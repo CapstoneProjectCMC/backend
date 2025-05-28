@@ -5,10 +5,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class HelloController
-{
-  @GetMapping("/hello")
-  ResponseEntity<String> helloWorld() {
-    return ResponseEntity.ok("Hello World");
-  }
+public class HelloController {
+    @GetMapping("/hello")
+    ResponseEntity<String> helloWorld() {
+        return ResponseEntity.ok("Hello World");
+    }
 }
