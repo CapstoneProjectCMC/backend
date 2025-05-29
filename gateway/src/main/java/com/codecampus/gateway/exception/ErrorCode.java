@@ -1,10 +1,12 @@
 package com.codecampus.gateway.exception;
 
 import lombok.Getter;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 
 import static com.codecampus.gateway.constant.exception.ErrorCodeConstant.FORBIDDEN_STATUS;
 import static com.codecampus.gateway.constant.exception.ErrorCodeConstant.INTERNAL_SERVER_STATUS;
+import static com.codecampus.gateway.constant.exception.ErrorCodeConstant.TOO_MANY_REQUESTS_STATUS;
 import static com.codecampus.gateway.constant.exception.ErrorCodeConstant.UNAUTHORIZED_STATUS;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
@@ -28,6 +30,10 @@ public enum ErrorCode {
     // 404 - Not Found
 
     // 409 - Conflict
+
+    // 429 - Too Many Requests
+    RATE_LIMIT_EXCEEDED(42901, TOO_MANY_REQUESTS_STATUS, "Rate limit exceeded", HttpStatus.TOO_MANY_REQUESTS);
+
 
     // 500 - Internal Server Error
 

@@ -26,7 +26,10 @@ public class ApplicationInitialization
   PermissionRepository permissionRepository;
 
   @Bean
-  @ConditionalOnProperty(prefix = "")
+  @ConditionalOnProperty(
+      prefix = "spring.datasource",
+      value = "driver-class-name",
+      havingValue = "org.postgresql.Driver")
   ApplicationRunner applicationRunner()
   {
     log.info("Khởi chạy ứng dụng!");

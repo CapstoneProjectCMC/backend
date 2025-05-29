@@ -18,11 +18,11 @@ public class GlobalExceptionHandler {
      * @return ResponseEntity chứa ApiResponse với mã lỗi, thông điệp và trạng thái lỗi tương ứng
      */
     @ExceptionHandler(value = Exception.class)
-    ResponseEntity<ApiResponse> handlingRuntimeException(
+    ResponseEntity<ApiResponse<?>> handlingRuntimeException(
             RuntimeException exception) {
         log.error("Exception: " + exception.getMessage(), exception);
 
-        ApiResponse apiResponse = new ApiResponse();
+        ApiResponse<?> apiResponse = new ApiResponse<>();
         apiResponse.setCode(ErrorCode.UNCATEGORIZED_EXCEPTION.getCode());
         apiResponse.setMessage(ErrorCode.UNCATEGORIZED_EXCEPTION.getMessage());
         apiResponse.setStatus(ErrorCode.UNCATEGORIZED_EXCEPTION.getStatus());
@@ -37,12 +37,12 @@ public class GlobalExceptionHandler {
      * @return ResponseEntity chứa ApiResponse với thông tin lỗi tương ứng
      */
     @ExceptionHandler(value = AppException.class)
-    ResponseEntity<ApiResponse> handlingAppException(
+    ResponseEntity<ApiResponse<?>> handlingAppException(
             AppException exception) {
         log.error("Exception: " + exception.getMessage(), exception);
 
         ErrorCode errorCode = exception.getErrorCode();
-        ApiResponse apiResponse = new ApiResponse();
+        ApiResponse<?> apiResponse = new ApiResponse<>();
         apiResponse.setCode(errorCode.getCode());
         apiResponse.setMessage(errorCode.getMessage());
         apiResponse.setStatus(errorCode.getStatus());
@@ -58,11 +58,11 @@ public class GlobalExceptionHandler {
      * @return ResponseEntity chứa ApiResponse với thông tin lỗi truy cập
      */
     @ExceptionHandler(value = AccessDeniedException.class)
-    ResponseEntity<ApiResponse> handlingAccessDeniedException(
+    ResponseEntity<ApiResponse<?>> handlingAccessDeniedException(
             AccessDeniedException exception) {
         ErrorCode errorCode = ErrorCode.UNAUTHORIZED;
 
-        ApiResponse apiResponse = ApiResponse.builder()
+        ApiResponse<?> apiResponse = ApiResponse.builder()
                 .code(errorCode.getCode())
                 .message(errorCode.getMessage())
                 .status(errorCode.getStatus())

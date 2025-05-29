@@ -1,12 +1,10 @@
 package com.codecampus.identity.service.authentication;
 
-import java.security.KeyPair;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
@@ -26,12 +24,10 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class JwtTokenService
 {
 
-  KeyPair keyPair;
   JwtEncoder jwtEncoder;
   JwtDecoder jwtDecoder;
 

@@ -30,14 +30,14 @@
         <java.version>21</java.version>
         <spring-cloud.version>2024.0.1</spring-cloud.version>
         <projectlombok-lombok.version>1.18.38</projectlombok-lombok.version>
-        <bucket4j-core.version>8.0.1</bucket4j-core.version>
+        <bucket4j-core.version>8.10.1</bucket4j-core.version>
+        <ben-manes.caffeine.version>3.2.0</ben-manes.caffeine.version>
+        <spring-webflux.version>7.0.0-M5</spring-webflux.version>
+        <contract-stub-runner.version>4.2.1</contract-stub-runner.version>
+        <reactor-test.version>3.8.0-M3</reactor-test.version>
+        <mockito-core.vesion>5.18.0</mockito-core.vesion>
     </properties>
     <dependencies>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>org.springframework.cloud</groupId>
@@ -56,21 +56,44 @@
         <dependency>
             <groupId>io.projectreactor</groupId>
             <artifactId>reactor-test</artifactId>
-            <version>3.8.0-M3</version>
+            <version>${reactor-test.version}</version>
             <scope>test</scope>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/com.github.vladimir-bukhtoyarov/bucket4j-core -->
         <dependency>
-            <groupId>com.github.vladimir-bukhtoyarov</groupId>
-            <artifactId>bucket4j-core</artifactId>
-            <version>${bucket4j-core.version}</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <scope>runtime</scope>
+            <optional>true</optional>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.mockito/mockito-core -->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito-core.vesion}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.bucket4j/bucket4j-core -->
+        <dependency>
+            <groupId>com.bucket4j</groupId>
+            <artifactId>bucket4j-core</artifactId>
+            <version>${bucket4j-core.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.github.ben-manes.caffeine/caffeine -->
+<!--        Lưu trữ bucket theo client-->
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+            <version>${ben-manes.caffeine.version}</version>
         </dependency>
     </dependencies>
     <dependencyManagement>

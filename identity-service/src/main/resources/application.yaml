@@ -8,7 +8,7 @@ spring:
     name: identity-service
   datasource:
     url: jdbc:postgresql://localhost:5432/identity_db
-    username: postgres
+    username: root
     password: dinhanst2832004
     driver-class-name: org.postgresql.Driver
   jpa:
@@ -17,6 +17,7 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
 
 app:
   services:

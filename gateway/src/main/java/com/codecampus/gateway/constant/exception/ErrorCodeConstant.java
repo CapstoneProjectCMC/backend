@@ -5,6 +5,7 @@ import static org.springframework.http.HttpStatus.CONFLICT;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.TOO_MANY_REQUESTS;
 
 public class ErrorCodeConstant {
     public static final String INTERNAL_SERVER_STATUS =
@@ -15,4 +16,5 @@ public class ErrorCodeConstant {
     public static final String FORBIDDEN_STATUS = FORBIDDEN.toString();
     public static final String NOT_FOUND_STATUS = NOT_FOUND.toString();
     public static final String CONFLICT_STATUS = CONFLICT.toString();
+    public static final String TOO_MANY_REQUESTS_STATUS = TOO_MANY_REQUESTS.toString();
 }

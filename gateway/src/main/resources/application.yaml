@@ -16,3 +16,18 @@ spring:
             - Path=${app.api-prefix}/identity/**
           filters:
             - StripPrefix=2
+            - name: RateLimiter
+              args:
+                routeId: identity_service
+
+# Cấu hình rate limiter
+rate-limiter:
+  default:
+    capacity: 10
+    refillTokens: 10
+    refillDuration: 60
+  routes:
+    identity_service: # Khớp với routeId
+      capacity: 20
+      refillTokens: 20
+      refillDuration: 60
