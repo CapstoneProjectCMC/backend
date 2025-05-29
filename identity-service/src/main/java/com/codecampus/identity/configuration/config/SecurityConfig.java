@@ -116,7 +116,7 @@ public class SecurityConfig
               response.setStatus(HttpStatus.OK.value());
             })
             .addLogoutHandler((request, response, authentication) -> {
-                
+
             })
         )
     ;
