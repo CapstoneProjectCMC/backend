@@ -6,13 +6,17 @@ server:
 spring:
   application:
     name: identity-service
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          jwk-set-uri:
-
-
+  datasource:
+    url: jdbc:postgresql://localhost:5432/identity_db
+    username: postgres
+    password: dinhanst2832004
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
 
 app:
   services:
@@ -21,3 +25,4 @@ app:
     key-secret:
       "code-campus-123456"
     expiration: 3
+    refresh-expiration: 4
