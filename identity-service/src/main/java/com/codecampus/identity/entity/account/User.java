@@ -52,4 +52,7 @@ public class User {
 
     @ManyToMany
     Set<Role> roles;
+
+    @Builder.Default
+    boolean enabled = false;
 }

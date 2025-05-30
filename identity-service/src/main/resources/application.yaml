@@ -18,10 +18,23 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: yunomix2834@gmail.com
+    password: mfym xcpi cstr ckfd
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 app:
   services:
     profile: http://localhost:8081/profile
+  otp:
+    expiry-minutes: 5
   jwt:
     signerKey: "1TjXchw5FloESb63Kc+DFhTARvpWL4jUGCwfGWxuG5SIf/1y/LgJxHnMqaF6A/ij"
     valid-duration: 3600 # in second

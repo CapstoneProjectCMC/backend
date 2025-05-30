@@ -11,7 +11,7 @@ import static com.codecampus.identity.constant.config.SecurityConfigConstant.GET
 import static com.codecampus.identity.constant.config.SecurityConfigConstant.OPTIONS_METHOD;
 import static com.codecampus.identity.constant.config.SecurityConfigConstant.PATCH_METHOD;
 import static com.codecampus.identity.constant.config.SecurityConfigConstant.POST_METHOD;
-import static com.codecampus.identity.constant.config.SecurityConfigConstant.PUBLIC_ENDPOINTS_POST;
+import static com.codecampus.identity.constant.config.SecurityConfigConstant.PUBLIC_ENDPOINTS;
 import static com.codecampus.identity.constant.config.SecurityConfigConstant.PUT_METHOD;
 import static com.codecampus.identity.constant.config.SecurityConfigConstant.URL_PATTERN_ALL;
 
@@ -20,7 +20,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -47,7 +46,7 @@ public class SecurityConfig
       HttpSecurity httpSecurity) throws Exception
   {
     httpSecurity.authorizeHttpRequests(request -> request
-        .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS_POST)
+        .requestMatchers(PUBLIC_ENDPOINTS)
         .permitAll()
         .anyRequest()
         .authenticated());

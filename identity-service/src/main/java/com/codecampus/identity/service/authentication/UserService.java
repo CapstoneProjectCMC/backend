@@ -33,14 +33,25 @@ import org.springframework.stereotype.Service;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserService
 {
+  OtpService otpService;
   UserRepository userRepository;
   RoleRepository roleRepository;
   UserMapper userMapper;
   PasswordEncoder passwordEncoder;
 
   public UserResponse createUser(UserCreationRequest request) {
+    // Kiểm tra username và email đã tồn tại
+    if (userRepository.existsByUsername(request.getUsername())) {
+      throw new AppException(ErrorCode.USER_ALREADY_EXISTS);
+    }
+
+    if (userRepository.existsByEmail(request.getEmail())) {
+      throw new AppException(ErrorCode.EMAIL_ALREADY_EXISTS);
+    }
+
     User user = userMapper.toUser(request);
     user.setPassword(passwordEncoder.encode(user.getPassword()));
+    user.setEnabled(false);
 
     HashSet<Role> roles = new HashSet<>();
     roleRepository.findById(USER_ROLE)
@@ -49,6 +60,10 @@ public class UserService
 
     try {
       user = userRepository.save(user);
+
+      // Gửi OTP qua email
+      otpService.sendOtp(request);
+
     } catch (DataIntegrityViolationException e) {
       throw new AppException(ErrorCode.USER_ALREADY_EXISTS);
     }

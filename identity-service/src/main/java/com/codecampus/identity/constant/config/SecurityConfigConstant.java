@@ -13,20 +13,13 @@ public class SecurityConfigConstant {
     // PATTERN REQUEST
     public static final String URL_PATTERN_ALL = "/**";
 
-    // PUBLIC ENDPOINT POST
-    public static final String[] PUBLIC_ENDPOINTS_POST = {
+    // PUBLIC ENDPOINT
+    public static final String[] PUBLIC_ENDPOINTS = {
             "/users",
-            "/auth/token",
-            "/auth/introspect",
-            "/auth/logout",
-            "/auth/refresh"
-    };
-
-    // PUBLIC ENDPOINT GET
-    public static final String[] PUBLIC_ENDPOINTS_GET = {
-        "/hello",
-        "/health",
-        "/actuator/**"
+            "/auth/**",
+            "/hello",
+            "/health",
+            "/actuator/**"
     };
 
     // FRONTEND ENDPOINT

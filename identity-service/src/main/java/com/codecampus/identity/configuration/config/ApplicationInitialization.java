@@ -60,6 +60,8 @@ public class ApplicationInitialization
         User user = User.builder()
             .username("admin")
             .password(passwordEncoder.encode("admin123"))
+            .email("admin123123123@mail.com")
+            .enabled(true)
             .roles(roles)
             .build();
 

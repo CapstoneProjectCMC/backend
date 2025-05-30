@@ -5,6 +5,7 @@ import com.codecampus.identity.dto.request.authentication.AuthenticationRequest;
 import com.codecampus.identity.dto.request.authentication.IntrospectRequest;
 import com.codecampus.identity.dto.request.authentication.LogoutRequest;
 import com.codecampus.identity.dto.request.authentication.RefreshRequest;
+import com.codecampus.identity.dto.request.authentication.UserCreationRequest;
 import com.codecampus.identity.dto.response.authentication.AuthenticationResponse;
 import com.codecampus.identity.dto.response.authentication.IntrospectResponse;
 import com.codecampus.identity.service.authentication.AuthenticationService;
@@ -30,17 +31,28 @@ public class AuthenticationController
 {
   AuthenticationService authenticationService;
 
-  @PostMapping("/token")
-  ApiResponse<AuthenticationResponse> authenticate(
-      @RequestBody AuthenticationRequest request) {
+  @PostMapping("/login")
+  ApiResponse<AuthenticationResponse> login(
+      @RequestBody AuthenticationRequest request)
+      throws ParseException
+  {
     return ApiResponse.<AuthenticationResponse>builder()
-        .result(authenticationService.authenticate(request))
-        .message("Authentication successful")
+        .result(authenticationService.login(request))
+        .message("Login successful")
+        .build();
+  }
+
+  @PostMapping("/register")
+  ApiResponse<Void> register(
+      @RequestBody UserCreationRequest request) {
+    authenticationService.register(request);
+    return ApiResponse.<Void>builder()
+        .message("Register successful. Check OTP Send to mail")
         .build();
   }
 
   @PostMapping("/introspect")
-  ApiResponse<IntrospectResponse> authenticate(
+  ApiResponse<IntrospectResponse> introspect(
       @RequestBody IntrospectRequest request)
       throws ParseException, JOSEException
   {

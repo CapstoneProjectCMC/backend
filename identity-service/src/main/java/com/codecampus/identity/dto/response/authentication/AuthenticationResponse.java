@@ -1,5 +1,6 @@
 package com.codecampus.identity.dto.response.authentication;
 
+import java.time.Instant;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
@@ -20,6 +21,7 @@ public class AuthenticationResponse
   String tokenAccessType;
   String accessToken;
   String refreshToken;
-  String expiryTime;
+  Instant expiryTime;
   boolean isAuthenticated;
+  boolean isEnabled;
 }
