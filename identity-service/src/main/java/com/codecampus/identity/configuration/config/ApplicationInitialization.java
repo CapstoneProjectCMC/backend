@@ -2,8 +2,11 @@ package com.codecampus.identity.configuration.config;
 
 import com.codecampus.identity.entity.account.Permission;
 import com.codecampus.identity.entity.account.Role;
+import com.codecampus.identity.entity.account.User;
 import com.codecampus.identity.repository.account.PermissionRepository;
 import com.codecampus.identity.repository.account.RoleRepository;
+import com.codecampus.identity.repository.account.UserRepository;
+import java.util.HashSet;
 import java.util.Set;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +17,7 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @RequiredArgsConstructor
@@ -24,6 +28,8 @@ public class ApplicationInitialization
 
   RoleRepository roleRepository;
   PermissionRepository permissionRepository;
+  UserRepository userRepository;
+  PasswordEncoder passwordEncoder;
 
   @Bean
   @ConditionalOnProperty(
@@ -53,9 +59,24 @@ public class ApplicationInitialization
         createPermissionIfNotFound("ADMIN_PERMISSION");
 
     // Tạo role USER với các permission cơ bản
-    createRoleIfNotFound("ROLE_USER", Set.of(userPermission));
-    createRoleIfNotFound("ROLE_ADMIN",
+    Role userRole = createRoleIfNotFound("ROLE_USER", Set.of(userPermission));
+    Role adminRole = createRoleIfNotFound("ROLE_ADMIN",
         Set.of(userPermission, adminPermission));
+
+    // Tạo user ADMIN
+    createUserIfNotFound(
+        "admin",
+        "yunomix2834@gmail.com",
+        "admin123",
+        Set.of(adminRole, userRole)
+    );
+
+    createUserIfNotFound(
+        "user",
+        "yunomix280304@gmail.com",
+        "user123",
+        Set.of(userRole)
+    );
   }
 
   private Permission createPermissionIfNotFound(String name)
@@ -69,15 +90,31 @@ public class ApplicationInitialization
         );
   }
 
-  private void createRoleIfNotFound(
+  private Role createRoleIfNotFound(
       String name,
       Set<Permission> permissions)
   {
-    roleRepository
+    return roleRepository
         .findByName(name)
         .orElseGet(() -> roleRepository.save(Role.builder()
             .name(name)
             .permissions(permissions)
+            .build()));
+  }
+
+  private void createUserIfNotFound(
+      String username,
+      String email,
+      String password,
+      Set<Role> roles) {
+
+    userRepository
+        .findByUsername(username)
+        .orElseGet(() -> userRepository.save(User.builder()
+            .username(username)
+            .email(email)
+            .password(passwordEncoder.encode(password))
+            .roles(new HashSet<>())
             .build()));
   }
 }

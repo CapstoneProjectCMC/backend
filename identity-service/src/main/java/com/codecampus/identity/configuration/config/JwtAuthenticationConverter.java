@@ -26,8 +26,8 @@ public class JwtAuthenticationConverter
     public AbstractAuthenticationToken convert(Jwt source) {
         Collection<GrantedAuthority> authorities =
                 authoritiesConverter.convert(source);
-        return new JwtAuthenticationToken(source, authorities,
-                getPrincipal(source));
+        String principal = getPrincipal(source);
+        return new JwtAuthenticationToken(source, authorities, principal);
     }
 
     private String getPrincipal(Jwt source) {

@@ -7,9 +7,9 @@ spring:
   application:
     name: identity-service
   datasource:
-    url: jdbc:postgresql://localhost:5432/identity_db
-    username: root
-    password: dinhanst2832004
+    url: jdbc:postgresql://localhost:5431/identity_db
+    username: postgres
+    password: mysecretpassword
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:

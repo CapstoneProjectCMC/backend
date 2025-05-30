@@ -43,7 +43,7 @@ public class AuthenticationService
   PasswordEncoder passwordEncoder;
 
   UserRepository userRepository;
-  private final TokenRepository tokenRepository;
+  TokenRepository tokenRepository;
 
   // Phương thức đăng ký
   public void register(
