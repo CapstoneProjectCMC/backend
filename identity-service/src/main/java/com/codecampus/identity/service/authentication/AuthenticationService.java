@@ -3,13 +3,13 @@ package com.codecampus.identity.service.authentication;
 import static com.codecampus.identity.constant.authentication.AuthenticationConstant.USER_ROLE;
 
 import com.codecampus.identity.dto.request.authentication.AuthenticationRequest;
+import com.codecampus.identity.dto.request.authentication.ExchangeTokenRequest;
 import com.codecampus.identity.dto.request.authentication.IntrospectRequest;
 import com.codecampus.identity.dto.request.authentication.LogoutRequest;
 import com.codecampus.identity.dto.request.authentication.RefreshRequest;
 import com.codecampus.identity.dto.request.authentication.UserCreationRequest;
 import com.codecampus.identity.dto.response.authentication.AuthenticationResponse;
 import com.codecampus.identity.dto.response.authentication.IntrospectResponse;
-import com.codecampus.identity.dto.response.authentication.UserResponse;
 import com.codecampus.identity.entity.account.InvalidatedToken;
 import com.codecampus.identity.entity.account.Role;
 import com.codecampus.identity.entity.account.User;
@@ -19,6 +19,8 @@ import com.codecampus.identity.mapper.authentication.UserMapper;
 import com.codecampus.identity.repository.account.InvalidatedTokenRepository;
 import com.codecampus.identity.repository.account.RoleRepository;
 import com.codecampus.identity.repository.account.UserRepository;
+import com.codecampus.identity.repository.httpclient.OutboundGoogleIdentityClient;
+import com.codecampus.identity.repository.httpclient.OutboundGoogleUserClient;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
@@ -34,6 +36,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Set;
 import java.util.StringJoiner;
 import java.util.UUID;
 import lombok.AccessLevel;
@@ -62,6 +65,9 @@ public class AuthenticationService
   UserMapper userMapper;
   PasswordEncoder passwordEncoder;
 
+  OutboundGoogleIdentityClient outboundGoogleIdentityClient;
+  OutboundGoogleUserClient outboundGoogleUserClient;
+
   @NonFinal
   @Value("${app.jwt.signerKey}")
   protected String SIGNER_KEY;
@@ -73,6 +79,21 @@ public class AuthenticationService
   @NonFinal
   @Value("${app.jwt.refreshable-duration}")
   protected long REFRESH_DURATION;
+
+  @NonFinal
+  @Value("${app.google.client-id}")
+  protected String GOOGLE_CLIENT_ID;
+
+  @NonFinal
+  @Value("${app.google.client-secret}")
+  protected String GOOGLE_CLIENT_SECRET;
+
+  @NonFinal
+  @Value("${app.google.redirect-uri}")
+  protected String GOOGLE_REDIRECT_URI;
+
+  @NonFinal
+  protected String GRANT_TYPE = "authorization_code";
 
   public IntrospectResponse introspect(
       IntrospectRequest request)
@@ -94,6 +115,69 @@ public class AuthenticationService
         .build();
   }
 
+  public AuthenticationResponse outboundGoogleLogin(
+      String code) throws ParseException
+  {
+    var response = outboundGoogleIdentityClient.exchangeToken(
+        ExchangeTokenRequest.builder()
+            .code(code)
+            .clientId(GOOGLE_CLIENT_ID)
+            .clientSecret(GOOGLE_CLIENT_SECRET)
+            .redirectUri(GOOGLE_REDIRECT_URI)
+            .grantType(GRANT_TYPE)
+            .build()
+    );
+    log.info("TOKEN RESPONSE {}", response);
+
+    // Get User info
+    var userInfo = outboundGoogleUserClient.getUserInfo(
+        "json",
+        response.getAccessToken());
+
+    log.info("User Info {}", userInfo);
+
+    Set<Role> roles = new HashSet<>();
+    roles.add(Role.builder()
+        .name(USER_ROLE)
+        .build()
+    );
+
+    // Onboard user
+    var user = userRepository.findByUsername(userInfo.getEmail())
+        .orElseGet(() -> userRepository.save(User.builder()
+            .username(userInfo.getEmail())
+            .roles(roles)
+            .build()));
+
+    // Tạo token
+    var token = generateToken(user);
+    SignedJWT signedJWT;
+    try {
+      signedJWT = SignedJWT.parse(token);
+    } catch (ParseException e) {
+      throw new AppException(ErrorCode.FAILED_GENERATE_TOKEN);
+    }
+    JWTClaimsSet claims = signedJWT.getJWTClaimsSet();
+
+    var role = user.getRoles().stream()
+        .findFirst()
+        .map(Role::getName)
+        .orElse(null);
+
+    return AuthenticationResponse.builder()
+        .username(user.getUsername())
+        .email(user.getEmail())
+        .role(role)
+        .tokenId(claims.getJWTID())
+        .tokenAccessType("Bearer")
+        .accessToken(token)
+        .refreshToken(null)
+        .expiryTime(claims.getExpirationTime().toInstant())
+        .isAuthenticated(true)
+        .isEnabled(true)
+        .build();
+  }
+
   public AuthenticationResponse login(
       AuthenticationRequest request) throws ParseException
   {
@@ -105,6 +189,7 @@ public class AuthenticationService
         .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
     // Kiểm tra tài khoản đã kích hoạt chưa
+    // TODO Mới đang ném ra lỗi khi chưa kích hoạt tài khoản
     if (!user.isEnabled()) {
       throw new AppException(ErrorCode.ACCOUNT_NOT_ACTIVATED);
     }

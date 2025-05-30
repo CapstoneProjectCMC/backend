@@ -1,6 +1,7 @@
 package com.codecampus.identity.controller.authentication;
 
 import com.codecampus.identity.dto.api.ApiResponse;
+import com.codecampus.identity.dto.request.authentication.PasswordCreationRequest;
 import com.codecampus.identity.dto.request.authentication.UserCreationRequest;
 import com.codecampus.identity.dto.request.authentication.UserUpdateRequest;
 import com.codecampus.identity.dto.response.authentication.UserResponse;
@@ -35,6 +36,15 @@ public class UserController
     return ApiResponse.<UserResponse>builder()
         .result(userService.createUser(request))
         .message("Create User successful")
+        .build();
+  }
+
+  @PostMapping("/user/create-password")
+  ApiResponse<Void> createPassword(
+      @RequestBody @Valid PasswordCreationRequest request) {
+    userService.createPassword(request);
+    return ApiResponse.<Void>builder()
+        .message("Password has been created, you could use it to log-in")
         .build();
   }
 

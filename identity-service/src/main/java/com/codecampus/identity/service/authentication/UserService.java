@@ -2,6 +2,7 @@ package com.codecampus.identity.service.authentication;
 
 import static com.codecampus.identity.constant.authentication.AuthenticationConstant.USER_ROLE;
 
+import com.codecampus.identity.dto.request.authentication.PasswordCreationRequest;
 import com.codecampus.identity.dto.request.authentication.UserCreationRequest;
 import com.codecampus.identity.dto.request.authentication.UserUpdateRequest;
 import com.codecampus.identity.dto.response.authentication.UserResponse;
@@ -12,6 +13,7 @@ import com.codecampus.identity.exception.ErrorCode;
 import com.codecampus.identity.mapper.authentication.UserMapper;
 import com.codecampus.identity.repository.account.RoleRepository;
 import com.codecampus.identity.repository.account.UserRepository;
+import io.netty.util.internal.StringUtil;
 import java.util.HashSet;
 import java.util.List;
 import lombok.AccessLevel;
@@ -25,6 +27,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 @Service
 @RequiredArgsConstructor
@@ -69,6 +72,21 @@ public class UserService
     }
 
     return userMapper.toUserResponse(user);
+  }
+
+  public void createPassword(PasswordCreationRequest request) {
+    var context = SecurityContextHolder.getContext();
+    String name = context.getAuthentication().getName();
+
+    User user = userRepository.findByUsername(name)
+        .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+
+    if (StringUtils.hasText(request.getPassword())) {
+      throw new AppException(ErrorCode.PASSWORD_ALREADY_EXISTS);
+    }
+
+    user.setPassword(passwordEncoder.encode(request.getPassword()));
+    userRepository.save(user);
   }
 
   public UserResponse getMyInfo(){

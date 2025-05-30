@@ -55,6 +55,7 @@ public enum ErrorCode
       CONFLICT),
   EMAIL_ALREADY_EXISTS(40902, CONFLICT_STATUS, "Email already exists",
       CONFLICT),
+  PASSWORD_ALREADY_EXISTS(40903, CONFLICT_STATUS, "Password already exists", CONFLICT),
 
   // 500 - Internal Server Error
   FAILED_GENERATE_TOKEN(50001, INTERNAL_SERVER_STATUS,
