@@ -95,6 +95,10 @@
             <artifactId>caffeine</artifactId>
             <version>${ben-manes.caffeine.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-openfeign-core</artifactId>
+        </dependency>
     </dependencies>
     <dependencyManagement>
         <dependencies>

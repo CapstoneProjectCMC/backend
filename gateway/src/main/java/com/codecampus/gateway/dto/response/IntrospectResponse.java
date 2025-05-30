@@ -11,5 +11,7 @@ import lombok.experimental.FieldDefaults;
 // Mặc định cho phép response cả null khi Dev
 // Khi build thì KHÔNG response null
 //@JsonInclude(JsonInclude.Include.NON_NULL)
-public class AuthenticationResponse {
+public class IntrospectResponse
+{
+  boolean valid;
 }

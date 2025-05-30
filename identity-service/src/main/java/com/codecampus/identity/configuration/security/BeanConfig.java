@@ -36,10 +36,10 @@ public class BeanConfig {
      * @return {@link PasswordEncoder} sử dụng BCrypt
      */
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    public PasswordEncoder passwordEncoder()
+    {
         return new BCryptPasswordEncoder();
     }
-
 
     /**
      * Cấu hình bean {@link RoleHierarchy} để xác định phân cấp của các vai trò.
