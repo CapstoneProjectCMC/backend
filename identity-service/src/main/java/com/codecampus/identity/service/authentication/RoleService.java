@@ -1,9 +1,13 @@
 package com.codecampus.identity.service.authentication;
 
-import com.codecampus.identity.entity.account.Role;
-import com.codecampus.identity.exception.AppException;
-import com.codecampus.identity.exception.ErrorCode;
+import com.codecampus.identity.dto.request.authentication.RoleRequest;
+import com.codecampus.identity.dto.response.authentication.RoleResponse;
+import com.codecampus.identity.mapper.authentication.RoleMapper;
+import com.codecampus.identity.repository.account.PermissionRepository;
 import com.codecampus.identity.repository.account.RoleRepository;
+import java.util.HashSet;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
@@ -16,12 +20,32 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class RoleService {
-    RoleRepository roleRepository;
+public class RoleService
+{
+  RoleRepository roleRepository;
+  PermissionRepository permissionRepository;
+  RoleMapper roleMapper;
 
-    public Role getDefaultRole() {
-        return roleRepository
-                .findByName("ROLE_USER")
-                .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
-    }
+  public RoleResponse createRole(RoleRequest roleRequest) {
+    var role = roleMapper.toRole(roleRequest);
+
+    var permissions = permissionRepository
+        .findAllById(roleRequest.getPermissions());
+    role.setPermissions(new HashSet<>(permissions));
+
+    role = roleRepository.save(role);
+    return roleMapper.toRoleResponse(role);
+  }
+
+  public List<RoleResponse> getAllRoles()
+  {
+    return roleRepository.findAll()
+        .stream()
+        .map(roleMapper::toRoleResponse)
+        .toList();
+  }
+
+  public void delete(String role) {
+    roleRepository.deleteById(role);
+  }
 }

@@ -29,17 +29,10 @@ import java.util.Set;
 @Entity
 public class Role {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    String id;
-
-    @Column(unique = true)
     String name;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "role_permissions",
-            joinColumns = @JoinColumn(name = "role_id"),
-            inverseJoinColumns = @JoinColumn(name = "permission_id")
-    )
-    Set<Permission> permissions = new HashSet<>();
+    String description;
+
+    @ManyToMany
+    Set<Permission> permissions;
 }

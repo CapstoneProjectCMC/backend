@@ -1,5 +1,8 @@
 package com.codecampus.identity.configuration.config;
 
+import static com.codecampus.identity.constant.authentication.AuthenticationConstant.ADMIN_ROLE;
+import static com.codecampus.identity.constant.authentication.AuthenticationConstant.USER_ROLE;
+
 import com.codecampus.identity.entity.account.Permission;
 import com.codecampus.identity.entity.account.Role;
 import com.codecampus.identity.entity.account.User;
@@ -39,82 +42,30 @@ public class ApplicationInitialization
   ApplicationRunner applicationRunner()
   {
     log.info("Khởi chạy ứng dụng!");
-    return this::run;
-  }
+    return args -> {
+      if (userRepository.findByUsername("admin").isEmpty()) {
+        roleRepository.save(Role.builder()
+            .name(USER_ROLE)
+            .description("User role")
+            .build());
 
-  /**
-   * Code chạy các thành phần khởi tạo ở đây
-   */
-  private void run(ApplicationArguments args)
-  {
-    createDefaultRolesAndPermissions();
-  }
+        Role adminRole = roleRepository.save(Role.builder()
+            .name(ADMIN_ROLE)
+            .description("Admin role")
+            .build());
 
-  private void createDefaultRolesAndPermissions()
-  {
-    // Tạo các permission cơ bản
-    Permission userPermission =
-        createPermissionIfNotFound("USER_PERMISSION");
-    Permission adminPermission =
-        createPermissionIfNotFound("ADMIN_PERMISSION");
+        var roles = new HashSet<Role>();
+        roles.add(adminRole);
 
-    // Tạo role USER với các permission cơ bản
-    Role userRole = createRoleIfNotFound("ROLE_USER", Set.of(userPermission));
-    Role adminRole = createRoleIfNotFound("ROLE_ADMIN",
-        Set.of(userPermission, adminPermission));
+        User user = User.builder()
+            .username("admin")
+            .password(passwordEncoder.encode("admin123"))
+            .roles(roles)
+            .build();
 
-    // Tạo user ADMIN
-    createUserIfNotFound(
-        "admin",
-        "yunomix2834@gmail.com",
-        "admin123",
-        Set.of(adminRole, userRole)
-    );
-
-    createUserIfNotFound(
-        "user",
-        "yunomix280304@gmail.com",
-        "user123",
-        Set.of(userRole)
-    );
-  }
-
-  private Permission createPermissionIfNotFound(String name)
-  {
-    return permissionRepository
-        .findByName(name)
-        .orElseGet(
-            () -> permissionRepository.save(Permission.builder()
-                .name(name)
-                .build())
-        );
-  }
-
-  private Role createRoleIfNotFound(
-      String name,
-      Set<Permission> permissions)
-  {
-    return roleRepository
-        .findByName(name)
-        .orElseGet(() -> roleRepository.save(Role.builder()
-            .name(name)
-            .permissions(permissions)
-            .build()));
-  }
-
-  private void createUserIfNotFound(
-      String username,
-      String email,
-      String password,
-      Set<Role> roles) {
-
-    userRepository
-        .findByUsername(username)
-        .orElseGet(() -> userRepository.save(User.builder()
-            .username(username)
-            .email(email)
-            .password(passwordEncoder.encode(password))
-            .roles(new HashSet<>())
-            .build()));
-  }
+        userRepository.save(user);
+        log.warn("admin user has been created with default password: admin, please change it");
+      }
+      log.info("Application initialization completed .....");
+    };  }
 }

@@ -9,7 +9,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5431/identity_db
     username: postgres
-    password: mysecretpassword
+    password: dinhanst2832004
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -23,7 +23,7 @@ app:
   services:
     profile: http://localhost:8081/profile
   jwt:
-    key-secret:
-      "code-campus-123456"
-    expiration: 3
-    refresh-expiration: 4
+    signerKey: "1TjXchw5FloESb63Kc+DFhTARvpWL4jUGCwfGWxuG5SIf/1y/LgJxHnMqaF6A/ij"
+    valid-duration: 3600 # in second
+    refreshable-duration: 36000 # in seconds
+
