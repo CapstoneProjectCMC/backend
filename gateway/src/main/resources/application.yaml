@@ -1,9 +1,11 @@
 server:
   port: 8888
   ssl:
+    enabled: true
     key-alias: gateway-https
     key-store: classpath:gateway.jks
     key-store-type: JKS
+    key-store-password: dinhanst2832004
     key-password: dinhanst2832004
 
 app:
@@ -14,9 +16,14 @@ spring:
     name: api-gateway
   cloud:
     gateway:
+      httpclient:
+        ssl:
+          trusted-x509-certificates:
+            - "classpath:identity.crt"
+          use-insecure-trust-manager: false
       routes:
         - id: identity_service
-          uri: http://localhost:8080
+          uri: https://localhost:8080
           predicates:
             - Path=${app.api-prefix}/identity/**
           filters:
@@ -24,7 +31,6 @@ spring:
             - name: RateLimiter
               args:
                 routeId: identity_service
-
 # Cấu hình rate limiter
 rate-limiter:
   default:

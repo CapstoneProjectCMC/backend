@@ -1,13 +1,13 @@
 package com.codecampus.identity.service.authentication;
 
 import com.codecampus.identity.dto.request.authentication.RoleRequest;
+import com.codecampus.identity.dto.response.authentication.PermissionResponse;
 import com.codecampus.identity.dto.response.authentication.RoleResponse;
 import com.codecampus.identity.mapper.authentication.RoleMapper;
 import com.codecampus.identity.repository.account.PermissionRepository;
 import com.codecampus.identity.repository.account.RoleRepository;
 import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +30,7 @@ public class RoleService
     var role = roleMapper.toRole(roleRequest);
 
     var permissions = permissionRepository
-        .findAllById(roleRequest.getPermissions());
+        .findAllById(roleRequest.getPermissions().stream().map(PermissionResponse::getName).toList());
     role.setPermissions(new HashSet<>(permissions));
 
     role = roleRepository.save(role);

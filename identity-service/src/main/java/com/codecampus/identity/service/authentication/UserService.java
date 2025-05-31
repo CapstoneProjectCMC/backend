@@ -42,6 +42,7 @@ public class UserService
   UserMapper userMapper;
   PasswordEncoder passwordEncoder;
 
+  @PreAuthorize("hasRole('ADMIN')")
   public UserResponse createUser(UserCreationRequest request) {
     // Kiểm tra username và email đã tồn tại
     if (userRepository.existsByUsername(request.getUsername())) {
@@ -54,7 +55,7 @@ public class UserService
 
     User user = userMapper.toUser(request);
     user.setPassword(passwordEncoder.encode(user.getPassword()));
-    user.setEnabled(false);
+    user.setEnabled(true);
 
     HashSet<Role> roles = new HashSet<>();
     roleRepository.findById(USER_ROLE)
@@ -63,10 +64,6 @@ public class UserService
 
     try {
       user = userRepository.save(user);
-
-      // Gửi OTP qua email
-      otpService.sendOtp(request);
-
     } catch (DataIntegrityViolationException e) {
       throw new AppException(ErrorCode.USER_ALREADY_EXISTS);
     }
@@ -99,7 +96,7 @@ public class UserService
     return userMapper.toUserResponse(user);
   }
 
-  @PostAuthorize("returnObject.username == authentication.name")
+  // @PostAuthorize("returnObject.username == authentication.name")
   public UserResponse updateUser(
       String userId,
       UserUpdateRequest request)

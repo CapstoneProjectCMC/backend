@@ -15,6 +15,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -84,7 +85,7 @@ public class UserController
 
   @PutMapping("/user/{userId}")
   ApiResponse<UserResponse> updateUser(
-      @PathVariable String userId,
+      @PathVariable("userId") String userId,
       @RequestBody UserUpdateRequest request) {
     return ApiResponse.<UserResponse>builder()
         .result(userService.updateUser(userId, request))

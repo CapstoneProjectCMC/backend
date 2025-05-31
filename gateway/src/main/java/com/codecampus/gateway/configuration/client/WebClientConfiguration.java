@@ -26,6 +26,7 @@
    @Bean
    CorsWebFilter corsWebFilter() {
      CorsConfiguration corsConfiguration = new CorsConfiguration();
+     corsConfiguration.setAllowCredentials(true);
      corsConfiguration.setAllowedOrigins(List.of("*"));
      corsConfiguration.setAllowedHeaders(List.of("*"));
      corsConfiguration.setAllowedMethods(List.of("*"));

@@ -3,9 +3,11 @@ server:
   servlet:
     context-path: /identity
   ssl:
+    enabled: true
     key-alias: identity-https
     key-store: classpath:identity.jks
     key-store-type: JKS
+    key-store-password: dinhanst2832004
     key-password: dinhanst2832004
 
 spring:

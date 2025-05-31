@@ -1,5 +1,6 @@
 package com.codecampus.identity.dto.request.authentication;
 
+import com.codecampus.identity.dto.response.authentication.PermissionResponse;
 import java.util.Set;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -13,5 +14,5 @@ public class RoleRequest
 {
   String name;
   String description;
-  Set<String> permissions;
+  Set<PermissionResponse> permissions;
 }
