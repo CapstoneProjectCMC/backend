@@ -2,6 +2,11 @@ server:
   port: 8080
   servlet:
     context-path: /identity
+  ssl:
+    key-alias: identity-https
+    key-store: classpath:identity.jks
+    key-store-type: JKS
+    key-password: dinhanst2832004
 
 spring:
   application:

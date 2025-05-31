@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 @FeignClient(
     name = "outbound-identity",
     url = "https://oauth2.googleapis.com")
-public interface OutboundIdentityClient
+public interface OutboundGoogleIdentityClient
 {
   @PostMapping(
       value = "/login",

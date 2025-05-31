@@ -1,5 +1,10 @@
 server:
   port: 8888
+  ssl:
+    key-alias: gateway-https
+    key-store: classpath:gateway.jks
+    key-store-type: JKS
+    key-password: dinhanst2832004
 
 app:
   api-prefix: /api/v1
