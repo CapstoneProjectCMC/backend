@@ -96,12 +96,31 @@ public class UserService
     return userMapper.toUserResponse(user);
   }
 
-  // @PostAuthorize("returnObject.username == authentication.name")
+  @PreAuthorize("hasRole('ADMIN')")
   public UserResponse updateUser(
       String userId,
       UserUpdateRequest request)
   {
     User user = userRepository.findById(userId)
+        .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+
+    userMapper.updateUser(user, request);
+    user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+    var roles = roleRepository.findAllById(request.getRoles());
+    user.setRoles(new HashSet<>(roles));
+
+    return userMapper.toUserResponse(userRepository.save(user));
+  }
+
+   @PostAuthorize("returnObject.username == authentication.name")
+  public UserResponse updateMyInfo(
+      UserUpdateRequest request)
+  {
+    var context = SecurityContextHolder.getContext();
+    String username = context.getAuthentication().getName();
+
+    User user = userRepository.findByUsername(username)
         .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
     userMapper.updateUser(user, request);

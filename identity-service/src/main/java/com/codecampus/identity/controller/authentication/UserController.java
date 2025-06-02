@@ -13,6 +13,7 @@ import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -31,6 +32,7 @@ public class UserController
 {
   UserService userService;
 
+  @PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/user")
   ApiResponse<UserResponse> createUser(
       @RequestBody @Valid UserCreationRequest request) {
@@ -49,6 +51,7 @@ public class UserController
         .build();
   }
 
+  @PreAuthorize("hasRole('ADMIN')")
   @GetMapping("/users")
   ApiResponse<List<UserResponse>> getUsers() {
     return ApiResponse.<List<UserResponse>>builder()
@@ -57,6 +60,7 @@ public class UserController
         .build();
   }
 
+  @PreAuthorize("hasRole('ADMIN')")
   @GetMapping("/user/{userId}")
   ApiResponse<UserResponse> getUser(
       @PathVariable("userId") String userId) {
@@ -74,6 +78,7 @@ public class UserController
         .build();
   }
 
+  @PreAuthorize("hasRole('ADMIN')")
   @DeleteMapping("/user/{userId}")
   ApiResponse<String> deleteUser(
       @PathVariable String userId) {
@@ -83,6 +88,7 @@ public class UserController
         .build();
   }
 
+  @PreAuthorize("hasRole('ADMIN')")
   @PutMapping("/user/{userId}")
   ApiResponse<UserResponse> updateUser(
       @PathVariable("userId") String userId,
@@ -90,6 +96,16 @@ public class UserController
     return ApiResponse.<UserResponse>builder()
         .result(userService.updateUser(userId, request))
         .message("Update User successful")
+        .build();
+  }
+
+  @PutMapping("/user/my-info")
+  ApiResponse<UserResponse> updateMyInfo(
+      UserUpdateRequest request)
+  {
+    return ApiResponse.<UserResponse>builder()
+        .result(userService.updateMyInfo(request))
+        .message("Update My Info successful")
         .build();
   }
 }
