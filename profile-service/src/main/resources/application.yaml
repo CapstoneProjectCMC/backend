@@ -5,7 +5,7 @@ server:
   ssl:
     enabled: true
     key-alias: profile-https
-    key-store: classpath:profile.jks
+    key-store: classpath:ssl/profile.jks
     key-store-type: JKS
     key-store-password: dinhanst2832004
     key-password: dinhanst2832004

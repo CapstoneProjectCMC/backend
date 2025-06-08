@@ -67,12 +67,6 @@ keytool -importcert -alias identity-service -file identity.crt -keystore gateway
 - Khi Gateway gọi API của Identity Service, nó sẽ kiểm tra certificate trong `identity.crt` để đảm bảo kết nối an toàn (SSL/TLS).
 
 
-
-
-
-
-
-
 keytool -genkeypair -alias gateway-https -keyalg RSA -keysize 2048 -keystore gateway.jks -validity 3650 -storepass dinhanst2832004 -keypass dinhanst2832004 -dname "CN=localhost, OU=Gateway, O=CMC University, L=City, ST=Hanoi, C=VN"
 
 keytool -genkeypair -alias identity-https -keyalg RSA -keysize 2048 -keystore identity.jks -validity 3650 -storepass dinhanst2832004 -keypass dinhanst2832004 -dname "CN=localhost, OU=Identity, O=CMC University, L=City, ST=Hanoi, C=VN"
@@ -83,6 +77,8 @@ keytool -exportcert -alias identity-https -keystore identity.jks -file identity.
 
 keytool -exportcert -alias profile-https -keystore profile.jks -file profile.crt -storepass dinhanst2832004
 
-keytool -importcert -alias identity-service -file identity.crt -keystore gateway-truststore.jks -storepass truststorePassword -noprompt
+keytool -importcert -alias identity-service -file identity.crt -keystore gateway-truststore.jks -storepass dinhanst2832004 -noprompt
 
-keytool -importcert -alias profile-service -file profile.crt -keystore gateway-truststore.jks -storepass truststorePassword -noprompt
+keytool -importcert -alias profile-service -file profile.crt -keystore gateway-truststore.jks -storepass dinhanst2832004 -noprompt
+
+keytool -list -v -keystore gateway-truststore.jks -storepass dinhanst2832004
