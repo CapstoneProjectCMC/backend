@@ -12,7 +12,7 @@
         </processorPath>
         <module name="gateway" />
       </profile>
-      <profile name="Annotation profile for identity" enabled="true">
+      <profile name="Annotation profile for profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -25,6 +25,7 @@
           <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct/1.6.3/mapstruct-1.6.3.jar" />
         </processorPath>
         <module name="identity-service" />
+        <module name="profile-service" />
       </profile>
     </annotationProcessing>
   </component>
@@ -32,6 +33,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="gateway" options="-parameters" />
       <module name="identity-service" options="-parameters -Amapstruct.defaultComponentModel=spring -Amapstruct.verbose=true" />
+      <module name="profile-service" options="-parameters -Amapstruct.defaultComponentModel=spring -Amapstruct.verbose=true" />
     </option>
   </component>
 </project>

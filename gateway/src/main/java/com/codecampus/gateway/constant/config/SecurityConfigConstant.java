@@ -11,7 +11,9 @@ public class SecurityConfigConstant
 
   // PUBLIC ENDPOINTS FOR AUTHENTICATION FILTER
   public static final String[] PUBLIC_ENDPOINTS = {
-      "/identity/auth/.*"
+      "/identity/hello/.*",
+      "/identity/auth/.*",
+      "/profile/hello/.*",
   };
 
   // CORS IDENTITY SERVICE ENDPOINT

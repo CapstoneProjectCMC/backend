@@ -1,7 +1,7 @@
-package com.codecampus.identity.configuration.config;
+package com.codecampus.profile.config;
 
-import com.codecampus.identity.dto.api.ApiResponse;
-import com.codecampus.identity.exception.ErrorCode;
+import com.codecampus.profile.dto.api.ApiResponse;
+import com.codecampus.profile.exception.ErrorCode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -20,7 +20,7 @@ public class JwtAuthenticationEntryPoint
       AuthenticationException authException)
       throws IOException
   {
-    ErrorCode errorCode = ErrorCode.UNAUTHENTICATED;
+    ErrorCode errorCode = ErrorCode.UNAUTHORIZED;
 
     response.setStatus(errorCode.getStatusCode().value());
     response.setContentType(MediaType.APPLICATION_JSON_VALUE);

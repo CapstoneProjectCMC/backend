@@ -20,6 +20,7 @@ spring:
         ssl:
           trusted-x509-certificates:
             - "classpath:identity.crt"
+            - "classpath:profile.crt"
           use-insecure-trust-manager: false
       routes:
         - id: identity_service
@@ -31,6 +32,15 @@ spring:
             - name: RateLimiter
               args:
                 routeId: identity_service
+        - id: profile_service
+          uri: https://localhost:8081
+          predicates:
+            - Path=${app.api-prefix}/profile/**
+          filters:
+            - StripPrefix=2
+            - name: RateLimiter
+              args:
+                routeId: profile_service
 # Cấu hình rate limiter
 rate-limiter:
   default:
@@ -39,6 +49,10 @@ rate-limiter:
     refillDuration: 60
   routes:
     identity_service: # Khớp với routeId
+      capacity: 20
+      refillTokens: 20
+      refillDuration: 60
+    profile_service: # Khớp với routeId
       capacity: 20
       refillTokens: 20
       refillDuration: 60

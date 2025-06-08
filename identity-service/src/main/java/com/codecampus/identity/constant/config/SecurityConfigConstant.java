@@ -16,6 +16,7 @@ public class SecurityConfigConstant {
     // PUBLIC ENDPOINT
     public static final String[] PUBLIC_ENDPOINTS = {
             "/users",
+            "/hello",
             "/auth/**",
             "/health",
             "/actuator/**"

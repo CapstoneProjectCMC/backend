@@ -1,4 +1,4 @@
-package com.codecampus.identity.controller.authentication;
+package com.codecampus.identity.controller;
 
 import com.codecampus.identity.dto.api.ApiResponse;
 import lombok.AccessLevel;
@@ -19,8 +19,8 @@ public class HelloController
   @GetMapping("/hello")
   ApiResponse<String> getHello() {
     return ApiResponse.<String>builder()
-        .result("Hello World")
-        .message("Get Hello Successfully")
+        .result("Hello World From IDENTITY SERVICE")
+        .message("Hello World From IDENTITY SERVICE")
         .build();
   }
 }
