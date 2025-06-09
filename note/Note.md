@@ -53,27 +53,6 @@ key-store-type: JKS
 key-store-password: dinhanst2832004
 key-password: dinhanst2832004
 
-spring:
-cloud:
-gateway:
-httpclient:
-ssl:
-trust-store: classpath:ssl/gateway-truststore.jks
-trust-store-type: JKS
-trust-store-password: dinhanst2832004
-routes:
-- id: identity_service
-uri: https://localhost:8080     # <-- HTTPS
-predicates:
-- Path=/api/v1/identity/**
-filters: [ StripPrefix=2 ]
-- id: profile_service
-uri: https://localhost:8081     # <-- HTTPS
-predicates:
-- Path=/api/v1/profile/**
-filters: [ StripPrefix=2 ]
-
-
 keytool -exportcert -alias identity-https -keystore identity.jks -storepass dinhanst2832004 -rfc -file ssl\identity.pem
 keytool -exportcert -alias profile-https  -keystore profile.jks  -storepass dinhanst2832004 -rfc -file ssl\profile.pem
 
