@@ -1,5 +1,11 @@
 server:
   port: 8888
+  ssl:
+    enabled: true
+    key-alias: gateway-https
+    key-store: classpath:ssl/gateway.jks
+    key-store-password: dinhanst2832004
+    key-store-type: JKS
 
 app:
   api-prefix: /api/v1
@@ -9,9 +15,14 @@ spring:
     name: api-gateway
   cloud:
     gateway:
+      httpclient:
+        ssl:
+          trusted-x509-certificates:
+            - classpath:ssl/identity.pem
+            - classpath:ssl/profile.pem
       routes:
         - id: identity_service
-          uri: http://localhost:8080
+          uri: https://localhost:8080
           predicates:
             - Path=${app.api-prefix}/identity/**
           filters:
@@ -20,7 +31,7 @@ spring:
               args:
                 routeId: identity_service
         - id: profile_service
-          uri: http://localhost:8081
+          uri: https://localhost:8081
           predicates:
             - Path=${app.api-prefix}/profile/**
           filters:
