@@ -19,8 +19,8 @@ import com.codecampus.identity.mapper.authentication.UserMapper;
 import com.codecampus.identity.repository.account.InvalidatedTokenRepository;
 import com.codecampus.identity.repository.account.RoleRepository;
 import com.codecampus.identity.repository.account.UserRepository;
-import com.codecampus.identity.repository.httpclient.OutboundGoogleIdentityClient;
-import com.codecampus.identity.repository.httpclient.OutboundGoogleUserClient;
+import com.codecampus.identity.repository.httpclient.google.OutboundGoogleIdentityClient;
+import com.codecampus.identity.repository.httpclient.google.OutboundGoogleUserClient;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
@@ -47,7 +47,6 @@ import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -322,7 +321,7 @@ public class AuthenticationService
         .plus(VALID_DURATION, ChronoUnit.SECONDS);
 
     JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
-        .subject(user.getUsername())
+        .subject(user.getId())
         .issuer("Code Campus")
         .issueTime(new Date())
         .expirationTime(Date.from(expiryInstant))

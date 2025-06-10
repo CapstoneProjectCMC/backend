@@ -26,7 +26,7 @@ import org.springframework.data.neo4j.core.support.UUIDStringGenerator;
 public class Reaction
 {
   @Id
-  @GeneratedValue(generatorClass = UUIDStringGenerator.class)
+  @GeneratedValue
   String id;
 
   ReactionType type;

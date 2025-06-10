@@ -35,7 +35,7 @@ import org.springframework.data.neo4j.core.support.UUIDStringGenerator;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Node("User")
-public class User
+public class UserProfile
 {
   @Id
   @GeneratedValue(generatorClass = UUIDStringGenerator.class)
@@ -54,6 +54,7 @@ public class User
   String displayName;
   int education;
   String[] links;
+  String city;
 
   /* Relationships */
 
@@ -66,7 +67,7 @@ public class User
 
   // Family
   @Relationship(type = "PARENT_OF")
-  Set<User> children = new HashSet<>();
+  Set<UserProfile> children = new HashSet<>();
 
   // Exercise
   @Relationship(type = "SAVED_EXERCISE")

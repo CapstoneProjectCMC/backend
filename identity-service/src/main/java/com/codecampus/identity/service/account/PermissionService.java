@@ -1,11 +1,10 @@
-package com.codecampus.identity.service.authentication;
+package com.codecampus.identity.service.account;
 
 import com.codecampus.identity.dto.request.authentication.PermissionRequest;
 import com.codecampus.identity.dto.response.authentication.PermissionResponse;
 import com.codecampus.identity.entity.account.Permission;
 import com.codecampus.identity.mapper.authentication.PermissionMapper;
 import com.codecampus.identity.repository.account.PermissionRepository;
-import jakarta.persistence.PrePersist;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;

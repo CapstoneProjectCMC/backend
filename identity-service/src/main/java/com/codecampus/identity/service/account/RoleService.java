@@ -1,4 +1,4 @@
-package com.codecampus.identity.service.authentication;
+package com.codecampus.identity.service.account;
 
 import com.codecampus.identity.dto.request.authentication.RoleRequest;
 import com.codecampus.identity.dto.response.authentication.PermissionResponse;

@@ -25,7 +25,7 @@ import org.springframework.data.neo4j.core.support.UUIDStringGenerator;
 public class CompletedExercise
 {
   @Id
-  @GeneratedValue(generatorClass = UUIDStringGenerator.class)
+  @GeneratedValue
   String id;
 
   int score;

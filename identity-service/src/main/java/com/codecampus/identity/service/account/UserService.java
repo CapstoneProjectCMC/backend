@@ -1,4 +1,4 @@
-package com.codecampus.identity.service.authentication;
+package com.codecampus.identity.service.account;
 
 import static com.codecampus.identity.constant.authentication.AuthenticationConstant.USER_ROLE;
 
@@ -11,9 +11,11 @@ import com.codecampus.identity.entity.account.User;
 import com.codecampus.identity.exception.AppException;
 import com.codecampus.identity.exception.ErrorCode;
 import com.codecampus.identity.mapper.authentication.UserMapper;
+import com.codecampus.identity.mapper.mapper.UserProfileMapper;
 import com.codecampus.identity.repository.account.RoleRepository;
 import com.codecampus.identity.repository.account.UserRepository;
-import io.netty.util.internal.StringUtil;
+import com.codecampus.identity.repository.httpclient.profile.ProfileClient;
+import com.codecampus.identity.service.authentication.OtpService;
 import java.util.HashSet;
 import java.util.List;
 import lombok.AccessLevel;
@@ -39,8 +41,12 @@ public class UserService
   OtpService otpService;
   UserRepository userRepository;
   RoleRepository roleRepository;
+
   UserMapper userMapper;
+  UserProfileMapper userProfileMapper;
+
   PasswordEncoder passwordEncoder;
+  ProfileClient profileClient;
 
   @PreAuthorize("hasRole('ADMIN')")
   public UserResponse createUser(UserCreationRequest request) {
@@ -55,18 +61,27 @@ public class UserService
 
     User user = userMapper.toUser(request);
     user.setPassword(passwordEncoder.encode(user.getPassword()));
-    user.setEnabled(true);
 
     HashSet<Role> roles = new HashSet<>();
     roleRepository.findById(USER_ROLE)
         .ifPresent(roles::add);
     user.setRoles(roles);
+    user.setEnabled(true);
 
     try {
       user = userRepository.save(user);
     } catch (DataIntegrityViolationException e) {
       throw new AppException(ErrorCode.USER_ALREADY_EXISTS);
     }
+
+    var userProfileRequest =
+        userProfileMapper.toUserProfileCreationRequest(request);
+    userProfileRequest.setUserId(user.getId());
+
+    var userProfile = profileClient.createUserProfile(userProfileRequest);
+
+    var userCreationResponse = userMapper.toUserResponse(user);
+    userCreationResponse.setId(userProfile.getResult().getId());
 
     return userMapper.toUserResponse(user);
   }

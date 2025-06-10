@@ -26,6 +26,7 @@ public class Classroom
   @GeneratedValue(generatorClass = UUIDStringGenerator.class)
   String id;
 
+  String classId;
   String name;
 
   @Relationship(

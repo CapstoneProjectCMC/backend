@@ -1,4 +1,4 @@
-package com.codecampus.identity.repository.httpclient;
+package com.codecampus.identity.repository.httpclient.google;
 
 import com.codecampus.identity.dto.response.authentication.OutboundUserResponse;
 import org.springframework.cloud.openfeign.FeignClient;

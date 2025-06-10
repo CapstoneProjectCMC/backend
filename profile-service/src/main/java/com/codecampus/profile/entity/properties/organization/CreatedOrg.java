@@ -25,7 +25,7 @@ import org.springframework.data.neo4j.core.support.UUIDStringGenerator;
 public class CreatedOrg
 {
   @Id
-  @GeneratedValue(generatorClass = UUIDStringGenerator.class)
+  @GeneratedValue
   String id;
 
   Instant createdAt;

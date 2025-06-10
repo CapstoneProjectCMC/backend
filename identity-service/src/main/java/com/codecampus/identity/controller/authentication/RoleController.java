@@ -3,7 +3,7 @@ package com.codecampus.identity.controller.authentication;
 import com.codecampus.identity.dto.api.ApiResponse;
 import com.codecampus.identity.dto.request.authentication.RoleRequest;
 import com.codecampus.identity.dto.response.authentication.RoleResponse;
-import com.codecampus.identity.service.authentication.RoleService;
+import com.codecampus.identity.service.account.RoleService;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
