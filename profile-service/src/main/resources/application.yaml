@@ -18,3 +18,5 @@ spring:
     authentication:
       username: neo4j
       password: dinhanst2832004
+    schema-action: create
+

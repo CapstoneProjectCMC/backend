@@ -50,8 +50,11 @@ public class User {
 
     String password;
 
-    @ManyToMany
-    Set<Role> roles;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_roles",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "role_name"))
+    Set<Role> roles = new HashSet<>();
 
     @Builder.Default
     boolean enabled = false;
