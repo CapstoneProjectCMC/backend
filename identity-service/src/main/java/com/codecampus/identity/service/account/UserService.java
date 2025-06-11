@@ -16,6 +16,7 @@ import com.codecampus.identity.repository.account.RoleRepository;
 import com.codecampus.identity.repository.account.UserRepository;
 import com.codecampus.identity.repository.httpclient.profile.ProfileClient;
 import com.codecampus.identity.service.authentication.OtpService;
+import com.codecampus.identity.utils.AuthenticationUtils;
 import com.codecampus.identity.utils.SecurityUtils;
 import java.util.HashSet;
 import java.util.List;
@@ -48,21 +49,16 @@ public class UserService
 
   PasswordEncoder passwordEncoder;
   ProfileClient profileClient;
+  AuthenticationUtils authenticationUtils;
 
   @PreAuthorize("hasRole('ADMIN')")
   @Transactional
   public UserResponse createUser(UserCreationRequest request)
   {
-    // Kiểm tra username và email đã tồn tại
-    if (userRepository.existsByUsername(request.getUsername()))
-    {
-      throw new AppException(ErrorCode.USER_ALREADY_EXISTS);
-    }
-
-    if (userRepository.existsByEmail(request.getEmail()))
-    {
-      throw new AppException(ErrorCode.EMAIL_ALREADY_EXISTS);
-    }
+    authenticationUtils.checkExistsUsernameEmail(
+        request.getUsername(),
+        request.getEmail()
+    );
 
     User user = userMapper.toUser(request);
     user.setPassword(passwordEncoder.encode(user.getPassword()));

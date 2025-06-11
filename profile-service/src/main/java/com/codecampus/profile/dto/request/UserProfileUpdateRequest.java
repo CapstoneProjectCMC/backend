@@ -13,7 +13,7 @@ public class UserProfileUpdateRequest
 {
   String firstName;
   String lastName;
-  Instant dob;
+  String dob;
   Instant createdAt;
   String bio;
   boolean gender;

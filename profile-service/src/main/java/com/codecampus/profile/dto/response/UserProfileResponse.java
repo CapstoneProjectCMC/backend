@@ -17,7 +17,7 @@ public class UserProfileResponse
   String id;
   String firstName;
   String lastName;
-  Instant dob;
+  String dob;
   String bio;
   boolean gender;
   String displayName;

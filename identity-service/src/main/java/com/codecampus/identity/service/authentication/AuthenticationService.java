@@ -23,6 +23,7 @@ import com.codecampus.identity.repository.account.UserRepository;
 import com.codecampus.identity.repository.httpclient.google.OutboundGoogleIdentityClient;
 import com.codecampus.identity.repository.httpclient.google.OutboundGoogleUserClient;
 import com.codecampus.identity.repository.httpclient.profile.ProfileClient;
+import com.codecampus.identity.utils.AuthenticationUtils;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
@@ -74,6 +75,7 @@ public class AuthenticationService
   OutboundGoogleIdentityClient outboundGoogleIdentityClient;
   OutboundGoogleUserClient outboundGoogleUserClient;
   ProfileClient profileClient;
+  AuthenticationUtils authenticationUtils;
 
   @NonFinal
   @Value("${app.jwt.signerKey}")
@@ -264,14 +266,10 @@ public class AuthenticationService
 
   @Transactional
   public void register(UserCreationRequest request) {
-    // Kiểm tra username và email đã tồn tại
-    if (userRepository.existsByUsername(request.getUsername())) {
-      throw new AppException(ErrorCode.USER_ALREADY_EXISTS);
-    }
-
-    if (userRepository.existsByEmail(request.getEmail())) {
-      throw new AppException(ErrorCode.EMAIL_ALREADY_EXISTS);
-    }
+    authenticationUtils.checkExistsUsernameEmail(
+        request.getUsername(),
+        request.getEmail()
+    );
 
     // Tạo user nhưng chưa kích hoạt
     User user = userMapper.toUser(request);

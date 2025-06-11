@@ -44,34 +44,34 @@ src\main\resources\ssl\
 └─ profile.crt
 
 server:
-port: 8888
-ssl:
-enabled: true
-key-alias: gateway-https
-key-store: classpath:ssl/gateway.jks
-key-store-type: JKS
-key-store-password: dinhanst2832004
-key-password: dinhanst2832004
+    port: 8888
+    ssl:
+        enabled: true
+        key-alias: gateway-https
+        key-store: classpath:ssl/gateway.jks
+        key-store-type: JKS
+        key-store-password: dinhanst2832004
+        key-password: dinhanst2832004
 
 keytool -exportcert -alias identity-https -keystore identity.jks -storepass dinhanst2832004 -rfc -file ssl\identity.pem
 keytool -exportcert -alias profile-https  -keystore profile.jks  -storepass dinhanst2832004 -rfc -file ssl\profile.pem
 
 server:
-port: 8888
-ssl:
-enabled: true
-key-alias: gateway-https
-key-store: classpath:ssl/gateway.jks
-key-store-password: dinhanst2832004
-key-store-type: JKS
+    port: 8888
+    ssl:
+        enabled: true
+        key-alias: gateway-https
+        key-store: classpath:ssl/gateway.jks
+        key-store-password: dinhanst2832004
+        key-store-type: JKS
 
 spring:
-cloud:
-gateway:
-httpclient:
-ssl:
-# DÙNG PEM → Không cần trust-store JKS nữa
-trusted-x509-certificates:
-- classpath:ssl/identity.pem
-- classpath:ssl/profile.pem
+    cloud:
+        gateway:
+            httpclient:
+                ssl:
+                    # DÙNG PEM → Không cần trust-store JKS nữa
+                    trusted-x509-certificates:
+                    - classpath:ssl/identity.pem
+                    - classpath:ssl/profile.pem
 

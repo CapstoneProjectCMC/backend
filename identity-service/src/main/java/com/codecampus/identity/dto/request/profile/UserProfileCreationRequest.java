@@ -2,13 +2,13 @@ package com.codecampus.identity.dto.request.profile;
 
 import java.time.Instant;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 @Data
-@NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Builder
 public class UserProfileCreationRequest
 {
   String userId;

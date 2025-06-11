@@ -8,16 +8,15 @@ import com.codecampus.profile.exception.AppException;
 import com.codecampus.profile.exception.ErrorCode;
 import com.codecampus.profile.mapper.UserProfileMapper;
 import com.codecampus.profile.repository.UserProfileRepository;
+import com.codecampus.profile.utils.AuthenticationUtils;
 import com.codecampus.profile.utils.SecurityUtils;
 import java.time.Instant;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,13 +28,12 @@ public class UserProfileService
   UserProfileRepository userProfileRepository;
 
   UserProfileMapper userProfileMapper;
+  AuthenticationUtils authenticationUtils;
 
   public UserProfileResponse createUserProfile(
       UserProfileCreationRequest request) {
 
-    if (userProfileRepository.existsByUserId(request.getUserId())) {
-      throw new AppException(ErrorCode.USER_ALREADY_EXISTS);
-    }
+    authenticationUtils.checkExistsUserid(request.getUserId());
 
     UserProfile userProfile = userProfileMapper.toUserProfile(request);
     userProfile.setCreatedAt(Instant.now());
@@ -53,6 +51,7 @@ public class UserProfileService
         );
   }
 
+  @PreAuthorize("hasRole('ADMIN')")
   public UserProfileResponse getUserProfileById(String id)
   {
     return userProfileRepository
@@ -86,6 +85,8 @@ public class UserProfileService
         );
 
     userProfileMapper.updateUserProfile(profile, request);
-    return userProfileMapper.toUserProfileResponse(userProfileRepository.save(profile));
+    return userProfileMapper.toUserProfileResponse(
+        userProfileRepository.save(profile)
+    );
   }
 }

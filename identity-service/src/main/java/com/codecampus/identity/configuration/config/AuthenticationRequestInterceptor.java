@@ -2,8 +2,11 @@ package com.codecampus.identity.configuration.config;
 
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.util.StringUtils;
+import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -14,14 +17,18 @@ public class AuthenticationRequestInterceptor
   @Override
   public void apply(RequestTemplate requestTemplate)
   {
-    ServletRequestAttributes servletRequestAttributes =
-        (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+    RequestAttributes attrs = RequestContextHolder.getRequestAttributes();
+    if (!(attrs instanceof ServletRequestAttributes)) {
+      // Không có HTTP request (ví dụ ApplicationRunner), bỏ qua
+      return;
+    }
 
-    var authHeader = servletRequestAttributes.getRequest().getHeader("Authorization");
+    HttpServletRequest request = ((ServletRequestAttributes) attrs).getRequest();
+    String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
     log.info("authHeader: {}", authHeader);
     if (StringUtils.hasText(authHeader)) {
-      requestTemplate.header("Authorization", authHeader);
+      requestTemplate.header(HttpHeaders.AUTHORIZATION, authHeader);
     }
   }
 }

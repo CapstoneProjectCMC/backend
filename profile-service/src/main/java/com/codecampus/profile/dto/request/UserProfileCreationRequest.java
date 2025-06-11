@@ -14,7 +14,7 @@ public class UserProfileCreationRequest
   String userId;
   String firstName;
   String lastName;
-  Instant dob;
+  String dob;
   String bio;
   boolean gender;
   String displayName;

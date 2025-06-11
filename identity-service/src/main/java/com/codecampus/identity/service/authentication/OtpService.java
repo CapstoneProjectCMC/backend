@@ -74,8 +74,11 @@ public class OtpService
 
   public void verifyOtp(OtpVerificationRequest request)
   {
-    OtpVerification otp = otpRepository.findByEmail(request.getEmail())
-        .orElseThrow(() -> new AppException(ErrorCode.OTP_NOT_FOUND));
+    OtpVerification otp = otpRepository
+        .findByEmail(request.getEmail())
+        .orElseThrow(
+            () -> new AppException(ErrorCode.EMAIL_NOT_FOUND)
+        );
 
     // Kiểm tra OTP
     if (!otp.getOtpCode().equals(request.getOtpCode())) {

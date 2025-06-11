@@ -26,6 +26,7 @@ public class UserProfileController
 {
   UserProfileService userProfileService;
 
+  @PreAuthorize("hasRole('ADMIN')")
   @GetMapping("/user/{profileId}")
   ApiResponse<UserProfileResponse> getUserProfileById(
       @PathVariable("profileId") String profileId) {
