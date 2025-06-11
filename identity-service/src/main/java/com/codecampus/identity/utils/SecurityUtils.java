@@ -38,4 +38,8 @@ public class SecurityUtils {
 
     return null;
   }
+
+  public static String getMyUserId() {
+    return SecurityContextHolder.getContext().getAuthentication().getName();
+  }
 }

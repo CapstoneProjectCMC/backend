@@ -8,6 +8,8 @@ import com.codecampus.profile.exception.AppException;
 import com.codecampus.profile.exception.ErrorCode;
 import com.codecampus.profile.mapper.UserProfileMapper;
 import com.codecampus.profile.repository.UserProfileRepository;
+import com.codecampus.profile.utils.SecurityUtils;
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AccessLevel;
@@ -30,38 +32,40 @@ public class UserProfileService
 
   public UserProfileResponse createUserProfile(
       UserProfileCreationRequest request) {
+
+    if (userProfileRepository.existsByUserId(request.getUserId())) {
+      throw new AppException(ErrorCode.USER_ALREADY_EXISTS);
+    }
+
     UserProfile userProfile = userProfileMapper.toUserProfile(request);
+    userProfile.setCreatedAt(Instant.now());
     userProfile = userProfileRepository.save(userProfile);
 
     return userProfileMapper.toUserProfileResponse(userProfile);
   }
 
   public UserProfileResponse getUserProfileByUserId(String userId) {
-    UserProfile userProfile = userProfileRepository
+    return userProfileRepository
         .findByUserId(userId)
+        .map(userProfileMapper::toUserProfileResponse)
         .orElseThrow(
             () -> new AppException(ErrorCode.USER_NOT_FOUND)
         );
-
-    return userProfileMapper.toUserProfileResponse(userProfile);
   }
 
   public UserProfileResponse getUserProfileById(String id)
   {
-    UserProfile userProfile = userProfileRepository
+    return userProfileRepository
         .findById(id)
+        .map(userProfileMapper::toUserProfileResponse)
         .orElseThrow(
             () -> new AppException(ErrorCode.USER_NOT_FOUND)
         );
-
-    return userProfileMapper.toUserProfileResponse(userProfile);
   }
 
   @PreAuthorize("hasRole('ADMIN')")
   public List<UserProfileResponse> getAllUserProfiles() {
-    var profiles = userProfileRepository.findAll();
-
-    return profiles
+    return userProfileRepository.findAll()
         .stream()
         .map(userProfileMapper::toUserProfileResponse)
         .toList();
@@ -69,26 +73,14 @@ public class UserProfileService
 
   public UserProfileResponse getMyUserProfile()
   {
-    var authentication = SecurityContextHolder.getContext().getAuthentication();
-    String userId = authentication.getName();
-
-    var profile = userProfileRepository
-        .findByUserId(userId)
-        .orElseThrow(
-            () -> new AppException(ErrorCode.USER_NOT_FOUND)
-        );
-
-    return userProfileMapper.toUserProfileResponse(profile);
+    return getUserProfileByUserId(SecurityUtils.getMyUserId());
   }
 
   public UserProfileResponse updateMyUserProfile(
       UserProfileUpdateRequest request) {
-    var authentication = SecurityContextHolder.getContext().getAuthentication();
-
-    String userId = authentication.getName();
 
     var profile = userProfileRepository
-        .findByUserId(userId)
+        .findByUserId(SecurityUtils.getMyUserId())
         .orElseThrow(
             () -> new AppException(ErrorCode.USER_NOT_FOUND)
         );

@@ -18,13 +18,13 @@ public class UserProfileResponse
   String firstName;
   String lastName;
   Instant dob;
-  Instant createdAt;
-  String avatarUrl;
-  String backgroundUrl;
   String bio;
   boolean gender;
   String displayName;
   int education;
   String[] links;
   String city;
+  String avatarUrl;
+  String backgroundUrl;
+  Instant createdAt;
 }

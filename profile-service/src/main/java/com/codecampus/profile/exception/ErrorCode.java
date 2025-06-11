@@ -39,7 +39,8 @@ public enum ErrorCode
 
 
   // 409 - Conflict
-
+  USER_ALREADY_EXISTS(40901, CONFLICT_STATUS, "User already exists",
+      CONFLICT),
 
       ;
 

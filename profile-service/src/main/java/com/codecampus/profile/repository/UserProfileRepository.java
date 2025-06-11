@@ -10,4 +10,6 @@ public interface UserProfileRepository
     extends Neo4jRepository<UserProfile, String>
 {
   Optional<UserProfile> findByUserId(String userId);
+
+  boolean existsByUserId(String userId);
 }

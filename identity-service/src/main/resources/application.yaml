@@ -2,13 +2,13 @@ server:
   port: 8080
   servlet:
     context-path: /identity
-  ssl:
-    enabled: true
-    key-alias: identity-https
-    key-store: classpath:ssl/identity.jks
-    key-store-type: JKS
-    key-store-password: dinhanst2832004
-    key-password: dinhanst2832004
+#  ssl:
+#    enabled: true
+#    key-alias: identity-https
+#    key-store: classpath:ssl/identity.jks
+#    key-store-type: JKS
+#    key-store-password: dinhanst2832004
+#    key-password: dinhanst2832004
 
 spring:
   application:
@@ -39,7 +39,8 @@ spring:
 
 app:
   services:
-    profile: https://localhost:8081/profile
+#    profile: https://localhost:8081/profile
+    profile: http://localhost:8081/profile
   otp:
     expiry-minutes: 5
   jwt:
