@@ -1,6 +1,6 @@
 package com.codecampus.identity.controller;
 
-import com.codecampus.identity.dto.api.ApiResponse;
+import com.codecampus.identity.dto.common.ApiResponse;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;

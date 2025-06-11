@@ -1,6 +1,6 @@
 package com.codecampus.identity.controller.authentication;
 
-import com.codecampus.identity.dto.api.ApiResponse;
+import com.codecampus.identity.dto.common.ApiResponse;
 import com.codecampus.identity.dto.request.authentication.PermissionRequest;
 import com.codecampus.identity.dto.response.authentication.PermissionResponse;
 import com.codecampus.identity.service.account.PermissionService;

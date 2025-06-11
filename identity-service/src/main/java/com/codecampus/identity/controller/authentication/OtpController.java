@@ -1,6 +1,6 @@
 package com.codecampus.identity.controller.authentication;
 
-import com.codecampus.identity.dto.api.ApiResponse;
+import com.codecampus.identity.dto.common.ApiResponse;
 import com.codecampus.identity.dto.request.authentication.OtpVerificationRequest;
 import com.codecampus.identity.dto.request.authentication.UserCreationRequest;
 import com.codecampus.identity.dto.response.authentication.OtpResponse;

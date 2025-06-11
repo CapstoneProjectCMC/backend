@@ -1,7 +1,7 @@
 package com.codecampus.identity.repository.httpclient.profile;
 
 import com.codecampus.identity.configuration.config.AuthenticationRequestInterceptor;
-import com.codecampus.identity.dto.api.ApiResponse;
+import com.codecampus.identity.dto.common.ApiResponse;
 import com.codecampus.identity.dto.request.profile.UserProfileCreationRequest;
 import com.codecampus.identity.dto.response.profile.UserProfileResponse;
 import org.springframework.cloud.openfeign.FeignClient;

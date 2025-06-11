@@ -1,5 +1,6 @@
 package com.codecampus.profile.service;
 
+import com.codecampus.profile.dto.common.PageResponse;
 import com.codecampus.profile.dto.request.UserProfileCreationRequest;
 import com.codecampus.profile.dto.request.UserProfileUpdateRequest;
 import com.codecampus.profile.dto.response.UserProfileResponse;
@@ -11,11 +12,12 @@ import com.codecampus.profile.repository.UserProfileRepository;
 import com.codecampus.profile.utils.AuthenticationUtils;
 import com.codecampus.profile.utils.SecurityUtils;
 import java.time.Instant;
-import java.util.List;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
@@ -63,11 +65,22 @@ public class UserProfileService
   }
 
   @PreAuthorize("hasRole('ADMIN')")
-  public List<UserProfileResponse> getAllUserProfiles() {
-    return userProfileRepository.findAll()
+  public PageResponse<UserProfileResponse> getAllUserProfiles(int page, int size) {
+    Pageable pageable = PageRequest.of(page - 1, size);
+    var pageData = userProfileRepository.findAll(pageable);
+    var userProfileList = pageData
+        .getContent()
         .stream()
         .map(userProfileMapper::toUserProfileResponse)
         .toList();
+
+    return PageResponse.<UserProfileResponse>builder()
+        .currentPage(page)
+        .pageSize(pageData.getSize())
+        .totalPages(pageData.getTotalPages())
+        .totalElements(pageData.getTotalElements())
+        .data(userProfileList)
+        .build();
   }
 
   public UserProfileResponse getMyUserProfile()

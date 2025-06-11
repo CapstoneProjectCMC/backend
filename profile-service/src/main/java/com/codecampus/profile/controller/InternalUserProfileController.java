@@ -1,6 +1,6 @@
 package com.codecampus.profile.controller;
 
-import com.codecampus.profile.dto.api.ApiResponse;
+import com.codecampus.profile.dto.common.ApiResponse;
 import com.codecampus.profile.dto.request.UserProfileCreationRequest;
 import com.codecampus.profile.dto.response.UserProfileResponse;
 import com.codecampus.profile.service.UserProfileService;

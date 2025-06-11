@@ -2,6 +2,7 @@ package com.codecampus.identity.service.account;
 
 import static com.codecampus.identity.constant.authentication.AuthenticationConstant.USER_ROLE;
 
+import com.codecampus.identity.dto.common.PageResponse;
 import com.codecampus.identity.dto.request.authentication.PasswordCreationRequest;
 import com.codecampus.identity.dto.request.authentication.UserCreationRequest;
 import com.codecampus.identity.dto.request.authentication.UserUpdateRequest;
@@ -26,6 +27,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -140,11 +144,23 @@ public class UserService
   }
 
   @PreAuthorize("hasRole('ADMIN')")
-  public List<UserResponse> getUsers() {
-    return userRepository.findAll()
+  public PageResponse<UserResponse> getUsers(int page, int size)
+  {
+    Pageable pageable = PageRequest.of(page - 1, size);
+    var pageData = userRepository.findAll(pageable);
+    var userList = pageData
+        .getContent()
         .stream()
         .map(userMapper::toUserResponse)
         .toList();
+
+    return PageResponse.<UserResponse>builder()
+        .currentPage(page)
+        .pageSize(pageData.getSize())
+        .totalPages(pageData.getTotalPages())
+        .totalElements(pageData.getTotalElements())
+        .data(userList)
+        .build();
   }
 
   public UserResponse getUser(String id) {

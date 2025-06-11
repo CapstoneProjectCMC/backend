@@ -14,7 +14,6 @@ public class UserProfileUpdateRequest
   String firstName;
   String lastName;
   String dob;
-  Instant createdAt;
   String bio;
   boolean gender;
   String displayName;

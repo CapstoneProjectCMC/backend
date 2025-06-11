@@ -1,18 +1,19 @@
 package com.codecampus.identity.controller.authentication;
 
-import com.codecampus.identity.dto.api.ApiResponse;
+import com.codecampus.identity.dto.common.ApiResponse;
+import com.codecampus.identity.dto.common.PageResponse;
 import com.codecampus.identity.dto.request.authentication.PasswordCreationRequest;
 import com.codecampus.identity.dto.request.authentication.UserCreationRequest;
 import com.codecampus.identity.dto.request.authentication.UserUpdateRequest;
 import com.codecampus.identity.dto.response.authentication.UserResponse;
 import com.codecampus.identity.service.account.UserService;
 import jakarta.validation.Valid;
-import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -52,9 +54,11 @@ public class UserController
 
   @PreAuthorize("hasRole('ADMIN')")
   @GetMapping("/users")
-  ApiResponse<List<UserResponse>> getUsers() {
-    return ApiResponse.<List<UserResponse>>builder()
-        .result(userService.getUsers())
+  ApiResponse<PageResponse<UserResponse>> getUsers(
+      @RequestParam(value = "page", defaultValue = "1") int page,
+      @RequestParam(value = "size", defaultValue = "10") int size) {
+    return ApiResponse.<PageResponse<UserResponse>>builder()
+        .result(userService.getUsers(page, size))
         .message("Get Users successful")
         .build();
   }
