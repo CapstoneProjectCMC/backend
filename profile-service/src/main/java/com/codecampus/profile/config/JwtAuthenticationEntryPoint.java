@@ -1,6 +1,6 @@
 package com.codecampus.profile.config;
 
-import com.codecampus.profile.dto.api.ApiResponse;
+import com.codecampus.profile.dto.common.ApiResponse;
 import com.codecampus.profile.exception.ErrorCode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;

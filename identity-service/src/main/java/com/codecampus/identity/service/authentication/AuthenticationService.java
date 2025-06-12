@@ -16,11 +16,14 @@ import com.codecampus.identity.entity.account.User;
 import com.codecampus.identity.exception.AppException;
 import com.codecampus.identity.exception.ErrorCode;
 import com.codecampus.identity.mapper.authentication.UserMapper;
+import com.codecampus.identity.mapper.mapper.UserProfileMapper;
 import com.codecampus.identity.repository.account.InvalidatedTokenRepository;
 import com.codecampus.identity.repository.account.RoleRepository;
 import com.codecampus.identity.repository.account.UserRepository;
-import com.codecampus.identity.repository.httpclient.OutboundGoogleIdentityClient;
-import com.codecampus.identity.repository.httpclient.OutboundGoogleUserClient;
+import com.codecampus.identity.repository.httpclient.google.OutboundGoogleIdentityClient;
+import com.codecampus.identity.repository.httpclient.google.OutboundGoogleUserClient;
+import com.codecampus.identity.repository.httpclient.profile.ProfileClient;
+import com.codecampus.identity.utils.AuthenticationUtils;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
@@ -50,6 +53,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 @Service
@@ -62,11 +66,16 @@ public class AuthenticationService
   RoleRepository roleRepository;
   InvalidatedTokenRepository invalidatedTokenRepository;
   OtpService otpService;
+
+  UserProfileMapper userProfileMapper;
   UserMapper userMapper;
+
   PasswordEncoder passwordEncoder;
 
   OutboundGoogleIdentityClient outboundGoogleIdentityClient;
   OutboundGoogleUserClient outboundGoogleUserClient;
+  ProfileClient profileClient;
+  AuthenticationUtils authenticationUtils;
 
   @NonFinal
   @Value("${app.jwt.signerKey}")
@@ -255,15 +264,12 @@ public class AuthenticationService
     }
   }
 
+  @Transactional
   public void register(UserCreationRequest request) {
-    // Kiểm tra username và email đã tồn tại
-    if (userRepository.existsByUsername(request.getUsername())) {
-      throw new AppException(ErrorCode.USER_ALREADY_EXISTS);
-    }
-
-    if (userRepository.existsByEmail(request.getEmail())) {
-      throw new AppException(ErrorCode.EMAIL_ALREADY_EXISTS);
-    }
+    authenticationUtils.checkExistsUsernameEmail(
+        request.getUsername(),
+        request.getEmail()
+    );
 
     // Tạo user nhưng chưa kích hoạt
     User user = userMapper.toUser(request);
@@ -284,6 +290,12 @@ public class AuthenticationService
     } catch (DataIntegrityViolationException e) {
       throw new AppException(ErrorCode.USER_ALREADY_EXISTS);
     }
+
+    var userProfileRequest =
+        userProfileMapper.toUserProfileCreationRequest(request);
+    userProfileRequest.setUserId(user.getId());
+
+    profileClient.createUserProfile(userProfileRequest);
   }
 
   public AuthenticationResponse refreshToken(RefreshRequest request)
@@ -321,7 +333,7 @@ public class AuthenticationService
         .plus(VALID_DURATION, ChronoUnit.SECONDS);
 
     JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
-        .subject(user.getUsername())
+        .subject(user.getId())
         .issuer("Code Campus")
         .issueTime(new Date())
         .expirationTime(Date.from(expiryInstant))

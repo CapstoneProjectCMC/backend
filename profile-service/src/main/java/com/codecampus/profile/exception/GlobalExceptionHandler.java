@@ -1,6 +1,6 @@
 package com.codecampus.profile.exception;
 
-import com.codecampus.profile.dto.api.ApiResponse;
+import com.codecampus.profile.dto.common.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;

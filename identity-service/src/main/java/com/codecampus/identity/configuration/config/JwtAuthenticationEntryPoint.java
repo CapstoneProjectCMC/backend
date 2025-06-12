@@ -1,6 +1,6 @@
 package com.codecampus.identity.configuration.config;
 
-import com.codecampus.identity.dto.api.ApiResponse;
+import com.codecampus.identity.dto.common.ApiResponse;
 import com.codecampus.identity.exception.ErrorCode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;

@@ -19,7 +19,9 @@ public class SecurityConfigConstant
       "/hello",
       "/auth/**",
       "/health",
-      "/actuator/**"
+      "/actuator/**",
+      "/internal/user",
+      "/internal/user/**",
   };
 
   // FRONTEND ENDPOINT
