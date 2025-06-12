@@ -16,6 +16,8 @@ namespace FileService.Api
 
             var app = builder.Build();
 
+            app.UsePathBase("/file");
+
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {

@@ -41,6 +41,16 @@ spring:
             - name: RateLimiter
               args:
                 routeId: profile_service
+        - id: file_service
+          # uri: https://localhost:80820
+          uri: http://localhost:8082
+          predicates:
+            - Path=${app.api-prefix}/file/**
+          filters:
+            - StripPrefix=2
+            - name: RateLimiter
+              args:
+                routeId: file_service
 # Cấu hình rate limiter
 rate-limiter:
   default:
