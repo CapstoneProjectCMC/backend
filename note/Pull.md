@@ -1,6 +1,14 @@
 # khởi tạo & chạy nền
 docker compose up -d
 
+# Kết thúc chạy 
+docker compose down
+
+# Chạy + build lại
+docker compose up -d --build
+
+
+
 # xem log từng dịch vụ
 docker compose logs -f postgresql
 docker compose logs -f neo4j
