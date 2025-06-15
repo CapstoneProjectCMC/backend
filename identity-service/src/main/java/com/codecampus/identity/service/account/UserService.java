@@ -37,6 +37,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+/**
+ * Dịch vụ quản lý người dùng (User) trong hệ thống.
+ *
+ * <p>Cung cấp các chức năng:
+ * <ul>
+ *   <li>Tạo mới người dùng và cấu hình mật khẩu.</li>
+ *   <li>Cập nhật thông tin người dùng hoặc mật khẩu.</li>
+ *   <li>Xóa người dùng theo ID.</li>
+ *   <li>Lấy danh sách người dùng có phân trang.</li>
+ *   <li>Lấy thông tin chi tiết của người dùng.</li>
+ * </ul>
+ * Chú ý một số phương thức chỉ dành cho ADMIN hoặc cho phép người dùng tự thao tác.</p>
+ */
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -55,6 +68,20 @@ public class UserService
   ProfileClient profileClient;
   AuthenticationUtils authenticationUtils;
 
+  /**
+   * Tạo mới người dùng, gán vai trò USER và khởi tạo profile.
+   *
+   * <p>Chỉ ADMIN được phép gọi.
+   * - Kiểm tra tồn tại username và email.
+   * - Mã hóa mật khẩu.
+   * - Gán vai trò mặc định.
+   * - Lưu User và tạo profile qua ProfileClient.
+   * </p>
+   *
+   * @param request thông tin tạo người dùng mới
+   * @return thông tin người dùng vừa tạo (UserResponse)
+   * @throws AppException nếu user đã tồn tại
+   */
   @PreAuthorize("hasRole('ADMIN')")
   @Transactional
   public UserResponse createUser(UserCreationRequest request)
@@ -93,6 +120,14 @@ public class UserService
     return userCreationResponse;
   }
 
+  /**
+   * Tạo hoặc cập nhật mật khẩu cho người dùng hiện tại.
+   *
+   * - Ném lỗi nếu đã tồn tại mật khẩu.
+   *
+   * @param request chứa mật khẩu mới
+   * @throws AppException nếu mật khẩu đã tồn tại
+   */
   public void createPassword(PasswordCreationRequest request) {
     User user = findUser(SecurityUtils.getMyUserId());
 
@@ -104,10 +139,26 @@ public class UserService
     userRepository.save(user);
   }
 
+  /**
+   * Lấy thông tin của chính người dùng đang đăng nhập.
+   *
+   * @return UserResponse chứa thông tin người dùng
+   */
   public UserResponse getMyInfo(){
     return getUser(SecurityUtils.getMyUserId());
   }
 
+  /**
+   * Cập nhật thông tin người dùng theo ID.
+   *
+   * <p>Chỉ ADMIN được phép gọi.
+   * Mã hóa lại mật khẩu và cập nhật vai trò.
+   * </p>
+   *
+   * @param userId  ID người dùng cần cập nhật
+   * @param request thông tin cập nhật
+   * @return UserResponse chứa thông tin sau khi cập nhật
+   */
   @PreAuthorize("hasRole('ADMIN')")
   public UserResponse updateUser(
       String userId,
@@ -123,7 +174,14 @@ public class UserService
     return userMapper.toUserResponse(userRepository.save(user));
   }
 
-   @PostAuthorize("returnObject.username == authentication.name")
+  /**
+   * Cập nhật thông tin của chính người dùng đang đăng nhập.
+   *
+   * <p>Chỉ cho phép khi username trả về khớp tên trong authentication.</p>
+   *
+   * @param request thông tin cập nhật
+   * @return UserResponse sau khi cập nhật
+   */
   public UserResponse updateMyInfo(
       UserUpdateRequest request)
   {
@@ -138,11 +196,27 @@ public class UserService
     return userMapper.toUserResponse(userRepository.save(user));
   }
 
+  /**
+   * Xóa người dùng theo ID.
+   *
+   * <p>Chỉ ADMIN được phép gọi.</p>
+   *
+   * @param userId ID người dùng cần xóa
+   */
   @PreAuthorize("hasRole('ADMIN')")
   public void deleteUser(String userId) {
     userRepository.deleteById(userId);
   }
 
+  /**
+   * Lấy danh sách người dùng với phân trang.
+   *
+   * <p>Chỉ ADMIN được phép gọi.</p>
+   *
+   * @param page số trang (bắt đầu từ 1)
+   * @param size kích thước trang
+   * @return PageResponse chứa danh sách UserResponse và thông tin phân trang
+   */
   @PreAuthorize("hasRole('ADMIN')")
   public PageResponse<UserResponse> getUsers(int page, int size)
   {
@@ -163,6 +237,14 @@ public class UserService
         .build();
   }
 
+
+  /**
+   * Lấy thông tin người dùng theo ID.
+   *
+   * @param id ID người dùng
+   * @return UserResponse chứa thông tin người dùng
+   * @throws AppException nếu không tìm thấy
+   */
   public UserResponse getUser(String id) {
     return userMapper.toUserResponse(
         userRepository.findById(id)
@@ -170,6 +252,13 @@ public class UserService
     );
   }
 
+  /**
+   * Tìm entity User theo ID.
+   *
+   * @param id ID người dùng
+   * @return User entity
+   * @throws AppException nếu không tìm thấy
+   */
   public User findUser(String id) {
     return userRepository.findById(id)
             .orElseThrow(

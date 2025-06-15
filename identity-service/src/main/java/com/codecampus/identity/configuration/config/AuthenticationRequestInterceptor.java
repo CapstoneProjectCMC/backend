@@ -10,10 +10,20 @@ import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+/**
+ * RequestInterceptor dùng để truyền header Authorization từ HTTP request gốc
+ * vào trong các request được tạo bởi Feign client.
+ * Trường hợp không có HTTP request hiện tại (ví dụ chạy trong ApplicationRunner), interceptor sẽ bỏ qua.
+ */
 @Slf4j
 public class AuthenticationRequestInterceptor
     implements RequestInterceptor
 {
+  /**
+   * Gắn header Authorization vào RequestTemplate nếu có trong HttpServletRequest.
+   *
+   * @param requestTemplate đối tượng RequestTemplate chuẩn bị gửi qua Feign
+   */
   @Override
   public void apply(RequestTemplate requestTemplate)
   {

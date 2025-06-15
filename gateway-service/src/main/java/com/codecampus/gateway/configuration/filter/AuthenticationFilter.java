@@ -28,6 +28,10 @@
  import org.springframework.web.server.ServerWebExchange;
  import reactor.core.publisher.Mono;
 
+ /**
+  * Lọc toàn cục để xác thực JWT token cho các request đi qua Gateway.
+  * Bỏ qua các đường dẫn công khai (public).
+  */
  @Component
  @Slf4j
  @RequiredArgsConstructor
@@ -42,6 +46,18 @@
    @NonFinal
    private String apiPrefix;
 
+   /**
+    * Thực hiện lọc cho mỗi request:
+    * <ul>
+    *   <li>Cho phép request đến các public endpoints mà không cần xác thực.</li>
+    *   <li>Lấy header Authorization, kiểm tra token hợp lệ qua IdentityService.</li>
+    *   <li>Chuyển tiếp hoặc trả về 401 nếu không xác thực được.</li>
+    * </ul>
+    *
+    * @param exchange chứa thông tin request và response
+    * @param chain chuỗi filter tiếp theo
+    * @return Mono hoàn thành khi xử lý xong
+    */
    @Override
    public Mono<Void> filter(
        ServerWebExchange exchange,
@@ -74,12 +90,23 @@
          .onErrorResume(throwable -> unauthenticated(exchange.getResponse()));
    }
 
-   // Chạy trước toàn bộ
+   /**
+    * Thiết lập thứ tự chạy của filter.
+    * Giá trị negative để chạy trước các filter khác.
+    *
+    * @return thứ tự ưu tiên
+    */
    @Override
    public int getOrder() {
      return -1;
    }
 
+   /**
+    * Kiểm tra xem request có phải endpoint công khai không.
+    *
+    * @param request đối tượng ServerHttpRequest
+    * @return true nếu endpoint nằm trong danh sách PUBLIC_ENDPOINTS
+    */
    private boolean isPublicEndpoint(
        ServerHttpRequest request)
    {
@@ -90,6 +117,12 @@
          );
    }
 
+   /**
+    * Xử lý trường hợp không xác thực thành công, trả về 401 với nội dung JSON.
+    *
+    * @param response đối tượng ServerHttpResponse
+    * @return Mono hoàn thành khi ghi response
+    */
    Mono<Void> unauthenticated(
        ServerHttpResponse response)
    {

@@ -13,8 +13,21 @@ import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
+/**
+ * Dịch vụ quản lý vai trò (Role) trong hệ thống.
+ *
+ * <p>Cung cấp các phương thức để:
+ * <ul>
+ *   <li>Tạo vai trò mới với danh sách quyền liên quan.</li>
+ *   <li>Lấy danh sách tất cả vai trò.</li>
+ *   <li>Xóa vai trò dựa trên mã vai trò.</li>
+ * </ul>
+ * Tất cả các phương thức chỉ cho phép thực thi khi người dùng có vai trò ADMIN.
+ * </p>
+ */
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -26,6 +39,13 @@ public class RoleService
   PermissionRepository permissionRepository;
   RoleMapper roleMapper;
 
+  /**
+   * Tạo mới một vai trò trong hệ thống, đồng thời gán các quyền tương ứng.
+   *
+   * @param roleRequest đối tượng RoleRequest chứa tên vai trò và danh sách quyền
+   * @return RoleResponse chứa thông tin vai trò vừa được lưu
+   */
+  @PreAuthorize("hasRole('ADMIN')")
   public RoleResponse createRole(RoleRequest roleRequest) {
     var role = roleMapper.toRole(roleRequest);
 
@@ -37,6 +57,12 @@ public class RoleService
     return roleMapper.toRoleResponse(role);
   }
 
+  /**
+   * Lấy danh sách tất cả các vai trò hiện có trong hệ thống.
+   *
+   * @return danh sách RoleResponse tương ứng với mỗi vai trò
+   */
+  @PreAuthorize("hasRole('ADMIN')")
   public List<RoleResponse> getAllRoles()
   {
     return roleRepository.findAll()
@@ -45,7 +71,13 @@ public class RoleService
         .toList();
   }
 
-  public void delete(String role) {
-    roleRepository.deleteById(role);
+  /**
+   * Xóa một vai trò dựa trên tên vai trò.
+   *
+   * @param roleName tên vai trò cần xóa
+   */
+  @PreAuthorize("hasRole('ADMIN')")
+  public void delete(String roleName) {
+    roleRepository.deleteById(roleName);
   }
 }

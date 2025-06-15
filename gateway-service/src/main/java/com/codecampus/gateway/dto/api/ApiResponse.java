@@ -24,7 +24,7 @@ public class ApiResponse<T> {
 
     // Trạng thái phản hồi mặc định (mã 20000) cho các phản hồi thành công
     @Builder.Default
-    String status = "OK";
+    String status = "Thành công!";
 
     private T result;
 }

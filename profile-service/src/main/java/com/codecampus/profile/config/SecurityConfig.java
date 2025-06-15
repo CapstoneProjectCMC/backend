@@ -31,6 +31,19 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+/**
+ * Cấu hình bảo mật cho Profile Service sử dụng Spring Security.
+ *
+ * <p>Bao gồm:
+ * <ul>
+ *   <li>Định nghĩa các endpoint công khai (không yêu cầu xác thực).</li>
+ *   <li>Cấu hình OAuth2 Resource Server sử dụng JWT với bộ giải mã tùy chỉnh và entry point xử lý lỗi.</li>
+ *   <li>Tắt CSRF để phù hợp với API REST.</li>
+ *   <li>Thiết lập CORS cho các origin, method và header được phép.</li>
+ *   <li>Cấu hình converter để chuyển đổi JWT claims thành GrantedAuthority.</li>
+ * </ul>
+ * </p>
+ */
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -40,6 +53,23 @@ public class SecurityConfig
   @Autowired
   private CustomJwtDecoder customJwtDecoder;
 
+  /**
+   * Cấu hình SecurityFilterChain cho HTTP security.
+   *
+   * <p>Thiết lập:
+   * <ul>
+   *   <li>Cho phép truy cập PUBLIC_ENDPOINTS không cần xác thực.</li>
+   *   <li>Các request khác phải xác thực JWT.</li>
+   *   <li>Sử dụng customJwtDecoder và jwtAuthenticationConverter để xử lý JWT.</li>
+   *   <li>Sử dụng JwtAuthenticationEntryPoint để trả về 401 khi xác thực thất bại.</li>
+   *   <li>Tắt CSRF.</li>
+   * </ul>
+   * </p>
+   *
+   * @param httpSecurity đối tượng HttpSecurity để cấu hình
+   * @return SecurityFilterChain đã cấu hình
+   * @throws Exception nếu cấu hình gặp lỗi
+   */
   @Bean
   public SecurityFilterChain securityFilterChain(
       HttpSecurity httpSecurity) throws Exception
@@ -113,6 +143,12 @@ public class SecurityConfig
     return source;
   }
 
+  /**
+   * Tạo {@link JwtAuthenticationConverter} để chuyển đổi JWT claims thành GrantedAuthority.
+   * Loại bỏ prefix mặc định (ví dụ "SCOPE_").
+   *
+   * @return JwtAuthenticationConverter đã cấu hình
+   */
   @Bean
   JwtAuthenticationConverter jwtAuthenticationConverter() {
     JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();

@@ -15,6 +15,12 @@ import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.stereotype.Component;
 
+/**
+ * JwtDecoder tùy chỉnh để xác thực token JWT thông qua API introspect
+ * trước khi giải mã token nội bộ bằng NimbusJwtDecoder.
+ * 1. Gửi yêu cầu introspect đến AuthenticationService để kiểm tra tính hợp lệ của token.
+ * 2. Nếu token hợp lệ, khởi tạo NimbusJwtDecoder với signerKey cấu hình và giải mã token.
+ */
 @Component
 public class CustomJwtDecoder implements JwtDecoder
 {
@@ -27,6 +33,19 @@ public class CustomJwtDecoder implements JwtDecoder
   private NimbusJwtDecoder nimbusJwtDecoder = null;
 
 
+  /**
+   * Giải mã token JWT.
+   * <ol>
+   *   <li>Gọi AuthenticationService.introspect để kiểm tra token hợp lệ.</li>
+   *   <li>Nếu introspect trả về không hợp lệ hoặc có lỗi, ném JwtException.</li>
+   *   <li>Nếu lần đầu giải mã, khởi tạo NimbusJwtDecoder với algorithm HS512.</li>
+   *   <li>Sử dụng NimbusJwtDecoder để decode token và trả về đối tượng Jwt.</li>
+   * </ol>
+   *
+   * @param token chuỗi JWT cần giải mã và xác thực
+   * @return đối tượng Jwt chứa thông tin đã giải mã của token
+   * @throws JwtException nếu token không hợp lệ hoặc quá trình decode gặp lỗi
+   */
   @Override
   public Jwt decode(String token) throws JwtException
   {

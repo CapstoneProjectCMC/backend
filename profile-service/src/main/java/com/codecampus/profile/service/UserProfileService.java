@@ -21,6 +21,20 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
+/**
+ * Dịch vụ quản lý hồ sơ người dùng (UserProfile) trong hệ thống.
+ *
+ * <p>Cung cấp các chức năng:
+ * <ul>
+ *   <li>createUserProfile: Tạo hồ sơ mới cho người dùng.</li>
+ *   <li>getUserProfileByUserId: Lấy hồ sơ theo userId.</li>
+ *   <li>getUserProfileById: Lấy hồ sơ theo id hồ sơ (chỉ ADMIN).</li>
+ *   <li>getAllUserProfiles: Lấy danh sách hồ sơ với phân trang (chỉ ADMIN).</li>
+ *   <li>getMyUserProfile: Lấy hồ sơ của người dùng đang đăng nhập.</li>
+ *   <li>updateMyUserProfile: Cập nhật hồ sơ của người dùng đang đăng nhập.</li>
+ * </ul>
+ * </p>
+ */
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -32,6 +46,21 @@ public class UserProfileService
   UserProfileMapper userProfileMapper;
   AuthenticationUtils authenticationUtils;
 
+  /**
+   * Tạo hồ sơ người dùng mới.
+   *
+   * <p>Quy trình:
+   * <ol>
+   *   <li>Kiểm tra xem userId đã có hồ sơ chưa, nếu có ném AppException USER_ALREADY_EXISTS.</li>
+   *   <li>Chuyển đổi DTO sang entity, gán thời điểm tạo.</li>
+   *   <li>Lưu entity và trả về DTO kết quả.</li>
+   * </ol>
+   * </p>
+   *
+   * @param request thông tin tạo hồ sơ người dùng
+   * @return đối tượng UserProfileResponse chứa dữ liệu hồ sơ vừa tạo
+   * @throws AppException nếu user đã tồn tại hồ sơ
+   */
   public UserProfileResponse createUserProfile(
       UserProfileCreationRequest request) {
 
@@ -44,6 +73,13 @@ public class UserProfileService
     return userProfileMapper.toUserProfileResponse(userProfile);
   }
 
+  /**
+   * Lấy hồ sơ người dùng theo userId.
+   *
+   * @param userId ID của người dùng
+   * @return UserProfileResponse nếu tìm thấy hồ sơ
+   * @throws AppException nếu không tìm thấy hồ sơ
+   */
   public UserProfileResponse getUserProfileByUserId(String userId) {
     return userProfileRepository
         .findByUserId(userId)
@@ -53,6 +89,13 @@ public class UserProfileService
         );
   }
 
+  /**
+   * Lấy hồ sơ theo id hồ sơ (chỉ ADMIN được phép).
+   *
+   * @param id ID của hồ sơ
+   * @return UserProfileResponse
+   * @throws AppException nếu không tìm thấy
+   */
   @PreAuthorize("hasRole('ADMIN')")
   public UserProfileResponse getUserProfileById(String id)
   {
@@ -64,6 +107,13 @@ public class UserProfileService
         );
   }
 
+  /**
+   * Lấy danh sách tất cả hồ sơ với phân trang (chỉ ADMIN được phép).
+   *
+   * @param page số trang (bắt đầu từ 1)
+   * @param size số phần tử mỗi trang
+   * @return PageResponse chứa danh sách UserProfileResponse và thông tin phân trang
+   */
   @PreAuthorize("hasRole('ADMIN')")
   public PageResponse<UserProfileResponse> getAllUserProfiles(int page, int size) {
     Pageable pageable = PageRequest.of(page - 1, size);
@@ -83,11 +133,31 @@ public class UserProfileService
         .build();
   }
 
+  /**
+   * Lấy hồ sơ của người dùng đang đăng nhập.
+   *
+   * @return UserProfileResponse của người dùng hiện tại
+   */
   public UserProfileResponse getMyUserProfile()
   {
     return getUserProfileByUserId(SecurityUtils.getMyUserId());
   }
 
+  /**
+   * Cập nhật hồ sơ của người dùng đang đăng nhập.
+   *
+   * <p>Quy trình:
+   * <ol>
+   *   <li>Lấy entity UserProfile theo userId, nếu không tìm thấy ném AppException USER_NOT_FOUND.</li>
+   *   <li>Cập nhật thông tin theo request.</li>
+   *   <li>Lưu lại và trả về DTO kết quả.</li>
+   * </ol>
+   * </p>
+   *
+   * @param request thông tin cập nhật hồ sơ
+   * @return UserProfileResponse sau khi cập nhật
+   * @throws AppException nếu không tìm thấy hồ sơ
+   */
   public UserProfileResponse updateMyUserProfile(
       UserProfileUpdateRequest request) {
 

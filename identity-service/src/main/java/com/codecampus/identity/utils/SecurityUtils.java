@@ -8,6 +8,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
+/**
+ * Tiện ích hỗ trợ lấy thông tin người dùng hiện đang đăng nhập
+ * từ ngữ cảnh bảo mật của Spring Security.
+ */
 public class SecurityUtils {
   /**
    * Trả về đối tượng người dùng hiện đang được xác thực từ cơ sở dữ liệu hoặc null nếu không tìm thấy
@@ -39,6 +43,11 @@ public class SecurityUtils {
     return null;
   }
 
+  /**
+   * Lấy ID của người dùng đã đăng nhập.
+   *
+   * @return chuỗi tên đăng nhập hoặc null nếu chưa xác thực
+   */
   public static String getMyUserId() {
     return SecurityContextHolder.getContext().getAuthentication().getName();
   }

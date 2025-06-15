@@ -56,6 +56,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+/**
+ * Dịch vụ xác thực và quản lý phiên làm việc (authentication) cho người dùng.
+ *
+ * <p>Cung cấp các phương thức:
+ * <ul>
+ *   <li>Introspect: Kiểm tra tính hợp lệ của token.</li>
+ *   <li>login: Xác thực username/password và sinh token.</li>
+ *   <li>logout: Thu hồi token bằng cách lưu vào blacklist.</li>
+ *   <li>refreshToken: Tạo token mới dựa trên token cũ.</li>
+ *   <li>outboundGoogleLogin: Đăng nhập qua Google OAuth2.</li>
+ *   <li>register: Đăng ký người dùng mới và gửi OTP.</li>
+ * </ul>
+ * Đồng thời xử lý việc sinh và xác thực JWT qua HMAC-SHA512.</p>
+ */
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -104,6 +118,14 @@ public class AuthenticationService
   @NonFinal
   protected String GRANT_TYPE = "authorization_code";
 
+  /**
+   * Kiểm tra tính hợp lệ của token mà không ném exception.
+   *
+   * @param request đối tượng chứa token cần kiểm tra
+   * @return IntrospectResponse với flag valid
+   * @throws JOSEException khi lỗi ký JWT
+   * @throws ParseException khi lỗi parse JWT
+   */
   public IntrospectResponse introspect(
       IntrospectRequest request)
       throws JOSEException, ParseException
@@ -124,6 +146,13 @@ public class AuthenticationService
         .build();
   }
 
+  /**
+   * Đăng nhập qua Google OAuth2, trao đổi code lấy access token và user info.
+   *
+   * @param code authorization code từ Google
+   * @return AuthenticationResponse chứa accessToken, thông tin user
+   * @throws ParseException khi lỗi parse JWT
+   */
   public AuthenticationResponse outboundGoogleLogin(
       String code) throws ParseException
   {
@@ -187,6 +216,13 @@ public class AuthenticationService
         .build();
   }
 
+  /**
+   * Đăng nhập bằng username hoặc email, kiểm tra mật khẩu và sinh JWT.
+   *
+   * @param request thông tin đăng nhập
+   * @return AuthenticationResponse chứa accessToken và thông tin user
+   * @throws ParseException khi lỗi parse JWT
+   */
   public AuthenticationResponse login(
       AuthenticationRequest request) throws ParseException
   {
@@ -242,6 +278,13 @@ public class AuthenticationService
         .build();
   }
 
+  /**
+   * Đăng xuất, invalid token bằng cách lưu vào repository.
+   *
+   * @param request chứa token cần logout
+   * @throws ParseException khi lỗi parse JWT
+   * @throws JOSEException khi lỗi verify JWT
+   */
   public void logout(LogoutRequest request)
       throws ParseException, JOSEException
   {
@@ -264,6 +307,11 @@ public class AuthenticationService
     }
   }
 
+  /**
+   * Đăng ký người dùng mới chưa kích hoạt và gửi mã OTP.
+   *
+   * @param request thông tin user để đăng ký
+   */
   @Transactional
   public void register(UserCreationRequest request) {
     authenticationUtils.checkExistsUsernameEmail(
@@ -298,6 +346,14 @@ public class AuthenticationService
     profileClient.createUserProfile(userProfileRequest);
   }
 
+  /**
+   * Làm mới access token từ refresh token.
+   *
+   * @param request chứa token cũ
+   * @return AuthenticationResponse chứa token mới và expiryTime
+   * @throws ParseException khi lỗi parse JWT
+   * @throws JOSEException khi lỗi verify JWT
+   */
   public AuthenticationResponse refreshToken(RefreshRequest request)
       throws ParseException, JOSEException
   {
@@ -325,6 +381,12 @@ public class AuthenticationService
         .build();
   }
 
+  /**
+   * Sinh JWT mới cho user dựa trên HMAC-SHA512.
+   *
+   * @param user đối tượng User cần sinh token
+   * @return chuỗi JWT
+   */
   private String generateToken(User user)
   {
     JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
@@ -357,6 +419,15 @@ public class AuthenticationService
     }
   }
 
+  /**
+   * Xác thực và verify JWT.
+   *
+   * @param token     chuỗi JWT cần verify
+   * @param isRefresh nếu true, xét thời gian refresh duration thay vì expiration
+   * @return SignedJWT đã verify
+   * @throws JOSEException khi verify HMAC thất bại
+   * @throws ParseException khi parse JWT thất bại
+   */
   private SignedJWT verifyToken(
       String token,
       boolean isRefresh) throws JOSEException, ParseException
@@ -390,6 +461,12 @@ public class AuthenticationService
     return signedJWT;
   }
 
+  /**
+   * Xây dựng scope (roles và permissions) cho JWT.
+   *
+   * @param user đối tượng User
+   * @return chuỗi scope phân tách bởi dấu cách
+   */
   private String buildScope(User user)
   {
     StringJoiner stringJoiner = new StringJoiner(" ");

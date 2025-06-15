@@ -21,6 +21,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+/**
+ * GatewayFilterFactory để giới hạn tốc độ request theo từng route và IP.
+ * Sử dụng Bucket4j kết hợp cấu hình từ RateLimiterConfigProperties.
+ */
 @Component
 public class RateLimiterGatewayFilterFactory
     extends AbstractGatewayFilterFactory<RateLimiterGatewayFilterFactory.Config>
@@ -29,6 +33,10 @@ public class RateLimiterGatewayFilterFactory
   private final RateLimiterConfig rateLimiterConfig;
   private final ObjectMapper objectMapper;
   private final RateLimiterConfigProperties configProperties;
+
+  /**
+   * Bộ nhớ cache lưu trữ các Bucket cho mỗi cặp (routeId, clientIp).
+   */
   private final Map<String, Bucket> bucketCache = new ConcurrentHashMap<>();
 
   public RateLimiterGatewayFilterFactory(
@@ -42,6 +50,12 @@ public class RateLimiterGatewayFilterFactory
     this.configProperties = configProperties;
   }
 
+  /**
+   * Áp dụng filter giới hạn tốc độ cho một route.
+   *
+   * @param config cấu hình chứa routeId cần áp dụng rate limit
+   * @return GatewayFilter xử lý giới hạn tốc độ
+   */
   @Override
   public GatewayFilter apply(Config config)
   {
@@ -91,6 +105,12 @@ public class RateLimiterGatewayFilterFactory
     };
   }
 
+  /**
+   * Xử lý khi vượt quá giới hạn tốc độ, trả về 429 cùng với JSON thông báo.
+   *
+   * @param exchange đối tượng ServerWebExchange để ghi response
+   * @return Mono hoàn thành khi ghi response
+   */
   private Mono<Void> handleRateLimitExceeded(
       ServerWebExchange exchange)
   {
@@ -115,6 +135,9 @@ public class RateLimiterGatewayFilterFactory
     }
   }
 
+  /**
+   * Cấu hình truyền vào cho filter, chỉ chứa routeId.
+   */
   @Getter
   @Setter
   public static class Config {

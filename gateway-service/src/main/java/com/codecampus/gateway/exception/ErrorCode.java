@@ -11,20 +11,23 @@ import static com.codecampus.gateway.constant.exception.ErrorCodeConstant.UNAUTH
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
+/**
+ * Định nghĩa các mã lỗi và thông điệp tương ứng.
+ */
 @Getter
 public enum ErrorCode {
     // Các lỗi không phân loại và lỗi chung
     UNCATEGORIZED_EXCEPTION(99999, INTERNAL_SERVER_STATUS,
-            "Uncategorized error", INTERNAL_SERVER_ERROR),
+        "Lỗi chưa phân loại", INTERNAL_SERVER_ERROR),
 
     // 400 - Bad Request
 
     // 401 - Unauthorized
-    UNAUTHENTICATED(40101, UNAUTHORIZED_STATUS, "Unauthenticated!",
+    UNAUTHENTICATED(4018801, UNAUTHORIZED_STATUS, "Chưa xác thực!",
             org.springframework.http.HttpStatus.UNAUTHORIZED),
 
     // 403 - Forbidden
-    UNAUTHORIZED(40301, FORBIDDEN_STATUS, "You do not have permission!",
+    UNAUTHORIZED(4038801, FORBIDDEN_STATUS, "Bạn không có quyền truy cập!",
             FORBIDDEN),
 
     // 404 - Not Found
@@ -32,7 +35,7 @@ public enum ErrorCode {
     // 409 - Conflict
 
     // 429 - Too Many Requests
-    RATE_LIMIT_EXCEEDED(42901, TOO_MANY_REQUESTS_STATUS, "Rate limit exceeded", HttpStatus.TOO_MANY_REQUESTS);
+    RATE_LIMIT_EXCEEDED(4298801, TOO_MANY_REQUESTS_STATUS, "Vượt quá giới hạn request", HttpStatus.TOO_MANY_REQUESTS);
 
 
     // 500 - Internal Server Error

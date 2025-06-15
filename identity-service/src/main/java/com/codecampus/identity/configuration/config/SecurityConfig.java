@@ -31,6 +31,16 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+/**
+ * Cấu hình bảo mật cho Identity Service sử dụng Spring Security.
+ *
+ * <ul>
+ *   <li>Xác định các endpoint công khai không cần xác thực.</li>
+ *   <li>Cấu hình OAuth2 Resource Server với JWT và CustomJwtDecoder.</li>
+ *   <li>Tắt CSRF để phù hợp với API REST.</li>
+ *   <li>Thiết lập CORS và converter cho JWT authorities.</li>
+ * </ul>
+ */
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -41,6 +51,13 @@ public class SecurityConfig
   @Autowired
   private CustomJwtDecoder customJwtDecoder;
 
+  /**
+   * Thiết lập chuỗi bảo mật (SecurityFilterChain) cho ứng dụng.
+   *
+   * @param httpSecurity đối tượng HttpSecurity để cấu hình bảo mật
+   * @return SecurityFilterChain đã cấu hình các filter cần thiết
+   * @throws Exception nếu cấu hình bảo mật gặp lỗi
+   */
   @Bean
   public SecurityFilterChain securityFilterChain(
       HttpSecurity httpSecurity) throws Exception
@@ -114,6 +131,12 @@ public class SecurityConfig
     return source;
   }
 
+  /**
+   * Tạo converter để chuyển đổi claim trong JWT thành GrantedAuthority.
+   * Bỏ bỏ prefix "SCOPE_" mặc định của JwtGrantedAuthoritiesConverter.
+   *
+   * @return JwtAuthenticationConverter đã cấu hình
+   */
   @Bean
   JwtAuthenticationConverter jwtAuthenticationConverter() {
     JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();

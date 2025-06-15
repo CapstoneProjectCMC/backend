@@ -21,25 +21,25 @@ public enum ErrorCode
 {
   // Các lỗi không phân loại và lỗi chung
   UNCATEGORIZED_EXCEPTION(99999, INTERNAL_SERVER_STATUS,
-      "Uncategorized error", INTERNAL_SERVER_ERROR),
+      "Lỗi chưa phân loại", INTERNAL_SERVER_ERROR),
 
   // 400 - Bad Request
 
 
   // 401 - Unauthorized
-  UNAUTHENTICATED(40101, UNAUTHORIZED_STATUS, "Unauthenticated!",
+  UNAUTHENTICATED(4018101, UNAUTHORIZED_STATUS, "Chưa xác thực!",
                   HttpStatus.UNAUTHORIZED),
 
   // 403 - Forbidden
-  UNAUTHORIZED(40301, FORBIDDEN_STATUS, "You do not have permission!",
+  UNAUTHORIZED(4038101, FORBIDDEN_STATUS, "Bạn không có quyền truy cập!",
                FORBIDDEN),
 
   // 404 - Not Found
-  USER_NOT_FOUND(40401, NOT_FOUND_STATUS, "User not found!", NOT_FOUND),
+  USER_NOT_FOUND(4048101, NOT_FOUND_STATUS, "Không tìm thấy người dùng!", NOT_FOUND),
 
 
   // 409 - Conflict
-  USER_ALREADY_EXISTS(40901, CONFLICT_STATUS, "User already exists",
+  USER_ALREADY_EXISTS(4098101, CONFLICT_STATUS, "Người dùng đã tồn tại!",
       CONFLICT),
 
       ;

@@ -7,6 +7,18 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import org.mapstruct.Named;
 
+/**
+ * Tiện ích chuyển đổi giữa chuỗi ngày theo định dạng dd/MM/yyyy
+ * và đối tượng Instant, hỗ trợ cả múi giờ UTC và múi giờ hệ thống.
+ *
+ * <p>Các chức năng chính:
+ * <ul>
+ *   <li>Chuyển chuỗi ngày "dd/MM/yyyy" sang Instant tại đầu ngày (UTC).</li>
+ *   <li>Định dạng Instant thành chuỗi ngày "dd/MM/yyyy" tính theo UTC.</li>
+ *   <li>Định dạng Instant thành chuỗi ngày "dd/MM/yyyy" tính theo múi giờ hệ thống.</li>
+ * </ul>
+ * </p>
+ */
 public class ConvertUtils
 {
   // Định dạng dd/MM/yyyy

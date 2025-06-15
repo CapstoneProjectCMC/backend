@@ -14,6 +14,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
+/**
+ * Dịch vụ quản lý quyền (Permission) trong hệ thống.
+ *
+ * <p>Cung cấp các phương thức để:
+ * <ul>
+ *   <li>Tạo quyền mới.</li>
+ *   <li>Lấy danh sách tất cả quyền.</li>
+ *   <li>Xóa quyền theo mã quyền.</li>
+ * </ul>
+ * Các phương thức chỉ cho phép thực thi khi người dùng có vai trò ADMIN.</p>
+ */
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -24,6 +35,12 @@ public class PermissionService
   PermissionRepository permissionRepository;
   PermissionMapper permissionMapper;
 
+  /**
+   * Tạo mới một quyền trong hệ thống.
+   *
+   * @param request đối tượng PermissionRequest chứa thông tin quyền cần tạo
+   * @return PermissionResponse chứa thông tin quyền vừa được lưu
+   */
   @PreAuthorize("hasRole('ADMIN')")
   public PermissionResponse createPermission(PermissionRequest request) {
     Permission permission = permissionMapper.toPermission(request);
@@ -31,6 +48,11 @@ public class PermissionService
     return permissionMapper.toPermissionResponse(permission);
   }
 
+  /**
+   * Lấy danh sách tất cả các quyền đã tồn tại trong hệ thống.
+   *
+   * @return danh sách PermissionResponse tương ứng với mỗi quyền
+   */
   @PreAuthorize("hasRole('ADMIN')")
   public List<PermissionResponse> getAllPermissions()
   {
@@ -40,6 +62,11 @@ public class PermissionService
         .toList();
   }
 
+  /**
+   * Xóa một quyền dựa trên mã quyền.
+   *
+   * @param permission mã quyền cần xóa
+   */
   @PreAuthorize("hasRole('ADMIN')")
   public void deletePermission(String permission) {
     permissionRepository.deleteById(permission);

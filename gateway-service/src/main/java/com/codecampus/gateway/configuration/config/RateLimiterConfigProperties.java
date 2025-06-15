@@ -7,15 +7,17 @@ import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * Lớp đọc cấu hình cho Rate Limiter từ file application.properties hoặc application.yml.
+ * Các cấu hình gồm defaultConfig và từng route riêng lẻ.
+ */
 @Getter
 @Setter
 @Configuration
 @ConfigurationProperties(prefix = "rate-limiter")
 public class RateLimiterConfigProperties
 {
-  // Thêm getter cho routes nếu chưa có
   private Map<String, RouteConfig> routes = new HashMap<>();
-  // Thêm getter cho defaultConfig nếu chưa có
   private DefaultConfig defaultConfig = new DefaultConfig();
 
   @Getter
