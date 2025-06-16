@@ -1,14 +1,16 @@
 server:
   port: 8081
+  http:
+    port: 8001
   servlet:
     context-path: /profile
-#  ssl:
-#    enabled: true
-#    key-alias: profile-https
-#    key-store: classpath:ssl/profile.jks
-#    key-store-type: JKS
-#    key-store-password: dinhanst2832004
-#    key-password: dinhanst2832004
+  ssl:
+    enabled: true
+    key-alias: profile-https
+    key-store: classpath:ssl/profile.jks
+    key-store-type: JKS
+    key-store-password: dinhanst2832004
+    key-password: dinhanst2832004
 
 spring:
   application:

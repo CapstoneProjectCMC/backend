@@ -19,6 +19,5 @@ public class SecurityConfigConstant
 
   // CORS IDENTITY SERVICE ENDPOINT
   public static final String IDENTITY_SERVICE_ENDPOINT =
-//      "https://localhost:8080/identity";
-      "http://localhost:8080/identity";
+      "https://localhost:8080/identity";
 }
