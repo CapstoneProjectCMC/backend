@@ -22,7 +22,7 @@ spring:
             - classpath:ssl/profile.pem
       routes:
         - id: identity_service
-          uri: https://lochalhost:8080
+          uri: https://localhost:8080
           predicates:
             - Path=${app.api-prefix}/identity/**
           filters:
