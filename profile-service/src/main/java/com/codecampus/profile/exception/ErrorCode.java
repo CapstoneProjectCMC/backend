@@ -39,7 +39,7 @@ public enum ErrorCode
   EXERCISE_NOT_FOUND(4048102, NOT_FOUND_STATUS, "Không tìm thấy bài tập!", NOT_FOUND),
   TARGET_USER_NOT_FOUND(4048103, NOT_FOUND_STATUS, "Không tìm thấy người dùng mục tiêu!", NOT_FOUND),
   POST_NOT_FOUND(4048104, NOT_FOUND_STATUS, "Không tìm thấy bài đăng!", NOT_FOUND),
-
+  ORG_NOT_FOUND(4048104, NOT_FOUND_STATUS, "Không tìm thấy tổ chức!", NOT_FOUND),
 
 
   // 409 - Conflict

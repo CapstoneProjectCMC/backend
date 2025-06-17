@@ -5,6 +5,7 @@ import static com.codecampus.profile.utils.PageResponseUtils.toPageResponse;
 import com.codecampus.profile.dto.common.PageResponse;
 import com.codecampus.profile.entity.Post;
 import com.codecampus.profile.entity.UserProfile;
+import com.codecampus.profile.entity.properties.post.Reaction;
 import com.codecampus.profile.entity.properties.post.SavedPost;
 import com.codecampus.profile.exception.AppException;
 import com.codecampus.profile.exception.ErrorCode;
@@ -60,6 +61,15 @@ public class PostService
     Pageable pageable = PageRequest.of(page - 1, size);
     var pageData = userProfileRepository
         .findSavedPosts(SecurityUtils.getMyUserId(), pageable);
+
+    return toPageResponse(pageData, page);
+  }
+
+  public PageResponse<Reaction> myReactions(
+      int page, int size) {
+    Pageable pageable = PageRequest.of(page - 1, size);
+    var pageData = userProfileRepository
+        .findReactions(SecurityUtils.getMyUserId(), pageable);
 
     return toPageResponse(pageData, page);
   }
