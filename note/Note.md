@@ -29,11 +29,35 @@ keytool -genkeypair ^
 -keypass   dinhanst2832004 ^
 -dname "CN=localhost, OU=Profile, O=CMC University, L=City, ST=Hanoi, C=VN"
 
+REM === 1.4 File service ===
+
+REM === 1.5 Submission service ===
+keytool -genkeypair ^
+-alias submission-https ^
+-keyalg RSA -keysize 2048 ^
+-keystore submission.jks ^
+-validity 3650 ^
+-storepass dinhanst2832004 ^
+-keypass   dinhanst2832004 ^
+-dname "CN=localhost, OU=Submission, O=CMC University, L=City, ST=Hanoi, C=VN"
+
+REM === 1.2 Identity service ===
 keytool -exportcert -alias identity-https -keystore identity.jks -storepass dinhanst2832004 -file identity.crt
+
+REM === 1.3 Profile service ===
 keytool -exportcert -alias profile-https -keystore profile.jks  -storepass dinhanst2832004 -file profile.crt
 
+REM === 1.5 Submission service ===
+keytool -exportcert -alias submission-https -keystore submission.jks  -storepass dinhanst2832004 -file submission.crt
+
+REM === 1.2 Identity service ===
 keytool -importcert -alias identity-service -file identity.crt -keystore gateway-truststore.jks -storepass dinhanst2832004 -noprompt
+
+REM === 1.3 Profile service ===
 keytool -importcert -alias profile-service  -file profile.crt  -keystore gateway-truststore.jks -storepass dinhanst2832004 -noprompt
+
+REM === 1.5 Submission service ===
+keytool -importcert -alias submission-service  -file submission.crt  -keystore gateway-truststore.jks -storepass dinhanst2832004 -noprompt
 
 keytool -list -v -keystore gateway-truststore.jks -storepass dinhanst2832004
 
@@ -53,8 +77,14 @@ server:
         key-store-password: dinhanst2832004
         key-password: dinhanst2832004
 
+REM === 1.2 Identity service ===
 keytool -exportcert -alias identity-https -keystore identity.jks -storepass dinhanst2832004 -rfc -file ssl\identity.pem
+
+REM === 1.3 Profile service ===
 keytool -exportcert -alias profile-https  -keystore profile.jks  -storepass dinhanst2832004 -rfc -file ssl\profile.pem
+
+REM === 1.5 Submission service ===
+keytool -exportcert -alias submission-https  -keystore submission.jks  -storepass dinhanst2832004 -rfc -file ssl\submission.pem
 
 server:
     port: 8888

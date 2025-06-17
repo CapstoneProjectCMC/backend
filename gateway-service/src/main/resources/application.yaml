@@ -20,6 +20,7 @@ spring:
           trusted-x509-certificates:
             - classpath:ssl/identity.pem
             - classpath:ssl/profile.pem
+            - classpath:ssl/submission.pem
       routes:
         - id: identity_service
           uri: https://localhost:8080
@@ -49,6 +50,15 @@ spring:
             - name: RateLimiter
               args:
                 routeId: file_service
+        - id: file_service
+          uri: https://localhost:8083
+          predicates:
+            - Path=${app.api-prefix}/submission/**
+          filters:
+            - StripPrefix=2
+            - name: RateLimiter
+              args:
+                routeId: submission_service
 # Cấu hình rate limiter
 rate-limiter:
   default:
