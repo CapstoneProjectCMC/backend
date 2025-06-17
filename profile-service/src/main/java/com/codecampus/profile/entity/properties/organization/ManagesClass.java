@@ -31,4 +31,6 @@ public class ManagesClass
 
   @TargetNode
   Classroom classroom;
+
+  Instant enrolledAt;
 }

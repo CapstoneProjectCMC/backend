@@ -1,5 +1,6 @@
 package com.codecampus.profile.entity;
 
+import com.codecampus.profile.entity.properties.exercise.AssignedOrgExercise;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.AccessLevel;
@@ -30,7 +31,12 @@ public class Org
 
   String orgId;
   String orgName;
+  String logoUrl;
+  String description;
 
   @Relationship(type = "HAS_CLASS")
   Set<Classroom> classrooms = new HashSet<>();
+
+  @Relationship(type = "ASSIGNED_ORG_EXERCISE")
+  Set<AssignedOrgExercise> exercises = new HashSet<>();
 }

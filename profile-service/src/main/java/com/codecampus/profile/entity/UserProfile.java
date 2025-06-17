@@ -2,6 +2,7 @@ package com.codecampus.profile.entity;
 
 import com.codecampus.profile.entity.properties.exercise.CreatedExercise;
 import com.codecampus.profile.entity.properties.organization.CreatedOrg;
+import com.codecampus.profile.entity.properties.organization.EnrolledClass;
 import com.codecampus.profile.entity.properties.organization.ManagesClass;
 import com.codecampus.profile.entity.properties.organization.MemberOrg;
 import com.codecampus.profile.entity.properties.post.Reaction;
@@ -93,6 +94,7 @@ public class UserProfile
   @Relationship(type = "SUBSCRIBED_TO")
   Set<SubscribedTo> subscriptions = new HashSet<>();
 
+  // Activity
   @Relationship(type = "HAS_ACTIVITY")
   Set<ActivityWeek> activityWeeks = new HashSet<>();
 
@@ -106,4 +108,7 @@ public class UserProfile
   // Teacher-specific
   @Relationship(type = "MANAGES_CLASS")
   Set<ManagesClass> managesClasses;
+
+  @Relationship(type = "ENROLLED_IN")
+  Set<EnrolledClass> enrolledClasses;
 }

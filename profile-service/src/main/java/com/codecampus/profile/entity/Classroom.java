@@ -1,5 +1,8 @@
 package com.codecampus.profile.entity;
 
+import com.codecampus.profile.entity.properties.exercise.AssignedClassExercise;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,4 +37,7 @@ public class Classroom
       direction = Relationship.Direction.OUTGOING
   )
   Org organization;
+
+  @Relationship(type = "ASSIGNED_CLASS_EXERCISE")
+  Set<AssignedClassExercise> exercises = new HashSet<>();
 }

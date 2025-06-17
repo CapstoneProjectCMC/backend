@@ -1,5 +1,7 @@
 package com.codecampus.profile.service;
 
+import static com.codecampus.profile.utils.PageResponseUtils.toPageResponse;
+
 import com.codecampus.profile.dto.common.PageResponse;
 import com.codecampus.profile.dto.request.UserProfileCreationRequest;
 import com.codecampus.profile.dto.request.UserProfileUpdateRequest;
@@ -117,20 +119,11 @@ public class UserProfileService
   @PreAuthorize("hasRole('ADMIN')")
   public PageResponse<UserProfileResponse> getAllUserProfiles(int page, int size) {
     Pageable pageable = PageRequest.of(page - 1, size);
-    var pageData = userProfileRepository.findAll(pageable);
-    var userProfileList = pageData
-        .getContent()
-        .stream()
-        .map(userProfileMapper::toUserProfileResponse)
-        .toList();
+    var pageData = userProfileRepository
+        .findAll(pageable)
+        .map(userProfileMapper::toUserProfileResponse);
 
-    return PageResponse.<UserProfileResponse>builder()
-        .currentPage(page)
-        .pageSize(pageData.getSize())
-        .totalPages(pageData.getTotalPages())
-        .totalElements(pageData.getTotalElements())
-        .data(userProfileList)
-        .build();
+    return toPageResponse(pageData, page);
   }
 
   /**
@@ -141,6 +134,32 @@ public class UserProfileService
   public UserProfileResponse getMyUserProfile()
   {
     return getUserProfileByUserId(SecurityUtils.getMyUserId());
+  }
+
+  /**
+   * Lấy hồ sơ của người dùng.
+   *
+   * @return UserProfile của người dùng
+   */
+  public UserProfile getUserProfile(String userId) {
+    return userProfileRepository
+        .findByUserId(userId)
+        .orElseThrow(
+            () -> new AppException(ErrorCode.USER_NOT_FOUND)
+        );
+  }
+
+  /**
+   * Lấy hồ sơ của người dùng đang đăng nhập.
+   *
+   * @return UserProfile của người dùng hiện tại đang đăng nhập
+   */
+  public UserProfile getUserProfile() {
+    return userProfileRepository
+        .findByUserId(SecurityUtils.getMyUserId())
+        .orElseThrow(
+            () -> new AppException(ErrorCode.USER_NOT_FOUND)
+        );
   }
 
   /**
@@ -161,11 +180,7 @@ public class UserProfileService
   public UserProfileResponse updateMyUserProfile(
       UserProfileUpdateRequest request) {
 
-    var profile = userProfileRepository
-        .findByUserId(SecurityUtils.getMyUserId())
-        .orElseThrow(
-            () -> new AppException(ErrorCode.USER_NOT_FOUND)
-        );
+    UserProfile profile = getUserProfile();
 
     userProfileMapper.updateUserProfile(profile, request);
     return userProfileMapper.toUserProfileResponse(

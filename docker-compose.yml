@@ -15,48 +15,11 @@ services:
       - "5431:5432" # host:container
     volumes:
       - pg_data:/bitnami/postgresql # dữ liệu bền vững
-      - ./backups/postgres:/backups # bind-mount ra host
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
       timeout: 5s
       retries: 5
-    ## Khi container khởi động lần đầu và CSDL trống,
-    ## nếu có file /backups/identity_db.latest.dump thì tải vào luôn.
-    command:
-      - /bin/bash
-      - -ceu
-      - |
-        DUMP=/backups/identity_db.latest.dump
-        DATA_DIR=/bitnami/postgresql/data
-        if [ "$(ls -A $DATA_DIR | wc -l)" -lt 3 ] && [ -f "$DUMP" ]; then
-          echo "[postgresql] Restoring from $DUMP"
-          /opt/bitnami/scripts/postgresql/run.sh &  # khởi Postgres nền
-          PG_PID=$!
-          for i in {1..15}; do pg_isready -U postgres && break || sleep 1; done
-          pg_restore -U postgres -d identity_db --clean "$DUMP"
-          kill "$PG_PID"
-          echo "[postgresql] Restore finished"
-        fi
-        exec /opt/bitnami/scripts/postgresql/run.sh
-
-  pg_backup:
-    image: postgres:16-alpine
-    depends_on: [postgresql]
-    restart: unless-stopped
-    environment:
-      - PGPASSWORD=dinhanst2832004
-    volumes:
-      - ./backups/postgres:/backups
-    entrypoint: >
-      /bin/sh -c '
-        while true; do
-          echo "[pg_backup] $(date) pg_dump running";
-          pg_dump -h postgresql -U postgres -F c identity_db \
-            -f /backups/identity_db.latest.dump;
-          sleep 3600;
-        done
-      '
 
   # ---------- Neo4j ----------
   neo4j:
@@ -78,40 +41,11 @@ services:
       - "7474:7474"
     volumes:
       - neo4j_data:/bitnami/neo4j
-      - ./backups/neo4j:/backups
     healthcheck:
       test: ["CMD-SHELL", "cypher-shell -u neo4j -p $${NEO4J_PASSWORD} 'RETURN 1' || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 5
-#    # Nếu dữ liệu trống và có backup tgz thì giải nén
-#    command:
-#      - /bin/bash
-#      - -ceu
-#      - |
-#        BACKUP=/backups/neo4j.latest.tgz
-#        DB_DIR=/bitnami/neo4j/data/databases/neo4j
-#        if [ ! -d "$DB_DIR" ] && [ -f "$BACKUP" ]; then
-#          echo "[neo4j] Restoring from $BACKUP"
-#          tar xzf "$BACKUP" -C /bitnami/neo4j/data/databases
-#        fi
-#        exec /opt/bitnami/scripts/neo4j/run.sh
-
-  neo4j_backup:
-    image: alpine:3.20
-    depends_on: [neo4j]
-    restart: unless-stopped
-    volumes:
-      - neo4j_data:/data
-      - ./backups/neo4j:/backups
-    command: >
-      /bin/sh -c '
-        while true; do
-          echo "[neo4j_backup] $(date) making tar";
-          tar czf /backups/neo4j.latest.tgz -C /data . ;
-          sleep 3600;
-        done
-      '
 
 volumes:
   pg_data:

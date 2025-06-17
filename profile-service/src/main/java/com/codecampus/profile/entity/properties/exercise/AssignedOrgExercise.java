@@ -1,5 +1,6 @@
-package com.codecampus.profile.entity;
+package com.codecampus.profile.entity.properties.exercise;
 
+import com.codecampus.profile.entity.Exercise;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +10,8 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
-import org.springframework.data.neo4j.core.schema.Node;
-import org.springframework.data.neo4j.core.support.UUIDStringGenerator;
+import org.springframework.data.neo4j.core.schema.RelationshipProperties;
+import org.springframework.data.neo4j.core.schema.TargetNode;
 
 @Getter
 @Setter
@@ -18,15 +19,13 @@ import org.springframework.data.neo4j.core.support.UUIDStringGenerator;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Node("Exercise")
-public class Exercise
+@RelationshipProperties
+public class AssignedOrgExercise
 {
   @Id
-  @GeneratedValue(generatorClass = UUIDStringGenerator.class)
+  @GeneratedValue
   String id;
 
-  String exerciseId;
-  String title;
-  String type;
-  int difficulty;
+  @TargetNode
+  Exercise exercise;
 }
