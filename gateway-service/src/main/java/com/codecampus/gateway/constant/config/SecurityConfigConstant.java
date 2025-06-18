@@ -16,6 +16,7 @@ public class SecurityConfigConstant
       "/profile/hello",
       "/file/hello",
       "/submission/hello",
+      "/coding/hello"
   };
 
   // CORS IDENTITY SERVICE ENDPOINT

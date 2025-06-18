@@ -21,6 +21,8 @@ spring:
             - classpath:ssl/identity.pem
             - classpath:ssl/profile.pem
             - classpath:ssl/submission.pem
+            - classpath:ssl/coding.pem
+
       routes:
         - id: identity_service
           uri: https://localhost:8080
@@ -50,7 +52,7 @@ spring:
             - name: RateLimiter
               args:
                 routeId: file_service
-        - id: file_service
+        - id: submission_service
           uri: https://localhost:8083
           predicates:
             - Path=${app.api-prefix}/submission/**
@@ -59,6 +61,15 @@ spring:
             - name: RateLimiter
               args:
                 routeId: submission_service
+        - id: coding_service
+          uri: https://localhost:8084
+          predicates:
+            - Path=${app.api-prefix}/coding/**
+          filters:
+            - StripPrefix=2
+            - name: RateLimiter
+              args:
+                routeId: coding_service
 # Cấu hình rate limiter
 rate-limiter:
   default:

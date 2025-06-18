@@ -41,6 +41,16 @@ keytool -genkeypair ^
 -keypass   dinhanst2832004 ^
 -dname "CN=localhost, OU=Submission, O=CMC University, L=City, ST=Hanoi, C=VN"
 
+REM === 1.6 Coding service ===
+keytool -genkeypair ^
+-alias coding-https ^
+-keyalg RSA -keysize 2048 ^
+-keystore coding.jks ^
+-validity 3650 ^
+-storepass dinhanst2832004 ^
+-keypass   dinhanst2832004 ^
+-dname "CN=localhost, OU=Coding, O=CMC University, L=City, ST=Hanoi, C=VN"
+
 REM === 1.2 Identity service ===
 keytool -exportcert -alias identity-https -keystore identity.jks -storepass dinhanst2832004 -file identity.crt
 
@@ -50,6 +60,9 @@ keytool -exportcert -alias profile-https -keystore profile.jks  -storepass dinha
 REM === 1.5 Submission service ===
 keytool -exportcert -alias submission-https -keystore submission.jks  -storepass dinhanst2832004 -file submission.crt
 
+REM === 1.6 Coding service ===
+keytool -exportcert -alias coding-https -keystore coding.jks  -storepass dinhanst2832004 -file coding.crt
+
 REM === 1.2 Identity service ===
 keytool -importcert -alias identity-service -file identity.crt -keystore gateway-truststore.jks -storepass dinhanst2832004 -noprompt
 
@@ -58,6 +71,9 @@ keytool -importcert -alias profile-service  -file profile.crt  -keystore gateway
 
 REM === 1.5 Submission service ===
 keytool -importcert -alias submission-service  -file submission.crt  -keystore gateway-truststore.jks -storepass dinhanst2832004 -noprompt
+
+REM === 1.6 Coding service ===
+keytool -importcert -alias coding-service  -file coding.crt  -keystore gateway-truststore.jks -storepass dinhanst2832004 -noprompt
 
 keytool -list -v -keystore gateway-truststore.jks -storepass dinhanst2832004
 
@@ -85,6 +101,9 @@ keytool -exportcert -alias profile-https  -keystore profile.jks  -storepass dinh
 
 REM === 1.5 Submission service ===
 keytool -exportcert -alias submission-https  -keystore submission.jks  -storepass dinhanst2832004 -rfc -file ssl\submission.pem
+
+REM === 1.6 Coding service ===
+keytool -exportcert -alias coding-https  -keystore coding.jks  -storepass dinhanst2832004 -rfc -file ssl\coding.pem
 
 server:
     port: 8888

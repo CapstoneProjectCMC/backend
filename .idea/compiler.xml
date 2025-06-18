@@ -25,13 +25,15 @@
           <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct/1.6.3/mapstruct-1.6.3.jar" />
         </processorPath>
         <module name="submission-service" />
-        <module name="identity-service" />
         <module name="profile-service" />
+        <module name="coding-service" />
+        <module name="identity-service" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="coding-service" options="-parameters -Amapstruct.defaultComponentModel=spring -Amapstruct.verbose=true" />
       <module name="gateway-service" options="-parameters" />
       <module name="identity-service" options="-parameters -Amapstruct.defaultComponentModel=spring -Amapstruct.verbose=true" />
       <module name="profile-service" options="-parameters -Amapstruct.defaultComponentModel=spring -Amapstruct.verbose=true" />
