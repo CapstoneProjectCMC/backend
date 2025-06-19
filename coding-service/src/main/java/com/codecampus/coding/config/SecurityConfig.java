@@ -152,12 +152,15 @@ public class SecurityConfig
    */
   @Bean
   JwtAuthenticationConverter jwtAuthenticationConverter() {
-    JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-    jwtGrantedAuthoritiesConverter.setAuthorityPrefix("");
+    JwtGrantedAuthoritiesConverter authConverter  = new JwtGrantedAuthoritiesConverter();
+    authConverter.setAuthorityPrefix("");
 
-    JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
-    jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
+    JwtAuthenticationConverter converter  = new JwtAuthenticationConverter();
+    converter.setJwtGrantedAuthoritiesConverter(authConverter);
 
-    return jwtAuthenticationConverter;
+    // Principal = claim "username"
+    converter.setPrincipalClaimName("username");
+
+    return converter;
   }
 }

@@ -1,5 +1,6 @@
 package com.codecampus.submission.entity;
 
+import com.codecampus.submission.entity.audit.AuditMetadata;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,6 +19,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 @Getter
 @Setter
@@ -27,7 +30,9 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "contest")
-public class Contest
+@SQLDelete(sql = "UPDATE contest SET deleted_at = now(), deleted_by = ? WHERE id = ?")
+@Where(clause = "deleted_at IS NULL")
+public class Contest extends AuditMetadata
 {
 
   @Id
@@ -42,9 +47,6 @@ public class Contest
 
   @Column(name = "org_id")
   String orgId;
-
-  @Column(name = "created_by", nullable = false)
-  String createdBy;
 
   @Column(name = "start_time", nullable = false)
   Instant startTime;

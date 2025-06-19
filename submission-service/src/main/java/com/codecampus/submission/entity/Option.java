@@ -1,5 +1,6 @@
 package com.codecampus.submission.entity;
 
+import com.codecampus.submission.entity.audit.AuditMetadata;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -16,6 +17,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 @Getter
 @Setter
@@ -25,7 +28,9 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "option")
-public class Option
+@SQLDelete(sql = "UPDATE option SET deleted_at = now(), deleted_by = ? WHERE id = ?")
+@Where(clause = "deleted_at IS NULL")
+public class Option extends AuditMetadata
 {
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)

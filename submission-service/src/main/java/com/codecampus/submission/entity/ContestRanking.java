@@ -1,10 +1,16 @@
 package com.codecampus.submission.entity;
 
+import com.codecampus.submission.entity.audit.AuditMetadata;
 import com.codecampus.submission.entity.data.ContestRankId;
 import jakarta.persistence.Column;
+import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MapsId;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -13,6 +19,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 @Getter
 @Setter
@@ -22,14 +30,17 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "contest_ranking")
-@IdClass(ContestRankId.class)
-public class ContestRanking
+@SQLDelete(sql = "UPDATE contest_ranking SET deleted_at = now(), deleted_by = ? WHERE id = ?")
+@Where(clause = "deleted_at IS NULL")
+public class ContestRanking extends AuditMetadata
 {
-  @Id
-  String contestId;
+  @EmbeddedId
+  ContestRankId id;
 
-  @Id
-  String userId;
+  @MapsId("contestId")
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "contest_id")
+  Contest contest;
 
   @Column(nullable = false, columnDefinition = "smallint")
   Integer score;

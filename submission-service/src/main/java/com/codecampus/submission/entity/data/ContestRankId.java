@@ -1,5 +1,8 @@
 package com.codecampus.submission.entity.data;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
+import java.io.Serializable;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,7 +13,12 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ContestRankId implements java.io.Serializable {
+@Embeddable
+public class ContestRankId implements Serializable
+{
+  @Column(name = "contest_id")
   String contestId;
+
+  @Column(name = "user_id")
   String userId;
 }

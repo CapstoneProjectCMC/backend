@@ -369,8 +369,8 @@ public class AuthenticationService
 
     invalidatedTokenRepository.save(invalidatedToken);
 
-    var username = signedJWT.getJWTClaimsSet().getSubject();
-    var user = userRepository.findByUsername(username)
+    var userId = signedJWT.getJWTClaimsSet().getSubject();
+    var user = userRepository.findById(userId)
         .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
     var token = generateToken(user);
 
@@ -401,6 +401,8 @@ public class AuthenticationService
         .expirationTime(Date.from(expiryInstant))
         .jwtID(UUID.randomUUID().toString())
         .claim("scope", buildScope(user))
+        .claim("username", user.getUsername())
+        .claim("email", user.getEmail())
         .build();
 
     Payload payload = new Payload(jwtClaimsSet.toJSONObject());

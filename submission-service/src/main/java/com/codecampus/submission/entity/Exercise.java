@@ -1,6 +1,7 @@
 package com.codecampus.submission.entity;
 
 import com.codecampus.submission.constant.submission.Difficulty;
+import com.codecampus.submission.entity.audit.AuditMetadata;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -23,6 +24,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 @Getter
 @Setter
@@ -32,7 +35,9 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "exercise")
-public class Exercise
+@SQLDelete(sql = "UPDATE exercise SET deleted_at = now(), deleted_by = ? WHERE id = ?")
+@Where(clause = "deleted_at IS NULL")
+public class Exercise extends AuditMetadata
 {
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
@@ -58,9 +63,6 @@ public class Exercise
   @Column(nullable = false, columnDefinition = "smallint default 1")
   Difficulty difficulty = Difficulty.EASY;
 
-  @Column(name = "created_by", nullable = false)
-  String createdBy;
-
   @Column(name = "org_id")
   String orgId;                // nullable
 
@@ -76,12 +78,6 @@ public class Exercise
   @Column(name = "free_for_org", nullable = false)
   boolean freeForOrg;
 
-  @Column(name = "created_at", nullable = false, updatable = false)
-  Instant createdAt;
-
-  @Column(name = "updated_at", nullable = false)
-  Instant updatedAt;
-
   Instant startTime;
   Instant endTime;
 
@@ -93,16 +89,4 @@ public class Exercise
 
   @Column(name = "resource_ids", columnDefinition = "text[]")
   Set<String> resourceIds;
-
-  @PrePersist
-  public void prePersist() {
-    Instant now = Instant.now();
-    createdAt = now;
-    updatedAt = now;
-  }
-
-  @PreUpdate
-  public void preUpdate() {
-    updatedAt = Instant.now();
-  }
 }

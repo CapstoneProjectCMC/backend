@@ -1,14 +1,15 @@
 package com.codecampus.submission.entity;
 
 import com.codecampus.submission.entity.data.SubmissionAnswerId;
-import com.codecampus.submission.entity.data.SubmissionResultId;
 import jakarta.persistence.Column;
+import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MapsId;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -26,21 +27,21 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "submission_answer")
-@IdClass(SubmissionAnswerId.class)
 public class SubmissionAnswer
 {
-  @Id
-  String submissionId;
+  @EmbeddedId
+  SubmissionAnswerId id;
 
-  @Id
-  String questionId;
-
+  // ---- FK tới Submission (dùng submission_id của khóa) ----
+  @MapsId("submissionId")                     // trùng field trong Id
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "submission_id", insertable = false, updatable = false)
+  @JoinColumn(name = "submission_id")
   Submission submission;
 
+  // ---- FK tới Question (dùng question_id của khóa) ----
+  @MapsId("questionId")
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "question_id", insertable = false, updatable = false)
+  @JoinColumn(name = "question_id")
   Question question;
 
   @Column(name = "selected_option")
