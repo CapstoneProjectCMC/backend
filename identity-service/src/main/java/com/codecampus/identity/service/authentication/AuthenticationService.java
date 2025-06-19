@@ -11,6 +11,7 @@ import com.codecampus.identity.dto.request.authentication.UserCreationRequest;
 import com.codecampus.identity.dto.response.authentication.AuthenticationResponse;
 import com.codecampus.identity.dto.response.authentication.IntrospectResponse;
 import com.codecampus.identity.entity.account.InvalidatedToken;
+import com.codecampus.identity.entity.account.Permission;
 import com.codecampus.identity.entity.account.Role;
 import com.codecampus.identity.entity.account.User;
 import com.codecampus.identity.exception.AppException;
@@ -43,7 +44,6 @@ import java.util.Set;
 import java.util.StringJoiner;
 import java.util.UUID;
 import lombok.AccessLevel;
-
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
@@ -74,8 +74,7 @@ import org.springframework.util.CollectionUtils;
 @RequiredArgsConstructor
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class AuthenticationService
-{
+public class AuthenticationService {
   UserRepository userRepository;
   RoleRepository roleRepository;
   InvalidatedTokenRepository invalidatedTokenRepository;
@@ -123,21 +122,18 @@ public class AuthenticationService
    *
    * @param request đối tượng chứa token cần kiểm tra
    * @return IntrospectResponse với flag valid
-   * @throws JOSEException khi lỗi ký JWT
+   * @throws JOSEException  khi lỗi ký JWT
    * @throws ParseException khi lỗi parse JWT
    */
   public IntrospectResponse introspect(
       IntrospectRequest request)
-      throws JOSEException, ParseException
-  {
+      throws JOSEException, ParseException {
     var token = request.getToken();
     boolean isValid = true;
 
-    try
-    {
+    try {
       verifyToken(token, false);
-    } catch (AppException e)
-    {
+    } catch (AppException e) {
       isValid = false;
     }
 
@@ -154,8 +150,7 @@ public class AuthenticationService
    * @throws ParseException khi lỗi parse JWT
    */
   public AuthenticationResponse outboundGoogleLogin(
-      String code) throws ParseException
-  {
+      String code) throws ParseException {
     var response = outboundGoogleIdentityClient.exchangeToken(
         ExchangeTokenRequest.builder()
             .code(code)
@@ -224,8 +219,7 @@ public class AuthenticationService
    * @throws ParseException khi lỗi parse JWT
    */
   public AuthenticationResponse login(
-      AuthenticationRequest request) throws ParseException
-  {
+      AuthenticationRequest request) throws ParseException {
     PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
 
     // Tìm user bằng username hoặc email
@@ -244,8 +238,7 @@ public class AuthenticationService
         user.getPassword()
     );
 
-    if (!authenticated)
-    {
+    if (!authenticated) {
       throw new AppException(ErrorCode.INVALID_CREDENTIALS);
     }
 
@@ -283,13 +276,11 @@ public class AuthenticationService
    *
    * @param request chứa token cần logout
    * @throws ParseException khi lỗi parse JWT
-   * @throws JOSEException khi lỗi verify JWT
+   * @throws JOSEException  khi lỗi verify JWT
    */
   public void logout(LogoutRequest request)
-      throws ParseException, JOSEException
-  {
-    try
-    {
+      throws ParseException, JOSEException {
+    try {
       var signToken = verifyToken(request.getToken(), true);
 
       String jit = signToken.getJWTClaimsSet().getJWTID();
@@ -301,8 +292,7 @@ public class AuthenticationService
           .build();
 
       invalidatedTokenRepository.save(invalidatedToken);
-    } catch (AppException e)
-    {
+    } catch (AppException e) {
       log.info("Token already expired");
     }
   }
@@ -352,11 +342,10 @@ public class AuthenticationService
    * @param request chứa token cũ
    * @return AuthenticationResponse chứa token mới và expiryTime
    * @throws ParseException khi lỗi parse JWT
-   * @throws JOSEException khi lỗi verify JWT
+   * @throws JOSEException  khi lỗi verify JWT
    */
   public AuthenticationResponse refreshToken(RefreshRequest request)
-      throws ParseException, JOSEException
-  {
+      throws ParseException, JOSEException {
     var signedJWT = verifyToken(request.getToken(), true);
 
     var jit = signedJWT.getJWTClaimsSet().getJWTID();
@@ -387,8 +376,7 @@ public class AuthenticationService
    * @param user đối tượng User cần sinh token
    * @return chuỗi JWT
    */
-  private String generateToken(User user)
-  {
+  private String generateToken(User user) {
     JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
 
     Instant expiryInstant = Instant.now()
@@ -403,19 +391,29 @@ public class AuthenticationService
         .claim("scope", buildScope(user))
         .claim("username", user.getUsername())
         .claim("email", user.getEmail())
+        .claim("roles", user.getRoles()
+            .stream()
+            .map(Role::getName)
+            .toList()
+        )
+        .claim("permissions", user.getRoles()
+            .stream()
+            .flatMap(role -> role.getPermissions().stream())
+            .map(Permission::getName)
+            .distinct()
+            .toList()
+        )
         .build();
 
     Payload payload = new Payload(jwtClaimsSet.toJSONObject());
 
     JWSObject jwsObject = new JWSObject(header, payload);
 
-    try
-    {
+    try {
       jwsObject.sign(new MACSigner(SIGNER_KEY.getBytes()));
 
       return jwsObject.serialize();
-    } catch (JOSEException e)
-    {
+    } catch (JOSEException e) {
       log.error("Cannot create token", e);
       throw new AppException(ErrorCode.FAILED_GENERATE_TOKEN);
     }
@@ -427,13 +425,12 @@ public class AuthenticationService
    * @param token     chuỗi JWT cần verify
    * @param isRefresh nếu true, xét thời gian refresh duration thay vì expiration
    * @return SignedJWT đã verify
-   * @throws JOSEException khi verify HMAC thất bại
+   * @throws JOSEException  khi verify HMAC thất bại
    * @throws ParseException khi parse JWT thất bại
    */
   private SignedJWT verifyToken(
       String token,
-      boolean isRefresh) throws JOSEException, ParseException
-  {
+      boolean isRefresh) throws JOSEException, ParseException {
     JWSVerifier verifier = new MACVerifier(SIGNER_KEY.getBytes());
 
     SignedJWT signedJWT = SignedJWT.parse(token);
@@ -450,13 +447,12 @@ public class AuthenticationService
 
     var verified = signedJWT.verify(verifier);
 
-    if (!(verified && expiryTime.after(new Date())))
-    {
+    if (!(verified && expiryTime.after(new Date()))) {
       throw new AppException(ErrorCode.UNAUTHENTICATED);
     }
 
-    if (invalidatedTokenRepository.existsById(signedJWT.getJWTClaimsSet().getJWTID()))
-    {
+    if (invalidatedTokenRepository.existsById(
+        signedJWT.getJWTClaimsSet().getJWTID())) {
       throw new AppException(ErrorCode.TOKEN_REVOKED);
     }
 
@@ -469,16 +465,13 @@ public class AuthenticationService
    * @param user đối tượng User
    * @return chuỗi scope phân tách bởi dấu cách
    */
-  private String buildScope(User user)
-  {
+  private String buildScope(User user) {
     StringJoiner stringJoiner = new StringJoiner(" ");
 
-    if (!CollectionUtils.isEmpty(user.getRoles()))
-    {
+    if (!CollectionUtils.isEmpty(user.getRoles())) {
       user.getRoles().forEach(role -> {
         stringJoiner.add("ROLE_" + role.getName());
-        if (!CollectionUtils.isEmpty(role.getPermissions()))
-        {
+        if (!CollectionUtils.isEmpty(role.getPermissions())) {
           role.getPermissions().forEach(permission ->
               stringJoiner.add(permission.getName()));
         }

@@ -9,8 +9,7 @@ import lombok.experimental.FieldDefaults;
 @Data
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserProfileCreationRequest
-{
+public class UserProfileCreationRequest {
   String userId;
   String firstName;
   String lastName;

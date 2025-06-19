@@ -11,8 +11,7 @@ import reactor.core.publisher.Mono;
 /**
  * Client interface dùng để gọi các API của Identity Service thông qua Spring WebServiceProxy.
  */
-public interface IdentityClient
-{
+public interface IdentityClient {
   /**
    * Gửi yêu cầu kiểm tra (introspect) tính hợp lệ của token đến endpoint của Identity Service.
    *

@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PostRepository
-    extends Neo4jRepository<Post, String>
-{
+    extends Neo4jRepository<Post, String> {
   Optional<Post> findByPostId(String postId);
 }

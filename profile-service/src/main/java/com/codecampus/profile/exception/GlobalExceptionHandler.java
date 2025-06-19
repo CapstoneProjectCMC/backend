@@ -9,8 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 @Slf4j
-public class GlobalExceptionHandler
-{
+public class GlobalExceptionHandler {
   /**
    * Xử lý các ngoại lệ RuntimeException không được bắt riêng.
    *

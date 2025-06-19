@@ -26,8 +26,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class SocialService
-{
+public class SocialService {
   UserProfileRepository userProfileRepository;
 
   UserProfileService userProfileService;
@@ -39,10 +38,9 @@ public class SocialService
    * kiểm tra tránh duplicate, rồi thêm vào danh sách {@link Follows} của người dùng hiện tại.
    *
    * @param targetUserId ID của người dùng cần follow
-   * @throws com.codecampus.profile.exception.AppException
-   *         nếu không tìm thấy profile của người dùng hiện tại hoặc của targetUserId
+   * @throws com.codecampus.profile.exception.AppException nếu không tìm thấy profile của người dùng hiện tại hoặc của targetUserId
    */
-  public void follow (String targetUserId) {
+  public void follow(String targetUserId) {
     UserProfile myProfile = userProfileService.getUserProfile();
 
     UserProfile targetProfile = userProfileService.getUserProfile(targetUserId);
@@ -70,11 +68,9 @@ public class SocialService
    * có target trùng với {@code targetUserId}, sau đó lưu lại profile.
    *
    * @param targetUserId ID của người dùng cần unfollow
-   * @throws com.codecampus.profile.exception.AppException
-   *         nếu không tìm thấy profile của người dùng hiện tại
+   * @throws com.codecampus.profile.exception.AppException nếu không tìm thấy profile của người dùng hiện tại
    */
-  public void unfollow(String targetUserId)
-  {
+  public void unfollow(String targetUserId) {
     UserProfile myProfile = userProfileService.getUserProfile();
 
     myProfile.getFollows().removeIf(
@@ -91,11 +87,9 @@ public class SocialService
    * rồi thêm mới entry {@link Blocks} và lưu lại profile.
    *
    * @param targetUserId ID của người dùng cần block
-   * @throws com.codecampus.profile.exception.AppException
-   *         nếu không tìm thấy profile của người dùng hiện tại hoặc của targetUserId
+   * @throws com.codecampus.profile.exception.AppException nếu không tìm thấy profile của người dùng hiện tại hoặc của targetUserId
    */
-  public void block(String targetUserId)
-  {
+  public void block(String targetUserId) {
     UserProfile myProfile = userProfileService.getUserProfile();
 
     UserProfile targetProfile = userProfileService.getUserProfile(targetUserId);
@@ -122,8 +116,7 @@ public class SocialService
    * có target trùng với {@code targetUserId}, sau đó lưu lại profile.
    *
    * @param targetUserId ID của người dùng cần unblock
-   * @throws com.codecampus.profile.exception.AppException
-   *         nếu không tìm thấy profile của người dùng hiện tại
+   * @throws com.codecampus.profile.exception.AppException nếu không tìm thấy profile của người dùng hiện tại
    */
   public void unblock(String targetUserId) {
     UserProfile myProfile = userProfileService.getUserProfile();
@@ -143,8 +136,7 @@ public class SocialService
    * @return {@link PageResponse} chứa các đối tượng {@link Follows}
    */
   public PageResponse<Follows> getFollowers(
-      int page, int size)
-  {
+      int page, int size) {
     Pageable pageable = PageRequest.of(page - 1, size);
     var pageData = userProfileRepository
         .findFollowers(SecurityUtils.getMyUserId(), pageable);
@@ -160,8 +152,7 @@ public class SocialService
    * @return {@link PageResponse} chứa các đối tượng {@link Follows}
    */
   public PageResponse<Follows> getFollowings(
-      int page, int size)
-  {
+      int page, int size) {
     Pageable pageable = PageRequest.of(page - 1, size);
     var pageData = userProfileRepository
         .findFollowings(SecurityUtils.getMyUserId(), pageable);
@@ -177,8 +168,7 @@ public class SocialService
    * @return {@link PageResponse} chứa các đối tượng {@link Blocks}
    */
   public PageResponse<Blocks> findBlocked(
-      int page, int size)
-  {
+      int page, int size) {
     Pageable pageable = PageRequest.of(page - 1, size);
     var pageData = userProfileRepository
         .findBlocked(SecurityUtils.getMyUserId(), pageable);

@@ -12,7 +12,6 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
 @AllArgsConstructor
-public class IntrospectRequest
-{
+public class IntrospectRequest {
   String token;
 }

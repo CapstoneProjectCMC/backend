@@ -22,8 +22,7 @@ import org.springframework.stereotype.Component;
  * 2. Nếu token hợp lệ, khởi tạo NimbusJwtDecoder với signerKey cấu hình và giải mã token.
  */
 @Component
-public class CustomJwtDecoder implements JwtDecoder
-{
+public class CustomJwtDecoder implements JwtDecoder {
   @Value("${app.jwt.signerKey}")
   private String signerKey;
 
@@ -47,8 +46,7 @@ public class CustomJwtDecoder implements JwtDecoder
    * @throws JwtException nếu token không hợp lệ hoặc quá trình decode gặp lỗi
    */
   @Override
-  public Jwt decode(String token) throws JwtException
-  {
+  public Jwt decode(String token) throws JwtException {
     try {
       var response = authenticationService.introspect(
           IntrospectRequest.builder()
@@ -58,13 +56,13 @@ public class CustomJwtDecoder implements JwtDecoder
       if (!response.isValid()) {
         throw new JwtException("Token invalid");
       }
-    } catch (JOSEException | ParseException e)
-    {
+    } catch (JOSEException | ParseException e) {
       throw new JwtException(e.getMessage());
     }
 
     if (Objects.isNull(nimbusJwtDecoder)) {
-      SecretKeySpec secretKeySpec = new SecretKeySpec(signerKey.getBytes(), "HS512");
+      SecretKeySpec secretKeySpec =
+          new SecretKeySpec(signerKey.getBytes(), "HS512");
 
       nimbusJwtDecoder = NimbusJwtDecoder.withSecretKey(secretKeySpec)
           .macAlgorithm(MacAlgorithm.HS512)

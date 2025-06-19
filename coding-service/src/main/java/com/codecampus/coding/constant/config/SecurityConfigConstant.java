@@ -3,8 +3,7 @@ package com.codecampus.coding.constant.config;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
-public class SecurityConfigConstant
-{
+public class SecurityConfigConstant {
   // HEADER REQUEST
   public static final String AUTHORIZATION_HEADER = "Authorization";
   public static final String CONTENT_TYPE_HEADER = "Content-Type";

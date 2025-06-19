@@ -23,8 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Builder
 @Slf4j
-public class UserProfileController
-{
+public class UserProfileController {
   UserProfileService userProfileService;
 
   @PreAuthorize("hasRole('ADMIN')")

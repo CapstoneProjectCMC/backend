@@ -20,8 +20,7 @@ import org.springframework.data.neo4j.core.support.UUIDStringGenerator;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Node("ActivityWeek")
-public class ActivityWeek
-{
+public class ActivityWeek {
   @Id
   @GeneratedValue(generatorClass = UUIDStringGenerator.class)
   String id;

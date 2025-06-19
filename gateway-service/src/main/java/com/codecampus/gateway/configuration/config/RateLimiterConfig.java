@@ -19,8 +19,7 @@ import org.springframework.context.annotation.Configuration;
  * </ul>
  */
 @Configuration
-public class RateLimiterConfig
-{
+public class RateLimiterConfig {
   /**
    * Tạo và cấu hình Cache sử dụng Caffeine để lưu các Bucket và
    * tự động loại bỏ các mục không truy cập sau 1 giờ, giới hạn tối đa 10.000 mục.
@@ -38,16 +37,15 @@ public class RateLimiterConfig
   /**
    * Tạo một Bucket mới với giới hạn capacity và cơ chế refill định kỳ.
    *
-   * @param capacity      Số token tối đa trong Bucket (năng lực lưu trữ)
-   * @param refillTokens  Số token được thêm vào Bucket trong mỗi chu kỳ refill
+   * @param capacity       Số token tối đa trong Bucket (năng lực lưu trữ)
+   * @param refillTokens   Số token được thêm vào Bucket trong mỗi chu kỳ refill
    * @param refillDuration Khoảng thời gian giữa các chu kỳ refill
    * @return Bucket đã cấu hình giới hạn và refill
    */
   public Bucket createNewBucket(
       int capacity,
       int refillTokens,
-      Duration refillDuration)
-  {
+      Duration refillDuration) {
     Refill refill = Refill.intervally(refillTokens, refillDuration);
     Bandwidth limit = Bandwidth.classic(capacity, refill);
     return Bucket.builder().addLimit(limit).build();

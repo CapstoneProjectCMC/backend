@@ -19,8 +19,7 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class IdentityService
-{
+public class IdentityService {
   IdentityClient identityClient;
 
   /**

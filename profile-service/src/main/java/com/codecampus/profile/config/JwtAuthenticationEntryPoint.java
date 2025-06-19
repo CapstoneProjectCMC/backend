@@ -18,8 +18,7 @@ import org.springframework.security.web.AuthenticationEntryPoint;
  * payload JSON chứa mã lỗi và thông điệp tương ứng.</p>
  */
 public class JwtAuthenticationEntryPoint
-    implements AuthenticationEntryPoint
-{
+    implements AuthenticationEntryPoint {
   /**
    * Xử lý phản hồi khi yêu cầu không được xác thực.
    *
@@ -46,8 +45,7 @@ public class JwtAuthenticationEntryPoint
       HttpServletRequest request,
       HttpServletResponse response,
       AuthenticationException authException)
-      throws IOException
-  {
+      throws IOException {
     ErrorCode errorCode = ErrorCode.UNAUTHENTICATED;
 
     response.setStatus(errorCode.getStatusCode().value());

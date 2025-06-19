@@ -6,8 +6,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.Id;
-import jakarta.persistence.IdClass;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
@@ -32,8 +30,7 @@ import org.hibernate.annotations.Where;
 @Table(name = "contest_ranking")
 @SQLDelete(sql = "UPDATE contest_ranking SET deleted_at = now(), deleted_by = ? WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
-public class ContestRanking extends AuditMetadata
-{
+public class ContestRanking extends AuditMetadata {
   @EmbeddedId
   ContestRankId id;
 

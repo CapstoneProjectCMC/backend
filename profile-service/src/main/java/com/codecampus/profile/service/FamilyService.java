@@ -19,8 +19,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class FamilyService
-{
+public class FamilyService {
   UserProfileRepository userProfileRepository;
 
   UserProfileService userProfileService;
@@ -35,7 +34,7 @@ public class FamilyService
    * @param parentId ID của người dùng đóng vai trò phụ huynh
    * @param childId  ID của người dùng đóng vai trò con
    * @throws AppException với {@link ErrorCode#USER_NOT_FOUND}
-   *         nếu không tìm thấy profile của phụ huynh hoặc của con
+   *                      nếu không tìm thấy profile của phụ huynh hoặc của con
    */
   public void addChild(String parentId, String childId) {
     UserProfile parent = userProfileService.getUserProfile(parentId);
@@ -56,10 +55,9 @@ public class FamilyService
    * @param parentId ID của người dùng đóng vai trò phụ huynh
    * @param childId  ID của người dùng cần loại khỏi danh sách con
    * @throws AppException với {@link ErrorCode#USER_NOT_FOUND}
-   *         nếu không tìm thấy profile của phụ huynh
+   *                      nếu không tìm thấy profile của phụ huynh
    */
-  public void removeChild(String parentId, String childId)
-  {
+  public void removeChild(String parentId, String childId) {
     UserProfile parent = userProfileService.getUserProfile(parentId);
     parent.getChildren().removeIf(child -> childId.equals(child.getId()));
     userProfileRepository.save(parent);
@@ -75,7 +73,7 @@ public class FamilyService
    * @param parentId ID của người dùng đóng vai trò phụ huynh
    * @return danh sách {@link UserProfile} con của phụ huynh
    * @throws AppException với {@link ErrorCode#USER_NOT_FOUND}
-   *         nếu không tìm thấy profile của phụ huynh
+   *                      nếu không tìm thấy profile của phụ huynh
    */
   public List<UserProfile> getChildren(String parentId) {
     return userProfileRepository

@@ -27,8 +27,8 @@ import reactor.core.publisher.Mono;
  */
 @Component
 public class RateLimiterGatewayFilterFactory
-    extends AbstractGatewayFilterFactory<RateLimiterGatewayFilterFactory.Config>
-{
+    extends
+    AbstractGatewayFilterFactory<RateLimiterGatewayFilterFactory.Config> {
 
   private final RateLimiterConfig rateLimiterConfig;
   private final ObjectMapper objectMapper;
@@ -42,8 +42,7 @@ public class RateLimiterGatewayFilterFactory
   public RateLimiterGatewayFilterFactory(
       RateLimiterConfig rateLimiterConfig,
       ObjectMapper objectMapper,
-      RateLimiterConfigProperties configProperties)
-  {
+      RateLimiterConfigProperties configProperties) {
     super(Config.class);
     this.rateLimiterConfig = rateLimiterConfig;
     this.objectMapper = objectMapper;
@@ -57,23 +56,24 @@ public class RateLimiterGatewayFilterFactory
    * @return GatewayFilter xử lý giới hạn tốc độ
    */
   @Override
-  public GatewayFilter apply(Config config)
-  {
+  public GatewayFilter apply(Config config) {
     return (exchange, chain) -> {
       String routeId = config.getRouteId();
 
       // Lấy IP của người dùng
       String clientIp = "unknown";
-      if(exchange.getRequest().getRemoteAddress() != null
+      if (exchange.getRequest().getRemoteAddress() != null
           && exchange.getRequest().getRemoteAddress().getAddress() != null) {
-        clientIp = exchange.getRequest().getRemoteAddress().getAddress().getHostAddress();
+        clientIp = exchange.getRequest().getRemoteAddress().getAddress()
+            .getHostAddress();
       }
 
       // Gán RouteId cho IP người dùng -> key
       String key = routeId + ":" + clientIp;
 
       // Lấy cấu hình từ application.yaml
-      RateLimiterConfigProperties.RouteConfig routeConfig = configProperties.getRoutes().get(routeId);
+      RateLimiterConfigProperties.RouteConfig routeConfig =
+          configProperties.getRoutes().get(routeId);
 
       final int capacity;
       final int refillTokens;
@@ -86,7 +86,8 @@ public class RateLimiterGatewayFilterFactory
       } else {
         capacity = configProperties.getDefaultConfig().getCapacity();
         refillTokens = configProperties.getDefaultConfig().getRefillTokens();
-        refillDuration = configProperties.getDefaultConfig().getRefillDuration();
+        refillDuration =
+            configProperties.getDefaultConfig().getRefillDuration();
       }
 
       Bucket bucket = bucketCache.computeIfAbsent(key, k ->
@@ -112,10 +113,10 @@ public class RateLimiterGatewayFilterFactory
    * @return Mono hoàn thành khi ghi response
    */
   private Mono<Void> handleRateLimitExceeded(
-      ServerWebExchange exchange)
-  {
+      ServerWebExchange exchange) {
     exchange.getResponse().setStatusCode(HttpStatus.TOO_MANY_REQUESTS);
-    exchange.getResponse().getHeaders().setContentType(MediaType.APPLICATION_JSON);
+    exchange.getResponse().getHeaders()
+        .setContentType(MediaType.APPLICATION_JSON);
 
     ApiResponse<?> apiResponse = ApiResponse.builder()
         .code(ErrorCode.RATE_LIMIT_EXCEEDED.getCode())
@@ -129,8 +130,7 @@ public class RateLimiterGatewayFilterFactory
           .bufferFactory()
           .wrap(bytes);
       return exchange.getResponse().writeWith(Mono.just(buffer));
-    } catch (JsonProcessingException e)
-    {
+    } catch (JsonProcessingException e) {
       return exchange.getResponse().setComplete();
     }
   }

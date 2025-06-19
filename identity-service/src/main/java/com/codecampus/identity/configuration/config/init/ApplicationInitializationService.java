@@ -23,8 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class ApplicationInitializationService
-{
+public class ApplicationInitializationService {
   RoleRepository roleRepository;
   PermissionRepository permissionRepository;
   UserRepository userRepository;
@@ -32,8 +31,7 @@ public class ApplicationInitializationService
   ProfileClient profileClient;
 
   @Transactional
-  void createAdminUser(Role adminRole)
-  {
+  void createAdminUser(Role adminRole) {
     var roles = new HashSet<Role>();
     roles.add(adminRole);
 
@@ -61,7 +59,7 @@ public class ApplicationInitializationService
     );
   }
 
-  Role checkRoleAndCreate(String roleName){
+  Role checkRoleAndCreate(String roleName) {
     if (!roleRepository.existsByName(roleName)) {
       return roleRepository.save(Role.builder()
           .name(roleName)

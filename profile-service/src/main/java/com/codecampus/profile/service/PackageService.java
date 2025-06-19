@@ -18,8 +18,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class PackageService
-{
+public class PackageService {
   UserProfileRepository userProfileRepository;
 
   public PageResponse<SubscribedTo> getMySubscriptions(

@@ -14,8 +14,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Embeddable
-public class SubmissionAnswerId implements Serializable
-{
+public class SubmissionAnswerId implements Serializable {
   @Column(name = "submission_id")
   String submissionId;
 

@@ -15,14 +15,13 @@ import org.springframework.security.web.AuthenticationEntryPoint;
  * Trả về HTTP 401 Unauthorized cùng payload JSON mô tả lỗi.
  */
 public class JwtAuthenticationEntryPoint
-    implements AuthenticationEntryPoint
-{
+    implements AuthenticationEntryPoint {
   /**
    * Phương thức được gọi khi có AuthenticationException xảy ra.
    * Thiết lập HTTP status, content type và trả về body JSON chứa mã lỗi và thông điệp.
    *
-   * @param request    đối tượng HttpServletRequest của client
-   * @param response   đối tượng HttpServletResponse để gửi phản hồi
+   * @param request       đối tượng HttpServletRequest của client
+   * @param response      đối tượng HttpServletResponse để gửi phản hồi
    * @param authException ngoại lệ xác thực gây ra việc gọi entry point này
    * @throws IOException nếu ghi response gặp lỗi I/O
    */
@@ -31,8 +30,7 @@ public class JwtAuthenticationEntryPoint
       HttpServletRequest request,
       HttpServletResponse response,
       AuthenticationException authException)
-      throws IOException
-  {
+      throws IOException {
     ErrorCode errorCode = ErrorCode.UNAUTHENTICATED;
 
     response.setStatus(errorCode.getStatusCode().value());

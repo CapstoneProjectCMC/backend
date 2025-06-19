@@ -28,14 +28,12 @@ import org.springframework.web.bind.annotation.RestController;
 @Builder
 @Slf4j
 @RequestMapping("/auth")
-public class AuthenticationController
-{
+public class AuthenticationController {
   AuthenticationService authenticationService;
 
   @PostMapping("/login-google")
   ApiResponse<AuthenticationResponse> outboundGoogleLogin(
-      @RequestParam("code") String code) throws ParseException
-  {
+      @RequestParam("code") String code) throws ParseException {
     return ApiResponse.<AuthenticationResponse>builder()
         .result(authenticationService.outboundGoogleLogin(code))
         .build();
@@ -44,8 +42,7 @@ public class AuthenticationController
   @PostMapping("/login")
   ApiResponse<AuthenticationResponse> login(
       @RequestBody AuthenticationRequest request)
-      throws ParseException
-  {
+      throws ParseException {
     return ApiResponse.<AuthenticationResponse>builder()
         .result(authenticationService.login(request))
         .message("Login successful")
@@ -64,8 +61,7 @@ public class AuthenticationController
   @PostMapping("/introspect")
   ApiResponse<IntrospectResponse> introspect(
       @RequestBody IntrospectRequest request)
-      throws ParseException, JOSEException
-  {
+      throws ParseException, JOSEException {
     return ApiResponse.<IntrospectResponse>builder()
         .result(authenticationService.introspect(request))
         .message("Introspection successful")

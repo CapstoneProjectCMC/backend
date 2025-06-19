@@ -18,8 +18,7 @@ import org.springframework.context.annotation.Configuration;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
-public class ApplicationInitialization
-{
+public class ApplicationInitialization {
   UserRepository userRepository;
   ApplicationInitializationService applicationInitializationService;
 
@@ -28,19 +27,20 @@ public class ApplicationInitialization
       prefix = "spring.datasource",
       value = "driver-class-name",
       havingValue = "org.postgresql.Driver")
-  ApplicationRunner applicationRunner()
-  {
+  ApplicationRunner applicationRunner() {
     log.info("Khởi chạy ứng dụng!");
     return args -> {
 
-      Role adminRole = applicationInitializationService.checkRoleAndCreate(ADMIN_ROLE);
+      Role adminRole =
+          applicationInitializationService.checkRoleAndCreate(ADMIN_ROLE);
       applicationInitializationService.checkRoleAndCreate(USER_ROLE);
 
       if (userRepository.findByUsername("admin").isEmpty()) {
 
         applicationInitializationService.createAdminUser(adminRole);
 
-        log.warn("admin user has been created with default password: admin, please change it");
+        log.warn(
+            "admin user has been created with default password: admin, please change it");
       }
       log.info("khởi chạy ứng dụng thành công .....");
     };

@@ -9,8 +9,7 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
-public class ErrorCodeConstant
-{
+public class ErrorCodeConstant {
   public static final String INTERNAL_SERVER_STATUS =
       INTERNAL_SERVER_ERROR.toString();
   public static final String BAD_REQUEST_STATUS = BAD_REQUEST.toString();

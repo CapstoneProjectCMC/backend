@@ -22,8 +22,7 @@ import org.springframework.stereotype.Component;
  * </p>
  */
 @Component
-public class CustomJwtDecoder implements JwtDecoder
-{
+public class CustomJwtDecoder implements JwtDecoder {
   /**
    * Giải mã chuỗi JWT và trả về đối tượng Jwt chứa thông tin claims.
    *
@@ -32,8 +31,7 @@ public class CustomJwtDecoder implements JwtDecoder
    * @throws JwtException nếu token không hợp lệ hoặc không parse được
    */
   @Override
-  public Jwt decode(String token) throws JwtException
-  {
+  public Jwt decode(String token) throws JwtException {
     try {
       SignedJWT signedJWT = SignedJWT.parse(token);
 
@@ -44,8 +42,7 @@ public class CustomJwtDecoder implements JwtDecoder
           signedJWT.getHeader().toJSONObject(),
           signedJWT.getJWTClaimsSet().getClaims()
       );
-    } catch (ParseException e)
-    {
+    } catch (ParseException e) {
       throw new JwtException("Invalid token");
     }
   }

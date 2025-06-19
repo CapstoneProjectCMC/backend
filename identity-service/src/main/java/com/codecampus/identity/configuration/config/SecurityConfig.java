@@ -45,8 +45,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableWebSecurity
 @EnableMethodSecurity
 @RequiredArgsConstructor
-public class SecurityConfig
-{
+public class SecurityConfig {
 
   @Autowired
   private CustomJwtDecoder customJwtDecoder;
@@ -60,18 +59,18 @@ public class SecurityConfig
    */
   @Bean
   public SecurityFilterChain securityFilterChain(
-      HttpSecurity httpSecurity) throws Exception
-  {
+      HttpSecurity httpSecurity) throws Exception {
     httpSecurity.authorizeHttpRequests(request -> request
         .requestMatchers(PUBLIC_ENDPOINTS)
         .permitAll()
         .anyRequest()
         .authenticated());
 
-    httpSecurity.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer -> jwtConfigurer
-            .decoder(customJwtDecoder)
-            .jwtAuthenticationConverter(jwtAuthenticationConverter()))
-        .authenticationEntryPoint(new JwtAuthenticationEntryPoint()));
+    httpSecurity.oauth2ResourceServer(
+        oauth2 -> oauth2.jwt(jwtConfigurer -> jwtConfigurer
+                .decoder(customJwtDecoder)
+                .jwtAuthenticationConverter(jwtAuthenticationConverter()))
+            .authenticationEntryPoint(new JwtAuthenticationEntryPoint()));
     httpSecurity.csrf(AbstractHttpConfigurer::disable);
 
     return httpSecurity.build();
@@ -94,8 +93,7 @@ public class SecurityConfig
    * @return CorsConfigurationSource chứa cấu hình CORS của ứng dụng
    */
   @Bean
-  public CorsConfigurationSource corsConfigurationSource()
-  {
+  public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
 
     // Cho phép các origin truy cập định nghĩa sẵn
@@ -139,10 +137,11 @@ public class SecurityConfig
    */
   @Bean
   JwtAuthenticationConverter jwtAuthenticationConverter() {
-    JwtGrantedAuthoritiesConverter authConverter  = new JwtGrantedAuthoritiesConverter();
+    JwtGrantedAuthoritiesConverter authConverter =
+        new JwtGrantedAuthoritiesConverter();
     authConverter.setAuthorityPrefix("");
 
-    JwtAuthenticationConverter converter  = new JwtAuthenticationConverter();
+    JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
     converter.setJwtGrantedAuthoritiesConverter(authConverter);
 
     // Principal = claim "username"

@@ -33,8 +33,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class RoleService
-{
+public class RoleService {
   RoleRepository roleRepository;
   PermissionRepository permissionRepository;
   RoleMapper roleMapper;
@@ -50,7 +49,8 @@ public class RoleService
     var role = roleMapper.toRole(roleRequest);
 
     var permissions = permissionRepository
-        .findAllById(roleRequest.getPermissions().stream().map(PermissionResponse::getName).toList());
+        .findAllById(roleRequest.getPermissions().stream()
+            .map(PermissionResponse::getName).toList());
     role.setPermissions(new HashSet<>(permissions));
 
     role = roleRepository.save(role);
@@ -63,8 +63,7 @@ public class RoleService
    * @return danh sách RoleResponse tương ứng với mỗi vai trò
    */
   @PreAuthorize("hasRole('ADMIN')")
-  public List<RoleResponse> getAllRoles()
-  {
+  public List<RoleResponse> getAllRoles() {
     return roleRepository.findAll()
         .stream()
         .map(roleMapper::toRoleResponse)

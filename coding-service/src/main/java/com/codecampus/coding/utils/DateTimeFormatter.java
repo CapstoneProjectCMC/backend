@@ -22,8 +22,7 @@ import org.springframework.stereotype.Component;
  * </p>
  */
 @Component
-public class DateTimeFormatter
-{
+public class DateTimeFormatter {
   /**
    * Bản đồ chiến lược format dựa trên ngưỡng thời gian (giây).
    * Key: số giây tối đa, Value: hàm format tương ứng.
@@ -52,7 +51,7 @@ public class DateTimeFormatter
    * @param instant thời điểm cần định dạng
    * @return chuỗi mô tả thời gian (ví dụ "5 minute(s) ago" hoặc "2025-06-14")
    */
-  public String format (Instant instant) {
+  public String format(Instant instant) {
     long elapseSeconds = ChronoUnit.SECONDS.between(instant, Instant.now());
 
     var strategy = strategyMap.entrySet()
@@ -68,7 +67,7 @@ public class DateTimeFormatter
    * @param instant thời điểm cần so sánh
    * @return "x second(s) ago"
    */
-  private String formatInSeconds(Instant instant){
+  private String formatInSeconds(Instant instant) {
     long elapseSeconds = ChronoUnit.SECONDS.between(instant, Instant.now());
     return String.format("%s second(s) ago", elapseSeconds);
   }
@@ -79,7 +78,7 @@ public class DateTimeFormatter
    * @param instant thời điểm cần so sánh
    * @return "x minute(s) ago"
    */
-  private String formatInMinutes(Instant instant){
+  private String formatInMinutes(Instant instant) {
     long elapseMinutes = ChronoUnit.MINUTES.between(instant, Instant.now());
     return String.format("%s minute(s) ago", elapseMinutes);
   }
@@ -90,7 +89,7 @@ public class DateTimeFormatter
    * @param instant thời điểm cần so sánh
    * @return "x hour(s) ago"
    */
-  private String formatInHours(Instant instant){
+  private String formatInHours(Instant instant) {
     long elapseHours = ChronoUnit.HOURS.between(instant, Instant.now());
     return String.format("%s hour(s) ago", elapseHours);
   }
@@ -101,9 +100,11 @@ public class DateTimeFormatter
    * @param instant thời điểm cần định dạng
    * @return chuỗi ngày ISO
    */
-  private String formatInDate(Instant instant){
-    LocalDateTime localDateTime = instant.atZone(ZoneId.systemDefault()).toLocalDateTime();
-    java.time.format.DateTimeFormatter dateTimeFormatter = java.time.format.DateTimeFormatter.ISO_DATE;
+  private String formatInDate(Instant instant) {
+    LocalDateTime localDateTime =
+        instant.atZone(ZoneId.systemDefault()).toLocalDateTime();
+    java.time.format.DateTimeFormatter dateTimeFormatter =
+        java.time.format.DateTimeFormatter.ISO_DATE;
 
     return localDateTime.format(dateTimeFormatter);
   }

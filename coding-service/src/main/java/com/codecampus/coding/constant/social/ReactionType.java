@@ -1,7 +1,6 @@
 package com.codecampus.coding.constant.social;
 
-public enum ReactionType
-{
+public enum ReactionType {
   LIKE,
   LOVE,
   WOW,

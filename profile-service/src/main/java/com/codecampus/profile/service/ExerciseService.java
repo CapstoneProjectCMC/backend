@@ -31,8 +31,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class ExerciseService
-{
+public class ExerciseService {
   ExerciseRepository exerciseRepository;
   UserProfileRepository userProfileRepository;
 
@@ -46,9 +45,9 @@ public class ExerciseService
    *
    * @param exerciseId mã của bài tập cần lưu
    * @throws AppException với mã {@link ErrorCode#USER_NOT_FOUND}
-   *         nếu không tìm thấy người dùng,
-   *         hoặc {@link ErrorCode#EXERCISE_NOT_FOUND}
-   *         nếu không tìm thấy bài tập.
+   *                      nếu không tìm thấy người dùng,
+   *                      hoặc {@link ErrorCode#EXERCISE_NOT_FOUND}
+   *                      nếu không tìm thấy bài tập.
    */
   public void saveExercise(String exerciseId) {
     UserProfile profile = userProfileService.getUserProfile();
@@ -69,10 +68,9 @@ public class ExerciseService
    *
    * @param exerciseId mã của bài tập cần hủy lưu
    * @throws AppException với mã {@link ErrorCode#USER_NOT_FOUND}
-   *         nếu không tìm thấy người dùng.
+   *                      nếu không tìm thấy người dùng.
    */
-  public void unsaveExercise(String exerciseId)
-  {
+  public void unsaveExercise(String exerciseId) {
     UserProfile profile = userProfileService.getUserProfile();
 
     profile.getSavedExercises()
@@ -83,12 +81,12 @@ public class ExerciseService
   /**
    * Lấy trang dữ liệu các bài tập mà người dùng hiện tại đã lưu.
    *
-   * @param page   trang thứ mấy (bắt đầu từ 1)
-   * @param size   số phần tử trên mỗi trang
+   * @param page trang thứ mấy (bắt đầu từ 1)
+   * @param size số phần tử trên mỗi trang
    * @return {@link PageResponse} chứa danh sách {@link SavedExercise}
-   *         đã lưu.
+   * đã lưu.
    */
-  public PageResponse<SavedExercise> getSavedExercises (
+  public PageResponse<SavedExercise> getSavedExercises(
       int page, int size) {
     Pageable pageable = PageRequest.of(page - 1, size);
     var pageData = userProfileRepository
@@ -100,10 +98,10 @@ public class ExerciseService
   /**
    * Lấy trang dữ liệu các bài tập mà người dùng hiện tại đã hoàn thành.
    *
-   * @param page   trang thứ mấy (bắt đầu từ 1)
-   * @param size   số phần tử trên mỗi trang
+   * @param page trang thứ mấy (bắt đầu từ 1)
+   * @param size số phần tử trên mỗi trang
    * @return {@link PageResponse} chứa danh sách {@link CompletedExercise}
-   *         đã hoàn thành.
+   * đã hoàn thành.
    */
   public PageResponse<CompletedExercise> getCompletedExercises(
       int page, int size) {
@@ -115,14 +113,15 @@ public class ExerciseService
   }
 
   // ROLE TEACHER
+
   /**
    * (Dành cho ROLE_TEACHER) Lấy trang dữ liệu các bài tập do người dùng
    * hiện tại tạo ra.
    *
-   * @param page   trang thứ mấy (bắt đầu từ 1)
-   * @param size   số phần tử trên mỗi trang
+   * @param page trang thứ mấy (bắt đầu từ 1)
+   * @param size số phần tử trên mỗi trang
    * @return {@link PageResponse} chứa danh sách {@link CreatedExercise}
-   *         do người dùng tạo.
+   * do người dùng tạo.
    */
   public PageResponse<CreatedExercise> getCreatedExercises(
       int page, int size) {
@@ -133,8 +132,7 @@ public class ExerciseService
     return toPageResponse(pageData, page);
   }
 
-  public Exercise getExercise(String exerciseId)
-  {
+  public Exercise getExercise(String exerciseId) {
     return exerciseRepository
         .findByExerciseId(exerciseId)
         .orElseThrow(

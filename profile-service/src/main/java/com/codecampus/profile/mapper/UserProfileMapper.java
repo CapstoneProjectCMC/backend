@@ -15,8 +15,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
     componentModel = "spring",
     uses = {ConvertUtils.class}
 )
-public interface UserProfileMapper
-{
+public interface UserProfileMapper {
   @Mapping(
       source = "dob",
       target = "dob",

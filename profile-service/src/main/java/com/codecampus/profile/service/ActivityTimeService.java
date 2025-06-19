@@ -22,8 +22,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class ActivityTimeService
-{
+public class ActivityTimeService {
 
   UserProfileRepository userProfileRepository;
 
@@ -34,21 +33,21 @@ public class ActivityTimeService
    * ID người dùng, sau đó gọi repository tương ứng để truy vấn dữ liệu
    * theo tuần. Kết quả trả về được bao gói trong DTO {@link PageResponse}.
    *
-   * @param page    số trang hiện tại (bắt đầu từ 1)
-   * @param size    số phần tử trên mỗi trang
+   * @param page số trang hiện tại (bắt đầu từ 1)
+   * @param size số phần tử trên mỗi trang
    * @return {@link PageResponse} chứa danh sách đối tượng {@link ActivityWeek}
-   *         đã được phân trang, bao gồm các thông tin:
-   *         <ul>
-   *           <li>currentPage: trang đang trả về</li>
-   *           <li>pageSize: số phần tử mỗi trang</li>
-   *           <li>totalPages: tổng số trang</li>
-   *           <li>totalElements: tổng số phần tử</li>
-   *           <li>data: danh sách {@link ActivityWeek} ở trang này</li>
-   *         </ul>
+   * đã được phân trang, bao gồm các thông tin:
+   * <ul>
+   *   <li>currentPage: trang đang trả về</li>
+   *   <li>pageSize: số phần tử mỗi trang</li>
+   *   <li>totalPages: tổng số trang</li>
+   *   <li>totalElements: tổng số phần tử</li>
+   *   <li>data: danh sách {@link ActivityWeek} ở trang này</li>
+   * </ul>
    */
   public PageResponse<ActivityWeek> getActivityWeeks(
       int page, int size) {
-    Pageable pageable = PageRequest.of(page - 1,  size);
+    Pageable pageable = PageRequest.of(page - 1, size);
     var pageData = userProfileRepository
         .findActivityWeek(SecurityUtils.getMyUserId(), pageable);
 

@@ -11,8 +11,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -37,8 +35,7 @@ import org.hibernate.annotations.Where;
 @Table(name = "exercise")
 @SQLDelete(sql = "UPDATE exercise SET deleted_at = now(), deleted_by = ? WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
-public class Exercise extends AuditMetadata
-{
+public class Exercise extends AuditMetadata {
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   String id;

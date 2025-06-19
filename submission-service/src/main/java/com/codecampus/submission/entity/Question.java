@@ -33,8 +33,7 @@ import org.hibernate.annotations.Where;
 @Table(name = "question")
 @SQLDelete(sql = "UPDATE question SET deleted_at = now(), deleted_by = ? WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
-public class Question extends AuditMetadata
-{
+public class Question extends AuditMetadata {
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   String id;

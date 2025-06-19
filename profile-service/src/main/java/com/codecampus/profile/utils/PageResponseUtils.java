@@ -3,9 +3,9 @@ package com.codecampus.profile.utils;
 import com.codecampus.profile.dto.common.PageResponse;
 import org.springframework.data.domain.Page;
 
-public class PageResponseUtils
-{
-  private PageResponseUtils() {}
+public class PageResponseUtils {
+  private PageResponseUtils() {
+  }
 
   /**
    * Chuyển một {@link Page}&lt;T&gt; thành {@link PageResponse}&lt;T&gt;.
@@ -15,7 +15,8 @@ public class PageResponseUtils
    * @param <T>         kiểu của phần tử trong trang
    * @return {@link PageResponse}&lt;T&gt; tương ứng
    */
-  public static <T> PageResponse<T> toPageResponse(Page<T> pageData, int currentPage) {
+  public static <T> PageResponse<T> toPageResponse(
+      Page<T> pageData, int currentPage) {
     return PageResponse.<T>builder()
         .currentPage(currentPage)
         .pageSize(pageData.getSize())

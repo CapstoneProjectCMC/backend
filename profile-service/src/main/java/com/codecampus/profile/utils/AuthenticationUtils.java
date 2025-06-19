@@ -22,8 +22,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class AuthenticationUtils
-{
+public class AuthenticationUtils {
   UserProfileRepository userProfileRepository;
 
   /**
@@ -32,10 +31,8 @@ public class AuthenticationUtils
    * @param userId mã định danh của người dùng cần kiểm tra
    * @throws AppException nếu userId đã tồn tại (ErrorCode.USER_ALREADY_EXISTS)
    */
-  public void checkExistsUserid(String userId)
-  {
-    if (userProfileRepository.existsByUserId(userId))
-    {
+  public void checkExistsUserid(String userId) {
+    if (userProfileRepository.existsByUserId(userId)) {
       throw new AppException(ErrorCode.USER_ALREADY_EXISTS);
     }
   }

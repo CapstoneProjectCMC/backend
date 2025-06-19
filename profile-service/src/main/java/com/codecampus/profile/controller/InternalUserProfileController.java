@@ -20,8 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Builder
 @Slf4j
-public class InternalUserProfileController
-{
+public class InternalUserProfileController {
   UserProfileService userProfileService;
 
   @PostMapping("/internal/user")

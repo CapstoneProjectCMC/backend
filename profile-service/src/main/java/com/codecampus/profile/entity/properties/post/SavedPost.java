@@ -1,6 +1,5 @@
 package com.codecampus.profile.entity.properties.post;
 
-import com.codecampus.profile.entity.Exercise;
 import com.codecampus.profile.entity.Post;
 import java.time.Instant;
 import lombok.AccessLevel;
@@ -14,7 +13,6 @@ import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.RelationshipProperties;
 import org.springframework.data.neo4j.core.schema.TargetNode;
-import org.springframework.data.neo4j.core.support.UUIDStringGenerator;
 
 @Getter
 @Setter
@@ -23,8 +21,7 @@ import org.springframework.data.neo4j.core.support.UUIDStringGenerator;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @RelationshipProperties
-public class SavedPost
-{
+public class SavedPost {
   @Id
   @GeneratedValue
   String id;

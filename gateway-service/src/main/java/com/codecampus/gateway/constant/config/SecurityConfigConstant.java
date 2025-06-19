@@ -3,8 +3,7 @@ package com.codecampus.gateway.constant.config;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
-public class SecurityConfigConstant
-{
+public class SecurityConfigConstant {
 
   // PATTERN REQUEST
   public static final String URL_PATTERN_ALL = "/**";

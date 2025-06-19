@@ -41,8 +41,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class UserProfileService
-{
+public class UserProfileService {
   UserProfileRepository userProfileRepository;
 
   UserProfileMapper userProfileMapper;
@@ -99,8 +98,7 @@ public class UserProfileService
    * @throws AppException nếu không tìm thấy
    */
   @PreAuthorize("hasRole('ADMIN')")
-  public UserProfileResponse getUserProfileById(String id)
-  {
+  public UserProfileResponse getUserProfileById(String id) {
     return userProfileRepository
         .findById(id)
         .map(userProfileMapper::toUserProfileResponse)
@@ -117,7 +115,8 @@ public class UserProfileService
    * @return PageResponse chứa danh sách UserProfileResponse và thông tin phân trang
    */
   @PreAuthorize("hasRole('ADMIN')")
-  public PageResponse<UserProfileResponse> getAllUserProfiles(int page, int size) {
+  public PageResponse<UserProfileResponse> getAllUserProfiles(int page,
+                                                              int size) {
     Pageable pageable = PageRequest.of(page - 1, size);
     var pageData = userProfileRepository
         .findAll(pageable)
@@ -131,8 +130,7 @@ public class UserProfileService
    *
    * @return UserProfileResponse của người dùng hiện tại
    */
-  public UserProfileResponse getMyUserProfile()
-  {
+  public UserProfileResponse getMyUserProfile() {
     return getUserProfileByUserId(SecurityUtils.getMyUserId());
   }
 

@@ -20,8 +20,7 @@ import org.springframework.data.neo4j.core.schema.TargetNode;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @RelationshipProperties
-public class EnrolledClass
-{
+public class EnrolledClass {
   @Id
   @GeneratedValue
   String id;

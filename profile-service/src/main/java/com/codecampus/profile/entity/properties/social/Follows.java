@@ -21,8 +21,7 @@ import org.springframework.data.neo4j.core.schema.TargetNode;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @RelationshipProperties
-public class Follows
-{
+public class Follows {
   @Id
   @GeneratedValue
   String id;

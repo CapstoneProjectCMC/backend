@@ -29,8 +29,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class OrganizationService
-{
+public class OrganizationService {
   UserProfileRepository userProfileRepository;
   OrgRepository orgRepository;
   private final ClassroomRepository classroomRepository;
@@ -46,8 +45,7 @@ public class OrganizationService
   }
 
   public PageResponse<MemberOrg> getMyMemberOrgs(
-      int page, int size)
-  {
+      int page, int size) {
     Pageable pageable = PageRequest.of(page - 1, size);
     var pageData = userProfileRepository
         .findMemberOrgs(SecurityUtils.getMyUserId(), pageable);
@@ -74,7 +72,8 @@ public class OrganizationService
     return toPageResponse(pageData, page);
   }
 
-  public PageResponse<Classroom> classesOfOrg(String orgId, int page, int size) {
+  public PageResponse<Classroom> classesOfOrg(String orgId, int page,
+                                              int size) {
     Pageable pageable = PageRequest.of(page - 1, size);
     var pageData = orgRepository
         .findClassesOfOrg(orgId, pageable);
@@ -84,7 +83,7 @@ public class OrganizationService
 
   public PageResponse<AssignedOrgExercise> assignedExercisesOfOrg(
       String orgId, int page, int size) {
-    Pageable pageable = PageRequest.of(page-1, size);
+    Pageable pageable = PageRequest.of(page - 1, size);
     var pageData = orgRepository
         .findAssignedExercises(orgId, pageable);
 
@@ -93,7 +92,7 @@ public class OrganizationService
 
   public PageResponse<AssignedClassExercise> assignedExercisesOfClass(
       String classId, int page, int size) {
-    Pageable pageable = PageRequest.of(page-1, size);
+    Pageable pageable = PageRequest.of(page - 1, size);
     var pageData = classroomRepository
         .findAssignedExercises(classId, pageable);
 

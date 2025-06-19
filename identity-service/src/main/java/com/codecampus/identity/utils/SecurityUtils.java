@@ -22,7 +22,8 @@ public class SecurityUtils {
    */
   public static User getCurrentUser(
       UserRepository userRepository) {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    Authentication authentication =
+        SecurityContextHolder.getContext().getAuthentication();
 
     if (authentication == null || !authentication.isAuthenticated()) {
       return null;

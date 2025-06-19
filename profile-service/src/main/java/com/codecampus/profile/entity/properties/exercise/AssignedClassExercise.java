@@ -1,7 +1,6 @@
 package com.codecampus.profile.entity.properties.exercise;
 
 import com.codecampus.profile.entity.Exercise;
-import java.time.Instant;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,8 +20,7 @@ import org.springframework.data.neo4j.core.schema.TargetNode;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @RelationshipProperties
-public class AssignedClassExercise
-{
+public class AssignedClassExercise {
   @Id
   @GeneratedValue
   String id;

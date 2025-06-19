@@ -9,8 +9,7 @@ import lombok.experimental.FieldDefaults;
 @Data
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserUpdateRequest
-{
+public class UserUpdateRequest {
   String password;
   List<String> roles;
 }

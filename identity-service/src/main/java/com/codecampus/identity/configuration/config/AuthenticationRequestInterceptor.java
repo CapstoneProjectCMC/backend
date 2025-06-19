@@ -17,23 +17,22 @@ import org.springframework.web.context.request.ServletRequestAttributes;
  */
 @Slf4j
 public class AuthenticationRequestInterceptor
-    implements RequestInterceptor
-{
+    implements RequestInterceptor {
   /**
    * Gắn header Authorization vào RequestTemplate nếu có trong HttpServletRequest.
    *
    * @param requestTemplate đối tượng RequestTemplate chuẩn bị gửi qua Feign
    */
   @Override
-  public void apply(RequestTemplate requestTemplate)
-  {
+  public void apply(RequestTemplate requestTemplate) {
     RequestAttributes attrs = RequestContextHolder.getRequestAttributes();
     if (!(attrs instanceof ServletRequestAttributes)) {
       // Không có HTTP request (ví dụ ApplicationRunner), bỏ qua
       return;
     }
 
-    HttpServletRequest request = ((ServletRequestAttributes) attrs).getRequest();
+    HttpServletRequest request =
+        ((ServletRequestAttributes) attrs).getRequest();
     String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
     log.info("authHeader: {}", authHeader);

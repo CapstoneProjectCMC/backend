@@ -8,11 +8,9 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.stereotype.Component;
 
 @Component
-public class AuditorAwareImpl implements AuditorAware<String>
-{
+public class AuditorAwareImpl implements AuditorAware<String> {
   @Override
-  public Optional<String> getCurrentAuditor()
-  {
+  public Optional<String> getCurrentAuditor() {
     var auth = SecurityContextHolder.getContext().getAuthentication();
     if (auth == null || !auth.isAuthenticated()) {
       return Optional.empty();

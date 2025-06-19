@@ -1,7 +1,6 @@
 package com.codecampus.coding.exception;
 
 import com.codecampus.coding.dto.common.ApiResponse;
-import com.codecampus.coding.exception.ErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -10,8 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 @Slf4j
-public class GlobalExceptionHandler
-{
+public class GlobalExceptionHandler {
   /**
    * Xử lý các ngoại lệ RuntimeException không được bắt riêng.
    *

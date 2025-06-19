@@ -36,8 +36,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class OtpService
-{
+public class OtpService {
   JavaMailSender mailSender;
   OtpVerificationRepository otpRepository;
   UserRepository userRepository;
@@ -115,8 +114,7 @@ public class OtpService
    * @param request chứa email và otpCode cần xác thực
    * @throws AppException khi email không tồn tại, OTP sai hoặc hết hạn
    */
-  public void verifyOtp(OtpVerificationRequest request)
-  {
+  public void verifyOtp(OtpVerificationRequest request) {
     OtpVerification otp = otpRepository
         .findByEmail(request.getEmail())
         .orElseThrow(
@@ -156,12 +154,11 @@ public class OtpService
   /**
    * Gửi email chứa mã OTP đến địa chỉ người dùng.
    *
-   * @param email địa chỉ nhận OTP
+   * @param email   địa chỉ nhận OTP
    * @param otpCode mã OTP
    * @throws AppException nếu gửi email thất bại
    */
-  private void sendEmail(String email, String otpCode)
-  {
+  private void sendEmail(String email, String otpCode) {
     try {
       SimpleMailMessage message = new SimpleMailMessage();
       message.setFrom(fromEmail);

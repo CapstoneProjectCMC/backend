@@ -14,8 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Builder
 @Slf4j
-public class HelloController
-{
+public class HelloController {
   @GetMapping("/hello")
   ApiResponse<String> getHello() {
     return ApiResponse.<String>builder()

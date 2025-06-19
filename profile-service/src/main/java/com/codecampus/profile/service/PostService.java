@@ -25,8 +25,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class PostService
-{
+public class PostService {
   UserProfileRepository userProfileRepository;
   PostRepository postRepository;
 
@@ -46,8 +45,7 @@ public class PostService
     userProfileRepository.save(myProfile);
   }
 
-  public void unsavePost(String postId)
-  {
+  public void unsavePost(String postId) {
     UserProfile myProfile = userProfileService.getUserProfile();
 
     myProfile.getSavedPosts()
@@ -74,8 +72,7 @@ public class PostService
     return toPageResponse(pageData, page);
   }
 
-  public Post getPost(String postId)
-  {
+  public Post getPost(String postId) {
     return postRepository.findByPostId(postId)
         .orElseThrow(
             () -> new AppException(ErrorCode.POST_NOT_FOUND)

@@ -15,8 +15,7 @@ import org.springframework.context.annotation.Configuration;
 @Setter
 @Configuration
 @ConfigurationProperties(prefix = "rate-limiter")
-public class RateLimiterConfigProperties
-{
+public class RateLimiterConfigProperties {
   private Map<String, RouteConfig> routes = new HashMap<>();
   private DefaultConfig defaultConfig = new DefaultConfig();
 

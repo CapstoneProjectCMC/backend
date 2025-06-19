@@ -15,8 +15,7 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class OutboundUserResponse
-{
+public class OutboundUserResponse {
   String id;
   String email;
   boolean verifiedEmail;

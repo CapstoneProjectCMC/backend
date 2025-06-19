@@ -9,9 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
-import java.time.Instant;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,8 +30,7 @@ import org.hibernate.annotations.Where;
 @Table(name = "test_case")
 @SQLDelete(sql = "UPDATE test_case SET deleted_at = now(), deleted_by = ? WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
-public class TestCase extends AuditMetadata
-{
+public class TestCase extends AuditMetadata {
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   String id;

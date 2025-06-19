@@ -29,8 +29,7 @@ import org.hibernate.annotations.Where;
 @Table(name = "coding_detail")
 @SQLDelete(sql = "UPDATE coding_detail SET deleted_at = now(), deleted_by = ? WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
-public class CodingDetail extends AuditMetadata
-{
+public class CodingDetail extends AuditMetadata {
   @Id
   String id;   // trùng với exercise_id
 

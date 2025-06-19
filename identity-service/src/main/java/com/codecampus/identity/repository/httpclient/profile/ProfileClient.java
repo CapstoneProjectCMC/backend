@@ -14,8 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
     url = "${app.services.profile}",
     configuration = {AuthenticationRequestInterceptor.class}
 )
-public interface ProfileClient
-{
+public interface ProfileClient {
   @PostMapping(
       value = "/internal/user",
       produces = MediaType.APPLICATION_JSON_VALUE

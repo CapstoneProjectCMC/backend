@@ -1,12 +1,11 @@
 package com.codecampus.submission.configuration.config;
 
 import com.nimbusds.jwt.SignedJWT;
+import java.text.ParseException;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.stereotype.Component;
-
-import java.text.ParseException;
 
 /**
  * JwtDecoder tùy chỉnh sử dụng thư viện Nimbus để phân tích và giải mã JWT.
@@ -23,8 +22,7 @@ import java.text.ParseException;
  * </p>
  */
 @Component
-public class CustomJwtDecoder implements JwtDecoder
-{
+public class CustomJwtDecoder implements JwtDecoder {
   /**
    * Giải mã chuỗi JWT và trả về đối tượng Jwt chứa thông tin claims.
    *
@@ -33,20 +31,18 @@ public class CustomJwtDecoder implements JwtDecoder
    * @throws JwtException nếu token không hợp lệ hoặc không parse được
    */
   @Override
-  public Jwt decode(String token) throws JwtException
-  {
+  public Jwt decode(String token) throws JwtException {
     try {
       SignedJWT signedJWT = SignedJWT.parse(token);
 
       return new Jwt(
-              token,
-              signedJWT.getJWTClaimsSet().getIssueTime().toInstant(),
-              signedJWT.getJWTClaimsSet().getExpirationTime().toInstant(),
-              signedJWT.getHeader().toJSONObject(),
-              signedJWT.getJWTClaimsSet().getClaims()
+          token,
+          signedJWT.getJWTClaimsSet().getIssueTime().toInstant(),
+          signedJWT.getJWTClaimsSet().getExpirationTime().toInstant(),
+          signedJWT.getHeader().toJSONObject(),
+          signedJWT.getJWTClaimsSet().getClaims()
       );
-    } catch (ParseException e)
-    {
+    } catch (ParseException e) {
       throw new JwtException("Invalid token");
     }
   }

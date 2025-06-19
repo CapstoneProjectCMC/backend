@@ -25,17 +25,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
-import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.mock.http.server.reactive.MockServerHttpRequest;
 import org.springframework.mock.web.server.MockServerWebExchange;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
-import reactor.test.StepVerifier;
 
-public class RateLimiterGatewayFilterFactoryTest
-{
+public class RateLimiterGatewayFilterFactoryTest {
   private RateLimiterGatewayFilterFactory filterFactory;
   private GatewayFilterChain filterChain;
 
@@ -43,19 +39,22 @@ public class RateLimiterGatewayFilterFactoryTest
   void setUp() {
     // Mock RateLimiterConfig
     RateLimiterConfig rateLimiterConfig = mock(RateLimiterConfig.class);
-    when(rateLimiterConfig.createNewBucket(anyInt(), anyInt(), any(Duration.class)))
+    when(rateLimiterConfig.createNewBucket(anyInt(), anyInt(),
+        any(Duration.class)))
         .thenReturn(new TestBucket(2)); //Giới hạn 2 request
 
     // Mock Config Properties
-    RateLimiterConfigProperties configProperties = new RateLimiterConfigProperties();
-    RateLimiterConfigProperties.RouteConfig routeConfig = new RateLimiterConfigProperties.RouteConfig();
+    RateLimiterConfigProperties configProperties =
+        new RateLimiterConfigProperties();
+    RateLimiterConfigProperties.RouteConfig routeConfig =
+        new RateLimiterConfigProperties.RouteConfig();
     routeConfig.setCapacity(2);
     configProperties.getRoutes().put("test_route", routeConfig);
 
     filterFactory = new RateLimiterGatewayFilterFactory(
-      rateLimiterConfig,
-      new ObjectMapper(),
-      configProperties
+        rateLimiterConfig,
+        new ObjectMapper(),
+        configProperties
     );
 
     filterChain = mock(GatewayFilterChain.class);
@@ -63,8 +62,9 @@ public class RateLimiterGatewayFilterFactoryTest
   }
 
   @Test
-  void whenExceedLimit_thenReturn429(){
-    RateLimiterGatewayFilterFactory.Config config = new RateLimiterGatewayFilterFactory.Config();
+  void whenExceedLimit_thenReturn429() {
+    RateLimiterGatewayFilterFactory.Config config =
+        new RateLimiterGatewayFilterFactory.Config();
     config.setRouteId("test_route");
     GatewayFilter filter = filterFactory.apply(config);
 
@@ -82,12 +82,14 @@ public class RateLimiterGatewayFilterFactoryTest
     filter.filter(exchange3, filterChain).block();
 
     // Kiểm tra status code sau khi xử lý
-    assertEquals(HttpStatus.TOO_MANY_REQUESTS, exchange3.getResponse().getStatusCode());
+    assertEquals(HttpStatus.TOO_MANY_REQUESTS,
+        exchange3.getResponse().getStatusCode());
   }
 
   @Test
-  void whenDifferentIps_thenSeparateBuckets(){
-    RateLimiterGatewayFilterFactory.Config config = new RateLimiterGatewayFilterFactory.Config();
+  void whenDifferentIps_thenSeparateBuckets() {
+    RateLimiterGatewayFilterFactory.Config config =
+        new RateLimiterGatewayFilterFactory.Config();
     config.setRouteId("test_route");
     GatewayFilter filter = filterFactory.apply(config);
 
@@ -110,15 +112,16 @@ public class RateLimiterGatewayFilterFactoryTest
 
     // Kiểm tra request thứ 3 từ IP1 (vượt giới hạn)
     filter.filter(exchange1_3, filterChain).block();
-    assertEquals(HttpStatus.TOO_MANY_REQUESTS, exchange1_3.getResponse().getStatusCode());
+    assertEquals(HttpStatus.TOO_MANY_REQUESTS,
+        exchange1_3.getResponse().getStatusCode());
 
     // Kiểm tra request thứ 3 từ IP2 (vượt giới hạn)
     filter.filter(exchange2_3, filterChain).block();
-    assertEquals(HttpStatus.TOO_MANY_REQUESTS, exchange2_3.getResponse().getStatusCode());
+    assertEquals(HttpStatus.TOO_MANY_REQUESTS,
+        exchange2_3.getResponse().getStatusCode());
   }
 
-  private ServerWebExchange createExchange(String ipAddress)
-  {
+  private ServerWebExchange createExchange(String ipAddress) {
     return MockServerWebExchange.from(
         MockServerHttpRequest.get("/")
             .remoteAddress(new InetSocketAddress(ipAddress, 8080))
@@ -175,7 +178,8 @@ public class RateLimiterGatewayFilterFactoryTest
     }
 
     @Override
-    public void replaceConfiguration(BucketConfiguration newConfiguration, TokensInheritanceStrategy tokensInheritanceStrategy) {
+    public void replaceConfiguration(BucketConfiguration newConfiguration,
+                                     TokensInheritanceStrategy tokensInheritanceStrategy) {
       throw new UnsupportedOperationException();
     }
 

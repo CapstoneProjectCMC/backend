@@ -21,8 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Builder
 @Slf4j
 @RequestMapping("/auth")
-public class OtpController
-{
+public class OtpController {
   OtpService otpService;
 
   @PostMapping("/send-otp")

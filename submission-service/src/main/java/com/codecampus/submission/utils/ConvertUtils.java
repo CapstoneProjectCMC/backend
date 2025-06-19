@@ -1,12 +1,11 @@
 package com.codecampus.submission.utils;
 
-import org.mapstruct.Named;
-
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import org.mapstruct.Named;
 
 /**
  * Tiện ích chuyển đổi giữa chuỗi ngày theo định dạng dd/MM/yyyy
@@ -20,8 +19,7 @@ import java.time.format.DateTimeFormatter;
  * </ul>
  * </p>
  */
-public class ConvertUtils
-{
+public class ConvertUtils {
   // Định dạng dd/MM/yyyy
   private static final DateTimeFormatter DMY_FORMATTER =
       DateTimeFormatter.ofPattern("dd/MM/yyyy");

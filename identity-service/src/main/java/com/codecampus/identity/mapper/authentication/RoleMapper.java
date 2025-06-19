@@ -6,8 +6,7 @@ import com.codecampus.identity.entity.account.Role;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring", uses = {PermissionMapper.class})
-public interface RoleMapper
-{
+public interface RoleMapper {
   Role toRole(RoleRequest request);
 
   RoleResponse toRoleResponse(Role role);

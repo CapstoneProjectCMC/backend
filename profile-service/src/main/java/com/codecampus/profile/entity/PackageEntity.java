@@ -20,8 +20,7 @@ import org.springframework.data.neo4j.core.support.UUIDStringGenerator;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Node("Package")
-public class PackageEntity
-{
+public class PackageEntity {
   @Id
   @GeneratedValue(generatorClass = UUIDStringGenerator.class)
   String id;

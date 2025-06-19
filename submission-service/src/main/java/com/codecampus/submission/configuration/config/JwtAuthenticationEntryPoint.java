@@ -5,11 +5,10 @@ import com.codecampus.submission.exception.ErrorCode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
-
-import java.io.IOException;
 
 /**
  * Entry point tùy chỉnh cho Spring Security khi phát hiện yêu cầu không được xác thực.
@@ -19,8 +18,7 @@ import java.io.IOException;
  * payload JSON chứa mã lỗi và thông điệp tương ứng.</p>
  */
 public class JwtAuthenticationEntryPoint
-        implements AuthenticationEntryPoint
-{
+    implements AuthenticationEntryPoint {
   /**
    * Xử lý phản hồi khi yêu cầu không được xác thực.
    *
@@ -44,20 +42,19 @@ public class JwtAuthenticationEntryPoint
    */
   @Override
   public void commence(
-          HttpServletRequest request,
-          HttpServletResponse response,
-          AuthenticationException authException)
-          throws IOException
-  {
+      HttpServletRequest request,
+      HttpServletResponse response,
+      AuthenticationException authException)
+      throws IOException {
     ErrorCode errorCode = ErrorCode.UNAUTHENTICATED;
 
     response.setStatus(errorCode.getStatusCode().value());
     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
     ApiResponse<?> apiResponse = ApiResponse.builder()
-            .code(errorCode.getCode())
-            .message(errorCode.getMessage())
-            .build();
+        .code(errorCode.getCode())
+        .message(errorCode.getMessage())
+        .build();
 
     ObjectMapper objectMapper = new ObjectMapper();
 

@@ -22,8 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Builder
 @Slf4j
-public class PermissionController
-{
+public class PermissionController {
   PermissionService permissionService;
 
   @PostMapping("/permission")

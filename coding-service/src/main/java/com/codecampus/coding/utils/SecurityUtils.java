@@ -8,8 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
  * từ ngữ cảnh bảo mật của Spring Security.
  */
 @Slf4j
-public class SecurityUtils
-{
+public class SecurityUtils {
   /**
    * Lấy ID của người dùng đã đăng nhập.
    *

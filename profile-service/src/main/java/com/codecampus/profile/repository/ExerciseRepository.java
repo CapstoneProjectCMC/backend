@@ -7,8 +7,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ExerciseRepository
-    extends Neo4jRepository<Exercise, String>
-{
+    extends Neo4jRepository<Exercise, String> {
   Optional<Exercise> findByExerciseId(String title);
 
 }

@@ -30,8 +30,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class PermissionService
-{
+public class PermissionService {
   PermissionRepository permissionRepository;
   PermissionMapper permissionMapper;
 
@@ -54,8 +53,7 @@ public class PermissionService
    * @return danh sách PermissionResponse tương ứng với mỗi quyền
    */
   @PreAuthorize("hasRole('ADMIN')")
-  public List<PermissionResponse> getAllPermissions()
-  {
+  public List<PermissionResponse> getAllPermissions() {
     var permissions = permissionRepository.findAll();
     return permissions.stream()
         .map(permissionMapper::toPermissionResponse)

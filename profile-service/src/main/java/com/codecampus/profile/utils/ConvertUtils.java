@@ -19,8 +19,7 @@ import org.mapstruct.Named;
  * </ul>
  * </p>
  */
-public class ConvertUtils
-{
+public class ConvertUtils {
   // Định dạng dd/MM/yyyy
   private static final DateTimeFormatter DMY_FORMATTER =
       DateTimeFormatter.ofPattern("dd/MM/yyyy");

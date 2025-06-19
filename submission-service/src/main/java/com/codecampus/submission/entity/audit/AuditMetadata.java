@@ -17,8 +17,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 @FieldDefaults(level = AccessLevel.PROTECTED)
-public class AuditMetadata
-{
+public class AuditMetadata {
   /* ---- create ---- */
   @CreatedBy
   @Column(name = "created_by", updatable = false)
@@ -44,7 +43,9 @@ public class AuditMetadata
   @Column(name = "deleted_at")
   Instant deletedAt;
 
-  /** Đánh dấu xóa mềm */
+  /**
+   * Đánh dấu xóa mềm
+   */
   public void markDeleted(String by) {
     this.deletedBy = by;
     this.deletedAt = Instant.now();

@@ -8,8 +8,7 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @AllArgsConstructor
-public enum Difficulty
-{
+public enum Difficulty {
   EASY(1), MEDIUM(2), HARD(3);
   int code;
 }

@@ -17,8 +17,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
  */
 @Slf4j
 public class AuthenticationRequestInterceptor
-    implements RequestInterceptor
-{
+    implements RequestInterceptor {
   /**
    * Phương thức được gọi trước khi Feign gửi request.
    *
@@ -31,9 +30,9 @@ public class AuthenticationRequestInterceptor
    * @param requestTemplate template của request chuẩn bị gửi đi
    */
   @Override
-  public void apply(RequestTemplate requestTemplate)
-  {
-    ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+  public void apply(RequestTemplate requestTemplate) {
+    ServletRequestAttributes attributes =
+        (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
 
     var authHeader = attributes.getRequest().getHeader("Authorization");
 
