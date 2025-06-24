@@ -1,0 +1,17 @@
+F:\fileCode\capstoneProject\backend\common-protos\src\main\java\org\example\Main.java
+F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\grpc-java\com\codecampus\quiz\grpc\QuizServiceGrpc.java
+F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\quiz\grpc\Answer.java
+F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\quiz\grpc\AnswerOrBuilder.java
+F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\quiz\grpc\ExerciseData.java
+F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\quiz\grpc\ExerciseDataOrBuilder.java
+F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\quiz\grpc\GetExerciseRequest.java
+F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\quiz\grpc\GetExerciseRequestOrBuilder.java
+F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\quiz\grpc\OptionData.java
+F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\quiz\grpc\OptionDataOrBuilder.java
+F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\quiz\grpc\QuestionData.java
+F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\quiz\grpc\QuestionDataOrBuilder.java
+F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\quiz\grpc\QuizPayload.java
+F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\quiz\grpc\QuizPayloadOrBuilder.java
+F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\quiz\grpc\QuizProto.java
+F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\quiz\grpc\QuizResult.java
+F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\quiz\grpc\QuizResultOrBuilder.java

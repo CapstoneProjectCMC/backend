@@ -1,0 +1,49 @@
+syntax = "proto3";
+package quiz;
+
+option java_multiple_files = true;
+option java_package = "com.codecampus.quiz.grpc";
+option java_outer_classname = "QuizProto";
+
+message OptionData {
+  string id = 1;
+  string text = 2;
+}
+
+message QuestionData {
+  string id = 1;
+  string text = 2;
+  repeated OptionData options = 3;
+  int32 points = 4;
+}
+
+message QuizPayload {
+  string exerciseId = 1;
+  string studentId = 2;
+  repeated Answer answers = 3;
+}
+
+message Answer {
+  string questionId = 1;
+  string selectedOptionId = 2;
+  string answerText = 3;
+}
+
+message QuizResult {
+  string submissionId = 1;
+  int32 totalScore = 2;
+}
+
+service QuizService {
+  rpc SubmitQuiz (QuizPayload) returns (QuizResult);
+  rpc GetExercise (GetExerciseRequest) returns (ExerciseData);
+}
+
+message GetExerciseRequest {
+  string exerciseId = 1;
+}
+
+message ExerciseData {
+  string id = 1;
+  repeated QuestionData questions = 2;
+}

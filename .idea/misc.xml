@@ -11,7 +11,15 @@
         <option value="$PROJECT_DIR$/submission-service/pom.xml" />
         <option value="$PROJECT_DIR$/coding-service/pom.xml" />
         <option value="$PROJECT_DIR$/quiz-service/pom.xml" />
+        <option value="$PROJECT_DIR$/proto-contracts/pom.xml" />
+        <option value="$PROJECT_DIR$/common-protos/pom.xml" />
+        <option value="$PROJECT_DIR$/pom.xml" />
       </list>
+    </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/proto-contracts/pom.xml" />
+      </set>
     </option>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_21" default="true" project-jdk-name="21" project-jdk-type="JavaSDK">
