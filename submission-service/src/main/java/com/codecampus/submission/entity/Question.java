@@ -12,7 +12,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,7 +36,8 @@ import org.hibernate.annotations.Where;
 @Table(name = "question")
 @SQLDelete(sql = "UPDATE question SET deleted_at = now(), deleted_by = ? WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
-public class Question extends AuditMetadata {
+public class Question extends AuditMetadata
+{
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   String id;
@@ -54,4 +58,8 @@ public class Question extends AuditMetadata {
 
   @Column(name = "display_order", columnDefinition = "smallint")
   int order;
+
+  // Optional
+  @OneToMany(mappedBy = "question", fetch = FetchType.LAZY)
+  List<Question> options = new ArrayList<>();
 }

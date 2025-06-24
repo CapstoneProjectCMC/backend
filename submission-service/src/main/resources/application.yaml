@@ -15,3 +15,9 @@ server:
 spring:
   application:
     name: submission-service
+
+grpc:
+  quiz-service:
+    host: quiz-service # service name trong Docker compose hoặc k8s
+    port: 6565
+

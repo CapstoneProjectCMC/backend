@@ -1,19 +1,24 @@
 package com.codecampus.submission.entity;
 
 import com.codecampus.submission.constant.submission.Difficulty;
+import com.codecampus.submission.constant.submission.ExerciseType;
 import com.codecampus.submission.entity.audit.AuditMetadata;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -35,7 +40,8 @@ import org.hibernate.annotations.Where;
 @Table(name = "exercise")
 @SQLDelete(sql = "UPDATE exercise SET deleted_at = now(), deleted_by = ? WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
-public class Exercise extends AuditMetadata {
+public class Exercise extends AuditMetadata
+{
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   String id;
@@ -48,6 +54,10 @@ public class Exercise extends AuditMetadata {
 
   @Column(columnDefinition = "text")
   String description;
+
+  @Enumerated(EnumType.STRING)
+  @Column(name = "exercise_type", nullable = false)
+  ExerciseType exerciseType;
 
   // liên kết chi tiết code / quiz (One-To-One)
   @OneToOne(mappedBy = "exercise", cascade = CascadeType.ALL)
@@ -86,4 +96,9 @@ public class Exercise extends AuditMetadata {
 
   @Column(name = "resource_ids", columnDefinition = "text[]")
   Set<String> resourceIds;
+
+
+  // Optional
+  @OneToMany(mappedBy = "exercise", fetch = FetchType.LAZY)
+  List<Question> questions = new ArrayList<>();
 }
