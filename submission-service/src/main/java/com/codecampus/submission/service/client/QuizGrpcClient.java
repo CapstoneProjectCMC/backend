@@ -33,7 +33,7 @@ public class QuizGrpcClient
       q.getOptions().forEach(o -> questionData.addOptions(
           OptionData.newBuilder()
               .setId(o.getId())
-              .setText(o.getText())
+              .setText(o.getOptionText())
               .build()
       ));
 

@@ -61,5 +61,5 @@ public class Question extends AuditMetadata
 
   // Optional
   @OneToMany(mappedBy = "question", fetch = FetchType.LAZY)
-  List<Question> options = new ArrayList<>();
+  List<Option> options = new ArrayList<>();
 }

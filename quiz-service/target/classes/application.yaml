@@ -1,0 +1,6 @@
+server:
+  port: 8085
+  http:
+    port: 8005
+  servlet:
+    context-path: /quiz

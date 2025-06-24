@@ -38,6 +38,8 @@
         <jacoco-jacoco.version>0.8.13</jacoco-jacoco.version>
         <spring-security-oauth2-jose.version>6.5.0</spring-security-oauth2-jose.version>
         <nimbuds-jose.version>10.3</nimbuds-jose.version>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
     </properties>
     <dependencies>
         <dependency>

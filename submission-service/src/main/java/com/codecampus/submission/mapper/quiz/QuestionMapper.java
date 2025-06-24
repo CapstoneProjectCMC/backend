@@ -9,5 +9,6 @@ import org.mapstruct.Mapping;
 public interface QuestionMapper
 {
   @Mapping(target = "exercise", ignore = true)
+  @Mapping(target = "options", ignore = true)
   Question toQuestion(QuestionData questionData);
 }
