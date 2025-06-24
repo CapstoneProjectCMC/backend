@@ -10,6 +10,7 @@ option java_outer_classname = "QuizProto";
 message OptionData {
   string id = 1;
   string text = 2;
+  bool correct = 3;
 }
 
 message QuestionData {

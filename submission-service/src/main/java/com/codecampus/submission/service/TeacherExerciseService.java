@@ -6,6 +6,7 @@ import com.codecampus.submission.dto.request.ExerciseCreationRequest;
 import com.codecampus.submission.dto.response.exercise.ExerciseSummaryResponse;
 import com.codecampus.submission.entity.CodingDetail;
 import com.codecampus.submission.entity.Exercise;
+import com.codecampus.submission.entity.Option;
 import com.codecampus.submission.entity.Question;
 import com.codecampus.submission.entity.QuizDetail;
 import com.codecampus.submission.entity.TestCase;
@@ -117,5 +118,23 @@ public class TeacherExerciseService
           return question;
         })
         .forEach(questionRepository::save);
+
+    request.getQuiz().getQuestions().forEach(questionData -> {
+      Question q = questionMapper.toQuestion(questionData);
+      q.setExercise(exercise);
+      questionRepository.save(q);
+
+      questionData.getOptions().forEach(optionData -> {
+        Option o = Option.builder()
+            .id(optionData.getId())
+            .question(q)
+            .optionText(optionData.getText())
+            .correct(optionData.isCorrect())
+            .order(optionData.getOrder())
+            .build();
+        optionRepository.save(o);
+        q.getOptions().add(o);
+      });
+    });
   }
 }

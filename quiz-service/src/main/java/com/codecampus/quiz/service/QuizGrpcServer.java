@@ -3,6 +3,7 @@ package com.codecampus.quiz.service;
 import com.codecampus.quiz.grpc.Answer;
 import com.codecampus.quiz.grpc.ExerciseData;
 import com.codecampus.quiz.grpc.GetExerciseRequest;
+import com.codecampus.quiz.grpc.OptionData;
 import com.codecampus.quiz.grpc.QuestionData;
 import com.codecampus.quiz.grpc.QuizPayload;
 import com.codecampus.quiz.grpc.QuizResult;
@@ -11,6 +12,7 @@ import com.google.protobuf.Empty;
 import io.grpc.stub.StreamObserver;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -58,30 +60,43 @@ public class QuizGrpcServer extends QuizServiceGrpc.QuizServiceImplBase
     ExerciseData exerciseData = exerciseService
         .toQuizProto(request.getExerciseId());
 
-    Map<String, String> correctMap = exerciseData
+    Map<String, String> correctAnswer = exerciseData
         .getQuestionsList()
         .stream()
         .collect(Collectors.toMap(
             QuestionData::getId,
-            q -> q.getOptionsList().getFirst().getId())
-        );
+            q -> q.getOptionsList()
+                .stream()
+                .filter(OptionData::getCorrect)
+                .findFirst()
+                .map(OptionData::getId)
+                .orElse(null)
+        ));
 
-    int score = 0;
+    int total = 0;
     for (Answer ans : request.getAnswersList())
     {
       if (Objects.equals(
           ans.getSelectedOptionId(),
-          correctMap.get(ans.getQuestionId())
+          correctAnswer.get(ans.getQuestionId())
       ))
       {
-        int pts = exerciseData.getQuestionsList().stream()
+        int pts = exerciseData.getQuestionsList()
+            .stream()
             .filter(q -> q.getId().equals(ans.getQuestionId()))
             .findFirst()
             .map(QuestionData::getPoints)
             .orElse(0);
-        score += pts;
+        total += pts;
       }
     }
 
+    QuizResult result = QuizResult.newBuilder()
+        .setSubmissionId(UUID.randomUUID().toString())
+        .setTotalScore(total)
+        .build();
+
+    responseObserver.onNext(result);
+    responseObserver.onCompleted();
   }
 }

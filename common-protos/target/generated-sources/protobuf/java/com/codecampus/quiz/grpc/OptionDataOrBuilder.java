@@ -32,4 +32,10 @@ public interface OptionDataOrBuilder extends
    */
   com.google.protobuf.ByteString
       getTextBytes();
+
+  /**
+   * <code>bool correct = 3;</code>
+   * @return The correct.
+   */
+  boolean getCorrect();
 }

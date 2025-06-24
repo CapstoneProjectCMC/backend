@@ -5,7 +5,10 @@ import com.codecampus.submission.entity.Question;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring")
+@Mapper(
+    componentModel = "spring",
+    uses = {OptionMapper.class}
+)
 public interface QuestionMapper
 {
   @Mapping(target = "exercise", ignore = true)

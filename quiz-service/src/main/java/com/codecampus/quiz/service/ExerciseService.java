@@ -50,6 +50,8 @@ public class ExerciseService
 
       exercise.getQuestions().add(quizQuestion);
     });
+
+    quizExerciseRepository.save(exercise);
   }
 
   @Transactional(readOnly = true)

@@ -70,24 +70,25 @@ public final class QuizProto {
   static {
     java.lang.String[] descriptorData = {
       "\n\nquiz.proto\022\004quiz\032\033google/protobuf/empt" +
-      "y.proto\"&\n\nOptionData\022\n\n\002id\030\001 \001(\t\022\014\n\004tex" +
-      "t\030\002 \001(\t\"[\n\014QuestionData\022\n\n\002id\030\001 \001(\t\022\014\n\004t" +
-      "ext\030\002 \001(\t\022!\n\007options\030\003 \003(\0132\020.quiz.Option" +
-      "Data\022\016\n\006points\030\004 \001(\005\"S\n\013QuizPayload\022\022\n\ne" +
-      "xerciseId\030\001 \001(\t\022\021\n\tstudentId\030\002 \001(\t\022\035\n\007an" +
-      "swers\030\003 \003(\0132\014.quiz.Answer\"J\n\006Answer\022\022\n\nq" +
-      "uestionId\030\001 \001(\t\022\030\n\020selectedOptionId\030\002 \001(" +
-      "\t\022\022\n\nanswerText\030\003 \001(\t\"6\n\nQuizResult\022\024\n\014s" +
-      "ubmissionId\030\001 \001(\t\022\022\n\ntotalScore\030\002 \001(\005\"(\n" +
-      "\022GetExerciseRequest\022\022\n\nexerciseId\030\001 \001(\t\"" +
-      "A\n\014ExerciseData\022\n\n\002id\030\001 \001(\t\022%\n\tquestions" +
-      "\030\002 \003(\0132\022.quiz.QuestionData2\275\001\n\013QuizServi" +
-      "ce\022>\n\020RegisterExercise\022\022.quiz.ExerciseDa" +
-      "ta\032\026.google.protobuf.Empty\0221\n\nSubmitQuiz" +
-      "\022\021.quiz.QuizPayload\032\020.quiz.QuizResult\022;\n" +
-      "\013GetExercise\022\030.quiz.GetExerciseRequest\032\022" +
-      ".quiz.ExerciseDataB\'\n\030com.codecampus.qui" +
-      "z.grpcB\tQuizProtoP\001b\006proto3"
+      "y.proto\"7\n\nOptionData\022\n\n\002id\030\001 \001(\t\022\014\n\004tex" +
+      "t\030\002 \001(\t\022\017\n\007correct\030\003 \001(\010\"[\n\014QuestionData" +
+      "\022\n\n\002id\030\001 \001(\t\022\014\n\004text\030\002 \001(\t\022!\n\007options\030\003 " +
+      "\003(\0132\020.quiz.OptionData\022\016\n\006points\030\004 \001(\005\"S\n" +
+      "\013QuizPayload\022\022\n\nexerciseId\030\001 \001(\t\022\021\n\tstud" +
+      "entId\030\002 \001(\t\022\035\n\007answers\030\003 \003(\0132\014.quiz.Answ" +
+      "er\"J\n\006Answer\022\022\n\nquestionId\030\001 \001(\t\022\030\n\020sele" +
+      "ctedOptionId\030\002 \001(\t\022\022\n\nanswerText\030\003 \001(\t\"6" +
+      "\n\nQuizResult\022\024\n\014submissionId\030\001 \001(\t\022\022\n\nto" +
+      "talScore\030\002 \001(\005\"(\n\022GetExerciseRequest\022\022\n\n" +
+      "exerciseId\030\001 \001(\t\"A\n\014ExerciseData\022\n\n\002id\030\001" +
+      " \001(\t\022%\n\tquestions\030\002 \003(\0132\022.quiz.QuestionD" +
+      "ata2\275\001\n\013QuizService\022>\n\020RegisterExercise\022" +
+      "\022.quiz.ExerciseData\032\026.google.protobuf.Em" +
+      "pty\0221\n\nSubmitQuiz\022\021.quiz.QuizPayload\032\020.q" +
+      "uiz.QuizResult\022;\n\013GetExercise\022\030.quiz.Get" +
+      "ExerciseRequest\032\022.quiz.ExerciseDataB\'\n\030c" +
+      "om.codecampus.quiz.grpcB\tQuizProtoP\001b\006pr" +
+      "oto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -99,7 +100,7 @@ public final class QuizProto {
     internal_static_quiz_OptionData_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_quiz_OptionData_descriptor,
-        new java.lang.String[] { "Id", "Text", });
+        new java.lang.String[] { "Id", "Text", "Correct", });
     internal_static_quiz_QuestionData_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_quiz_QuestionData_fieldAccessorTable = new
