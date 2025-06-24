@@ -63,6 +63,6 @@ public class Submission extends AuditMetadata {
   @Column(name = "source_code", columnDefinition = "text")
   String sourceCode;
 
-  Integer runtime;
-  Integer memoryUsed;
+  int runtime;
+  int memoryUsed;
 }

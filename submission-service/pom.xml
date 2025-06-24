@@ -3,13 +3,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.codecampus</groupId>
-        <artifactId>codecampus</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.4.6</version>
+        <relativePath/> <!-- lookup parent from repository -->
     </parent>
-
+    <groupId>com.codecampus</groupId>
     <artifactId>submission-service</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
     <name>submission</name>
     <description>Submission Service Repository</description>
     <url/>
@@ -154,33 +155,6 @@
             <artifactId>spring-security-oauth2-jose</artifactId>
             <version>${spring-security-oauth2-jose.version}</version>
         </dependency>
-        <!-- gRPC Dependencies -->
-        <!-- https://mvnrepository.com/artifact/com.google.protobuf/protobuf-java -->
-        <dependency>
-            <groupId>com.google.protobuf</groupId>
-            <artifactId>protobuf-java</artifactId>
-            <version>${protobuf-java.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.grpc</groupId>
-            <artifactId>grpc-netty-shaded</artifactId>
-            <version>${grpc.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.grpc</groupId>
-            <artifactId>grpc-protobuf</artifactId>
-            <version>${grpc.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.grpc</groupId>
-            <artifactId>grpc-stub</artifactId>
-            <version>${grpc.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.grpc</groupId>
-            <artifactId>grpc-census</artifactId>
-            <version>${grpc.version}</version>
-        </dependency>
     </dependencies>
     <dependencyManagement>
         <dependencies>
@@ -316,22 +290,6 @@
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>
-                </configuration>
-            </plugin>
-            <!-- OSGI bundle configuration -->
-            <plugin>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>maven-bundle-plugin</artifactId>
-                <extensions>true</extensions>
-                <configuration>
-                    <instructions>
-                        <Automatic-Module-Name>com.google.protobuf
-                        </Automatic-Module-Name> <!-- Java9+ Jigsaw module name -->
-                        <Bundle-DocURL>https://developers.google.com/protocol-buffers/</Bundle-DocURL>
-                        <Bundle-SymbolicName>com.google.protobuf</Bundle-SymbolicName>
-                        <Export-Package>com.google.protobuf;version=${project.version}</Export-Package>
-                        <Import-Package>sun.misc;resolution:=optional,*</Import-Package>
-                    </instructions>
                 </configuration>
             </plugin>
         </plugins>
