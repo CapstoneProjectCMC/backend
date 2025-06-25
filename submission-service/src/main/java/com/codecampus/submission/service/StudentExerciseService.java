@@ -22,6 +22,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -30,7 +31,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class StudentExerciseService {
+public class StudentExerciseService
+{
 
   ExerciseRepository exerciseRepository;
   AssignmentRepository assignmentRepository;
@@ -43,9 +45,14 @@ public class StudentExerciseService {
   SubmissionMapper submissionMapper;
 
   // Có thể public
+  @Cacheable(
+      cacheNames = "exerciseList",
+      key = "{#page, #size, #keyword, #diff}"
+  )
   public PageResponse<ExerciseSummaryResponse> getExercise(
       String keyword, Integer diff,
-      int page, int size) {
+      int page, int size)
+  {
 
     Pageable pageable = PageRequest.of(page - 1, size);
 
@@ -59,7 +66,8 @@ public class StudentExerciseService {
   }
 
   public PageResponse<AssignmentResponse> getMyAssignments(
-      int page, int size) {
+      int page, int size)
+  {
     Pageable pageable = PageRequest.of(page - 1, size);
 
     var pageData = assignmentRepository
@@ -70,7 +78,8 @@ public class StudentExerciseService {
   }
 
   public PageResponse<ContestResponse> getContests(
-      int page, int size) {
+      int page, int size)
+  {
     Pageable pageable = PageRequest.of(page - 1, size);
 
     var pageData = contestRepository
@@ -81,7 +90,8 @@ public class StudentExerciseService {
   }
 
   public PageResponse<SubmissionResponse> getMySubmissions(
-      int page, int size) {
+      int page, int size)
+  {
     Pageable pageable = PageRequest.of(page - 1, size);
     var pageData = submissionRepository
         .findByUserId(SecurityUtils.getMyUserId(), pageable)

@@ -1,6 +1,7 @@
 package com.codecampus.submission.service;
 
 import com.codecampus.quiz.grpc.QuizServiceGrpc;
+import com.codecampus.submission.configuration.config.kafka.ExerciseEventPublisher;
 import com.codecampus.submission.constant.submission.ExerciseType;
 import com.codecampus.submission.dto.request.ExerciseCreationRequest;
 import com.codecampus.submission.dto.response.exercise.ExerciseSummaryResponse;
@@ -27,6 +28,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -37,6 +39,7 @@ public class TeacherExerciseService
 {
 
   QuizGrpcClient quizGrpcClient;
+  ExerciseEventPublisher exerciseEventPublisher;
 
   ExerciseRepository exerciseRepository;
   CodingRepository codingRepository;
@@ -52,6 +55,10 @@ public class TeacherExerciseService
 
   QuizServiceGrpc.QuizServiceBlockingStub quizStub;
 
+  @CacheEvict(
+      cacheNames = {"exerciseList", "quizExercise"},
+      allEntries = true
+  )
   @Transactional
   public ExerciseSummaryResponse createExercise(
       ExerciseCreationRequest request)
@@ -74,8 +81,13 @@ public class TeacherExerciseService
       quizGrpcClient.registerExercise(exercise);
     }
 
+    Exercise savedExercise = exerciseRepository.save(exercise);
+
+    // Gửi Kafka
+    exerciseEventPublisher.publishCreated(savedExercise);
+
     return exerciseMapper
-        .toExerciseSummaryResponse(exerciseRepository.save(exercise));
+        .toExerciseSummaryResponse(savedExercise);
   }
 
   private void saveCoding(

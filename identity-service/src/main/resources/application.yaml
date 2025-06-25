@@ -17,7 +17,7 @@ spring:
     name: identity-service
   datasource:
     url: jdbc:postgresql://localhost:5431/identity_db
-    username: postgres
+    username: postgres_identity
     password: dinhanst2832004
     driver-class-name: org.postgresql.Driver
   jpa:
