@@ -26,6 +26,7 @@
         <module>submission-service</module>
         <module>quiz-service</module>
         <module>coding-service</module>
+        <module>ai-service</module>
     </modules>
 
     <properties>
