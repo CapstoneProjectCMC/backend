@@ -21,7 +21,8 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class AuthenticationUtils {
+public class AuthenticationUtils
+{
   UserRepository userRepository;
 
   /**
@@ -34,15 +35,17 @@ public class AuthenticationUtils {
    * @param email    địa chỉ email cần kiểm tra
    * @throws AppException khi username hoặc email đã tồn tại
    */
-  public void checkExistsUsernameEmail(String username, String email) {
+  public void checkExistsUsernameEmail(String username, String email)
+  {
     // Kiểm tra username và email đã tồn tại
-    if (userRepository.existsByUsername(username)) {
+    if (userRepository.existsByUsername(username))
+    {
       throw new AppException(ErrorCode.USER_ALREADY_EXISTS);
     }
 
-    if (userRepository.existsByEmail(email)) {
+    if (userRepository.existsByEmail(email))
+    {
       throw new AppException(ErrorCode.EMAIL_ALREADY_EXISTS);
     }
   }
-
 }

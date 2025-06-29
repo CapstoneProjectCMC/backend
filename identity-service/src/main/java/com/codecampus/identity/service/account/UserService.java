@@ -12,7 +12,7 @@ import com.codecampus.identity.entity.account.User;
 import com.codecampus.identity.exception.AppException;
 import com.codecampus.identity.exception.ErrorCode;
 import com.codecampus.identity.mapper.authentication.UserMapper;
-import com.codecampus.identity.mapper.mapper.UserProfileMapper;
+import com.codecampus.identity.mapper.client.UserProfileMapper;
 import com.codecampus.identity.repository.account.RoleRepository;
 import com.codecampus.identity.repository.account.UserRepository;
 import com.codecampus.identity.repository.httpclient.profile.ProfileClient;
@@ -52,7 +52,8 @@ import org.springframework.util.StringUtils;
 @Slf4j
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class UserService {
+public class UserService
+{
   OtpService otpService;
   UserRepository userRepository;
   RoleRepository roleRepository;
@@ -80,7 +81,8 @@ public class UserService {
    */
   @PreAuthorize("hasRole('ADMIN')")
   @Transactional
-  public UserResponse createUser(UserCreationRequest request) {
+  public UserResponse createUser(UserCreationRequest request)
+  {
     authenticationUtils.checkExistsUsernameEmail(
         request.getUsername(),
         request.getEmail()
@@ -95,9 +97,11 @@ public class UserService {
     user.setRoles(roles);
     user.setEnabled(true);
 
-    try {
+    try
+    {
       user = userRepository.save(user);
-    } catch (DataIntegrityViolationException e) {
+    } catch (DataIntegrityViolationException e)
+    {
       throw new AppException(ErrorCode.USER_ALREADY_EXISTS);
     }
 
@@ -121,10 +125,12 @@ public class UserService {
    * @param request chứa mật khẩu mới
    * @throws AppException nếu mật khẩu đã tồn tại
    */
-  public void createPassword(PasswordCreationRequest request) {
+  public void createPassword(PasswordCreationRequest request)
+  {
     User user = findUser(SecurityUtils.getMyUserId());
 
-    if (StringUtils.hasText(request.getPassword())) {
+    if (StringUtils.hasText(request.getPassword()))
+    {
       throw new AppException(ErrorCode.PASSWORD_ALREADY_EXISTS);
     }
 
@@ -137,7 +143,8 @@ public class UserService {
    *
    * @return UserResponse chứa thông tin người dùng
    */
-  public UserResponse getMyInfo() {
+  public UserResponse getMyInfo()
+  {
     return getUser(SecurityUtils.getMyUserId());
   }
 
@@ -155,7 +162,8 @@ public class UserService {
   @PreAuthorize("hasRole('ADMIN')")
   public UserResponse updateUser(
       String userId,
-      UserUpdateRequest request) {
+      UserUpdateRequest request)
+  {
     User user = findUser(userId);
     userMapper.updateUser(user, request);
     user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -175,7 +183,8 @@ public class UserService {
    * @return UserResponse sau khi cập nhật
    */
   public UserResponse updateMyInfo(
-      UserUpdateRequest request) {
+      UserUpdateRequest request)
+  {
     User user = findUser(SecurityUtils.getMyUserId());
 
     userMapper.updateUser(user, request);
@@ -195,7 +204,8 @@ public class UserService {
    * @param userId ID người dùng cần xóa
    */
   @PreAuthorize("hasRole('ADMIN')")
-  public void deleteUser(String userId) {
+  public void deleteUser(String userId)
+  {
     userRepository.deleteById(userId);
   }
 
@@ -209,7 +219,8 @@ public class UserService {
    * @return PageResponse chứa danh sách UserResponse và thông tin phân trang
    */
   @PreAuthorize("hasRole('ADMIN')")
-  public PageResponse<UserResponse> getUsers(int page, int size) {
+  public PageResponse<UserResponse> getUsers(int page, int size)
+  {
     Pageable pageable = PageRequest.of(page - 1, size);
     var pageData = userRepository.findAll(pageable);
     var userList = pageData
@@ -235,7 +246,8 @@ public class UserService {
    * @return UserResponse chứa thông tin người dùng
    * @throws AppException nếu không tìm thấy
    */
-  public UserResponse getUser(String id) {
+  public UserResponse getUser(String id)
+  {
     return userMapper.toUserResponse(
         userRepository.findById(id)
             .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND))
@@ -249,10 +261,19 @@ public class UserService {
    * @return User entity
    * @throws AppException nếu không tìm thấy
    */
-  public User findUser(String id) {
+  public User findUser(String id)
+  {
     return userRepository.findById(id)
         .orElseThrow(
             () -> new AppException(ErrorCode.USER_NOT_FOUND)
         );
+  }
+
+  public String getRoleName(User user)
+  {
+    return user.getRoles().stream()
+        .findFirst()
+        .map(Role::getName)
+        .orElse(null);
   }
 }
