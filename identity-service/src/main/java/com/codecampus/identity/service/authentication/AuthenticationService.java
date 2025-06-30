@@ -8,8 +8,10 @@ import com.codecampus.identity.dto.request.authentication.IntrospectRequest;
 import com.codecampus.identity.dto.request.authentication.LogoutRequest;
 import com.codecampus.identity.dto.request.authentication.RefreshRequest;
 import com.codecampus.identity.dto.request.authentication.UserCreationRequest;
+import com.codecampus.identity.dto.request.profile.UserProfileCreationRequest;
 import com.codecampus.identity.dto.response.authentication.AuthenticationResponse;
 import com.codecampus.identity.dto.response.authentication.IntrospectResponse;
+import com.codecampus.identity.dto.response.authentication.OutboundUserResponse;
 import com.codecampus.identity.entity.account.InvalidatedToken;
 import com.codecampus.identity.entity.account.Permission;
 import com.codecampus.identity.entity.account.Role;
@@ -31,7 +33,6 @@ import com.nimbusds.jose.JOSEObjectType;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
 import com.nimbusds.jose.JWSSigner;
-import com.nimbusds.jose.JWSVerifier;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
@@ -134,7 +135,7 @@ public class AuthenticationService
       IntrospectRequest request)
       throws JOSEException, ParseException
   {
-    var token = request.getToken();
+    String token = request.getToken();
     boolean isValid = true;
 
     try
@@ -172,7 +173,7 @@ public class AuthenticationService
     log.info("TOKEN RESPONSE {}", response);
 
     // Get User info
-    var userInfo = outboundGoogleUserClient.getUserInfo(
+    OutboundUserResponse userInfo = outboundGoogleUserClient.getUserInfo(
         "json",
         response.getAccessToken());
 
@@ -185,7 +186,7 @@ public class AuthenticationService
     );
 
     // Onboard user
-    var user = userRepository.findByUsername(userInfo.getEmail())
+    User user = userRepository.findByUsername(userInfo.getEmail())
         .orElseGet(() -> userRepository.save(User.builder()
             .username(userInfo.getEmail())
             .roles(roles)
@@ -208,7 +209,7 @@ public class AuthenticationService
     PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
 
     // Tìm user bằng username hoặc email
-    var user = userRepository
+    User user = userRepository
         .findByUsernameOrEmail(request.getUsername(), request.getEmail())
         .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
@@ -245,7 +246,7 @@ public class AuthenticationService
   {
     try
     {
-      var signToken = verifyToken(request.getToken(), true);
+      SignedJWT signToken = verifyToken(request.getToken(), true);
 
       invalidateToken(signToken);
     } catch (AppException e)
@@ -289,7 +290,7 @@ public class AuthenticationService
       throw new AppException(ErrorCode.USER_ALREADY_EXISTS);
     }
 
-    var userProfileRequest =
+    UserProfileCreationRequest userProfileRequest =
         userProfileMapper.toUserProfileCreationRequest(request);
     userProfileRequest.setUserId(user.getId());
 
@@ -415,28 +416,17 @@ public class AuthenticationService
       boolean isRefresh)
       throws JOSEException, ParseException
   {
-    JWSVerifier verifier = new MACVerifier(SIGNER_KEY.getBytes());
-
     SignedJWT signedJWT = SignedJWT.parse(token);
-    String tokenType = signedJWT.getJWTClaimsSet().getClaim("token_type").toString();
 
-    if (isRefresh && !"refresh_token".equals(tokenType)
-        || !isRefresh && "access_token".equals(tokenType))
-    {
-      throw new AppException(ErrorCode.INVALID_TOKEN);
-    }
-
-    Date expiryTime = (isRefresh)
-        ? new Date(signedJWT.getJWTClaimsSet()
-        .getIssueTime()
+    Date expiryTime = isRefresh
+        ? Date.from(signedJWT.getJWTClaimsSet()
+        .getIssueTime()       // thời điểm phát hành
         .toInstant()
-        .plus(REFRESH_DURATION, ChronoUnit.SECONDS)
-        .toEpochMilli()
-    )
-        : signedJWT.getJWTClaimsSet()
-        .getExpirationTime();
+        .plus(REFRESH_DURATION, ChronoUnit.SECONDS))
+        : signedJWT.getJWTClaimsSet().getExpirationTime();
 
-    var verified = signedJWT.verify(verifier);
+    boolean verified = signedJWT.verify(
+        new MACVerifier(SIGNER_KEY.getBytes(StandardCharsets.UTF_8)));
 
     if (!(verified && expiryTime.after(new Date())))
     {
@@ -495,7 +485,7 @@ public class AuthenticationService
         .refreshExpiry(refreshToken.getJWTClaimsSet().getExpirationTime().toInstant())
         .authenticated(true)
         .enabled(user.isEnabled())
-        .active(true)                                  // ➍
+        .active(true)
         .build();
   }
 }

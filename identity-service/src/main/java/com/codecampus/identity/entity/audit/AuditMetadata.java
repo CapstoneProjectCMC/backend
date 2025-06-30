@@ -1,4 +1,4 @@
-package com.codecampus.submission.entity.audit;
+package com.codecampus.identity.entity.audit;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
@@ -17,7 +17,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 @FieldDefaults(level = AccessLevel.PROTECTED)
-public class AuditMetadata
+public class AuditMetadata implements SoftDeletable
 {
   /* ---- create ---- */
   @CreatedBy
@@ -44,15 +44,14 @@ public class AuditMetadata
   @Column(name = "deleted_at")
   Instant deletedAt;
 
-  /**
-   * Đánh dấu xóa mềm
-   */
+  @Override
   public void markDeleted(String by)
   {
     this.deletedBy = by;
     this.deletedAt = Instant.now();
   }
 
+  @Override
   public boolean isDeleted()
   {
     return deletedAt != null;

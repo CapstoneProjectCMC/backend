@@ -3,6 +3,8 @@ package com.codecampus.identity.service.account;
 import com.codecampus.identity.dto.request.authentication.RoleRequest;
 import com.codecampus.identity.dto.response.authentication.PermissionResponse;
 import com.codecampus.identity.dto.response.authentication.RoleResponse;
+import com.codecampus.identity.entity.account.Permission;
+import com.codecampus.identity.entity.account.Role;
 import com.codecampus.identity.mapper.authentication.RoleMapper;
 import com.codecampus.identity.repository.account.PermissionRepository;
 import com.codecampus.identity.repository.account.RoleRepository;
@@ -33,7 +35,8 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class RoleService {
+public class RoleService
+{
   RoleRepository roleRepository;
   PermissionRepository permissionRepository;
   RoleMapper roleMapper;
@@ -45,10 +48,11 @@ public class RoleService {
    * @return RoleResponse chứa thông tin vai trò vừa được lưu
    */
   @PreAuthorize("hasRole('ADMIN')")
-  public RoleResponse createRole(RoleRequest roleRequest) {
-    var role = roleMapper.toRole(roleRequest);
+  public RoleResponse createRole(RoleRequest roleRequest)
+  {
+    Role role = roleMapper.toRole(roleRequest);
 
-    var permissions = permissionRepository
+    List<Permission> permissions = permissionRepository
         .findAllById(roleRequest.getPermissions().stream()
             .map(PermissionResponse::getName).toList());
     role.setPermissions(new HashSet<>(permissions));
@@ -63,7 +67,8 @@ public class RoleService {
    * @return danh sách RoleResponse tương ứng với mỗi vai trò
    */
   @PreAuthorize("hasRole('ADMIN')")
-  public List<RoleResponse> getAllRoles() {
+  public List<RoleResponse> getAllRoles()
+  {
     return roleRepository.findAll()
         .stream()
         .map(roleMapper::toRoleResponse)
@@ -76,7 +81,8 @@ public class RoleService {
    * @param roleName tên vai trò cần xóa
    */
   @PreAuthorize("hasRole('ADMIN')")
-  public void delete(String roleName) {
+  public void delete(String roleName)
+  {
     roleRepository.deleteById(roleName);
   }
 }

@@ -1,11 +1,14 @@
 package com.codecampus.identity.configuration.config;
 
 import com.codecampus.identity.dto.request.authentication.IntrospectRequest;
+import com.codecampus.identity.dto.response.authentication.IntrospectResponse;
 import com.codecampus.identity.service.authentication.AuthenticationService;
 import com.nimbusds.jose.JOSEException;
 import java.text.ParseException;
 import java.util.Objects;
 import javax.crypto.spec.SecretKeySpec;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
@@ -22,7 +25,9 @@ import org.springframework.stereotype.Component;
  * 2. Nếu token hợp lệ, khởi tạo NimbusJwtDecoder với signerKey cấu hình và giải mã token.
  */
 @Component
-public class CustomJwtDecoder implements JwtDecoder {
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class CustomJwtDecoder implements JwtDecoder
+{
   @Value("${app.jwt.signerKey}")
   private String signerKey;
 
@@ -30,7 +35,6 @@ public class CustomJwtDecoder implements JwtDecoder {
   private AuthenticationService authenticationService;
 
   private NimbusJwtDecoder nimbusJwtDecoder = null;
-
 
   /**
    * Giải mã token JWT.
@@ -46,21 +50,26 @@ public class CustomJwtDecoder implements JwtDecoder {
    * @throws JwtException nếu token không hợp lệ hoặc quá trình decode gặp lỗi
    */
   @Override
-  public Jwt decode(String token) throws JwtException {
-    try {
-      var response = authenticationService.introspect(
+  public Jwt decode(String token) throws JwtException
+  {
+    try
+    {
+      IntrospectResponse response = authenticationService.introspect(
           IntrospectRequest.builder()
               .token(token)
               .build());
 
-      if (!response.isValid()) {
+      if (!response.isValid())
+      {
         throw new JwtException("Token invalid");
       }
-    } catch (JOSEException | ParseException e) {
+    } catch (JOSEException | ParseException e)
+    {
       throw new JwtException(e.getMessage());
     }
 
-    if (Objects.isNull(nimbusJwtDecoder)) {
+    if (Objects.isNull(nimbusJwtDecoder))
+    {
       SecretKeySpec secretKeySpec =
           new SecretKeySpec(signerKey.getBytes(), "HS512");
 

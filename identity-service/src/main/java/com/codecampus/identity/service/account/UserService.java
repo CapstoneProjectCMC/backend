@@ -6,6 +6,7 @@ import com.codecampus.identity.dto.common.PageResponse;
 import com.codecampus.identity.dto.request.authentication.PasswordCreationRequest;
 import com.codecampus.identity.dto.request.authentication.UserCreationRequest;
 import com.codecampus.identity.dto.request.authentication.UserUpdateRequest;
+import com.codecampus.identity.dto.request.profile.UserProfileCreationRequest;
 import com.codecampus.identity.dto.response.authentication.UserResponse;
 import com.codecampus.identity.entity.account.Role;
 import com.codecampus.identity.entity.account.User;
@@ -18,14 +19,15 @@ import com.codecampus.identity.repository.account.UserRepository;
 import com.codecampus.identity.repository.httpclient.profile.ProfileClient;
 import com.codecampus.identity.service.authentication.OtpService;
 import com.codecampus.identity.utils.AuthenticationUtils;
-import com.codecampus.identity.utils.SecurityUtils;
 import java.util.HashSet;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -105,16 +107,13 @@ public class UserService
       throw new AppException(ErrorCode.USER_ALREADY_EXISTS);
     }
 
-    var userProfileRequest =
+    UserProfileCreationRequest userProfileRequest =
         userProfileMapper.toUserProfileCreationRequest(request);
     userProfileRequest.setUserId(user.getId());
 
-    var userProfile = profileClient.createUserProfile(userProfileRequest);
+    profileClient.createUserProfile(userProfileRequest);
 
-    var userCreationResponse = userMapper.toUserResponse(user);
-    userCreationResponse.setId(userProfile.getResult().getId());
-
-    return userCreationResponse;
+    return userMapper.toUserResponse(user);
   }
 
   /**
@@ -127,7 +126,7 @@ public class UserService
    */
   public void createPassword(PasswordCreationRequest request)
   {
-    User user = findUser(SecurityUtils.getMyUserId());
+    User user = findUser(AuthenticationUtils.getMyUserId());
 
     if (StringUtils.hasText(request.getPassword()))
     {
@@ -145,7 +144,7 @@ public class UserService
    */
   public UserResponse getMyInfo()
   {
-    return getUser(SecurityUtils.getMyUserId());
+    return getUser(AuthenticationUtils.getMyUserId());
   }
 
   /**
@@ -165,13 +164,7 @@ public class UserService
       UserUpdateRequest request)
   {
     User user = findUser(userId);
-    userMapper.updateUser(user, request);
-    user.setPassword(passwordEncoder.encode(user.getPassword()));
-
-    var roles = roleRepository.findAllById(request.getRoles());
-    user.setRoles(new HashSet<>(roles));
-
-    return userMapper.toUserResponse(userRepository.save(user));
+    return updateUserAndReturnUser(request, user);
   }
 
   /**
@@ -185,12 +178,18 @@ public class UserService
   public UserResponse updateMyInfo(
       UserUpdateRequest request)
   {
-    User user = findUser(SecurityUtils.getMyUserId());
+    User user = findUser(AuthenticationUtils.getMyUserId());
+    return updateUserAndReturnUser(request, user);
+  }
 
+  private UserResponse updateUserAndReturnUser(
+      UserUpdateRequest request,
+      User user)
+  {
     userMapper.updateUser(user, request);
     user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-    var roles = roleRepository.findAllById(request.getRoles());
+    List<Role> roles = roleRepository.findAllById(request.getRoles());
     user.setRoles(new HashSet<>(roles));
 
     return userMapper.toUserResponse(userRepository.save(user));
@@ -204,9 +203,12 @@ public class UserService
    * @param userId ID người dùng cần xóa
    */
   @PreAuthorize("hasRole('ADMIN')")
+  @Transactional
   public void deleteUser(String userId)
   {
-    userRepository.deleteById(userId);
+    User user = findUser(userId);
+    user.markDeleted(AuthenticationUtils.getMyUsername());
+    userRepository.save(user);
   }
 
   /**
@@ -222,8 +224,8 @@ public class UserService
   public PageResponse<UserResponse> getUsers(int page, int size)
   {
     Pageable pageable = PageRequest.of(page - 1, size);
-    var pageData = userRepository.findAll(pageable);
-    var userList = pageData
+    Page<User> pageData = userRepository.findAll(pageable);
+    List<UserResponse> userList = pageData
         .getContent()
         .stream()
         .map(userMapper::toUserResponse)
@@ -238,18 +240,17 @@ public class UserService
         .build();
   }
 
-
   /**
    * Lấy thông tin người dùng theo ID.
    *
-   * @param id ID người dùng
+   * @param userId ID người dùng
    * @return UserResponse chứa thông tin người dùng
    * @throws AppException nếu không tìm thấy
    */
-  public UserResponse getUser(String id)
+  public UserResponse getUser(String userId)
   {
     return userMapper.toUserResponse(
-        userRepository.findById(id)
+        userRepository.findById(userId)
             .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND))
     );
   }
@@ -265,8 +266,7 @@ public class UserService
   {
     return userRepository.findById(id)
         .orElseThrow(
-            () -> new AppException(ErrorCode.USER_NOT_FOUND)
-        );
+            () -> new AppException(ErrorCode.USER_NOT_FOUND));
   }
 
   public String getRoleName(User user)

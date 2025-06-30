@@ -154,6 +154,11 @@
             <artifactId>spring-security-oauth2-jose</artifactId>
             <version>${spring-security-oauth2-jose.version}</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.hibernate.orm/hibernate-envers -->
+        <dependency>
+            <groupId>org.hibernate.orm</groupId>
+            <artifactId>hibernate-envers</artifactId>
+        </dependency>
     </dependencies>
     <dependencyManagement>
         <dependencies>

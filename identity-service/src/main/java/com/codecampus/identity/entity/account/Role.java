@@ -1,5 +1,6 @@
 package com.codecampus.identity.entity.account;
 
+import com.codecampus.identity.entity.audit.AuditMetadata;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
@@ -15,6 +16,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.envers.Audited;
 
 @Getter
 @Setter
@@ -22,8 +24,10 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Audited
 @Entity
-public class Role {
+public class Role extends AuditMetadata
+{
   @Id
   String name;
 

@@ -1,5 +1,6 @@
 package com.codecampus.identity.entity.account;
 
+import com.codecampus.identity.entity.audit.AuditMetadata;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -19,6 +20,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 
 @Getter
 @Setter
@@ -28,8 +33,13 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "users")
-public class User {
-
+@SQLDelete(sql = "UPDATE users " +
+    "SET deleted_by = ? , deleted_at = now() " +
+    "WHERE id = ?")
+@Where(clause = "deleted_at IS NULL")
+@Audited
+public class User extends AuditMetadata
+{
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   String id;
@@ -40,6 +50,7 @@ public class User {
   @Column(unique = true)
   String email;
 
+  @NotAudited
   String password;
 
   @ManyToMany(fetch = FetchType.EAGER)

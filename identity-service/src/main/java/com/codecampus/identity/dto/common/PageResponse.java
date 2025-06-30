@@ -3,17 +3,22 @@ package com.codecampus.identity.dto.common;
 import java.util.Collections;
 import java.util.List;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 // Mặc định cho phép response cả null khi Dev
 // Khi build thì KHÔNG response null
 //@JsonInclude(JsonInclude.Include.NON_NULL)
-public class PageResponse<T> {
+public class PageResponse<T>
+{
   int currentPage;
   int totalPages;
   int pageSize;

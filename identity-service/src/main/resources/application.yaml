@@ -26,6 +26,10 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+        session_factory.interceptor: com.codecampus.identity.configuration.audit.SoftDeleteInterceptor
+        envers:
+          revision_on_collection_change: true
+          store_data_at_delete: true
     show-sql: true
   mail:
     host: smtp.gmail.com

@@ -1,5 +1,6 @@
 package com.codecampus.identity.utils;
 
+import com.codecampus.identity.entity.account.User;
 import com.codecampus.identity.exception.AppException;
 import com.codecampus.identity.exception.ErrorCode;
 import com.codecampus.identity.repository.account.UserRepository;
@@ -8,6 +9,10 @@ import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 
 /**
@@ -24,6 +29,70 @@ import org.springframework.stereotype.Component;
 public class AuthenticationUtils
 {
   UserRepository userRepository;
+
+  /**
+   * Trả về đối tượng người dùng hiện đang được xác thực từ cơ sở dữ liệu hoặc null nếu không tìm thấy
+   * hoặc chưa đăng nhập.
+   *
+   * @param userRepository kho lưu trữ dùng để truy vấn dữ liệu người dùng
+   * @return đối tượng User hoặc null nếu không xác thực hoặc không tìm thấy
+   */
+  public static User getCurrentUser(
+      UserRepository userRepository)
+  {
+    Authentication authentication =
+        SecurityContextHolder.getContext().getAuthentication();
+
+    if (authentication == null || !authentication.isAuthenticated())
+    {
+      return null;
+    }
+
+    Object principal = authentication.getPrincipal();
+
+    if (principal instanceof UserDetails)
+    {
+      String username = ((UserDetails) principal).getUsername();
+      return userRepository.findByUsername(username)
+          .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+    }
+
+    if (principal instanceof User)
+    {
+      return (User) principal;
+    }
+
+    return null;
+  }
+
+  /**
+   * Lấy ID của người dùng đã đăng nhập.
+   *
+   * @return chuỗi tên đăng nhập hoặc null nếu chưa xác thực
+   */
+  public static String getMyUsername()
+  {
+    return SecurityContextHolder.getContext().getAuthentication().getName();
+  }
+
+  public static String getMyUserId()
+  {
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    if (auth == null || !auth.isAuthenticated())
+    {
+      return null;
+    }
+
+    Object principal = auth.getPrincipal();
+
+    if (principal instanceof Jwt jwt)
+    {
+      // JwtAuthenticationToken giữ nguyên đối tượng Jwt làm principal,
+      return jwt.getClaimAsString("sub");
+    }
+
+    return null;
+  }
 
   /**
    * Kiểm tra xem username hoặc email đã tồn tại trong hệ thống hay chưa.

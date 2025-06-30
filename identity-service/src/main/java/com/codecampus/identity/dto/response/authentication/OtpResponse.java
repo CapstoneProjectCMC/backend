@@ -6,9 +6,10 @@ import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
 @Data
-@FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
-public class OtpResponse {
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class OtpResponse
+{
   String email;
   String message;
 }
