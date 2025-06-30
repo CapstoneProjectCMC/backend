@@ -189,8 +189,8 @@ public class UserService
     userMapper.updateUser(user, request);
     user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-    List<Role> roles = roleRepository.findAllById(request.getRoles());
-    user.setRoles(new HashSet<>(roles));
+//    List<Role> roles = roleRepository.findAllById(request.getRoles());
+//    user.setRoles(new HashSet<>(roles));
 
     return userMapper.toUserResponse(userRepository.save(user));
   }

@@ -9,7 +9,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-import org.hibernate.envers.Audited;
 
 @Getter
 @Setter
@@ -18,7 +17,6 @@ import org.hibernate.envers.Audited;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Audited
 public class Permission
 {
   @Id

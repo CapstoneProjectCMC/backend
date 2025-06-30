@@ -108,6 +108,6 @@ public class ApplicationInitializationService
           .description(roleName)
           .build());
     }
-    return null;
+    return roleRepository.findByName(roleName);
   }
 }

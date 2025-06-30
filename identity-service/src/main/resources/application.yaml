@@ -29,7 +29,9 @@ spring:
         session_factory.interceptor: com.codecampus.identity.configuration.audit.SoftDeleteInterceptor
         envers:
           revision_on_collection_change: true
-          store_data_at_delete: true
+          store_data_at_delete: true # Lưu dữ liệu khi xóa
+          global_with_modified_flag: true # Đánh dấu trường thay đổi
+          audit_table_suffix: _aud # Hậu tố bảng audit
     show-sql: true
   mail:
     host: smtp.gmail.com

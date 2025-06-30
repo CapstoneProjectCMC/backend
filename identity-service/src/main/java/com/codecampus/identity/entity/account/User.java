@@ -1,6 +1,7 @@
 package com.codecampus.identity.entity.account;
 
 import com.codecampus.identity.entity.audit.AuditMetadata;
+import com.codecampus.identity.utils.AuthenticationUtils;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -10,7 +11,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.PreRemove;
 import jakarta.persistence.Table;
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.AccessLevel;
@@ -22,8 +25,6 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
-import org.hibernate.envers.Audited;
-import org.hibernate.envers.NotAudited;
 
 @Getter
 @Setter
@@ -37,7 +38,6 @@ import org.hibernate.envers.NotAudited;
     "SET deleted_by = ? , deleted_at = now() " +
     "WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
-@Audited
 public class User extends AuditMetadata
 {
   @Id
@@ -50,7 +50,6 @@ public class User extends AuditMetadata
   @Column(unique = true)
   String email;
 
-  @NotAudited
   String password;
 
   @ManyToMany(fetch = FetchType.EAGER)
@@ -61,4 +60,11 @@ public class User extends AuditMetadata
 
   @Builder.Default
   boolean enabled = false;
+
+  @PreRemove
+  private void doSoftDelete()
+  {
+    this.setDeletedBy(AuthenticationUtils.getMyUsername());
+    this.setDeletedAt(Instant.now());
+  }
 }

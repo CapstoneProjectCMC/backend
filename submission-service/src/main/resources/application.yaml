@@ -16,7 +16,7 @@ spring:
   application:
     name: submission-service
   datasource:
-    url: jdbc:postgresql://localhost:5433/submission_db
+    url: jdbc:postgresql://localhost:5434/submission_db
     username: postgres_submission
     password: dinhanst2832004
     driver-class-name: org.postgresql.Driver

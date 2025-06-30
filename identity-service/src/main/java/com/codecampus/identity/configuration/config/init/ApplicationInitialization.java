@@ -1,5 +1,8 @@
 package com.codecampus.identity.configuration.config.init;
 
+import static com.codecampus.identity.constant.authentication.AuthenticationConstant.ADMIN_ROLE;
+import static com.codecampus.identity.constant.authentication.AuthenticationConstant.USER_ROLE;
+
 import com.codecampus.identity.repository.account.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +22,7 @@ public class ApplicationInitialization
   UserRepository userRepository;
   ApplicationInitializationService applicationInitializationService;
 
+  // TODO ĐANG SOFT DELETE NÊN KHI TẠO CÓ THỂ LỖI KHI ĐÃ TỒN TẠI DỮ LIỆU SOFT DELETE RỒI
   @Bean
   @ConditionalOnProperty(
       prefix = "spring.datasource",
@@ -28,6 +32,9 @@ public class ApplicationInitialization
   {
     log.info("Khởi chạy ứng dụng!");
     return args -> {
+
+      applicationInitializationService.checkRoleAndCreate(ADMIN_ROLE);
+      applicationInitializationService.checkRoleAndCreate(USER_ROLE);
 
       if (userRepository.findByUsername("admin").isEmpty())
       {
@@ -44,15 +51,6 @@ public class ApplicationInitialization
             "code_campusadmin",
             "Coco2025@2025@2025",
             "code_campusadmin@mail.com"
-        );
-      }
-
-      if (userRepository.findByUsername("yunomix2834").isEmpty())
-      {
-        applicationInitializationService.createUser(
-            "yunomix2834",
-            "dinhanst2832004",
-            "yunomix2834@mail.com"
         );
       }
 

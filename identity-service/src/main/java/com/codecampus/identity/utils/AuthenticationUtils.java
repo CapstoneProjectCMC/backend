@@ -72,7 +72,8 @@ public class AuthenticationUtils
    */
   public static String getMyUsername()
   {
-    return SecurityContextHolder.getContext().getAuthentication().getName();
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    return (auth == null) ? null : auth.getName();
   }
 
   public static String getMyUserId()
