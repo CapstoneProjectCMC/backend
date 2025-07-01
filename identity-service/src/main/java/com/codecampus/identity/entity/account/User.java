@@ -1,7 +1,7 @@
 package com.codecampus.identity.entity.account;
 
 import com.codecampus.identity.entity.audit.AuditMetadata;
-import com.codecampus.identity.utils.AuthenticationUtils;
+import com.codecampus.identity.helper.AuthenticationHelper;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -64,7 +64,7 @@ public class User extends AuditMetadata
   @PreRemove
   private void doSoftDelete()
   {
-    this.setDeletedBy(AuthenticationUtils.getMyUsername());
+    this.setDeletedBy(AuthenticationHelper.getMyEmail());
     this.setDeletedAt(Instant.now());
   }
 }

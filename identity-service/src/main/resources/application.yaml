@@ -1,16 +1,16 @@
 server:
   port: 8080
-  http:
-    port: 8000
+  #  http:
+  #    port: 8000
   servlet:
     context-path: /identity
-  ssl:
-    enabled: true
-    key-alias: identity-https
-    key-store: classpath:ssl/identity.jks
-    key-store-type: JKS
-    key-store-password: dinhanst2832004
-    key-password: dinhanst2832004
+#  ssl:
+#    enabled: true
+#    key-alias: identity-https
+#    key-store: classpath:ssl/identity.jks
+#    key-store-type: JKS
+#    key-store-password: dinhanst2832004
+#    key-password: dinhanst2832004
 
 spring:
   application:
@@ -47,7 +47,7 @@ spring:
 
 app:
   services:
-    profile: http://localhost:8001/profile
+    profile: http://localhost:8081/profile
   otp:
     expiry-minutes: 5
   jwt:
@@ -57,5 +57,5 @@ app:
   google:
     client-id: "989048331981-ftq9jst7r5os4fc0u64ongvsp08fvka1.apps.googleusercontent.com"
     client-secret: "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"
-    redirect-uri: "http://localhost:4200"
+    redirect-uri: "http://localhost:4200/auth/identity/authenticate"
 

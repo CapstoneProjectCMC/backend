@@ -35,5 +35,6 @@ public class Role extends AuditMetadata
   @JoinTable(name = "role_permissions",
       joinColumns = @JoinColumn(name = "role_name"),
       inverseJoinColumns = @JoinColumn(name = "permission_name"))
+  @Builder.Default
   Set<Permission> permissions = new HashSet<>();
 }

@@ -30,10 +30,13 @@ import org.hibernate.annotations.Where;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "exercise_assignment")
-@SQLDelete(sql = "UPDATE exercise_assignment SET deleted_at = now(), deleted_by = ? WHERE id = ?")
+@SQLDelete(sql = "UPDATE exercise_assignment " +
+    "SET deleted_by = ? , deleted_at = now() " +
+    "WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
 @EqualsAndHashCode(callSuper = false)
-public class Assignment extends AuditMetadata {
+public class Assignment extends AuditMetadata
+{
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   String id;

@@ -34,7 +34,9 @@ import org.hibernate.annotations.Where;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "question")
-@SQLDelete(sql = "UPDATE question SET deleted_at = now(), deleted_by = ? WHERE id = ?")
+@SQLDelete(sql = "UPDATE question " +
+    "SET deleted_by = ? , deleted_at = now() " +
+    "WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
 public class Question extends AuditMetadata
 {

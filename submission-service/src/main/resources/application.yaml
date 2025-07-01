@@ -1,16 +1,16 @@
 server:
   port: 8083
-  http:
-    port: 8003
+  #  http:
+  #    port: 8003
   servlet:
     context-path: /submission
-  ssl:
-    enabled: true
-    key-alias: submission-https
-    key-store: classpath:ssl/submission.jks
-    key-store-type: JKS
-    key-store-password: dinhanst2832004
-    key-password: dinhanst2832004
+#  ssl:
+#    enabled: true
+#    key-alias: submission-https
+#    key-store: classpath:ssl/submission.jks
+#    key-store-type: JKS
+#    key-store-password: dinhanst2832004
+#    key-password: dinhanst2832004
 
 spring:
   application:

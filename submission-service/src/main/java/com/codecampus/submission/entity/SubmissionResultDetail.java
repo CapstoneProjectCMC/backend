@@ -16,6 +16,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 @Getter
 @Setter
@@ -25,7 +27,12 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "submission_result_detail")
-public class SubmissionResultDetail {
+@SQLDelete(sql = "UPDATE submission_result_detail " +
+    "SET deleted_by = ? , deleted_at = now() " +
+    "WHERE id = ?")
+@Where(clause = "deleted_at IS NULL")
+public class SubmissionResultDetail
+{
   @EmbeddedId
   SubmissionResultId id;
 

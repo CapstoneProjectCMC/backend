@@ -28,9 +28,12 @@ import org.hibernate.annotations.Where;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "option")
-@SQLDelete(sql = "UPDATE option SET deleted_at = now(), deleted_by = ? WHERE id = ?")
+@SQLDelete(sql = "UPDATE option " +
+    "SET deleted_by = ? , deleted_at = now() " +
+    "WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
-public class Option extends AuditMetadata {
+public class Option extends AuditMetadata
+{
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   String id;

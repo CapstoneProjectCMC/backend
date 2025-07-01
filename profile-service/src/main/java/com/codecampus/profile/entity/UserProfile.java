@@ -1,12 +1,11 @@
 package com.codecampus.profile.entity;
 
 import com.codecampus.profile.entity.properties.contest.ContestStatus;
+import com.codecampus.profile.entity.properties.exercise.AssignedOrgExercise;
 import com.codecampus.profile.entity.properties.exercise.CompletedExercise;
 import com.codecampus.profile.entity.properties.exercise.CreatedExercise;
 import com.codecampus.profile.entity.properties.exercise.SavedExercise;
 import com.codecampus.profile.entity.properties.organization.CreatedOrg;
-import com.codecampus.profile.entity.properties.organization.EnrolledClass;
-import com.codecampus.profile.entity.properties.organization.ManagesClass;
 import com.codecampus.profile.entity.properties.organization.MemberOrg;
 import com.codecampus.profile.entity.properties.post.Reaction;
 import com.codecampus.profile.entity.properties.post.ReportedPost;
@@ -84,6 +83,9 @@ public class UserProfile
   @Relationship(type = "CREATED_EXERCISE")
   Set<CreatedExercise> createdExercises = new HashSet<>();
 
+  @Relationship(type = "ASSIGNED_ORG_EXERCISE")
+  Set<AssignedOrgExercise> exercises = new HashSet<>();
+
   @Relationship(type = "CONTEST_STATUS")
   Set<ContestStatus> contests = new HashSet<>();
 
@@ -114,13 +116,6 @@ public class UserProfile
 
   @Relationship(type = "CREATED_ORG")
   Set<CreatedOrg> createdOrgs = new HashSet<>();
-
-  // Teacher-specific
-  @Relationship(type = "MANAGES_CLASS")
-  Set<ManagesClass> managesClasses = new HashSet<>();
-
-  @Relationship(type = "ENROLLED_IN")
-  Set<EnrolledClass> enrolledClasses = new HashSet<>();
 
   // Resource
   @Relationship(type = "SAVED_RESOURCE")

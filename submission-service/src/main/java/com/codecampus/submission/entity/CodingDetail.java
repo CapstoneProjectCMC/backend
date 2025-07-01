@@ -27,9 +27,12 @@ import org.hibernate.annotations.Where;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "coding_detail")
-@SQLDelete(sql = "UPDATE coding_detail SET deleted_at = now(), deleted_by = ? WHERE id = ?")
+@SQLDelete(sql = "UPDATE coding_detail " +
+    "SET deleted_by = ? , deleted_at = now() " +
+    "WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
-public class CodingDetail extends AuditMetadata {
+public class CodingDetail extends AuditMetadata
+{
   @Id
   String id;   // trùng với exercise_id
 

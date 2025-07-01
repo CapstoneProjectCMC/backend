@@ -1,9 +1,10 @@
-package com.codecampus.identity.utils;
+package com.codecampus.identity.helper;
 
 import com.codecampus.identity.entity.account.User;
 import com.codecampus.identity.exception.AppException;
 import com.codecampus.identity.exception.ErrorCode;
 import com.codecampus.identity.repository.account.UserRepository;
+import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +27,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class AuthenticationUtils
+public class AuthenticationHelper
 {
   UserRepository userRepository;
 
@@ -70,10 +71,29 @@ public class AuthenticationUtils
    *
    * @return chuỗi tên đăng nhập hoặc null nếu chưa xác thực
    */
-  public static String getMyUsername()
+  public static String getMyEmail()
   {
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     return (auth == null) ? null : auth.getName();
+  }
+
+  public static String getMyUsername()
+  {
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    if (auth == null || !auth.isAuthenticated())
+    {
+      return null;
+    }
+
+    Object principal = auth.getPrincipal();
+
+    if (principal instanceof Jwt jwt)
+    {
+      // JwtAuthenticationToken giữ nguyên đối tượng Jwt làm principal,
+      return jwt.getClaimAsString("username");
+    }
+
+    return null;
   }
 
   public static String getMyUserId()
@@ -89,10 +109,20 @@ public class AuthenticationUtils
     if (principal instanceof Jwt jwt)
     {
       // JwtAuthenticationToken giữ nguyên đối tượng Jwt làm principal,
-      return jwt.getClaimAsString("sub");
+      return jwt.getClaimAsString("userId");
     }
 
     return null;
+  }
+
+  public static String extractToken(String header)
+  {
+    return Optional.ofNullable(header)
+        .filter(h -> h.toLowerCase().startsWith("bearer "))
+        .map(h -> h.substring(7))
+        .orElseThrow(
+            () -> new AppException(ErrorCode.INVALID_TOKEN)
+        );
   }
 
   /**

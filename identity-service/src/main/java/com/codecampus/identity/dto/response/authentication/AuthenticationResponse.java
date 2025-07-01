@@ -14,10 +14,6 @@ import lombok.experimental.FieldDefaults;
 //@JsonInclude(JsonInclude.Include.NON_NULL)
 public class AuthenticationResponse
 {
-  String username;
-  String email;
-  String role;
-  String tokenId;
   String tokenAccessType;
   String accessToken;
   String refreshToken;

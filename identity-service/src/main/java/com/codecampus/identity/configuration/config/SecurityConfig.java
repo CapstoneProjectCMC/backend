@@ -148,8 +148,8 @@ public class SecurityConfig
     JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
     converter.setJwtGrantedAuthoritiesConverter(authConverter);
 
-    // Principal = claim "username"
-    converter.setPrincipalClaimName("username");
+    // Principal
+    converter.setPrincipalClaimName("sub");
 
     return converter;
   }

@@ -2,6 +2,8 @@ package com.codecampus.identity.configuration.config;
 
 import com.codecampus.identity.dto.request.authentication.IntrospectRequest;
 import com.codecampus.identity.dto.response.authentication.IntrospectResponse;
+import com.codecampus.identity.exception.AppException;
+import com.codecampus.identity.exception.ErrorCode;
 import com.codecampus.identity.service.authentication.AuthenticationService;
 import com.nimbusds.jose.JOSEException;
 import java.text.ParseException;
@@ -61,7 +63,7 @@ public class CustomJwtDecoder implements JwtDecoder
 
       if (!response.isValid())
       {
-        throw new JwtException("Token invalid");
+        throw new AppException(ErrorCode.INVALID_TOKEN);
       }
     } catch (JOSEException | ParseException e)
     {

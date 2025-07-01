@@ -1,26 +1,26 @@
 package com.codecampus.identity.service.account;
 
 import static com.codecampus.identity.constant.authentication.AuthenticationConstant.USER_ROLE;
+import static com.codecampus.identity.helper.PageResponseHelper.toPageResponse;
 
 import com.codecampus.identity.dto.common.PageResponse;
 import com.codecampus.identity.dto.request.authentication.PasswordCreationRequest;
 import com.codecampus.identity.dto.request.authentication.UserCreationRequest;
 import com.codecampus.identity.dto.request.authentication.UserUpdateRequest;
-import com.codecampus.identity.dto.request.profile.UserProfileCreationRequest;
 import com.codecampus.identity.dto.response.authentication.UserResponse;
 import com.codecampus.identity.entity.account.Role;
 import com.codecampus.identity.entity.account.User;
 import com.codecampus.identity.exception.AppException;
 import com.codecampus.identity.exception.ErrorCode;
+import com.codecampus.identity.helper.AuthenticationHelper;
+import com.codecampus.identity.helper.ProfileSyncHelper;
 import com.codecampus.identity.mapper.authentication.UserMapper;
 import com.codecampus.identity.mapper.client.UserProfileMapper;
 import com.codecampus.identity.repository.account.RoleRepository;
 import com.codecampus.identity.repository.account.UserRepository;
 import com.codecampus.identity.repository.httpclient.profile.ProfileClient;
 import com.codecampus.identity.service.authentication.OtpService;
-import com.codecampus.identity.utils.AuthenticationUtils;
 import java.util.HashSet;
-import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
@@ -65,7 +65,8 @@ public class UserService
 
   PasswordEncoder passwordEncoder;
   ProfileClient profileClient;
-  AuthenticationUtils authenticationUtils;
+  AuthenticationHelper authenticationHelper;
+  ProfileSyncHelper profileSyncHelper;
 
   /**
    * Tạo mới người dùng, gán vai trò USER và khởi tạo profile.
@@ -85,7 +86,7 @@ public class UserService
   @Transactional
   public UserResponse createUser(UserCreationRequest request)
   {
-    authenticationUtils.checkExistsUsernameEmail(
+    authenticationHelper.checkExistsUsernameEmail(
         request.getUsername(),
         request.getEmail()
     );
@@ -102,16 +103,11 @@ public class UserService
     try
     {
       user = userRepository.save(user);
+      profileSyncHelper.createProfile(user, request);
     } catch (DataIntegrityViolationException e)
     {
       throw new AppException(ErrorCode.USER_ALREADY_EXISTS);
     }
-
-    UserProfileCreationRequest userProfileRequest =
-        userProfileMapper.toUserProfileCreationRequest(request);
-    userProfileRequest.setUserId(user.getId());
-
-    profileClient.createUserProfile(userProfileRequest);
 
     return userMapper.toUserResponse(user);
   }
@@ -126,7 +122,7 @@ public class UserService
    */
   public void createPassword(PasswordCreationRequest request)
   {
-    User user = findUser(AuthenticationUtils.getMyUserId());
+    User user = findUser(AuthenticationHelper.getMyUserId());
 
     if (StringUtils.hasText(request.getPassword()))
     {
@@ -144,7 +140,7 @@ public class UserService
    */
   public UserResponse getMyInfo()
   {
-    return getUser(AuthenticationUtils.getMyUserId());
+    return getUser(AuthenticationHelper.getMyUserId());
   }
 
   /**
@@ -164,7 +160,7 @@ public class UserService
       UserUpdateRequest request)
   {
     User user = findUser(userId);
-    return updateUserAndReturnUser(request, user);
+    return updateUserAndReturnUserResponse(request, user);
   }
 
   /**
@@ -178,11 +174,11 @@ public class UserService
   public UserResponse updateMyInfo(
       UserUpdateRequest request)
   {
-    User user = findUser(AuthenticationUtils.getMyUserId());
-    return updateUserAndReturnUser(request, user);
+    User user = findUser(AuthenticationHelper.getMyUserId());
+    return updateUserAndReturnUserResponse(request, user);
   }
 
-  private UserResponse updateUserAndReturnUser(
+  private UserResponse updateUserAndReturnUserResponse(
       UserUpdateRequest request,
       User user)
   {
@@ -207,7 +203,7 @@ public class UserService
   public void deleteUser(String userId)
   {
     User user = findUser(userId);
-    user.markDeleted(AuthenticationUtils.getMyUsername());
+    user.markDeleted(AuthenticationHelper.getMyEmail());
     userRepository.save(user);
   }
 
@@ -221,23 +217,15 @@ public class UserService
    * @return PageResponse chứa danh sách UserResponse và thông tin phân trang
    */
   @PreAuthorize("hasRole('ADMIN')")
-  public PageResponse<UserResponse> getUsers(int page, int size)
+  public PageResponse<UserResponse> getUsers(
+      int page, int size)
   {
     Pageable pageable = PageRequest.of(page - 1, size);
-    Page<User> pageData = userRepository.findAll(pageable);
-    List<UserResponse> userList = pageData
-        .getContent()
-        .stream()
-        .map(userMapper::toUserResponse)
-        .toList();
+    Page<UserResponse> pageData = userRepository
+        .findAll(pageable)
+        .map(userMapper::toUserResponse);
 
-    return PageResponse.<UserResponse>builder()
-        .currentPage(page)
-        .pageSize(pageData.getSize())
-        .totalPages(pageData.getTotalPages())
-        .totalElements(pageData.getTotalElements())
-        .data(userList)
-        .build();
+    return toPageResponse(pageData, page);
   }
 
   /**

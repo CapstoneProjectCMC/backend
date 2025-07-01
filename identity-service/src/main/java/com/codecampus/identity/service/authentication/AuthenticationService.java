@@ -5,11 +5,10 @@ import static com.codecampus.identity.constant.authentication.AuthenticationCons
 import com.codecampus.identity.dto.request.authentication.AuthenticationRequest;
 import com.codecampus.identity.dto.request.authentication.ExchangeTokenRequest;
 import com.codecampus.identity.dto.request.authentication.IntrospectRequest;
-import com.codecampus.identity.dto.request.authentication.LogoutRequest;
 import com.codecampus.identity.dto.request.authentication.RefreshRequest;
 import com.codecampus.identity.dto.request.authentication.UserCreationRequest;
-import com.codecampus.identity.dto.request.profile.UserProfileCreationRequest;
 import com.codecampus.identity.dto.response.authentication.AuthenticationResponse;
+import com.codecampus.identity.dto.response.authentication.ExchangeTokenResponse;
 import com.codecampus.identity.dto.response.authentication.IntrospectResponse;
 import com.codecampus.identity.dto.response.authentication.OutboundUserResponse;
 import com.codecampus.identity.entity.account.InvalidatedToken;
@@ -18,16 +17,15 @@ import com.codecampus.identity.entity.account.Role;
 import com.codecampus.identity.entity.account.User;
 import com.codecampus.identity.exception.AppException;
 import com.codecampus.identity.exception.ErrorCode;
+import com.codecampus.identity.helper.AuthenticationHelper;
+import com.codecampus.identity.helper.ProfileSyncHelper;
 import com.codecampus.identity.mapper.authentication.UserMapper;
-import com.codecampus.identity.mapper.client.UserProfileMapper;
 import com.codecampus.identity.repository.account.InvalidatedTokenRepository;
 import com.codecampus.identity.repository.account.RoleRepository;
 import com.codecampus.identity.repository.account.UserRepository;
 import com.codecampus.identity.repository.httpclient.google.OutboundGoogleIdentityClient;
 import com.codecampus.identity.repository.httpclient.google.OutboundGoogleUserClient;
-import com.codecampus.identity.repository.httpclient.profile.ProfileClient;
-import com.codecampus.identity.service.account.UserService;
-import com.codecampus.identity.utils.AuthenticationUtils;
+import com.codecampus.identity.utils.EmailUtils;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JOSEObjectType;
 import com.nimbusds.jose.JWSAlgorithm;
@@ -84,17 +82,15 @@ public class AuthenticationService
   InvalidatedTokenRepository invalidatedTokenRepository;
 
   OtpService otpService;
-  UserService userService;
 
-  UserProfileMapper userProfileMapper;
   UserMapper userMapper;
 
   PasswordEncoder passwordEncoder;
 
   OutboundGoogleIdentityClient outboundGoogleIdentityClient;
   OutboundGoogleUserClient outboundGoogleUserClient;
-  ProfileClient profileClient;
-  AuthenticationUtils authenticationUtils;
+  AuthenticationHelper authenticationHelper;
+  ProfileSyncHelper profileSyncHelper;
 
   @NonFinal
   @Value("${app.jwt.signerKey}")
@@ -161,36 +157,44 @@ public class AuthenticationService
   public AuthenticationResponse outboundGoogleLogin(
       String code) throws ParseException
   {
-    var response = outboundGoogleIdentityClient.exchangeToken(
-        ExchangeTokenRequest.builder()
-            .code(code)
-            .clientId(GOOGLE_CLIENT_ID)
-            .clientSecret(GOOGLE_CLIENT_SECRET)
-            .redirectUri(GOOGLE_REDIRECT_URI)
-            .grantType(GRANT_TYPE)
-            .build()
-    );
-    log.info("TOKEN RESPONSE {}", response);
+    ExchangeTokenResponse response =
+        outboundGoogleIdentityClient.exchangeToken(
+            ExchangeTokenRequest.builder()
+                .code(code)
+                .clientId(GOOGLE_CLIENT_ID)
+                .clientSecret(GOOGLE_CLIENT_SECRET)
+                .redirectUri(GOOGLE_REDIRECT_URI)
+                .grantType(GRANT_TYPE)
+                .build()
+        );
 
     // Get User info
-    OutboundUserResponse userInfo = outboundGoogleUserClient.getUserInfo(
-        "json",
-        response.getAccessToken());
-
-    log.info("User Info {}", userInfo);
-
-    Set<Role> roles = new HashSet<>();
-    roles.add(Role.builder()
-        .name(USER_ROLE)
-        .build()
-    );
+    OutboundUserResponse googleUser = outboundGoogleUserClient.getUserInfo(
+        "json", response.getAccessToken());
 
     // Onboard user
-    User user = userRepository.findByUsername(userInfo.getEmail())
-        .orElseGet(() -> userRepository.save(User.builder()
-            .username(userInfo.getEmail())
-            .roles(roles)
-            .build()));
+    User user = userRepository
+        .findByEmail(googleUser.getEmail())
+        .orElseGet(() -> {
+              Role userRole = roleRepository.findByName(USER_ROLE);
+              User newUser = userRepository.save(User.builder()
+                  .username(EmailUtils.extractUsername(googleUser.getEmail()))
+                  .email(googleUser.getEmail())
+                  .roles(Set.of(userRole))
+                  .enabled(true)
+                  .build());
+
+              UserCreationRequest googleRequest = UserCreationRequest.builder()
+                  .email(googleUser.getEmail())
+                  .firstName(googleUser.getGivenName())
+                  .lastName(googleUser.getFamilyName())
+                  .displayName(googleUser.getName())
+                  .build();
+
+              profileSyncHelper.createProfile(newUser, googleRequest);
+              return newUser;
+            }
+        );
 
     // Tạo token
     return generateTokenAndReturnAuthenticationResponse(user);
@@ -237,16 +241,16 @@ public class AuthenticationService
   /**
    * Đăng xuất, invalid token bằng cách lưu vào repository.
    *
-   * @param request chứa token cần logout
+   * @param token chứa token cần logout
    * @throws ParseException khi lỗi parse JWT
    * @throws JOSEException  khi lỗi verify JWT
    */
-  public void logout(LogoutRequest request)
+  public void logout(String token)
       throws ParseException, JOSEException
   {
     try
     {
-      SignedJWT signToken = verifyToken(request.getToken(), true);
+      SignedJWT signToken = verifyToken(token, true);
 
       invalidateToken(signToken);
     } catch (AppException e)
@@ -263,7 +267,7 @@ public class AuthenticationService
   @Transactional
   public void register(UserCreationRequest request)
   {
-    authenticationUtils.checkExistsUsernameEmail(
+    authenticationHelper.checkExistsUsernameEmail(
         request.getUsername(),
         request.getEmail()
     );
@@ -284,17 +288,11 @@ public class AuthenticationService
 
       // Gửi OTP qua email
       otpService.sendOtp(request);
-
+      profileSyncHelper.createProfile(user, request);   // 👍
     } catch (DataIntegrityViolationException e)
     {
       throw new AppException(ErrorCode.USER_ALREADY_EXISTS);
     }
-
-    UserProfileCreationRequest userProfileRequest =
-        userProfileMapper.toUserProfileCreationRequest(request);
-    userProfileRequest.setUserId(user.getId());
-
-    profileClient.createUserProfile(userProfileRequest);
   }
 
   /**
@@ -377,12 +375,13 @@ public class AuthenticationService
         .plus(duration, ChronoUnit.SECONDS);
 
     return new JWTClaimsSet.Builder()
-        .subject(user.getId())
+        .subject(user.getEmail())
         .issuer("Code Campus")
         .issueTime(new Date())
         .expirationTime(Date.from(expiryInstant))
         .jwtID(UUID.randomUUID().toString())
         .claim("scope", buildScope(user))
+        .claim("userId", user.getId())
         .claim("username", user.getUsername())
         .claim("email", user.getEmail())
         .claim("roles", user.getRoles()
@@ -474,11 +473,6 @@ public class AuthenticationService
     SignedJWT refreshToken = generateToken(user, REFRESH_DURATION, "refresh_token");
 
     return AuthenticationResponse.builder()
-        .username(user.getUsername())
-        .email(user.getEmail())
-        .role(userService.getRoleName(user))
-        .tokenId(accessToken.getJWTClaimsSet().getJWTID())
-        .tokenAccessType("Bearer")
         .accessToken(accessToken.serialize())
         .refreshToken(refreshToken.serialize())
         .accessExpiry(accessToken.getJWTClaimsSet().getExpirationTime().toInstant())
