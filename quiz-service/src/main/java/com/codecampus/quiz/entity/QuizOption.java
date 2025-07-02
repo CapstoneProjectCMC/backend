@@ -32,4 +32,5 @@ public class QuizOption
   QuizQuestion question;
 
   String text;
+  boolean correct;
 }

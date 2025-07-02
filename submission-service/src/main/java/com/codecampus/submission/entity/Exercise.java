@@ -98,8 +98,7 @@ public class Exercise extends AuditMetadata
 
   @Column(name = "resource_ids", columnDefinition = "text[]")
   Set<String> resourceIds;
-
-
+  
   // Optional
   @OneToMany(mappedBy = "exercise", fetch = FetchType.LAZY)
   List<Question> questions = new ArrayList<>();

@@ -1,7 +1,6 @@
 package com.codecampus.submission.service;
 
 import com.codecampus.quiz.grpc.QuizServiceGrpc;
-import com.codecampus.submission.configuration.config.kafka.ExerciseEventPublisher;
 import com.codecampus.submission.constant.submission.ExerciseType;
 import com.codecampus.submission.dto.request.ExerciseCreationRequest;
 import com.codecampus.submission.dto.response.exercise.ExerciseSummaryResponse;
@@ -11,6 +10,7 @@ import com.codecampus.submission.entity.Option;
 import com.codecampus.submission.entity.Question;
 import com.codecampus.submission.entity.QuizDetail;
 import com.codecampus.submission.entity.TestCase;
+import com.codecampus.submission.helper.AuthenticationHelper;
 import com.codecampus.submission.mapper.ExerciseMapper;
 import com.codecampus.submission.mapper.coding.CodingMapper;
 import com.codecampus.submission.mapper.coding.TestCaseMapper;
@@ -22,7 +22,6 @@ import com.codecampus.submission.repository.quiz.OptionRepository;
 import com.codecampus.submission.repository.quiz.QuestionRepository;
 import com.codecampus.submission.repository.quiz.QuizRepository;
 import com.codecampus.submission.service.client.QuizGrpcClient;
-import com.codecampus.submission.utils.SecurityUtils;
 import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +38,6 @@ public class TeacherExerciseService
 {
 
   QuizGrpcClient quizGrpcClient;
-  ExerciseEventPublisher exerciseEventPublisher;
 
   ExerciseRepository exerciseRepository;
   CodingRepository codingRepository;
@@ -64,7 +62,7 @@ public class TeacherExerciseService
       ExerciseCreationRequest request)
   {
     Exercise exercise = exerciseMapper.toExercise(request);
-    exercise.setUserId(SecurityUtils.getMyUserId());
+    exercise.setUserId(AuthenticationHelper.getMyUserId());
     exercise.setExerciseType(request.getExerciseType());
     exercise.setVisibility(true);
 
@@ -82,9 +80,6 @@ public class TeacherExerciseService
     }
 
     Exercise savedExercise = exerciseRepository.save(exercise);
-
-    // Gửi Kafka
-    exerciseEventPublisher.publishCreated(savedExercise);
 
     return exerciseMapper
         .toExerciseSummaryResponse(savedExercise);

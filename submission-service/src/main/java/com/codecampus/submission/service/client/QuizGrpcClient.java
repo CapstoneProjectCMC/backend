@@ -34,6 +34,7 @@ public class QuizGrpcClient
           OptionData.newBuilder()
               .setId(o.getId())
               .setText(o.getOptionText())
+              .setCorrect(o.isCorrect())
               .build()
       ));
 

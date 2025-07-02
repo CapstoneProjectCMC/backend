@@ -46,6 +46,7 @@ public class ExerciseService
                   .id(o.getId())
                   .question(quizQuestion)
                   .text(o.getText())
+                  .correct(o.getCorrect())
                   .build()
           ));
 
@@ -59,8 +60,14 @@ public class ExerciseService
       cacheNames = "quizExercise",
       key = "#exerciseId"
   )
-  @Transactional(readOnly = true)
   public ExerciseData toQuizProto(String exerciseId)
+  {
+    return toQuizProto(exerciseId, false);
+  }
+
+  public ExerciseData toQuizProto(
+      String exerciseId,
+      boolean revealCorrect)
   {
     QuizExercise exercise = quizExerciseRepository
         .findById(exerciseId)
@@ -83,6 +90,7 @@ public class ExerciseService
               OptionData.newBuilder()
                   .setId(o.getId())
                   .setText(o.getText())
+                  .setCorrect(revealCorrect && o.isCorrect())
                   .build()
           ));
 

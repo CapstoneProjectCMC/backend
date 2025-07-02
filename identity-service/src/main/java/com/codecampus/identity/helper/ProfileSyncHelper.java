@@ -6,11 +6,14 @@ import com.codecampus.identity.entity.account.User;
 import com.codecampus.identity.mapper.client.UserProfileMapper;
 import com.codecampus.identity.repository.httpclient.profile.ProfileClient;
 import feign.FeignException;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ProfileSyncHelper
 {
   ProfileClient profileClient;
@@ -23,8 +26,7 @@ public class ProfileSyncHelper
       User user,
       UserCreationRequest src)
   {
-    UserProfileCreationRequest req =
-        userProfileMapper.toUserProfileCreationRequest(src);
+    UserProfileCreationRequest req = userProfileMapper.toUserProfileCreationRequest(src);
     req.setUserId(user.getId());
 
     try

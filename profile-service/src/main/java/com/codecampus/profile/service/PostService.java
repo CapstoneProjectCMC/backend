@@ -1,6 +1,6 @@
 package com.codecampus.profile.service;
 
-import static com.codecampus.profile.utils.PageResponseUtils.toPageResponse;
+import static com.codecampus.profile.helper.PageResponseHelper.toPageResponse;
 
 import com.codecampus.profile.dto.common.PageResponse;
 import com.codecampus.profile.entity.Post;
@@ -10,9 +10,9 @@ import com.codecampus.profile.entity.properties.post.ReportedPost;
 import com.codecampus.profile.entity.properties.post.SavedPost;
 import com.codecampus.profile.exception.AppException;
 import com.codecampus.profile.exception.ErrorCode;
+import com.codecampus.profile.helper.SecurityHelper;
 import com.codecampus.profile.repository.PostRepository;
 import com.codecampus.profile.repository.UserProfileRepository;
-import com.codecampus.profile.utils.SecurityUtils;
 import java.time.Instant;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -76,7 +76,7 @@ public class PostService
   {
     Pageable pageable = PageRequest.of(page - 1, size);
     var pageData = userProfileRepository
-        .findSavedPosts(SecurityUtils.getMyUserId(), pageable);
+        .findSavedPosts(SecurityHelper.getMyUserId(), pageable);
 
     return toPageResponse(pageData, page);
   }
@@ -86,7 +86,7 @@ public class PostService
   {
     Pageable pageable = PageRequest.of(page - 1, size);
     var pageData = userProfileRepository
-        .findReactions(SecurityUtils.getMyUserId(), pageable);
+        .findReactions(SecurityHelper.getMyUserId(), pageable);
 
     return toPageResponse(pageData, page);
   }
@@ -95,7 +95,7 @@ public class PostService
   {
     Pageable pageable = PageRequest.of(page - 1, size);
     var pageData = userProfileRepository
-        .findReportedPosts(SecurityUtils.getMyUserId(), pageable);
+        .findReportedPosts(SecurityHelper.getMyUserId(), pageable);
     return toPageResponse(pageData, page);
   }
 

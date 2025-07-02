@@ -1,12 +1,13 @@
 package com.codecampus.submission.service;
 
-import static com.codecampus.submission.utils.PageResponseUtils.toPageResponse;
+import static com.codecampus.submission.helper.PageResponseHelper.toPageResponse;
 
 import com.codecampus.submission.dto.common.PageResponse;
 import com.codecampus.submission.dto.response.contest.ContestResponse;
 import com.codecampus.submission.dto.response.exercise.AssignmentResponse;
 import com.codecampus.submission.dto.response.exercise.ExerciseSummaryResponse;
 import com.codecampus.submission.dto.response.exercise.SubmissionResponse;
+import com.codecampus.submission.helper.AuthenticationHelper;
 import com.codecampus.submission.mapper.AssignmentMapper;
 import com.codecampus.submission.mapper.ContestMapper;
 import com.codecampus.submission.mapper.ExerciseMapper;
@@ -16,7 +17,6 @@ import com.codecampus.submission.repository.ContestRepository;
 import com.codecampus.submission.repository.ExerciseRepository;
 import com.codecampus.submission.repository.SubmissionRepository;
 import com.codecampus.submission.repository.specification.ExerciseSpecification;
-import com.codecampus.submission.utils.SecurityUtils;
 import java.time.Instant;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -71,7 +71,7 @@ public class StudentExerciseService
     Pageable pageable = PageRequest.of(page - 1, size);
 
     var pageData = assignmentRepository
-        .findByStudentId(SecurityUtils.getMyUserId(), pageable)
+        .findByStudentId(AuthenticationHelper.getMyUserId(), pageable)
         .map(assignmentMapper::toAssignmentResponse);
 
     return toPageResponse(pageData, page);
@@ -94,7 +94,7 @@ public class StudentExerciseService
   {
     Pageable pageable = PageRequest.of(page - 1, size);
     var pageData = submissionRepository
-        .findByUserId(SecurityUtils.getMyUserId(), pageable)
+        .findByUserId(AuthenticationHelper.getMyUserId(), pageable)
         .map(submissionMapper::toSubmissionResponse);
 
     return toPageResponse(pageData, page);

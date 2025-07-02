@@ -45,9 +45,8 @@ public class QuizGrpcServer extends QuizServiceGrpc.QuizServiceImplBase
       GetExerciseRequest request,
       StreamObserver<ExerciseData> responseObserver)
   {
-    ExerciseData data = exerciseService
-        .toQuizProto(request.getExerciseId());
-    responseObserver.onNext(data);
+    responseObserver.onNext(exerciseService
+        .toQuizProto(request.getExerciseId()));
     responseObserver.onCompleted();
   }
 
@@ -58,7 +57,7 @@ public class QuizGrpcServer extends QuizServiceGrpc.QuizServiceImplBase
       StreamObserver<QuizResult> responseObserver)
   {
     ExerciseData exerciseData = exerciseService
-        .toQuizProto(request.getExerciseId());
+        .toQuizProto(request.getExerciseId(), true);
 
     Map<String, String> correctAnswer = exerciseData
         .getQuestionsList()

@@ -1,10 +1,12 @@
-package com.codecampus.submission.utils;
+package com.codecampus.profile.helper;
 
-import com.codecampus.submission.dto.common.PageResponse;
+import com.codecampus.profile.dto.common.PageResponse;
 import org.springframework.data.domain.Page;
 
-public class PageResponseUtils {
-  private PageResponseUtils() {
+public class PageResponseHelper
+{
+  private PageResponseHelper()
+  {
   }
 
   /**
@@ -16,7 +18,8 @@ public class PageResponseUtils {
    * @return {@link PageResponse}&lt;T&gt; tương ứng
    */
   public static <T> PageResponse<T> toPageResponse(
-      Page<T> pageData, int currentPage) {
+      Page<T> pageData, int currentPage)
+  {
     return PageResponse.<T>builder()
         .currentPage(currentPage)
         .pageSize(pageData.getSize())

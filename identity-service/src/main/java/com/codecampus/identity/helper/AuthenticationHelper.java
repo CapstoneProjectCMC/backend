@@ -66,11 +66,6 @@ public class AuthenticationHelper
     return null;
   }
 
-  /**
-   * Lấy ID của người dùng đã đăng nhập.
-   *
-   * @return chuỗi tên đăng nhập hoặc null nếu chưa xác thực
-   */
   public static String getMyEmail()
   {
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
