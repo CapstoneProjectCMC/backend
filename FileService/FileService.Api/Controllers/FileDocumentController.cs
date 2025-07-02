@@ -1,0 +1,50 @@
+﻿using FileService.Core.ApiModels;
+using FileService.Service.ApiModels.FileDocumentModels;
+using FileService.Service.Dtos.FileDocumentDtos;
+using FileService.Service.Interfaces;
+using Microsoft.AspNetCore.Mvc;
+
+namespace FileService.Api.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class FileDocumentController : BaseApiController
+    {
+        public IFileDocumentService _fileDocumentService { get; set; }
+        public IFfmpegService _ffmpegService { get; set; }
+        public FileDocumentController(IServiceProvider serviceProvider, IFileDocumentService fileDocumentService, IFfmpegService ffmpegService  ) : base(serviceProvider)
+        {
+            _fileDocumentService = fileDocumentService;
+            _ffmpegService = ffmpegService;
+        }
+
+        [HttpPost("public")]
+        public async Task<IActionResult> GetViewModelsAsync([FromBody] FileDocumentDto pagingDto)
+        {
+            var result = await _fileDocumentService.GetViewModelsAsync(pagingDto);
+            var listResult = new PaginatedList<FileDocumentModel>(result.ToList(), result.Count(), pagingDto.PageIndex, pagingDto.PageSize);
+            return Success(listResult);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetFileById(Guid id)
+        {
+            var result = await _fileDocumentService.GetFileDetailById(id);
+            return Success(result);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> EditDetailFile(Guid id, [FromBody] EditFileDocumentDto dto)
+        {
+            var result = await _fileDocumentService.EditFileDetailAsync(id, dto);
+            return Success(result);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteFile(Guid id)
+        {
+            await _fileDocumentService.DeleteAsync(id);
+            return Success();
+        }
+    }
+}

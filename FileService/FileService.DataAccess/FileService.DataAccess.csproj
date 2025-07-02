@@ -6,4 +6,16 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="AspNetCore.Identity.Mongo" Version="10.1.0" />
+    <PackageReference Include="MongoDB.Bson" Version="3.4.0" />
+    <PackageReference Include="MongoDB.Driver" Version="3.4.0" />
+    <PackageReference Include="NUnit" Version="4.3.2" />
+    <PackageReference Include="Xabe.FFmpeg" Version="6.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+	  <ProjectReference Include="..\FileService.Core\FileService.Core.csproj" />
+  </ItemGroup>
+
 </Project>
