@@ -17,7 +17,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 
 @Getter
-public enum ErrorCode {
+public enum ErrorCode
+{
   // Các lỗi không phân loại và lỗi chung
   UNCATEGORIZED_EXCEPTION(99999, INTERNAL_SERVER_STATUS,
       "Lỗi chưa phân loại", INTERNAL_SERVER_ERROR),
@@ -69,7 +70,8 @@ public enum ErrorCode {
       "Lỗi tạo JWT token!", INTERNAL_SERVER_ERROR),
   FAILED_VALIDATE_TOKEN(5008002, INTERNAL_SERVER_STATUS,
       "Lỗi xác thực token!", INTERNAL_SERVER_ERROR),
-
+  FAILED_SEND_EMAIL(5008003, INTERNAL_SERVER_STATUS,
+      "Lỗi không gửi được email!", INTERNAL_SERVER_ERROR),
 
   ;
 
@@ -82,7 +84,8 @@ public enum ErrorCode {
       int code,
       String status,
       String message,
-      HttpStatusCode statusCode) {
+      HttpStatusCode statusCode)
+  {
     this.code = code;
     this.status = status;
     this.message = message;

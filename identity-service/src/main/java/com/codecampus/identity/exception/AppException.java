@@ -1,15 +1,19 @@
 package com.codecampus.identity.exception;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
-public class AppException extends RuntimeException {
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class AppException extends RuntimeException
+{
+  ErrorCode errorCode;
 
-  private ErrorCode errorCode;
-
-  public AppException(ErrorCode errorCode) {
+  public AppException(ErrorCode errorCode)
+  {
     super(errorCode.getMessage());
     this.errorCode = errorCode;
   }

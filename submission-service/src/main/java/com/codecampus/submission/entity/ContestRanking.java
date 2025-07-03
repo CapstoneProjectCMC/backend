@@ -28,9 +28,12 @@ import org.hibernate.annotations.Where;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "contest_ranking")
-@SQLDelete(sql = "UPDATE contest_ranking SET deleted_at = now(), deleted_by = ? WHERE id = ?")
+@SQLDelete(sql = "UPDATE contest_ranking " +
+    "SET deleted_by = ? , deleted_at = now() " +
+    "WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
-public class ContestRanking extends AuditMetadata {
+public class ContestRanking extends AuditMetadata
+{
   @EmbeddedId
   ContestRankId id;
 

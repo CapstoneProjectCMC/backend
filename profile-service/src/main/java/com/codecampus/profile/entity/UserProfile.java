@@ -1,15 +1,18 @@
 package com.codecampus.profile.entity;
 
+import com.codecampus.profile.entity.properties.contest.ContestStatus;
+import com.codecampus.profile.entity.properties.exercise.AssignedOrgExercise;
 import com.codecampus.profile.entity.properties.exercise.CompletedExercise;
 import com.codecampus.profile.entity.properties.exercise.CreatedExercise;
 import com.codecampus.profile.entity.properties.exercise.SavedExercise;
 import com.codecampus.profile.entity.properties.organization.CreatedOrg;
-import com.codecampus.profile.entity.properties.organization.EnrolledClass;
-import com.codecampus.profile.entity.properties.organization.ManagesClass;
 import com.codecampus.profile.entity.properties.organization.MemberOrg;
 import com.codecampus.profile.entity.properties.post.Reaction;
+import com.codecampus.profile.entity.properties.post.ReportedPost;
 import com.codecampus.profile.entity.properties.post.SavedPost;
 import com.codecampus.profile.entity.properties.post.ViewedPost;
+import com.codecampus.profile.entity.properties.resource.ReportedResource;
+import com.codecampus.profile.entity.properties.resource.SavedResource;
 import com.codecampus.profile.entity.properties.social.Blocks;
 import com.codecampus.profile.entity.properties.social.Follows;
 import com.codecampus.profile.entity.properties.subcribe.SubscribedTo;
@@ -36,7 +39,8 @@ import org.springframework.data.neo4j.core.support.UUIDStringGenerator;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Node("User")
-public class UserProfile {
+public class UserProfile
+{
   @Id
   @GeneratedValue(generatorClass = UUIDStringGenerator.class)
   String id;
@@ -79,6 +83,12 @@ public class UserProfile {
   @Relationship(type = "CREATED_EXERCISE")
   Set<CreatedExercise> createdExercises = new HashSet<>();
 
+  @Relationship(type = "ASSIGNED_ORG_EXERCISE")
+  Set<AssignedOrgExercise> exercises = new HashSet<>();
+
+  @Relationship(type = "CONTEST_STATUS")
+  Set<ContestStatus> contests = new HashSet<>();
+
   // Post
   @Relationship(type = "SAVED_POST")
   Set<SavedPost> savedPosts = new HashSet<>();
@@ -88,6 +98,9 @@ public class UserProfile {
 
   @Relationship(type = "REACTION")
   Set<Reaction> reactions = new HashSet<>();
+
+  @Relationship(type = "REPORTED_POST")
+  Set<ReportedPost> reportedPosts = new HashSet<>();
 
   // Package
   @Relationship(type = "SUBSCRIBED_TO")
@@ -104,10 +117,10 @@ public class UserProfile {
   @Relationship(type = "CREATED_ORG")
   Set<CreatedOrg> createdOrgs = new HashSet<>();
 
-  // Teacher-specific
-  @Relationship(type = "MANAGES_CLASS")
-  Set<ManagesClass> managesClasses;
+  // Resource
+  @Relationship(type = "SAVED_RESOURCE")
+  Set<SavedResource> savedResources = new HashSet<>();
 
-  @Relationship(type = "ENROLLED_IN")
-  Set<EnrolledClass> enrolledClasses;
+  @Relationship(type = "REPORTED_RESOURCE")
+  Set<ReportedResource> reportedResources = new HashSet<>();
 }

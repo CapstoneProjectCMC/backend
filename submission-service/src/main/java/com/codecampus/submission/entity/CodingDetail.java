@@ -1,13 +1,19 @@
 package com.codecampus.submission.entity;
 
 import com.codecampus.submission.entity.audit.AuditMetadata;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.MapsId;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -27,11 +33,15 @@ import org.hibernate.annotations.Where;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "coding_detail")
-@SQLDelete(sql = "UPDATE coding_detail SET deleted_at = now(), deleted_by = ? WHERE id = ?")
+@SQLDelete(sql = "UPDATE coding_detail " +
+    "SET deleted_by = ? , deleted_at = now() " +
+    "WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
-public class CodingDetail extends AuditMetadata {
+public class CodingDetail extends AuditMetadata
+{
   @Id
-  String id;   // trùng với exercise_id
+  @GeneratedValue(strategy = GenerationType.UUID)
+  String id;
 
   @OneToOne
   @MapsId
@@ -41,8 +51,20 @@ public class CodingDetail extends AuditMetadata {
   @Column(name = "allowed_languages", nullable = false, columnDefinition = "text[]")
   Set<String> allowedLanguages;
 
+  @Column(name = "input", columnDefinition = "text")
+  String input;
+
+  @Column(name = "output", columnDefinition = "text")
+  String output;
+
   @Column(name = "time_limit")
   int timeLimit;
+
+  @Column(name = "topic", length = 100)
+  String topic;
+
+  @Column(name = "constraint_text", columnDefinition = "text")
+  String constraintText;
 
   @Column(name = "memory_limit")
   int memoryLimit;
@@ -55,4 +77,9 @@ public class CodingDetail extends AuditMetadata {
 
   @Column(columnDefinition = "text")
   String solution;
+
+  @OneToMany(mappedBy = "codingDetail",
+      cascade = CascadeType.ALL,
+      orphanRemoval = true)
+  List<TestCase> testCases = new ArrayList<>();
 }

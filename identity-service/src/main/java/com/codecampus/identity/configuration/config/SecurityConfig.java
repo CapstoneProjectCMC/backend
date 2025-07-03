@@ -45,7 +45,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableWebSecurity
 @EnableMethodSecurity
 @RequiredArgsConstructor
-public class SecurityConfig {
+public class SecurityConfig
+{
 
   @Autowired
   private CustomJwtDecoder customJwtDecoder;
@@ -59,7 +60,8 @@ public class SecurityConfig {
    */
   @Bean
   public SecurityFilterChain securityFilterChain(
-      HttpSecurity httpSecurity) throws Exception {
+      HttpSecurity httpSecurity) throws Exception
+  {
     httpSecurity.authorizeHttpRequests(request -> request
         .requestMatchers(PUBLIC_ENDPOINTS)
         .permitAll()
@@ -93,7 +95,8 @@ public class SecurityConfig {
    * @return CorsConfigurationSource chứa cấu hình CORS của ứng dụng
    */
   @Bean
-  public CorsConfigurationSource corsConfigurationSource() {
+  public CorsConfigurationSource corsConfigurationSource()
+  {
     CorsConfiguration configuration = new CorsConfiguration();
 
     // Cho phép các origin truy cập định nghĩa sẵn
@@ -136,7 +139,8 @@ public class SecurityConfig {
    * @return JwtAuthenticationConverter đã cấu hình
    */
   @Bean
-  JwtAuthenticationConverter jwtAuthenticationConverter() {
+  JwtAuthenticationConverter jwtAuthenticationConverter()
+  {
     JwtGrantedAuthoritiesConverter authConverter =
         new JwtGrantedAuthoritiesConverter();
     authConverter.setAuthorityPrefix("");
@@ -144,9 +148,10 @@ public class SecurityConfig {
     JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
     converter.setJwtGrantedAuthoritiesConverter(authConverter);
 
-    // Principal = claim "username"
-    converter.setPrincipalClaimName("username");
+    // Principal
+    converter.setPrincipalClaimName("sub");
 
     return converter;
   }
+
 }

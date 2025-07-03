@@ -1,5 +1,6 @@
 package com.codecampus.identity.entity.account;
 
+import com.codecampus.identity.entity.audit.AuditMetadata;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
@@ -23,7 +24,8 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-public class Role {
+public class Role extends AuditMetadata
+{
   @Id
   String name;
 
@@ -33,5 +35,6 @@ public class Role {
   @JoinTable(name = "role_permissions",
       joinColumns = @JoinColumn(name = "role_name"),
       inverseJoinColumns = @JoinColumn(name = "permission_name"))
+  @Builder.Default
   Set<Permission> permissions = new HashSet<>();
 }

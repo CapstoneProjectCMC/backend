@@ -1,17 +1,18 @@
 package com.codecampus.profile.service;
 
-import static com.codecampus.profile.utils.PageResponseUtils.toPageResponse;
+import static com.codecampus.profile.helper.PageResponseHelper.toPageResponse;
 
 import com.codecampus.profile.dto.common.PageResponse;
 import com.codecampus.profile.entity.Post;
 import com.codecampus.profile.entity.UserProfile;
 import com.codecampus.profile.entity.properties.post.Reaction;
+import com.codecampus.profile.entity.properties.post.ReportedPost;
 import com.codecampus.profile.entity.properties.post.SavedPost;
 import com.codecampus.profile.exception.AppException;
 import com.codecampus.profile.exception.ErrorCode;
+import com.codecampus.profile.helper.SecurityHelper;
 import com.codecampus.profile.repository.PostRepository;
 import com.codecampus.profile.repository.UserProfileRepository;
-import com.codecampus.profile.utils.SecurityUtils;
 import java.time.Instant;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -25,13 +26,15 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class PostService {
+public class PostService
+{
   UserProfileRepository userProfileRepository;
   PostRepository postRepository;
 
   UserProfileService userProfileService;
 
-  public void savePost(String postId) {
+  public void savePost(String postId)
+  {
     UserProfile myProfile = userProfileService.getUserProfile();
 
     Post post = getPost(postId);
@@ -45,7 +48,8 @@ public class PostService {
     userProfileRepository.save(myProfile);
   }
 
-  public void unsavePost(String postId) {
+  public void unsavePost(String postId)
+  {
     UserProfile myProfile = userProfileService.getUserProfile();
 
     myProfile.getSavedPosts()
@@ -54,25 +58,49 @@ public class PostService {
     userProfileRepository.save(myProfile);
   }
 
+  public void reportPost(String postId, String reason)
+  {
+    UserProfile myProfile = userProfileService.getUserProfile();
+
+    Post post = getPost(postId);
+
+    ReportedPost reportedPost = ReportedPost.builder()
+        .post(post).reason(reason)
+        .reportedAt(Instant.now()).build();
+    myProfile.getReportedPosts().add(reportedPost);
+    userProfileRepository.save(myProfile);
+  }
+
   public PageResponse<SavedPost> getSavedPosts(
-      int page, int size) {
+      int page, int size)
+  {
     Pageable pageable = PageRequest.of(page - 1, size);
     var pageData = userProfileRepository
-        .findSavedPosts(SecurityUtils.getMyUserId(), pageable);
+        .findSavedPosts(SecurityHelper.getMyUserId(), pageable);
 
     return toPageResponse(pageData, page);
   }
 
   public PageResponse<Reaction> myReactions(
-      int page, int size) {
+      int page, int size)
+  {
     Pageable pageable = PageRequest.of(page - 1, size);
     var pageData = userProfileRepository
-        .findReactions(SecurityUtils.getMyUserId(), pageable);
+        .findReactions(SecurityHelper.getMyUserId(), pageable);
 
     return toPageResponse(pageData, page);
   }
 
-  public Post getPost(String postId) {
+  public PageResponse<ReportedPost> getReportedPosts(int page, int size)
+  {
+    Pageable pageable = PageRequest.of(page - 1, size);
+    var pageData = userProfileRepository
+        .findReportedPosts(SecurityHelper.getMyUserId(), pageable);
+    return toPageResponse(pageData, page);
+  }
+
+  public Post getPost(String postId)
+  {
     return postRepository.findByPostId(postId)
         .orElseThrow(
             () -> new AppException(ErrorCode.POST_NOT_FOUND)

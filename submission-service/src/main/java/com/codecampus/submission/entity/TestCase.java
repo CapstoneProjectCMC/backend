@@ -28,16 +28,19 @@ import org.hibernate.annotations.Where;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "test_case")
-@SQLDelete(sql = "UPDATE test_case SET deleted_at = now(), deleted_by = ? WHERE id = ?")
+@SQLDelete(sql = "UPDATE test_case " +
+    "SET deleted_by = ? , deleted_at = now() " +
+    "WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
-public class TestCase extends AuditMetadata {
+public class TestCase extends AuditMetadata
+{
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   String id;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "exercise_id", nullable = false)
-  Exercise exercise;
+  @JoinColumn(name = "coding_detail_id", nullable = false)
+  CodingDetail codingDetail;
 
   @Column(nullable = false, columnDefinition = "text")
   String input;

@@ -1,11 +1,11 @@
 server:
   port: 8888
-  ssl:
-    enabled: true
-    key-alias: gateway-https
-    key-store: classpath:ssl/gateway.jks
-    key-store-password: dinhanst2832004
-    key-store-type: JKS
+#  ssl:
+#    enabled: true
+#    key-alias: gateway-https
+#    key-store: classpath:ssl/gateway.jks
+#    key-store-password: dinhanst2832004
+#    key-store-type: JKS
 
 app:
   api-prefix: /api/v1
@@ -16,16 +16,17 @@ spring:
   cloud:
     gateway:
       httpclient:
-        ssl:
-          trusted-x509-certificates:
-            - classpath:ssl/identity.pem
-            - classpath:ssl/profile.pem
-            - classpath:ssl/submission.pem
-            - classpath:ssl/coding.pem
+      #        ssl:
+      #          trusted-x509-certificates:
+      #            - classpath:ssl/identity.pem
+      #            - classpath:ssl/profile.pem
+      #            - classpath:ssl/submission.pem
+      #            - classpath:ssl/coding.pem
 
       routes:
         - id: identity_service
-          uri: https://localhost:8080
+          #          uri: https://localhost:8080
+          uri: http://localhost:8080
           predicates:
             - Path=${app.api-prefix}/identity/**
           filters:
@@ -34,7 +35,8 @@ spring:
               args:
                 routeId: identity_service
         - id: profile_service
-          uri: https://localhost:8081
+          #          uri: https://localhost:8081
+          uri: http://localhost:8081
           predicates:
             - Path=${app.api-prefix}/profile/**
           filters:
@@ -53,7 +55,8 @@ spring:
               args:
                 routeId: file_service
         - id: submission_service
-          uri: https://localhost:8083
+          #          uri: https://localhost:8083
+          uri: http://localhost:8083
           predicates:
             - Path=${app.api-prefix}/submission/**
           filters:
@@ -62,7 +65,8 @@ spring:
               args:
                 routeId: submission_service
         - id: coding_service
-          uri: https://localhost:8084
+          #          uri: https://localhost:8084
+          uri: http://localhost:8084
           predicates:
             - Path=${app.api-prefix}/coding/**
           filters:

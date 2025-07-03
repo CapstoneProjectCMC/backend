@@ -6,8 +6,8 @@ import com.codecampus.identity.entity.account.Permission;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
-public interface PermissionMapper {
-
+public interface PermissionMapper
+{
   Permission toPermission(PermissionRequest permissionRequest);
 
   PermissionResponse toPermissionResponse(Permission permission);

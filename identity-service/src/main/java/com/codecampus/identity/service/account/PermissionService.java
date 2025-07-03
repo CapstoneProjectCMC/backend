@@ -30,7 +30,8 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class PermissionService {
+public class PermissionService
+{
   PermissionRepository permissionRepository;
   PermissionMapper permissionMapper;
 
@@ -41,7 +42,8 @@ public class PermissionService {
    * @return PermissionResponse chứa thông tin quyền vừa được lưu
    */
   @PreAuthorize("hasRole('ADMIN')")
-  public PermissionResponse createPermission(PermissionRequest request) {
+  public PermissionResponse createPermission(PermissionRequest request)
+  {
     Permission permission = permissionMapper.toPermission(request);
     permission = permissionRepository.save(permission);
     return permissionMapper.toPermissionResponse(permission);
@@ -53,8 +55,9 @@ public class PermissionService {
    * @return danh sách PermissionResponse tương ứng với mỗi quyền
    */
   @PreAuthorize("hasRole('ADMIN')")
-  public List<PermissionResponse> getAllPermissions() {
-    var permissions = permissionRepository.findAll();
+  public List<PermissionResponse> getAllPermissions()
+  {
+    List<Permission> permissions = permissionRepository.findAll();
     return permissions.stream()
         .map(permissionMapper::toPermissionResponse)
         .toList();
@@ -66,7 +69,8 @@ public class PermissionService {
    * @param permission mã quyền cần xóa
    */
   @PreAuthorize("hasRole('ADMIN')")
-  public void deletePermission(String permission) {
+  public void deletePermission(String permission)
+  {
     permissionRepository.deleteById(permission);
   }
 }

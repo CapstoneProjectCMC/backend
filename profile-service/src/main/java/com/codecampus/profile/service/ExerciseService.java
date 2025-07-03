@@ -1,6 +1,6 @@
 package com.codecampus.profile.service;
 
-import static com.codecampus.profile.utils.PageResponseUtils.toPageResponse;
+import static com.codecampus.profile.helper.PageResponseHelper.toPageResponse;
 
 import com.codecampus.profile.dto.common.PageResponse;
 import com.codecampus.profile.entity.Exercise;
@@ -10,9 +10,9 @@ import com.codecampus.profile.entity.properties.exercise.CreatedExercise;
 import com.codecampus.profile.entity.properties.exercise.SavedExercise;
 import com.codecampus.profile.exception.AppException;
 import com.codecampus.profile.exception.ErrorCode;
+import com.codecampus.profile.helper.SecurityHelper;
 import com.codecampus.profile.repository.ExerciseRepository;
 import com.codecampus.profile.repository.UserProfileRepository;
-import com.codecampus.profile.utils.SecurityUtils;
 import java.time.Instant;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +31,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class ExerciseService {
+public class ExerciseService
+{
   ExerciseRepository exerciseRepository;
   UserProfileRepository userProfileRepository;
 
@@ -49,7 +50,8 @@ public class ExerciseService {
    *                      hoặc {@link ErrorCode#EXERCISE_NOT_FOUND}
    *                      nếu không tìm thấy bài tập.
    */
-  public void saveExercise(String exerciseId) {
+  public void saveExercise(String exerciseId)
+  {
     UserProfile profile = userProfileService.getUserProfile();
 
     Exercise exercise = getExercise(exerciseId);
@@ -70,7 +72,8 @@ public class ExerciseService {
    * @throws AppException với mã {@link ErrorCode#USER_NOT_FOUND}
    *                      nếu không tìm thấy người dùng.
    */
-  public void unsaveExercise(String exerciseId) {
+  public void unsaveExercise(String exerciseId)
+  {
     UserProfile profile = userProfileService.getUserProfile();
 
     profile.getSavedExercises()
@@ -87,10 +90,11 @@ public class ExerciseService {
    * đã lưu.
    */
   public PageResponse<SavedExercise> getSavedExercises(
-      int page, int size) {
+      int page, int size)
+  {
     Pageable pageable = PageRequest.of(page - 1, size);
     var pageData = userProfileRepository
-        .findSavedExercises(SecurityUtils.getMyUserId(), pageable);
+        .findSavedExercises(SecurityHelper.getMyUserId(), pageable);
 
     return toPageResponse(pageData, page);
   }
@@ -104,10 +108,11 @@ public class ExerciseService {
    * đã hoàn thành.
    */
   public PageResponse<CompletedExercise> getCompletedExercises(
-      int page, int size) {
+      int page, int size)
+  {
     Pageable pageable = PageRequest.of(page - 1, size);
     var pageData = userProfileRepository
-        .findCompletedExercises(SecurityUtils.getMyUserId(), pageable);
+        .findCompletedExercises(SecurityHelper.getMyUserId(), pageable);
 
     return toPageResponse(pageData, page);
   }
@@ -124,15 +129,17 @@ public class ExerciseService {
    * do người dùng tạo.
    */
   public PageResponse<CreatedExercise> getCreatedExercises(
-      int page, int size) {
+      int page, int size)
+  {
     Pageable pageable = PageRequest.of(page - 1, size);
     var pageData = userProfileRepository
-        .findCreatedExercises(SecurityUtils.getMyUserId(), pageable);
+        .findCreatedExercises(SecurityHelper.getMyUserId(), pageable);
 
     return toPageResponse(pageData, page);
   }
 
-  public Exercise getExercise(String exerciseId) {
+  public Exercise getExercise(String exerciseId)
+  {
     return exerciseRepository
         .findByExerciseId(exerciseId)
         .orElseThrow(

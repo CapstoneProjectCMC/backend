@@ -1,5 +1,6 @@
 package com.codecampus.profile.entity.properties.organization;
 
+import com.codecampus.profile.constant.social.OrgRole;
 import com.codecampus.profile.entity.Org;
 import java.time.Instant;
 import lombok.AccessLevel;
@@ -21,14 +22,17 @@ import org.springframework.data.neo4j.core.schema.TargetNode;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @RelationshipProperties
-public class MemberOrg {
+public class MemberOrg
+{
   @Id
   @GeneratedValue
   String id;
 
   Instant joinAt;
-  String memberRole;
 
+  @Builder.Default
+  OrgRole memberRole = OrgRole.STUDENT;
+  
   @TargetNode
   Org organization;
 }
