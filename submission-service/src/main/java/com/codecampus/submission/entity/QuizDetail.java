@@ -1,13 +1,17 @@
 package com.codecampus.submission.entity;
 
 import com.codecampus.submission.entity.audit.AuditMetadata;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.MapsId;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -45,4 +49,9 @@ public class QuizDetail extends AuditMetadata
 
   @Column(name = "total_points")
   int totalPoints;
+
+  @OneToMany(mappedBy = "quizDetail",
+      cascade = CascadeType.ALL,
+      orphanRemoval = true)
+  List<Question> questions = new ArrayList<>();
 }

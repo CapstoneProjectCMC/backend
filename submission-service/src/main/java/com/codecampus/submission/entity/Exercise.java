@@ -8,17 +8,13 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -49,7 +45,7 @@ public class Exercise extends AuditMetadata
   String id;
 
   @Column(name = "user_id", nullable = false)
-  String userId;               // người đăng
+  String userId; // người tạo
 
   @Column(length = 100, nullable = false)
   String title;
@@ -98,8 +94,11 @@ public class Exercise extends AuditMetadata
 
   @Column(name = "resource_ids", columnDefinition = "text[]")
   Set<String> resourceIds;
-  
-  // Optional
-  @OneToMany(mappedBy = "exercise", fetch = FetchType.LAZY)
-  List<Question> questions = new ArrayList<>();
+
+  @Column(name = "tags", columnDefinition = "text[]")
+  Set<String> tags;
+
+  @Column(name = "allow_ai_question", nullable = false)
+  @Builder.Default
+  boolean allowAiQuestion = false;
 }

@@ -62,38 +62,6 @@ services:
       retries: 5
     networks: [ backend ]
 
-  # ----------  Redis (master-replica)  ----------
-  redis-master:
-    image: bitnami/redis:latest
-    container_name: redis-master
-    restart: unless-stopped
-    environment:
-      - REDIS_PASSWORD=${REDIS_PASSWORD}
-      - ALLOW_EMPTY_PASSWORD=no
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis_master_data:/bitnami/redis/data
-    networks: [ backend ]
-
-  redis-replica:
-    image: bitnami/redis:latest
-    container_name: redis-replica
-    restart: unless-stopped
-    depends_on: [ redis-master ]
-    environment:
-      - REDIS_REPLICATION_MODE=slave
-      - REDIS_MASTER_HOST=redis-master
-      - REDIS_MASTER_PORT_NUMBER=6379
-      - REDIS_MASTER_PASSWORD=${REDIS_PASSWORD}
-      - REDIS_PASSWORD=${REDIS_PASSWORD}
-      - ALLOW_EMPTY_PASSWORD=no
-    ports:
-      - "6380:6379"
-    volumes:
-      - redis_replica_data:/bitnami/redis/data
-    networks: [ backend ]
-
   # ----------  Kafka  ----------
   kafka:
     image: bitnami/kafka:latest
@@ -105,11 +73,13 @@ services:
       - KAFKA_CFG_PROCESS_ROLES=controller,broker
       - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka:9093
       - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093,EXTERNAL://:9094
-      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092,EXTERNAL://localhost:9094
-      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092,EXTERNAL://localhost:9094
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
     ports:
-      - "9092:9094"
+      - "9092:9092"
+      - "9093:9093"
+      - "9094:9094"
     volumes:
       - kafka_data:/bitnami/kafka
     networks: [ backend ]
@@ -148,7 +118,5 @@ volumes:
   identity_pg_data:
   submission_pg_data:
   quiz_pg_data:
-  redis_master_data:
-  redis_replica_data:
   kafka_data:
   neo4j_data:

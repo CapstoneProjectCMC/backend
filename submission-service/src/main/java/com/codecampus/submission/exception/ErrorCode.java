@@ -17,7 +17,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 
 @Getter
-public enum ErrorCode {
+public enum ErrorCode
+{
   // Các lỗi không phân loại và lỗi chung
   UNCATEGORIZED_EXCEPTION(99999, INTERNAL_SERVER_STATUS,
       "Lỗi chưa phân loại", INTERNAL_SERVER_ERROR),
@@ -29,6 +30,8 @@ public enum ErrorCode {
       BAD_REQUEST),
   ACCOUNT_NOT_ACTIVATED(4008004, BAD_REQUEST_STATUS,
       "Tài khoản chưa được kích hoạt!", BAD_REQUEST),
+  EXERCISE_TYPE(4008005, BAD_REQUEST_STATUS,
+      "Loại bài tập không hợp lệ!", BAD_REQUEST),
 
 
   // 401 - Unauthorized
@@ -54,6 +57,16 @@ public enum ErrorCode {
   OTP_NOT_FOUND(4048003, NOT_FOUND_STATUS, "Không tìm thấy OTP!", NOT_FOUND),
   EMAIL_NOT_FOUND(4048004, NOT_FOUND_STATUS, "Không tìm thấy email!",
       NOT_FOUND),
+  EXERCISE_NOT_FOUND(4048005, NOT_FOUND_STATUS, "Không tìm thấy bài tập!",
+      NOT_FOUND),
+  CODING_NOT_FOUND(4048006, NOT_FOUND_STATUS, "Không tìm thấy bài tập code!",
+      NOT_FOUND),
+  QUIZ_NOT_FOUND(4048007, NOT_FOUND_STATUS, "Không tìm thấy bài tập quiz!",
+      NOT_FOUND),
+  QUESTION_NOT_FOUND(4048008, NOT_FOUND_STATUS, "Không tìm thấy câu hỏi!",
+      NOT_FOUND),
+  OPTION_NOT_FOUND(4048010, NOT_FOUND_STATUS, "Không tìm thấy lựa chọn!",
+      NOT_FOUND),
 
 
   // 409 - Conflict
@@ -62,6 +75,10 @@ public enum ErrorCode {
   EMAIL_ALREADY_EXISTS(4098002, CONFLICT_STATUS, "Email đã tồn tại!",
       CONFLICT),
   PASSWORD_ALREADY_EXISTS(4098003, CONFLICT_STATUS, "Mật khẩu đã tồn tại!",
+      CONFLICT),
+  CODING_ALREADY_EXISTS(4098004, CONFLICT_STATUS, "Bài tập Code đã tồn tại!",
+      CONFLICT),
+  QUIZ_ALREADY_EXISTS(4098005, CONFLICT_STATUS, "Bài tập Quiz đã tồn tại!",
       CONFLICT),
 
   // 500 - Internal Server Error
@@ -82,7 +99,8 @@ public enum ErrorCode {
       int code,
       String status,
       String message,
-      HttpStatusCode statusCode) {
+      HttpStatusCode statusCode)
+  {
     this.code = code;
     this.status = status;
     this.message = message;

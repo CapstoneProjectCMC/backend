@@ -1,5 +1,6 @@
 package com.codecampus.submission.entity;
 
+import com.codecampus.submission.entity.audit.AuditMetadata;
 import com.codecampus.submission.entity.data.SubmissionAnswerId;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
@@ -8,6 +9,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -31,7 +33,7 @@ import org.hibernate.annotations.Where;
     "SET deleted_by = ? , deleted_at = now() " +
     "WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
-public class SubmissionAnswer
+public class SubmissionAnswer extends AuditMetadata
 {
   @EmbeddedId
   SubmissionAnswerId id;
@@ -48,8 +50,9 @@ public class SubmissionAnswer
   @JoinColumn(name = "question_id")
   Question question;
 
-  @Column(name = "selected_option")
-  String selectedOptionId;   // FK tới Option nếu dạng trắc nghiệm
+  @JoinColumn(name = "selected_option")
+  @OneToOne(fetch = FetchType.LAZY)
+  Option selectedOption;   // FK tới Option nếu dạng trắc nghiệm
 
   @Column(name = "answer_text", columnDefinition = "text")
   String answerText;         // nếu fill-in-blank …

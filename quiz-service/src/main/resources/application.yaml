@@ -32,7 +32,7 @@ spring:
     redis:
       host: redis-master     # dịch vụ trong compose
       port: 6379
-      password: ${REDIS_PASSWORD}
+      password: dinhanst2832004
   kafka:
     bootstrap-servers: localhost:9094
     consumer:

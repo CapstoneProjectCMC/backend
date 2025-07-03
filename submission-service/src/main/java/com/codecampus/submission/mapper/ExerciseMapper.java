@@ -1,33 +1,30 @@
 package com.codecampus.submission.mapper;
 
-import com.codecampus.submission.dto.request.ExerciseCreationRequest;
-import com.codecampus.submission.dto.response.exercise.ExerciseSummaryResponse;
-import com.codecampus.submission.entity.Exercise;
-import com.codecampus.submission.mapper.filter.RoleFilterMapper;
-import org.mapstruct.BeanMapping;
+import com.codecampus.submission.dto.request.AddCodingDetailRequest;
+import com.codecampus.submission.dto.request.OptionDto;
+import com.codecampus.submission.dto.request.QuestionDto;
+import com.codecampus.submission.dto.request.TestCaseDto;
+import com.codecampus.submission.entity.CodingDetail;
+import com.codecampus.submission.entity.Option;
+import com.codecampus.submission.entity.Question;
+import com.codecampus.submission.entity.TestCase;
+import java.util.List;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface ExerciseMapper
-    extends RoleFilterMapper<Exercise, ExerciseSummaryResponse>
 {
+  // CODE
+  CodingDetail toCodingDetail(
+      AddCodingDetailRequest request);
 
-  ExerciseSummaryResponse toExerciseSummaryResponse(Exercise exercise);
+  List<TestCase> toTestCases(
+      List<TestCaseDto> dtos);
 
-  @BeanMapping(ignoreUnmappedSourceProperties = {"exerciseType", "coding", "quiz"})
-  Exercise toExercise(ExerciseCreationRequest request);
+  // QUIZ
+  List<Question> toQuestions(
+      List<QuestionDto> dtos);
 
-  @Override
-  default void filterForUser(ExerciseSummaryResponse response)
-  {
-    RoleFilterMapper.super.filterForUser(response);
-    response.setUserId(null);
-  }
-
-  @Override
-  default void filterForTeacher(
-      ExerciseSummaryResponse response)
-  {
-    RoleFilterMapper.super.filterForTeacher(response);
-  }
+  List<Option> toOptions(
+      List<OptionDto> dtos);
 }

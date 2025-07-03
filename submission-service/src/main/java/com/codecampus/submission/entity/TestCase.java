@@ -39,8 +39,8 @@ public class TestCase extends AuditMetadata
   String id;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "exercise_id", nullable = false)
-  Exercise exercise;
+  @JoinColumn(name = "coding_detail_id", nullable = false)
+  CodingDetail codingDetail;
 
   @Column(nullable = false, columnDefinition = "text")
   String input;

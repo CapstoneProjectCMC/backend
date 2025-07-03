@@ -45,8 +45,8 @@ public class Question extends AuditMetadata
   String id;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "exercise_id", nullable = false)
-  Exercise exercise;
+  @JoinColumn(name = "quiz_detail_id", nullable = false)
+  QuizDetail quizDetail;
 
   @Column(nullable = false, columnDefinition = "text")
   String text;
@@ -58,8 +58,8 @@ public class Question extends AuditMetadata
   @Column(nullable = false, columnDefinition = "smallint")
   int points;
 
-  @Column(name = "display_order", columnDefinition = "smallint")
-  int order;
+  @Column(name = "display_order")
+  int orderInQuiz;
 
   // Optional
   @OneToMany(mappedBy = "question", fetch = FetchType.LAZY)

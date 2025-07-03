@@ -31,7 +31,7 @@ spring:
     redis:
       host: redis-master     # dịch vụ trong compose
       port: 6379
-      password: ${REDIS_PASSWORD}
+      password: dinhanst2832004
   kafka:
     bootstrap-servers: localhost:9094
     consumer:
@@ -46,3 +46,7 @@ spring:
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
 
+grpc:
+  quiz-service:
+    host: localhost
+    port: 9090

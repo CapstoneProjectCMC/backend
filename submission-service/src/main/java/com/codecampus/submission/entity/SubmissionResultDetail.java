@@ -1,5 +1,6 @@
 package com.codecampus.submission.entity;
 
+import com.codecampus.submission.entity.audit.AuditMetadata;
 import com.codecampus.submission.entity.data.SubmissionResultId;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
@@ -31,7 +32,7 @@ import org.hibernate.annotations.Where;
     "SET deleted_by = ? , deleted_at = now() " +
     "WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
-public class SubmissionResultDetail
+public class SubmissionResultDetail extends AuditMetadata
 {
   @EmbeddedId
   SubmissionResultId id;

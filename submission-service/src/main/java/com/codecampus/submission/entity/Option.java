@@ -27,7 +27,7 @@ import org.hibernate.annotations.Where;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table(name = "option")
+@Table(name = "question_option")
 @SQLDelete(sql = "UPDATE option " +
     "SET deleted_by = ? , deleted_at = now() " +
     "WHERE id = ?")
