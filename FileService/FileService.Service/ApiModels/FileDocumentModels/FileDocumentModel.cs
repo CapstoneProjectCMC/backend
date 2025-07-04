@@ -18,7 +18,7 @@ namespace FileService.Service.ApiModels.FileDocumentModels
 
         public string Url { get; set; } // http://localhost:<port>/static/{fileId}
 
-        public string Checksum { get; set; } // MD5 hoặc SHA256 checksum của file để kiểm tra tính toàn vẹn
+        public string Checksum { get; set; } // SHA256 kiểm tra tính toàn vẹn, bảo mật
 
         public string Category { get; set; } // bài giảng, giáo trình, file thường
 

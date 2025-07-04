@@ -33,8 +33,15 @@ namespace FileService.Api.Controllers
             return Success(result);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> EditDetailFile(Guid id, [FromBody] EditFileDocumentDto dto)
+        [HttpPost("add")]
+        public async Task<IActionResult> AddFile([FromForm] AddFileDocumentDto dto)
+        {
+            await _fileDocumentService.AddFileAsync(dto);
+            return Success();
+        }
+
+        [HttpPut("edit/{id}")]
+        public async Task<IActionResult> EditDetailFile(Guid id, [FromForm] EditFileDocumentDto dto)
         {
             var result = await _fileDocumentService.EditFileDetailAsync(id, dto);
             return Success(result);

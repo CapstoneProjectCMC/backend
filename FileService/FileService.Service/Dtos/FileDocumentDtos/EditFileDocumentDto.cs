@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,7 @@ namespace FileService.Service.Dtos.FileDocumentDtos
 {
     public class EditFileDocumentDto
     {
+        public IFormFile File { get; set; } 
         public string FileName { get; set; }
         public string Category { get; set; } // bài giảng, giáo trình, file thường
         public string Description { get; set; }
@@ -18,6 +20,6 @@ namespace FileService.Service.Dtos.FileDocumentDtos
         public bool IsTextbook { get; set; }
         public bool IsActive { get; set; } 
         // field dùng để phân loại theo tổ chức hoặc trường học, nếu là video bài giảng hoặc giáo trình
-        public string OrgId { get; set; }
+        public string? OrgId { get; set; }
     }
 }

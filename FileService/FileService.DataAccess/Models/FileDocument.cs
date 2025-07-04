@@ -70,7 +70,7 @@ namespace FileService.DataAccess.Models
 
         // field dùng để phân loại theo tổ chức hoặc trường học, nếu là video bài giảng hoặc giáo trình
      //   [BsonElement("orgId")]
-        public string OrgId { get; set; }
+        public string? OrgId { get; set; }
 
     }
 }

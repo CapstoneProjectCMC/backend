@@ -102,20 +102,36 @@ namespace FileService.Service.Implementation
 
             var fileId = Guid.NewGuid();
 
+            var ext = Path.GetExtension(dto.File.FileName);
+            var fileName = fileId + ext;
+
+            //save file to BE folder 
+            var staticPath = Path.Combine("wwwroot", "static");
+            if (!Directory.Exists(staticPath))
+            {
+                Directory.CreateDirectory(staticPath);
+            }
+
+            var filePath = Path.Combine(staticPath, fileName);
+            await using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await dto.File.CopyToAsync(stream);
+            }
+
             var file = new FileDocument
             {
                 Id = fileId,
                 FileName = dto.File.FileName,
                 FileType = dto.File.ContentType,
                 Size = dto.File.Length,
-                Url = $"/static/{fileId}",
+                Url = $"/static/{fileName}",
                 Description = dto.Description,
                 Category = dto.Category,
                 Tags = dto.Tags ?? new List<string>(),
                 IsActive = true,
                 CreatedAt = DateTime.UtcNow,
                 CreatedBy = _userContext.UserId,
-                OrgId = dto.OrgId,
+                OrgId = string.IsNullOrEmpty(dto.OrgId) ? null : dto.OrgId,
                 IsLectureVideo = dto.IsLectureVideo,
                 IsTextbook = dto.IsTextbook
             };
@@ -145,8 +161,8 @@ namespace FileService.Service.Implementation
         public async Task<EditFileDocumentResponseModel> EditFileDetailAsync(Guid id, EditFileDocumentDto dto)
         {
             var file = await _fileDocumentRepository.GetByIdAsync(id);
-            if (file == null)
-                throw new ErrorException(StatusCodeEnum.A02); 
+            if (file == null || file.IsRemoved)
+                throw new ErrorException(StatusCodeEnum.A02);
 
             file.FileName = dto.FileName;
             file.Category = dto.Category;
@@ -158,6 +174,38 @@ namespace FileService.Service.Implementation
             file.OrgId = dto.OrgId;
             file.UpdatedAt = DateTime.UtcNow;
             file.UpdatedBy = _userContext.UserId;
+
+            // upload a new file
+            if (dto.File != null && dto.File.Length > 0)
+            {
+                file.FileType = dto.File.ContentType;
+                file.Size = dto.File.Length;
+                file.Checksum = await FileHelper.ComputeChecksumAsync(dto.File.OpenReadStream());
+
+                // save to override file in the static folder
+                var savePath = Path.Combine("wwwroot", "static", file.Id.ToString());
+                using (var stream = new FileStream(savePath, FileMode.Create))
+                {
+                    await dto.File.CopyToAsync(stream);
+                }
+
+                if (dto.IsLectureVideo)
+                {
+                    try
+                    {
+                        var result = await _ffmpegService.ProcessVideoAsync(dto.File);
+                        file.ThumbnailUrl = result.ThumbnailUrl;
+                        file.TranscodingStatus = result.Status;
+                        file.Duration = result.Duration;
+                        file.ViewCount ??= 0;
+                        file.Rating ??= 0;
+                    }
+                    catch
+                    {
+                        file.TranscodingStatus = "failed";
+                    }
+                }
+            }
 
             await _fileDocumentRepository.UpdateAsync(file);
 

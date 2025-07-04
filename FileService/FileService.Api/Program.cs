@@ -38,6 +38,11 @@ builder.Services.AddHttpContextAccessor();
 
 builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection("MongoDbSettings"));
 builder.Services.Configure<FfmpegSettings>(builder.Configuration.GetSection("FfmpegSettings"));
+//builder.Services.Configure<FfmpegSettings>(options =>
+//{
+//    options.ExecutablePath = Path.Combine(builder.Environment.ContentRootPath, "Tools", "ffmpeg");
+//});
+
 
 
 // Đăng ký MongoClient và Database
@@ -158,6 +163,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseStaticFiles();
+
 
 app.UseCors(MyAllowSpecificOrigins);
 
