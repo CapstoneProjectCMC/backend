@@ -3,7 +3,13 @@
   <component name="CompilerConfiguration">
     <annotationProcessing>
       <profile default="true" name="Default" enabled="true" />
-      <profile name="Annotation profile for gateway" enabled="true">
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="common-protos" />
+      </profile>
+      <profile name="Annotation profile for gateway-service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -12,7 +18,7 @@
         </processorPath>
         <module name="gateway-service" />
       </profile>
-      <profile name="Annotation profile for submission" enabled="true">
+      <profile name="Annotation profile for CodeCampus :: Microservices" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -25,18 +31,26 @@
           <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct/1.6.3/mapstruct-1.6.3.jar" />
         </processorPath>
         <module name="submission-service" />
+        <module name="quiz-service" />
         <module name="profile-service" />
         <module name="coding-service" />
         <module name="identity-service" />
+        <module name="ai-service" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="proto-contracts" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="ai-service" options="-parameters -Amapstruct.defaultComponentModel=spring -Amapstruct.verbose=true" />
       <module name="coding-service" options="-parameters -Amapstruct.defaultComponentModel=spring -Amapstruct.verbose=true" />
+      <module name="common-protos" options="-parameters" />
       <module name="gateway-service" options="-parameters" />
       <module name="identity-service" options="-parameters -Amapstruct.defaultComponentModel=spring -Amapstruct.verbose=true" />
       <module name="profile-service" options="-parameters -Amapstruct.defaultComponentModel=spring -Amapstruct.verbose=true" />
+      <module name="quiz-service" options="-parameters -Amapstruct.defaultComponentModel=spring -Amapstruct.verbose=true" />
       <module name="submission-service" options="-parameters -Amapstruct.defaultComponentModel=spring -Amapstruct.verbose=true" />
     </option>
   </component>

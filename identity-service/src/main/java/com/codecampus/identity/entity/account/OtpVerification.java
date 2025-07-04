@@ -23,7 +23,8 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "otp_verification")
-public class OtpVerification {
+public class OtpVerification
+{
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   String id;

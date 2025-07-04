@@ -1,6 +1,6 @@
 package com.codecampus.profile.service;
 
-import static com.codecampus.profile.utils.PageResponseUtils.toPageResponse;
+import static com.codecampus.profile.helper.PageResponseHelper.toPageResponse;
 
 import com.codecampus.profile.dto.common.PageResponse;
 import com.codecampus.profile.dto.request.UserProfileCreationRequest;
@@ -9,10 +9,9 @@ import com.codecampus.profile.dto.response.UserProfileResponse;
 import com.codecampus.profile.entity.UserProfile;
 import com.codecampus.profile.exception.AppException;
 import com.codecampus.profile.exception.ErrorCode;
+import com.codecampus.profile.helper.SecurityHelper;
 import com.codecampus.profile.mapper.UserProfileMapper;
 import com.codecampus.profile.repository.UserProfileRepository;
-import com.codecampus.profile.utils.AuthenticationUtils;
-import com.codecampus.profile.utils.SecurityUtils;
 import java.time.Instant;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -41,11 +40,12 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class UserProfileService {
+public class UserProfileService
+{
   UserProfileRepository userProfileRepository;
 
   UserProfileMapper userProfileMapper;
-  AuthenticationUtils authenticationUtils;
+  SecurityHelper securityHelper;
 
   /**
    * Tạo hồ sơ người dùng mới.
@@ -63,9 +63,9 @@ public class UserProfileService {
    * @throws AppException nếu user đã tồn tại hồ sơ
    */
   public UserProfileResponse createUserProfile(
-      UserProfileCreationRequest request) {
-
-    authenticationUtils.checkExistsUserid(request.getUserId());
+      UserProfileCreationRequest request)
+  {
+    securityHelper.checkExistsUserid(request.getUserId());
 
     UserProfile userProfile = userProfileMapper.toUserProfile(request);
     userProfile.setCreatedAt(Instant.now());
@@ -81,7 +81,8 @@ public class UserProfileService {
    * @return UserProfileResponse nếu tìm thấy hồ sơ
    * @throws AppException nếu không tìm thấy hồ sơ
    */
-  public UserProfileResponse getUserProfileByUserId(String userId) {
+  public UserProfileResponse getUserProfileByUserId(String userId)
+  {
     return userProfileRepository
         .findByUserId(userId)
         .map(userProfileMapper::toUserProfileResponse)
@@ -98,7 +99,8 @@ public class UserProfileService {
    * @throws AppException nếu không tìm thấy
    */
   @PreAuthorize("hasRole('ADMIN')")
-  public UserProfileResponse getUserProfileById(String id) {
+  public UserProfileResponse getUserProfileById(String id)
+  {
     return userProfileRepository
         .findById(id)
         .map(userProfileMapper::toUserProfileResponse)
@@ -116,7 +118,8 @@ public class UserProfileService {
    */
   @PreAuthorize("hasRole('ADMIN')")
   public PageResponse<UserProfileResponse> getAllUserProfiles(int page,
-                                                              int size) {
+                                                              int size)
+  {
     Pageable pageable = PageRequest.of(page - 1, size);
     var pageData = userProfileRepository
         .findAll(pageable)
@@ -130,8 +133,9 @@ public class UserProfileService {
    *
    * @return UserProfileResponse của người dùng hiện tại
    */
-  public UserProfileResponse getMyUserProfile() {
-    return getUserProfileByUserId(SecurityUtils.getMyUserId());
+  public UserProfileResponse getMyUserProfile()
+  {
+    return getUserProfileByUserId(SecurityHelper.getMyUserId());
   }
 
   /**
@@ -139,7 +143,8 @@ public class UserProfileService {
    *
    * @return UserProfile của người dùng
    */
-  public UserProfile getUserProfile(String userId) {
+  public UserProfile getUserProfile(String userId)
+  {
     return userProfileRepository
         .findByUserId(userId)
         .orElseThrow(
@@ -152,9 +157,10 @@ public class UserProfileService {
    *
    * @return UserProfile của người dùng hiện tại đang đăng nhập
    */
-  public UserProfile getUserProfile() {
+  public UserProfile getUserProfile()
+  {
     return userProfileRepository
-        .findByUserId(SecurityUtils.getMyUserId())
+        .findByUserId(SecurityHelper.getMyUserId())
         .orElseThrow(
             () -> new AppException(ErrorCode.USER_NOT_FOUND)
         );
@@ -176,7 +182,8 @@ public class UserProfileService {
    * @throws AppException nếu không tìm thấy hồ sơ
    */
   public UserProfileResponse updateMyUserProfile(
-      UserProfileUpdateRequest request) {
+      UserProfileUpdateRequest request)
+  {
 
     UserProfile profile = getUserProfile();
 

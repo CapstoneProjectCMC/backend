@@ -1,6 +1,7 @@
 package com.codecampus.identity.service.account;
 
 import static com.codecampus.identity.constant.authentication.AuthenticationConstant.USER_ROLE;
+import static com.codecampus.identity.helper.PageResponseHelper.toPageResponse;
 
 import com.codecampus.identity.dto.common.PageResponse;
 import com.codecampus.identity.dto.request.authentication.PasswordCreationRequest;
@@ -11,14 +12,14 @@ import com.codecampus.identity.entity.account.Role;
 import com.codecampus.identity.entity.account.User;
 import com.codecampus.identity.exception.AppException;
 import com.codecampus.identity.exception.ErrorCode;
+import com.codecampus.identity.helper.AuthenticationHelper;
+import com.codecampus.identity.helper.ProfileSyncHelper;
 import com.codecampus.identity.mapper.authentication.UserMapper;
-import com.codecampus.identity.mapper.mapper.UserProfileMapper;
+import com.codecampus.identity.mapper.client.UserProfileMapper;
 import com.codecampus.identity.repository.account.RoleRepository;
 import com.codecampus.identity.repository.account.UserRepository;
 import com.codecampus.identity.repository.httpclient.profile.ProfileClient;
 import com.codecampus.identity.service.authentication.OtpService;
-import com.codecampus.identity.utils.AuthenticationUtils;
-import com.codecampus.identity.utils.SecurityUtils;
 import java.util.HashSet;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -26,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -52,7 +54,8 @@ import org.springframework.util.StringUtils;
 @Slf4j
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class UserService {
+public class UserService
+{
   OtpService otpService;
   UserRepository userRepository;
   RoleRepository roleRepository;
@@ -62,7 +65,8 @@ public class UserService {
 
   PasswordEncoder passwordEncoder;
   ProfileClient profileClient;
-  AuthenticationUtils authenticationUtils;
+  AuthenticationHelper authenticationHelper;
+  ProfileSyncHelper profileSyncHelper;
 
   /**
    * Tạo mới người dùng, gán vai trò USER và khởi tạo profile.
@@ -80,8 +84,9 @@ public class UserService {
    */
   @PreAuthorize("hasRole('ADMIN')")
   @Transactional
-  public UserResponse createUser(UserCreationRequest request) {
-    authenticationUtils.checkExistsUsernameEmail(
+  public UserResponse createUser(UserCreationRequest request)
+  {
+    authenticationHelper.checkExistsUsernameEmail(
         request.getUsername(),
         request.getEmail()
     );
@@ -95,22 +100,16 @@ public class UserService {
     user.setRoles(roles);
     user.setEnabled(true);
 
-    try {
+    try
+    {
       user = userRepository.save(user);
-    } catch (DataIntegrityViolationException e) {
+      profileSyncHelper.createProfile(user, request);
+    } catch (DataIntegrityViolationException e)
+    {
       throw new AppException(ErrorCode.USER_ALREADY_EXISTS);
     }
 
-    var userProfileRequest =
-        userProfileMapper.toUserProfileCreationRequest(request);
-    userProfileRequest.setUserId(user.getId());
-
-    var userProfile = profileClient.createUserProfile(userProfileRequest);
-
-    var userCreationResponse = userMapper.toUserResponse(user);
-    userCreationResponse.setId(userProfile.getResult().getId());
-
-    return userCreationResponse;
+    return userMapper.toUserResponse(user);
   }
 
   /**
@@ -121,10 +120,12 @@ public class UserService {
    * @param request chứa mật khẩu mới
    * @throws AppException nếu mật khẩu đã tồn tại
    */
-  public void createPassword(PasswordCreationRequest request) {
-    User user = findUser(SecurityUtils.getMyUserId());
+  public void createPassword(PasswordCreationRequest request)
+  {
+    User user = findUser(AuthenticationHelper.getMyUserId());
 
-    if (StringUtils.hasText(request.getPassword())) {
+    if (StringUtils.hasText(request.getPassword()))
+    {
       throw new AppException(ErrorCode.PASSWORD_ALREADY_EXISTS);
     }
 
@@ -137,8 +138,9 @@ public class UserService {
    *
    * @return UserResponse chứa thông tin người dùng
    */
-  public UserResponse getMyInfo() {
-    return getUser(SecurityUtils.getMyUserId());
+  public UserResponse getMyInfo()
+  {
+    return getUser(AuthenticationHelper.getMyUserId());
   }
 
   /**
@@ -155,15 +157,10 @@ public class UserService {
   @PreAuthorize("hasRole('ADMIN')")
   public UserResponse updateUser(
       String userId,
-      UserUpdateRequest request) {
+      UserUpdateRequest request)
+  {
     User user = findUser(userId);
-    userMapper.updateUser(user, request);
-    user.setPassword(passwordEncoder.encode(user.getPassword()));
-
-    var roles = roleRepository.findAllById(request.getRoles());
-    user.setRoles(new HashSet<>(roles));
-
-    return userMapper.toUserResponse(userRepository.save(user));
+    return updateUserAndReturnUserResponse(request, user);
   }
 
   /**
@@ -175,14 +172,21 @@ public class UserService {
    * @return UserResponse sau khi cập nhật
    */
   public UserResponse updateMyInfo(
-      UserUpdateRequest request) {
-    User user = findUser(SecurityUtils.getMyUserId());
+      UserUpdateRequest request)
+  {
+    User user = findUser(AuthenticationHelper.getMyUserId());
+    return updateUserAndReturnUserResponse(request, user);
+  }
 
+  private UserResponse updateUserAndReturnUserResponse(
+      UserUpdateRequest request,
+      User user)
+  {
     userMapper.updateUser(user, request);
     user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-    var roles = roleRepository.findAllById(request.getRoles());
-    user.setRoles(new HashSet<>(roles));
+//    List<Role> roles = roleRepository.findAllById(request.getRoles());
+//    user.setRoles(new HashSet<>(roles));
 
     return userMapper.toUserResponse(userRepository.save(user));
   }
@@ -195,8 +199,12 @@ public class UserService {
    * @param userId ID người dùng cần xóa
    */
   @PreAuthorize("hasRole('ADMIN')")
-  public void deleteUser(String userId) {
-    userRepository.deleteById(userId);
+  @Transactional
+  public void deleteUser(String userId)
+  {
+    User user = findUser(userId);
+    user.markDeleted(AuthenticationHelper.getMyEmail());
+    userRepository.save(user);
   }
 
   /**
@@ -209,35 +217,28 @@ public class UserService {
    * @return PageResponse chứa danh sách UserResponse và thông tin phân trang
    */
   @PreAuthorize("hasRole('ADMIN')")
-  public PageResponse<UserResponse> getUsers(int page, int size) {
+  public PageResponse<UserResponse> getUsers(
+      int page, int size)
+  {
     Pageable pageable = PageRequest.of(page - 1, size);
-    var pageData = userRepository.findAll(pageable);
-    var userList = pageData
-        .getContent()
-        .stream()
-        .map(userMapper::toUserResponse)
-        .toList();
+    Page<UserResponse> pageData = userRepository
+        .findAll(pageable)
+        .map(userMapper::toUserResponse);
 
-    return PageResponse.<UserResponse>builder()
-        .currentPage(page)
-        .pageSize(pageData.getSize())
-        .totalPages(pageData.getTotalPages())
-        .totalElements(pageData.getTotalElements())
-        .data(userList)
-        .build();
+    return toPageResponse(pageData, page);
   }
-
 
   /**
    * Lấy thông tin người dùng theo ID.
    *
-   * @param id ID người dùng
+   * @param userId ID người dùng
    * @return UserResponse chứa thông tin người dùng
    * @throws AppException nếu không tìm thấy
    */
-  public UserResponse getUser(String id) {
+  public UserResponse getUser(String userId)
+  {
     return userMapper.toUserResponse(
-        userRepository.findById(id)
+        userRepository.findById(userId)
             .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND))
     );
   }
@@ -249,10 +250,18 @@ public class UserService {
    * @return User entity
    * @throws AppException nếu không tìm thấy
    */
-  public User findUser(String id) {
+  public User findUser(String id)
+  {
     return userRepository.findById(id)
         .orElseThrow(
-            () -> new AppException(ErrorCode.USER_NOT_FOUND)
-        );
+            () -> new AppException(ErrorCode.USER_NOT_FOUND));
+  }
+
+  public String getRoleName(User user)
+  {
+    return user.getRoles().stream()
+        .findFirst()
+        .map(Role::getName)
+        .orElse(null);
   }
 }

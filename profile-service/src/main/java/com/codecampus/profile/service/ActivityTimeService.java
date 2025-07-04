@@ -1,11 +1,11 @@
 package com.codecampus.profile.service;
 
-import static com.codecampus.profile.utils.PageResponseUtils.toPageResponse;
+import static com.codecampus.profile.helper.PageResponseHelper.toPageResponse;
 
 import com.codecampus.profile.dto.common.PageResponse;
 import com.codecampus.profile.entity.ActivityWeek;
+import com.codecampus.profile.helper.SecurityHelper;
 import com.codecampus.profile.repository.UserProfileRepository;
-import com.codecampus.profile.utils.SecurityUtils;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -22,14 +22,15 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class ActivityTimeService {
+public class ActivityTimeService
+{
 
   UserProfileRepository userProfileRepository;
 
   /**
    * Lấy danh sách phân trang các {@link ActivityWeek} của người dùng hiện tại.
    * <p>
-   * Phương thức sẽ sử dụng {@link SecurityUtils#getMyUserId()} để xác định
+   * Phương thức sẽ sử dụng {@link SecurityHelper#getMyUserId()} để xác định
    * ID người dùng, sau đó gọi repository tương ứng để truy vấn dữ liệu
    * theo tuần. Kết quả trả về được bao gói trong DTO {@link PageResponse}.
    *
@@ -46,10 +47,11 @@ public class ActivityTimeService {
    * </ul>
    */
   public PageResponse<ActivityWeek> getActivityWeeks(
-      int page, int size) {
+      int page, int size)
+  {
     Pageable pageable = PageRequest.of(page - 1, size);
     var pageData = userProfileRepository
-        .findActivityWeek(SecurityUtils.getMyUserId(), pageable);
+        .findActivityWeek(SecurityHelper.getMyUserId(), pageable);
 
     return toPageResponse(pageData, page);
   }

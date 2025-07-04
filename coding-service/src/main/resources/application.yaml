@@ -1,16 +1,16 @@
 server:
   port: 8084
-  http:
-    port: 8004
+  #  http:
+  #    port: 8004
   servlet:
     context-path: /coding
-  ssl:
-    enabled: true
-    key-alias: coding-https
-    key-store: classpath:ssl/coding.jks
-    key-store-type: JKS
-    key-store-password: dinhanst2832004
-    key-password: dinhanst2832004
+#  ssl:
+#    enabled: true
+#    key-alias: coding-https
+#    key-store: classpath:ssl/coding.jks
+#    key-store-type: JKS
+#    key-store-password: dinhanst2832004
+#    key-password: dinhanst2832004
 
 spring:
   application:

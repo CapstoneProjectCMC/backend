@@ -1,6 +1,7 @@
 package com.codecampus.submission.entity;
 
 import com.codecampus.submission.constant.submission.Difficulty;
+import com.codecampus.submission.constant.submission.ExerciseType;
 import com.codecampus.submission.entity.audit.AuditMetadata;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -33,21 +34,28 @@ import org.hibernate.annotations.Where;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "exercise")
-@SQLDelete(sql = "UPDATE exercise SET deleted_at = now(), deleted_by = ? WHERE id = ?")
+@SQLDelete(sql = "UPDATE exercise " +
+    "SET deleted_by = ? , deleted_at = now() " +
+    "WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
-public class Exercise extends AuditMetadata {
+public class Exercise extends AuditMetadata
+{
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   String id;
 
   @Column(name = "user_id", nullable = false)
-  String userId;               // người đăng
+  String userId; // người tạo
 
   @Column(length = 100, nullable = false)
   String title;
 
   @Column(columnDefinition = "text")
   String description;
+
+  @Enumerated(EnumType.STRING)
+  @Column(name = "exercise_type", nullable = false)
+  ExerciseType exerciseType;
 
   // liên kết chi tiết code / quiz (One-To-One)
   @OneToOne(mappedBy = "exercise", cascade = CascadeType.ALL)
@@ -86,4 +94,11 @@ public class Exercise extends AuditMetadata {
 
   @Column(name = "resource_ids", columnDefinition = "text[]")
   Set<String> resourceIds;
+
+  @Column(name = "tags", columnDefinition = "text[]")
+  Set<String> tags;
+
+  @Column(name = "allow_ai_question", nullable = false)
+  @Builder.Default
+  boolean allowAiQuestion = false;
 }

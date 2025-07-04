@@ -1,13 +1,13 @@
 package com.codecampus.profile.service;
 
-import static com.codecampus.profile.utils.PageResponseUtils.toPageResponse;
+import static com.codecampus.profile.helper.PageResponseHelper.toPageResponse;
 
 import com.codecampus.profile.dto.common.PageResponse;
 import com.codecampus.profile.entity.UserProfile;
 import com.codecampus.profile.entity.properties.social.Blocks;
 import com.codecampus.profile.entity.properties.social.Follows;
+import com.codecampus.profile.helper.SecurityHelper;
 import com.codecampus.profile.repository.UserProfileRepository;
-import com.codecampus.profile.utils.SecurityUtils;
 import java.time.Instant;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +26,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class SocialService {
+public class SocialService
+{
   UserProfileRepository userProfileRepository;
 
   UserProfileService userProfileService;
@@ -40,7 +41,8 @@ public class SocialService {
    * @param targetUserId ID của người dùng cần follow
    * @throws com.codecampus.profile.exception.AppException nếu không tìm thấy profile của người dùng hiện tại hoặc của targetUserId
    */
-  public void follow(String targetUserId) {
+  public void follow(String targetUserId)
+  {
     UserProfile myProfile = userProfileService.getUserProfile();
 
     UserProfile targetProfile = userProfileService.getUserProfile(targetUserId);
@@ -51,7 +53,8 @@ public class SocialService {
             follows -> targetUserId.equals(follows.getTarget().getUserId())
         );
 
-    if (!exists) {
+    if (!exists)
+    {
       Follows follows = Follows.builder()
           .since(Instant.now())
           .target(targetProfile)
@@ -70,7 +73,8 @@ public class SocialService {
    * @param targetUserId ID của người dùng cần unfollow
    * @throws com.codecampus.profile.exception.AppException nếu không tìm thấy profile của người dùng hiện tại
    */
-  public void unfollow(String targetUserId) {
+  public void unfollow(String targetUserId)
+  {
     UserProfile myProfile = userProfileService.getUserProfile();
 
     myProfile.getFollows().removeIf(
@@ -89,7 +93,8 @@ public class SocialService {
    * @param targetUserId ID của người dùng cần block
    * @throws com.codecampus.profile.exception.AppException nếu không tìm thấy profile của người dùng hiện tại hoặc của targetUserId
    */
-  public void block(String targetUserId) {
+  public void block(String targetUserId)
+  {
     UserProfile myProfile = userProfileService.getUserProfile();
 
     UserProfile targetProfile = userProfileService.getUserProfile(targetUserId);
@@ -99,7 +104,8 @@ public class SocialService {
             blocks -> targetUserId.equals(blocks.getTarget().getUserId())
         );
 
-    if (!exists) {
+    if (!exists)
+    {
       Blocks blocks = Blocks.builder()
           .since(Instant.now())
           .target(targetProfile)
@@ -118,7 +124,8 @@ public class SocialService {
    * @param targetUserId ID của người dùng cần unblock
    * @throws com.codecampus.profile.exception.AppException nếu không tìm thấy profile của người dùng hiện tại
    */
-  public void unblock(String targetUserId) {
+  public void unblock(String targetUserId)
+  {
     UserProfile myProfile = userProfileService.getUserProfile();
 
     myProfile.getBlocks().removeIf(
@@ -136,10 +143,11 @@ public class SocialService {
    * @return {@link PageResponse} chứa các đối tượng {@link Follows}
    */
   public PageResponse<Follows> getFollowers(
-      int page, int size) {
+      int page, int size)
+  {
     Pageable pageable = PageRequest.of(page - 1, size);
     var pageData = userProfileRepository
-        .findFollowers(SecurityUtils.getMyUserId(), pageable);
+        .findFollowers(SecurityHelper.getMyUserId(), pageable);
 
     return toPageResponse(pageData, page);
   }
@@ -152,10 +160,11 @@ public class SocialService {
    * @return {@link PageResponse} chứa các đối tượng {@link Follows}
    */
   public PageResponse<Follows> getFollowings(
-      int page, int size) {
+      int page, int size)
+  {
     Pageable pageable = PageRequest.of(page - 1, size);
     var pageData = userProfileRepository
-        .findFollowings(SecurityUtils.getMyUserId(), pageable);
+        .findFollowings(SecurityHelper.getMyUserId(), pageable);
 
     return toPageResponse(pageData, page);
   }
@@ -168,10 +177,11 @@ public class SocialService {
    * @return {@link PageResponse} chứa các đối tượng {@link Blocks}
    */
   public PageResponse<Blocks> findBlocked(
-      int page, int size) {
+      int page, int size)
+  {
     Pageable pageable = PageRequest.of(page - 1, size);
     var pageData = userProfileRepository
-        .findBlocked(SecurityUtils.getMyUserId(), pageable);
+        .findBlocked(SecurityHelper.getMyUserId(), pageable);
 
     return toPageResponse(pageData, page);
   }

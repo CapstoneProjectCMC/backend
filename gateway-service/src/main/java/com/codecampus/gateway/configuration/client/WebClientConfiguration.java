@@ -23,7 +23,8 @@ import org.springframework.web.service.invoker.HttpServiceProxyFactory;
  * </ul>
  */
 @Configuration
-public class WebClientConfiguration {
+public class WebClientConfiguration
+{
 
   /**
    * Tạo và cấu hình bean WebClient với URL cơ sở được định nghĩa trong hằng số.
@@ -31,7 +32,8 @@ public class WebClientConfiguration {
    * @return một đối tượng WebClient dùng để thực hiện các HTTP request đến Identity Service
    */
   @Bean
-  WebClient webClient() {
+  WebClient webClient()
+  {
     return WebClient.builder()
         .baseUrl(IDENTITY_SERVICE_ENDPOINT)
         .build();
@@ -49,10 +51,11 @@ public class WebClientConfiguration {
    * @return một đối tượng CorsWebFilter áp dụng cấu hình CORS cho mọi đường dẫn
    */
   @Bean
-  CorsWebFilter corsWebFilter() {
+  CorsWebFilter corsWebFilter()
+  {
     CorsConfiguration corsConfiguration = new CorsConfiguration();
     corsConfiguration.setAllowCredentials(true);
-    corsConfiguration.setAllowedOrigins(List.of("*"));
+    corsConfiguration.setAllowedOrigins(List.of("http://localhost:4200"));
     corsConfiguration.setAllowedHeaders(List.of("*"));
     corsConfiguration.setAllowedMethods(List.of("*"));
 
@@ -72,7 +75,8 @@ public class WebClientConfiguration {
    * @return một đối tượng IdentityClient để thực hiện các cuộc gọi HTTP đến Identity Service
    */
   @Bean
-  IdentityClient identityClient(WebClient webClient) {
+  IdentityClient identityClient(WebClient webClient)
+  {
     HttpServiceProxyFactory httpServiceProxyFactory =
         HttpServiceProxyFactory
             .builderFor(WebClientAdapter.create(webClient))

@@ -20,7 +20,8 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "tokens")
-public class InvalidatedToken {
+public class InvalidatedToken
+{
   @Id
   String id;
 

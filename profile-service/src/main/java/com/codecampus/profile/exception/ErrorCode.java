@@ -15,7 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 
 @Getter
-public enum ErrorCode {
+public enum ErrorCode
+{
   // Các lỗi không phân loại và lỗi chung
   UNCATEGORIZED_EXCEPTION(99999, INTERNAL_SERVER_STATUS,
       "Lỗi chưa phân loại", INTERNAL_SERVER_ERROR),
@@ -42,6 +43,8 @@ public enum ErrorCode {
       NOT_FOUND),
   ORG_NOT_FOUND(4048104, NOT_FOUND_STATUS, "Không tìm thấy tổ chức!",
       NOT_FOUND),
+  FILE_NOT_FOUND(4048105, NOT_FOUND_STATUS, "Không tìm thấy file!",
+      NOT_FOUND),
 
 
   // 409 - Conflict
@@ -59,7 +62,8 @@ public enum ErrorCode {
       int code,
       String status,
       String message,
-      HttpStatusCode statusCode) {
+      HttpStatusCode statusCode)
+  {
     this.code = code;
     this.status = status;
     this.message = message;

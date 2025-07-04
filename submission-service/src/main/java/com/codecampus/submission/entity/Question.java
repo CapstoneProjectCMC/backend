@@ -12,7 +12,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,16 +34,19 @@ import org.hibernate.annotations.Where;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "question")
-@SQLDelete(sql = "UPDATE question SET deleted_at = now(), deleted_by = ? WHERE id = ?")
+@SQLDelete(sql = "UPDATE question " +
+    "SET deleted_by = ? , deleted_at = now() " +
+    "WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
-public class Question extends AuditMetadata {
+public class Question extends AuditMetadata
+{
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   String id;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "exercise_id", nullable = false)
-  Exercise exercise;
+  @JoinColumn(name = "quiz_detail_id", nullable = false)
+  QuizDetail quizDetail;
 
   @Column(nullable = false, columnDefinition = "text")
   String text;
@@ -52,6 +58,10 @@ public class Question extends AuditMetadata {
   @Column(nullable = false, columnDefinition = "smallint")
   int points;
 
-  @Column(name = "display_order", columnDefinition = "smallint")
-  int order;
+  @Column(name = "display_order")
+  int orderInQuiz;
+
+  // Optional
+  @OneToMany(mappedBy = "question", fetch = FetchType.LAZY)
+  List<Option> options = new ArrayList<>();
 }

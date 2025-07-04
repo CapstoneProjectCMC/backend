@@ -2,34 +2,97 @@ name: codecampus
 
 services:
   # ---------- PostgreSQL ----------
-  postgresql:
+  identity-db:
     image: bitnami/postgresql:latest
-    container_name: postgresql
+    container_name: identity-db
     restart: unless-stopped
     environment:
-      - POSTGRESQL_USERNAME=postgres
-      - POSTGRESQL_PASSWORD=dinhanst2832004
+      - POSTGRESQL_USERNAME=${IDENTITY_USERNAME}
+      - POSTGRESQL_PASSWORD=${IDENTITY_DB_PASSWORD}
       - POSTGRESQL_DATABASE=identity_db
-      - POSTGRESQL_POSTGRES_PASSWORD=dinhanst2832004
+      - POSTGRESQL_POSTGRES_PASSWORD=${IDENTITY_DB_PASSWORD}
     ports:
-      - "5431:5432" # host:container
+      - "5431:5432"
     volumes:
-      - pg_data:/bitnami/postgresql # dữ liệu bền vững
+      - identity_pg_data:/bitnami/postgresql
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      test: [ "CMD-SHELL","pg_isready -U postgres" ]
       interval: 10s
       timeout: 5s
       retries: 5
+    networks: [ backend ]
 
+  quiz-db:
+    image: bitnami/postgresql:latest
+    container_name: quiz-db
+    restart: unless-stopped
+    environment:
+      - POSTGRESQL_USERNAME=${QUIZ_USERNAME}
+      - POSTGRESQL_PASSWORD=${QUIZ_DB_PASSWORD}
+      - POSTGRESQL_DATABASE=quiz_db
+      - POSTGRESQL_POSTGRES_PASSWORD=${QUIZ_DB_PASSWORD}
+    ports:
+      - "5433:5432"
+    volumes:
+      - quiz_pg_data:/bitnami/postgresql
+    healthcheck:
+      test: [ "CMD-SHELL","pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: [ backend ]
+
+  submission-db:
+    image: bitnami/postgresql:latest
+    container_name: submission-db
+    restart: unless-stopped
+    environment:
+      - POSTGRESQL_USERNAME=${SUBMISSION_USERNAME}
+      - POSTGRESQL_PASSWORD=${SUBMISSION_DB_PASSWORD}
+      - POSTGRESQL_DATABASE=submission_db
+      - POSTGRESQL_POSTGRES_PASSWORD=${SUBMISSION_DB_PASSWORD}
+    ports:
+      - "5434:5432"
+    volumes:
+      - submission_pg_data:/bitnami/postgresql
+    healthcheck:
+      test: [ "CMD-SHELL","pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: [ backend ]
+
+  # ----------  Kafka  ----------
+  kafka:
+    image: bitnami/kafka:latest
+    container_name: kafka
+    restart: unless-stopped
+    environment:
+      - KAFKA_ENABLE_KRAFT=yes
+      - KAFKA_CFG_NODE_ID=0
+      - KAFKA_CFG_PROCESS_ROLES=controller,broker
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka:9093
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093,EXTERNAL://:9094
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092,EXTERNAL://localhost:9094
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+    ports:
+      - "9092:9092"
+      - "9093:9093"
+      - "9094:9094"
+    volumes:
+      - kafka_data:/bitnami/kafka
+    networks: [ backend ]
+  
   # ---------- Neo4j ----------
   neo4j:
     image: bitnami/neo4j:latest
     container_name: neo4j
     restart: unless-stopped
     environment:
-      - NEO4J_DAEMON_USER=neo4j
-      - NEO4J_PASSWORD=dinhanst2832004
-      - INIT_NEO4J_PASSWORD=dinhanst2832004
+      - NEO4J_DAEMON_USER=${NEO4J_USERNAME}
+      - NEO4J_PASSWORD=${NEO4J_PASSWORD}
+      - INIT_NEO4J_PASSWORD=${NEO4J_PASSWORD}
       # Mở cổng Bolt & HTTP
       - NEO4J_BOLT_PORT_NUMBER=7687
       - NEO4J_HTTP_PORT_NUMBER=7474
@@ -46,7 +109,14 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks: [ backend ]
+
+networks:
+  backend:
 
 volumes:
-  pg_data:
+  identity_pg_data:
+  submission_pg_data:
+  quiz_pg_data:
+  kafka_data:
   neo4j_data:

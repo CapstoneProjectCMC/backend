@@ -2,6 +2,8 @@ package com.codecampus.identity.dto.request.authentication;
 
 import java.time.Instant;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -9,7 +11,10 @@ import lombok.experimental.FieldDefaults;
 @Data
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserCreationRequest {
+@AllArgsConstructor
+@Builder
+public class UserCreationRequest
+{
   String username;
   String email;
   String password;

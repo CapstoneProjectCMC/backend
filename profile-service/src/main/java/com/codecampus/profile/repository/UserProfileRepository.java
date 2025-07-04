@@ -2,15 +2,16 @@ package com.codecampus.profile.repository;
 
 import com.codecampus.profile.entity.ActivityWeek;
 import com.codecampus.profile.entity.UserProfile;
+import com.codecampus.profile.entity.properties.contest.ContestStatus;
 import com.codecampus.profile.entity.properties.exercise.CompletedExercise;
 import com.codecampus.profile.entity.properties.exercise.CreatedExercise;
 import com.codecampus.profile.entity.properties.exercise.SavedExercise;
 import com.codecampus.profile.entity.properties.organization.CreatedOrg;
-import com.codecampus.profile.entity.properties.organization.EnrolledClass;
-import com.codecampus.profile.entity.properties.organization.ManagesClass;
 import com.codecampus.profile.entity.properties.organization.MemberOrg;
 import com.codecampus.profile.entity.properties.post.Reaction;
+import com.codecampus.profile.entity.properties.post.ReportedPost;
 import com.codecampus.profile.entity.properties.post.SavedPost;
+import com.codecampus.profile.entity.properties.resource.SavedResource;
 import com.codecampus.profile.entity.properties.social.Blocks;
 import com.codecampus.profile.entity.properties.social.Follows;
 import com.codecampus.profile.entity.properties.subcribe.SubscribedTo;
@@ -23,7 +24,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserProfileRepository
-    extends Neo4jRepository<UserProfile, String> {
+    extends Neo4jRepository<UserProfile, String>
+{
   Optional<UserProfile> findByUserId(String userId);
 
   boolean existsByUserId(String userId);
@@ -63,6 +65,19 @@ public interface UserProfileRepository
   Page<CreatedExercise> findCreatedExercises(
       String userId, Pageable pageable);
 
+  @Query(
+      value = """
+            MATCH (u:User {userId:$userId})-[:CONTEST_STATUS]->(cs)
+            RETURN cs
+          """,
+      countQuery = """
+            MATCH (u:User {userId:$userId})-[:CONTEST_STATUS]->(cs)
+            RETURN count(cs)
+          """
+  )
+  Page<ContestStatus> findContestStatuses(
+      String userId, Pageable pageable);
+
   // Post
   @Query(value = """
       MATCH (u:User {userId:$userId})-[:SAVED_POST]->(saved:SavedPost)-[:TARGET_NODE]->(e)
@@ -84,6 +99,16 @@ public interface UserProfileRepository
           RETURN count(r)
           """)
   Page<Reaction> findReactions(String userId, Pageable pageable);
+
+  @Query(value = """
+      MATCH (u:User {userId:$userId})-[r:REPORTED_POST]->(p:Post)
+      RETURN r, p ORDER BY r.at DESC
+      """,
+      countQuery = """
+          MATCH (u:User {userId:$userId})-[r:REPORTED_POST]->(:Post)
+          RETURN count(r)
+          """)
+  Page<ReportedPost> findReportedPosts(String userId, Pageable pageable);
 
   // Activity Time
   @Query(value = """
@@ -134,29 +159,6 @@ public interface UserProfileRepository
           """)
   Page<Blocks> findBlocked(String userId, Pageable pageable);
 
-  // Class
-  @Query(value = """
-      MATCH (u:User {userId:$userId})-[mc:MANAGES_CLASS]->(c:Class)
-      RETURN mc, c ORDER BY mc.enrolledAt DESC
-      """,
-      countQuery = """
-          MATCH (u:User {userId:$userId})-[mc:MANAGES_CLASS]->(:Class)
-          RETURN count(mc)
-          """)
-  Page<ManagesClass> findManagedClasses(
-      String userId, Pageable pageable);
-
-  @Query(value = """
-      MATCH (u:User {userId:$userId})-[e:ENROLLED_IN]->(c:Class)
-      RETURN e, c ORDER BY c.name
-      """,
-      countQuery = """
-          MATCH (u:User {userId:$userId})-[e:ENROLLED_IN]->(:Class)
-          RETURN count(e)
-          """)
-  Page<EnrolledClass> findEnrolledClasses(
-      String userId, Pageable pageable);
-
   // Org
   @Query(value = """
       MATCH (u:User {userId:$userId})-[m:MEMBER_ORG]->(o:Organization)
@@ -167,6 +169,18 @@ public interface UserProfileRepository
           RETURN count(m)
           """)
   Page<MemberOrg> findMemberOrgs(String userId, Pageable pageable);
+
+  @Query(value = """
+      MATCH (u:User {userId:$userId})-[m:MEMBER_ORG]->(o:Organization)
+      WHERE m.memberRole = $role
+      RETURN m,o ORDER BY m.joinAt DESC
+      """,
+      countQuery = """
+          MATCH (u:User {userId:$userId})-[m:MEMBER_ORG]->(:Organization)
+          WHERE m.memberRole = $role
+          RETURN count(m)
+          """)
+  Page<MemberOrg> findMemberOrgsByRole(String userId, String role, Pageable p);
 
   @Query(value = """
       MATCH (u:User {userId:$userId})-[c:CREATED_ORG]->(o:Organization)
@@ -188,7 +202,22 @@ public interface UserProfileRepository
           MATCH (u:User {userId:$userId})-[s:SUBSCRIBED_TO]->(:Package)
           RETURN count(s)
           """)
-  Page<SubscribedTo> findSubscriptions(String userId, Pageable pageable);
+  Page<SubscribedTo> findSubscriptions(
+      String userId, Pageable pageable);
 
-
+  // Resource
+  @Query(
+      value = """
+            MATCH (u:User {userId:$userId})-[:SAVED_RESOURCE]->(sr)-[:RESOURCE]->(f)
+            WHERE f.type = $type
+            RETURN sr
+          """,
+      countQuery = """
+            MATCH (u:User {userId:$userId})-[:SAVED_RESOURCE]->(sr)-[:RESOURCE]->(f)
+            WHERE f.type = $type
+            RETURN count(sr)
+          """
+  )
+  Page<SavedResource> findSavedResourcesByType(
+      String userId, String type, Pageable pageable);
 }
