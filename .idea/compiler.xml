@@ -39,6 +39,8 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="common-events" target="21" />
+      <module name="common-modules" target="21" />
       <module name="proto-contracts" target="1.8" />
     </bytecodeTargetLevel>
   </component>
@@ -46,6 +48,8 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="ai-service" options="-parameters -Amapstruct.defaultComponentModel=spring -Amapstruct.verbose=true" />
       <module name="coding-service" options="-parameters -Amapstruct.defaultComponentModel=spring -Amapstruct.verbose=true" />
+      <module name="common-events" options="-parameters" />
+      <module name="common-modules" options="-parameters" />
       <module name="common-protos" options="-parameters" />
       <module name="gateway-service" options="-parameters" />
       <module name="identity-service" options="-parameters -Amapstruct.defaultComponentModel=spring -Amapstruct.verbose=true" />

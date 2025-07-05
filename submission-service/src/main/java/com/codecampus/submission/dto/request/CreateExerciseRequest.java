@@ -2,17 +2,19 @@ package com.codecampus.submission.dto.request;
 
 import com.codecampus.submission.constant.submission.Difficulty;
 import com.codecampus.submission.constant.submission.ExerciseType;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Set;
 
 public record CreateExerciseRequest(
-    String tittle,
+    @NotBlank String title,
     String description,
-    Difficulty difficulty,
-    ExerciseType exerciseType,
+    @NotNull Difficulty difficulty,
+    @NotNull ExerciseType exerciseType,
     String orgId, // Có trong tổ chức hay không
-    BigDecimal cost,
+    @NotNull BigDecimal cost,
     boolean freeForOrg,
     Instant startTime,
     Instant endTime,

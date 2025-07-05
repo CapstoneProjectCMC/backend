@@ -57,6 +57,8 @@ public enum ErrorCode
       NOT_FOUND),
   EXERCISE_NOT_FOUND(4048005, NOT_FOUND_STATUS, "Không tìm thấy bài tập!",
       NOT_FOUND),
+  QUESTION_NOT_FOUND(4048006, NOT_FOUND_STATUS, "Không tìm thấy câu hỏi!",
+      NOT_FOUND),
 
 
   // 409 - Conflict
@@ -65,6 +67,8 @@ public enum ErrorCode
   EMAIL_ALREADY_EXISTS(4098002, CONFLICT_STATUS, "Email đã tồn tại!",
       CONFLICT),
   PASSWORD_ALREADY_EXISTS(4098003, CONFLICT_STATUS, "Mật khẩu đã tồn tại!",
+      CONFLICT),
+  EXERCISE_DUPLICATED(4098004, CONFLICT_STATUS, "Bài tập đã tồn tại!",
       CONFLICT),
 
   // 500 - Internal Server Error

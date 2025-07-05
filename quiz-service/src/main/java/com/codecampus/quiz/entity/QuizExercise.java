@@ -7,6 +7,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,10 +29,28 @@ public class QuizExercise
   @Id
   String id;
 
+  String title;
+  String description;
+  int totalPoints;
+  int numQuestions;
+
   @OneToMany(
-      mappedBy = "exercise",
+      mappedBy = "quiz",
       cascade = CascadeType.ALL,
       orphanRemoval = true
   )
-  List<QuizQuestion> questions = new ArrayList<>();
+  List<Question> questions = new ArrayList<>();
+
+  /* ---------- helper  ---------- */
+
+  /**
+   * Tìm câu hỏi theo id.
+   * Trả về Optional.empty() nếu không thấy.
+   */
+  public Optional<Question> findQuestion(String questionId)
+  {
+    return questions.stream()
+        .filter(q -> q.getId().equals(questionId))
+        .findFirst();
+  }
 }
