@@ -9,8 +9,10 @@ import com.codecampus.quiz.grpc.QuestionDto;
 import com.codecampus.quiz.grpc.QuestionType;
 import com.codecampus.quiz.grpc.QuizExerciseDto;
 import java.util.Comparator;
+import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.ReportingPolicy;
 
 @Mapper(componentModel = "spring",
@@ -61,15 +63,15 @@ public interface QuizMapper
         .setNumQuestions(quiz.getNumQuestions())
         .build();
 
-    LoadQuizResponse.Builder resp = LoadQuizResponse.newBuilder()
+    LoadQuizResponse.Builder response = LoadQuizResponse.newBuilder()
         .setExercise(exerciseDto);
 
     // Questions (ẩn 'correct')
     quiz.getQuestions().stream()
         .sorted(Comparator.comparingInt(Question::getOrderInQuiz))
-        .forEach(q -> resp.addQuestions(toDtoHideCorrect(q)));
+        .forEach(q -> response.addQuestions(toDtoHideCorrect(q)));
 
-    return resp.build();
+    return response.build();
   }
 
   default QuestionDto toDtoHideCorrect(Question q)
@@ -125,5 +127,14 @@ public interface QuizMapper
       case FILL_BLANK -> QuestionType.FILL_BLANK;
       case SINGLE_CHOICE -> QuestionType.SINGLE_CHOICE;
     };
+  }
+
+  @AfterMapping
+  default void link(@MappingTarget Question question)
+  {
+    if (question.getOptions() != null)
+    {
+      question.getOptions().forEach(option -> option.setQuestion(question));
+    }
   }
 }

@@ -2,6 +2,9 @@ package com.codecampus.submission.entity;
 
 import com.codecampus.submission.constant.submission.QuestionType;
 import com.codecampus.submission.entity.audit.AuditMetadata;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -44,6 +47,7 @@ public class Question extends AuditMetadata
   @GeneratedValue(strategy = GenerationType.UUID)
   String id;
 
+  @JsonBackReference
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "quiz_detail_id", nullable = false)
   QuizDetail quizDetail;
@@ -62,6 +66,11 @@ public class Question extends AuditMetadata
   int orderInQuiz;
 
   // Optional
-  @OneToMany(mappedBy = "question", fetch = FetchType.LAZY)
+  @JsonManagedReference
+  @OneToMany(mappedBy = "question",
+      fetch = FetchType.LAZY,
+      cascade = CascadeType.ALL,
+      orphanRemoval = true
+  )
   List<Option> options = new ArrayList<>();
 }

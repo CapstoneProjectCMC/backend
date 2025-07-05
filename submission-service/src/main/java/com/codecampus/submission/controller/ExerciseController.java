@@ -55,7 +55,8 @@ public class ExerciseController
       @RequestBody @Valid AddQuizDetailRequest addQuizRequest)
   {
     return ApiResponse.<QuizDetail>builder()
-        .result(quizService.addQuizDetail(exerciseId, addQuizRequest))
+        .result(quizService
+            .addQuizDetail(exerciseId, addQuizRequest))
         .message("Tạo Quiz thành công!")
         .build();
   }

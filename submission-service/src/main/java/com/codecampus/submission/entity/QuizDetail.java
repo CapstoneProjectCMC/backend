@@ -1,6 +1,8 @@
 package com.codecampus.submission.entity;
 
 import com.codecampus.submission.entity.audit.AuditMetadata;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -39,6 +41,7 @@ public class QuizDetail extends AuditMetadata
   @Id
   String id;   // trùng exercise_id
 
+  @JsonBackReference
   @OneToOne
   @MapsId
   @JoinColumn(name = "id")
@@ -50,6 +53,7 @@ public class QuizDetail extends AuditMetadata
   @Column(name = "total_points")
   int totalPoints;
 
+  @JsonManagedReference
   @OneToMany(mappedBy = "quizDetail",
       cascade = CascadeType.ALL,
       orphanRemoval = true)

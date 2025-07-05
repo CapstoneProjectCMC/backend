@@ -41,6 +41,7 @@ public class QuizPlayServiceImpl
 
   /* ---------- Load quiz cho học sinh ---------- */
   @Override
+  @Transactional
   public void loadQuiz(
       LoadQuizRequest loadQuizRequest,
       StreamObserver<LoadQuizResponse> streamObserver)

@@ -1,6 +1,8 @@
 package com.codecampus.submission.entity;
 
 import com.codecampus.submission.entity.audit.AuditMetadata;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -43,6 +45,7 @@ public class CodingDetail extends AuditMetadata
   @GeneratedValue(strategy = GenerationType.UUID)
   String id;
 
+  @JsonBackReference
   @OneToOne
   @MapsId
   @JoinColumn(name = "id")       // FK tới exercise
@@ -78,6 +81,7 @@ public class CodingDetail extends AuditMetadata
   @Column(columnDefinition = "text")
   String solution;
 
+  @JsonManagedReference
   @OneToMany(mappedBy = "codingDetail",
       cascade = CascadeType.ALL,
       orphanRemoval = true)

@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.server.service.GrpcService;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @GrpcService
@@ -50,6 +51,7 @@ public class QuizSyncServiceImpl
   }
 
   @Override
+  @Transactional
   public void addQuizDetail(
       AddQuizDetailRequest addQuizRequest,
       StreamObserver<Empty> streamObserver)
@@ -75,6 +77,7 @@ public class QuizSyncServiceImpl
   }
 
   @Override
+  @Transactional
   public void addQuestion(
       AddQuestionRequest addQuestionRequest,
       StreamObserver<Empty> streamObserver)
