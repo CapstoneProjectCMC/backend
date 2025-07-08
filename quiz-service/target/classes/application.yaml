@@ -46,3 +46,8 @@ spring:
 #    producer:
 #      key-serializer: org.apache.kafka.common.serialization.StringSerializer
 #      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+submission:
+  grpc:
+    host: localhost
+    port: 9091

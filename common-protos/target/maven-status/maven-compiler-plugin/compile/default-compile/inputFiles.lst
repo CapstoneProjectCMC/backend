@@ -1,6 +1,7 @@
 F:\fileCode\capstoneProject\backend\common-protos\src\main\java\org\codecampus\Main.java
 F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\grpc-java\com\codecampus\quiz\grpc\QuizPlayServiceGrpc.java
 F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\grpc-java\com\codecampus\quiz\grpc\QuizSyncServiceGrpc.java
+F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\grpc-java\com\codecampus\submission\grpc\SubmissionSyncServiceGrpc.java
 F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\quiz\grpc\AddQuestionRequest.java
 F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\quiz\grpc\AddQuestionRequestOrBuilder.java
 F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\quiz\grpc\AddQuizDetailRequest.java
@@ -25,3 +26,10 @@ F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\proto
 F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\quiz\grpc\SubmitQuizRequestOrBuilder.java
 F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\quiz\grpc\SubmitQuizResponse.java
 F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\quiz\grpc\SubmitQuizResponseOrBuilder.java
+F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\submission\grpc\CreateQuizSubmissionRequest.java
+F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\submission\grpc\CreateQuizSubmissionRequestOrBuilder.java
+F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\submission\grpc\QuizSubmissionAnswerDto.java
+F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\submission\grpc\QuizSubmissionAnswerDtoOrBuilder.java
+F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\submission\grpc\QuizSubmissionDto.java
+F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\submission\grpc\QuizSubmissionDtoOrBuilder.java
+F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\submission\grpc\SubmissionSyncProto.java

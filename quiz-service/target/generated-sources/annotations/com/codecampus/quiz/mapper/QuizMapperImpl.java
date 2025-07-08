@@ -11,11 +11,32 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-07-08T04:07:55+0700",
+    date = "2025-07-08T19:35:20+0700",
     comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.7 (Oracle Corporation)"
 )
 @Component
 public class QuizMapperImpl implements QuizMapper {
+
+    @Override
+    public void patch(QuestionDto request, Question question) {
+        if ( request == null ) {
+            return;
+        }
+
+        if ( request.getId() != null ) {
+            question.setId( request.getId() );
+        }
+        if ( request.getText() != null ) {
+            question.setText( request.getText() );
+        }
+        if ( request.getQuestionType() != null ) {
+            question.setQuestionType( asEntityEnum( request.getQuestionType() ) );
+        }
+        question.setPoints( request.getPoints() );
+        question.setOrderInQuiz( request.getOrderInQuiz() );
+
+        link( question );
+    }
 
     @Override
     public QuizExercise toEntity(QuizExerciseDto dto) {

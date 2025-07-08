@@ -1,5 +1,6 @@
 package com.codecampus.quiz.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -22,19 +23,19 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "question_option")
-public class Option
-{
-  @Id
-  String id;
+public class Option {
+    @Id
+    String id;
 
-  @ManyToOne
-  @JoinColumn(name = "question_id", nullable = false)
-  Question question;
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "question_id", nullable = false)
+    Question question;
 
-  @Column(name = "option_text")
-  String optionText;
-  boolean correct;
+    @Column(name = "option_text")
+    String optionText;
+    boolean correct;
 
-  @Column(name = "display_order")
-  String order;
+    @Column(name = "display_order")
+    String order;
 }
