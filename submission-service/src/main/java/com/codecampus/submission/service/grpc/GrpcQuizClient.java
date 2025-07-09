@@ -4,10 +4,13 @@ import com.codecampus.quiz.grpc.AddQuestionRequest;
 import com.codecampus.quiz.grpc.AddQuizDetailRequest;
 import com.codecampus.quiz.grpc.CreateQuizExerciseRequest;
 import com.codecampus.quiz.grpc.QuizSyncServiceGrpc;
+import com.codecampus.quiz.grpc.UpsertAssignmentRequest;
 import com.codecampus.submission.constant.submission.ExerciseType;
+import com.codecampus.submission.entity.Assignment;
 import com.codecampus.submission.entity.Exercise;
 import com.codecampus.submission.entity.Question;
 import com.codecampus.submission.entity.QuizDetail;
+import com.codecampus.submission.mapper.AssignmentMapper;
 import com.codecampus.submission.mapper.QuestionMapper;
 import com.codecampus.submission.mapper.QuizMapper;
 import io.grpc.StatusRuntimeException;
@@ -26,6 +29,7 @@ public class GrpcQuizClient {
     QuizSyncServiceGrpc.QuizSyncServiceBlockingStub stub;
     QuestionMapper questionMapper;
     QuizMapper quizMapper;
+    AssignmentMapper assignmentMapper;
 
     @Transactional
     public void pushExercise(Exercise exercise) {
@@ -71,5 +75,12 @@ public class GrpcQuizClient {
                         .setQuestion(questionMapper.toGrpc(question))
                         .build();
         stub.addQuestion(addQuestionRequest);
+    }
+
+    @Transactional
+    public void pushAssignment(Assignment assignment) {
+        UpsertAssignmentRequest request = UpsertAssignmentRequest.newBuilder()
+                .setAssignment(assignmentMapper.toGrpc(assignment))
+                .build();
     }
 }

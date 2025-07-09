@@ -17,6 +17,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 
 import java.util.Comparator;
+import java.util.Optional;
 
 @Mapper(componentModel = "spring",
         unmappedTargetPolicy = ReportingPolicy.IGNORE)
@@ -36,6 +37,12 @@ public interface QuizMapper {
     void patch(
             QuestionDto request,
             @MappingTarget Question question
+    );
+
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    void patchQuizExercise(
+            QuizExerciseDto request,
+            @MappingTarget QuizExercise quizExercise
     );
 
     @Mapping(target = "questions", ignore = true)
@@ -139,5 +146,17 @@ public interface QuizMapper {
             question.getOptions()
                     .forEach(option -> option.setQuestion(question));
         }
+    }
+
+    @Mapping(target = "questions", ignore = true)
+    default QuizExerciseDto toQuizExerciseDto(QuizExercise e) {
+        return QuizExerciseDto.newBuilder()
+                .setId(e.getId())
+                .setTitle(e.getTitle())
+                .setDescription(
+                        Optional.ofNullable(e.getDescription()).orElse(""))
+                .setTotalPoints(e.getTotalPoints())
+                .setNumQuestions(e.getNumQuestions())
+                .build();
     }
 }
