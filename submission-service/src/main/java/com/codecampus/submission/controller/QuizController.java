@@ -2,6 +2,7 @@ package com.codecampus.submission.controller;
 
 import com.codecampus.submission.dto.common.ApiResponse;
 import com.codecampus.submission.dto.request.quiz.AddQuizDetailRequest;
+import com.codecampus.submission.dto.request.quiz.OptionDto;
 import com.codecampus.submission.dto.request.quiz.QuestionDto;
 import com.codecampus.submission.dto.request.quiz.UpdateOptionRequest;
 import com.codecampus.submission.dto.request.quiz.UpdateQuestionRequest;
@@ -53,6 +54,17 @@ public class QuizController {
         return ApiResponse.<Question>builder()
                 .result(quizService.addQuestion(exerciseId, questionDto))
                 .message("Thêm câu hỏi cho quiz thành công!")
+                .build();
+    }
+
+    @PostMapping("/question/{questionId}/option")
+    ApiResponse<Option> addOption(
+            @PathVariable String questionId,
+            @RequestBody @Valid OptionDto request) {
+
+        return ApiResponse.<Option>builder()
+                .result(quizService.addOption(questionId, request))
+                .message("Thêm option thành công!")
                 .build();
     }
 

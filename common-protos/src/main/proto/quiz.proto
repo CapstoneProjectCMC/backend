@@ -74,9 +74,10 @@ message SubmitQuizResponse {
 // ---------- Internal sync – Submission-Service → Quiz-Service ----------
 service QuizSyncService {
   rpc CreateQuizExercise(CreateQuizExerciseRequest) returns (.google.protobuf.Empty);
-  rpc AddQuizDetail     (AddQuizDetailRequest)      returns (.google.protobuf.Empty);
-  rpc AddQuestion       (AddQuestionRequest)        returns (.google.protobuf.Empty);
-  rpc UpsertAssignment  (UpsertAssignmentRequest)   returns (.google.protobuf.Empty);
+  rpc AddQuizDetail (AddQuizDetailRequest) returns (.google.protobuf.Empty);
+  rpc AddQuestion (AddQuestionRequest) returns (.google.protobuf.Empty);
+  rpc AddOption (AddOptionRequest) returns (google.protobuf.Empty);
+  rpc UpsertAssignment (UpsertAssignmentRequest)  returns (.google.protobuf.Empty);
 }
 
 message CreateQuizExerciseRequest {
@@ -91,6 +92,12 @@ message AddQuizDetailRequest {
 message AddQuestionRequest {
   string      exerciseId = 1;
   QuestionDto question = 2;
+}
+
+message AddOptionRequest {
+  string exerciseId = 1;
+  string questionId = 2;
+  OptionDto option = 3;
 }
 
 message UpsertAssignmentRequest {

@@ -6,6 +6,8 @@ import com.codecampus.quiz.grpc.QuizExerciseDto;
 import com.codecampus.quiz.grpc.SubmitQuizRequest;
 import com.codecampus.quiz.grpc.SubmitQuizResponse;
 import com.codecampus.quiz.service.QuizService;
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.google.protobuf.util.JsonFormat;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
@@ -51,14 +53,29 @@ class QuizController {
     @PostMapping("/{quizId}/submit")
     ApiResponse<SubmitQuizResponse> submitQuiz(
             @PathVariable String quizId,
-            @RequestBody SubmitQuizRequest request) {
+            @RequestBody String bodyJson)
+            throws InvalidProtocolBufferException {
 
-        // Bảo đảm path id khớp body
-        Assert.isTrue(quizId.equals(request.getExerciseId()),
+        /* 1. Parse JSON ⇒ protobuf */
+        SubmitQuizRequest.Builder builder = SubmitQuizRequest.newBuilder();
+        JsonFormat.parser()
+                .ignoringUnknownFields()
+                .merge(bodyJson, builder);
+
+        /* 2. Bù exerciseId nếu client không gửi */
+        if (builder.getExerciseId().isEmpty()) {
+            builder.setExerciseId(quizId);
+        }
+
+        /* 3. Kiểm tra khớp path/body */
+        Assert.isTrue(quizId.equals(builder.getExerciseId()),
                 "exerciseId mismatch");
 
+        /* 4. Chấm điểm & trả kết quả */
+        SubmitQuizResponse rsp = quizService.submitQuiz(builder.build());
+
         return ApiResponse.<SubmitQuizResponse>builder()
-                .result(quizService.submitQuiz(request))
+                .result(rsp)
                 .message("Nộp bài thành công!")
                 .build();
     }

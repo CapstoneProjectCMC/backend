@@ -2,6 +2,8 @@ F:\fileCode\capstoneProject\backend\common-protos\src\main\java\org\codecampus\M
 F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\grpc-java\com\codecampus\quiz\grpc\QuizPlayServiceGrpc.java
 F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\grpc-java\com\codecampus\quiz\grpc\QuizSyncServiceGrpc.java
 F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\grpc-java\com\codecampus\submission\grpc\SubmissionSyncServiceGrpc.java
+F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\quiz\grpc\AddOptionRequest.java
+F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\quiz\grpc\AddOptionRequestOrBuilder.java
 F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\quiz\grpc\AddQuestionRequest.java
 F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\quiz\grpc\AddQuestionRequestOrBuilder.java
 F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\quiz\grpc\AddQuizDetailRequest.java

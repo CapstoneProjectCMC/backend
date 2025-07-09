@@ -1,5 +1,6 @@
 package com.codecampus.quiz.service.grpc;
 
+import com.codecampus.quiz.grpc.AddOptionRequest;
 import com.codecampus.quiz.grpc.AddQuestionRequest;
 import com.codecampus.quiz.grpc.AddQuizDetailRequest;
 import com.codecampus.quiz.grpc.CreateQuizExerciseRequest;
@@ -62,10 +63,22 @@ public class QuizSyncServiceImpl
 
     @Override
     @Transactional
+    public void addOption(
+            AddOptionRequest req,
+            StreamObserver<Empty> obs) {
+        
+        quizService.addOption(req);
+
+        obs.onNext(Empty.getDefaultInstance());
+        obs.onCompleted();
+    }
+
+    @Override
+    @Transactional
     public void upsertAssignment(
             UpsertAssignmentRequest request,
             StreamObserver<Empty> responseObserver) {
-        
+
         quizService.upsertAssignment(request);
 
         responseObserver.onNext(Empty.getDefaultInstance());

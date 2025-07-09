@@ -1,5 +1,6 @@
 package com.codecampus.submission.service.grpc;
 
+import com.codecampus.quiz.grpc.AddOptionRequest;
 import com.codecampus.quiz.grpc.AddQuestionRequest;
 import com.codecampus.quiz.grpc.AddQuizDetailRequest;
 import com.codecampus.quiz.grpc.CreateQuizExerciseRequest;
@@ -8,6 +9,7 @@ import com.codecampus.quiz.grpc.UpsertAssignmentRequest;
 import com.codecampus.submission.constant.submission.ExerciseType;
 import com.codecampus.submission.entity.Assignment;
 import com.codecampus.submission.entity.Exercise;
+import com.codecampus.submission.entity.Option;
 import com.codecampus.submission.entity.Question;
 import com.codecampus.submission.entity.QuizDetail;
 import com.codecampus.submission.mapper.AssignmentMapper;
@@ -78,9 +80,25 @@ public class GrpcQuizClient {
     }
 
     @Transactional
+    public void pushOption(
+            String exerciseId,
+            String questionId,
+            Option option) {
+        AddOptionRequest addOptionRequest = AddOptionRequest.newBuilder()
+                .setExerciseId(exerciseId)
+                .setQuestionId(questionId)
+                .setOption(questionMapper.toGrpc(option))
+                .build();
+
+        stub.addOption(addOptionRequest);
+    }
+
+    @Transactional
     public void pushAssignment(Assignment assignment) {
         UpsertAssignmentRequest request = UpsertAssignmentRequest.newBuilder()
                 .setAssignment(assignmentMapper.toGrpc(assignment))
                 .build();
+
+        stub.upsertAssignment(request);
     }
 }

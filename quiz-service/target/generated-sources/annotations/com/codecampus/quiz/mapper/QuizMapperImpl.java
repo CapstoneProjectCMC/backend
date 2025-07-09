@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-07-09T14:48:40+0700",
+    date = "2025-07-10T02:23:25+0700",
     comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.7 (Oracle Corporation)"
 )
 @Component
@@ -36,6 +36,25 @@ public class QuizMapperImpl implements QuizMapper {
         question.setOrderInQuiz( request.getOrderInQuiz() );
 
         link( question );
+    }
+
+    @Override
+    public void patchQuizExercise(QuizExerciseDto request, QuizExercise quizExercise) {
+        if ( request == null ) {
+            return;
+        }
+
+        if ( request.getId() != null ) {
+            quizExercise.setId( request.getId() );
+        }
+        if ( request.getTitle() != null ) {
+            quizExercise.setTitle( request.getTitle() );
+        }
+        if ( request.getDescription() != null ) {
+            quizExercise.setDescription( request.getDescription() );
+        }
+        quizExercise.setTotalPoints( request.getTotalPoints() );
+        quizExercise.setNumQuestions( request.getNumQuestions() );
     }
 
     @Override

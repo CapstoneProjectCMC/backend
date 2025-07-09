@@ -2,6 +2,7 @@ package com.codecampus.submission.service;
 
 import com.codecampus.submission.constant.submission.ExerciseType;
 import com.codecampus.submission.dto.request.quiz.AddQuizDetailRequest;
+import com.codecampus.submission.dto.request.quiz.OptionDto;
 import com.codecampus.submission.dto.request.quiz.QuestionDto;
 import com.codecampus.submission.dto.request.quiz.UpdateOptionRequest;
 import com.codecampus.submission.dto.request.quiz.UpdateQuestionRequest;
@@ -104,6 +105,25 @@ public class QuizService {
     }
 
     @Transactional
+    public Option addOption(
+            String questionId,
+            OptionDto optionDto) {
+        Question question = getQuestionOrThrow(questionId);
+
+        Option option = optionMapper.toOption(optionDto);
+        option.setQuestion(question);
+        question.getOptions().add(option);
+        optionRepository.save(option);
+
+        grpcQuizClient.pushOption(
+                question.getQuizDetail().getExercise().getId(),
+                questionId,
+                option);
+
+        return option;
+    }
+
+    @Transactional
     public Question updateQuestion(
             String exerciseId,
             String questionId,
@@ -147,5 +167,12 @@ public class QuizService {
         return exerciseRepository.findById(exerciseId)
                 .orElseThrow(
                         () -> new AppException(ErrorCode.EXERCISE_NOT_FOUND));
+    }
+
+    Question getQuestionOrThrow(String questionId) {
+        return questionRepository
+                .findById(questionId)
+                .orElseThrow(
+                        () -> new AppException(ErrorCode.QUESTION_NOT_FOUND));
     }
 }

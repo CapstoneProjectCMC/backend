@@ -1,11 +1,13 @@
 package com.codecampus.quiz.service;
 
 import com.codecampus.quiz.entity.Assignment;
+import com.codecampus.quiz.entity.Option;
 import com.codecampus.quiz.entity.Question;
 import com.codecampus.quiz.entity.QuizExercise;
 import com.codecampus.quiz.entity.QuizSubmission;
 import com.codecampus.quiz.exception.AppException;
 import com.codecampus.quiz.exception.ErrorCode;
+import com.codecampus.quiz.grpc.AddOptionRequest;
 import com.codecampus.quiz.grpc.AddQuestionRequest;
 import com.codecampus.quiz.grpc.AddQuizDetailRequest;
 import com.codecampus.quiz.grpc.AssignmentDto;
@@ -100,6 +102,19 @@ public class QuizService {
     }
 
     @Transactional
+    public void addOption(AddOptionRequest addOptionRequest) {
+        QuizExercise quiz =
+                findQuizOrThrow(addOptionRequest.getExerciseId());
+
+        Question question =
+                findQuestionOrThrow(addOptionRequest.getQuestionId());
+
+        Option option = quizMapper.toEntity(addOptionRequest.getOption());
+        option.setQuestion(question);
+        question.getOptions().add(option);
+    }
+
+    @Transactional
     public LoadQuizResponse loadQuiz(
             String exerciseId, String studentId) {
 
@@ -163,6 +178,14 @@ public class QuizService {
                 .findById(exerciseId)
                 .orElseThrow(
                         () -> new AppException(ErrorCode.EXERCISE_NOT_FOUND)
+                );
+    }
+
+    public Question findQuestionOrThrow(String questionId) {
+        return questionRepository
+                .findById(questionId)
+                .orElseThrow(
+                        () -> new AppException(ErrorCode.QUESTION_NOT_FOUND)
                 );
     }
 }

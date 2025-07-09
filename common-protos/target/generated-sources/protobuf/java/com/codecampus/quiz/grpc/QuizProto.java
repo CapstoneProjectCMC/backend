@@ -86,6 +86,11 @@ public final class QuizProto {
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_quiz_AddQuestionRequest_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_quiz_AddOptionRequest_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_quiz_AddOptionRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
     internal_static_quiz_UpsertAssignmentRequest_descriptor;
   static final 
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
@@ -128,23 +133,27 @@ public final class QuizProto {
       "erciseId\030\001 \001(\t\022$\n\tquestions\030\002 \003(\0132\021.quiz" +
       ".QuestionDto\"M\n\022AddQuestionRequest\022\022\n\nex" +
       "erciseId\030\001 \001(\t\022#\n\010question\030\002 \001(\0132\021.quiz." +
-      "QuestionDto\"B\n\027UpsertAssignmentRequest\022\'" +
-      "\n\nassignment\030\001 \001(\0132\023.quiz.AssignmentDto*" +
-      "C\n\014QuestionType\022\021\n\rSINGLE_CHOICE\020\000\022\020\n\014MU" +
-      "LTI_CHOICE\020\001\022\016\n\nFILL_BLANK\020\0022\261\002\n\017QuizSyn" +
-      "cService\022M\n\022CreateQuizExercise\022\037.quiz.Cr" +
-      "eateQuizExerciseRequest\032\026.google.protobu" +
-      "f.Empty\022C\n\rAddQuizDetail\022\032.quiz.AddQuizD" +
-      "etailRequest\032\026.google.protobuf.Empty\022?\n\013" +
-      "AddQuestion\022\030.quiz.AddQuestionRequest\032\026." +
-      "google.protobuf.Empty\022I\n\020UpsertAssignmen" +
-      "t\022\035.quiz.UpsertAssignmentRequest\032\026.googl" +
-      "e.protobuf.Empty2\215\001\n\017QuizPlayService\0229\n\010" +
-      "LoadQuiz\022\025.quiz.LoadQuizRequest\032\026.quiz.L" +
-      "oadQuizResponse\022?\n\nSubmitQuiz\022\027.quiz.Sub" +
-      "mitQuizRequest\032\030.quiz.SubmitQuizResponse" +
-      "B\'\n\030com.codecampus.quiz.grpcB\tQuizProtoP" +
-      "\001b\006proto3"
+      "QuestionDto\"[\n\020AddOptionRequest\022\022\n\nexerc" +
+      "iseId\030\001 \001(\t\022\022\n\nquestionId\030\002 \001(\t\022\037\n\006optio" +
+      "n\030\003 \001(\0132\017.quiz.OptionDto\"B\n\027UpsertAssign" +
+      "mentRequest\022\'\n\nassignment\030\001 \001(\0132\023.quiz.A" +
+      "ssignmentDto*C\n\014QuestionType\022\021\n\rSINGLE_C" +
+      "HOICE\020\000\022\020\n\014MULTI_CHOICE\020\001\022\016\n\nFILL_BLANK\020" +
+      "\0022\356\002\n\017QuizSyncService\022M\n\022CreateQuizExerc" +
+      "ise\022\037.quiz.CreateQuizExerciseRequest\032\026.g" +
+      "oogle.protobuf.Empty\022C\n\rAddQuizDetail\022\032." +
+      "quiz.AddQuizDetailRequest\032\026.google.proto" +
+      "buf.Empty\022?\n\013AddQuestion\022\030.quiz.AddQuest" +
+      "ionRequest\032\026.google.protobuf.Empty\022;\n\tAd" +
+      "dOption\022\026.quiz.AddOptionRequest\032\026.google" +
+      ".protobuf.Empty\022I\n\020UpsertAssignment\022\035.qu" +
+      "iz.UpsertAssignmentRequest\032\026.google.prot" +
+      "obuf.Empty2\215\001\n\017QuizPlayService\0229\n\010LoadQu" +
+      "iz\022\025.quiz.LoadQuizRequest\032\026.quiz.LoadQui" +
+      "zResponse\022?\n\nSubmitQuiz\022\027.quiz.SubmitQui" +
+      "zRequest\032\030.quiz.SubmitQuizResponseB\'\n\030co" +
+      "m.codecampus.quiz.grpcB\tQuizProtoP\001b\006pro" +
+      "to3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -224,8 +233,14 @@ public final class QuizProto {
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_quiz_AddQuestionRequest_descriptor,
         new java.lang.String[] { "ExerciseId", "Question", });
-    internal_static_quiz_UpsertAssignmentRequest_descriptor =
+    internal_static_quiz_AddOptionRequest_descriptor =
       getDescriptor().getMessageTypes().get(12);
+    internal_static_quiz_AddOptionRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_quiz_AddOptionRequest_descriptor,
+        new java.lang.String[] { "ExerciseId", "QuestionId", "Option", });
+    internal_static_quiz_UpsertAssignmentRequest_descriptor =
+      getDescriptor().getMessageTypes().get(13);
     internal_static_quiz_UpsertAssignmentRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_quiz_UpsertAssignmentRequest_descriptor,

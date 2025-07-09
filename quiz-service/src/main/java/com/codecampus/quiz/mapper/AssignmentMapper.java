@@ -15,7 +15,7 @@ public interface AssignmentMapper {
 
     Assignment toEntity(AssignmentDto dto);
 
-    @InheritInverseConfiguration
+    @InheritInverseConfiguration(name = "toEntity")
     AssignmentDto toGrpc(Assignment ent);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
@@ -25,11 +25,15 @@ public interface AssignmentMapper {
     );
 
     default Instant map(com.google.protobuf.Timestamp ts) {
-        return Instant.ofEpochSecond(ts.getSeconds(), ts.getNanos());
+        return ts == null ? null
+                : Instant.ofEpochSecond(ts.getSeconds(), ts.getNanos());
     }
 
     default com.google.protobuf.Timestamp map(Instant i) {
-        return com.google.protobuf.Timestamp.newBuilder()
-                .setSeconds(i.getEpochSecond()).setNanos(i.getNano()).build();
+        return i == null ? null
+                : com.google.protobuf.Timestamp.newBuilder()
+                .setSeconds(i.getEpochSecond())
+                .setNanos(i.getNano())
+                .build();
     }
 }
