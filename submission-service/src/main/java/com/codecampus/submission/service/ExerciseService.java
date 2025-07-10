@@ -22,8 +22,11 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -121,13 +124,24 @@ public class ExerciseService {
         return exercise; // JPA dirty-checking
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<Exercise> getAllExercises() {
+        return exerciseRepository.findAll();
+    }
+
+    @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER')")
+    public List<Exercise> getExercisesOf() {
+        return exerciseRepository.findByUserId(
+                AuthenticationHelper.getMyUserId());
+    }
+
     void assertType(Exercise exercise, ExerciseType type) {
         if (exercise.getExerciseType() != type) {
             throw new AppException(ErrorCode.EXERCISE_TYPE);
         }
     }
 
-    Exercise getExerciseOrThrow(
+    public Exercise getExerciseOrThrow(
             String exerciseId) {
         return exerciseRepository.findById(exerciseId)
                 .orElseThrow(

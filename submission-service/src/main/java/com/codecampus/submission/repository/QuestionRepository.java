@@ -4,9 +4,11 @@ import com.codecampus.submission.entity.Question;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface QuestionRepository
-    extends JpaRepository<Question, String>
-{
+        extends JpaRepository<Question, String> {
+    List<Question> findByQuizDetailId(String quizDetailId);
 }
 

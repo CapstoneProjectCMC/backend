@@ -29,6 +29,7 @@ import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -163,13 +164,43 @@ public class QuizService {
         return option;
     }
 
-    Exercise getExerciseOrThrow(String exerciseId) {
+    public QuizDetail getQuizDetail(String exerciseId) {
+        return quizDetailRepository
+                .findById(exerciseId)
+                .orElseThrow(
+                        () -> new AppException(ErrorCode.EXERCISE_NOT_FOUND)
+                );
+    }
+
+    public List<Question> getQuestionsOfQuiz(String exerciseId) {
+        return questionRepository.findByQuizDetailId(exerciseId);
+    }
+
+    public List<Option> getOptionsOfQuestion(String questionId) {
+        return optionRepository.findByQuestionId(questionId);
+    }
+
+    public Question getQuestion(String id) {
+        return questionRepository
+                .findById(id)
+                .orElseThrow(
+                        () -> new AppException(ErrorCode.QUESTION_NOT_FOUND));
+    }
+
+    public Option getOption(String id) {
+        return optionRepository
+                .findById(id)
+                .orElseThrow(
+                        () -> new AppException(ErrorCode.OPTION_NOT_FOUND));
+    }
+
+    public Exercise getExerciseOrThrow(String exerciseId) {
         return exerciseRepository.findById(exerciseId)
                 .orElseThrow(
                         () -> new AppException(ErrorCode.EXERCISE_NOT_FOUND));
     }
 
-    Question getQuestionOrThrow(String questionId) {
+    public Question getQuestionOrThrow(String questionId) {
         return questionRepository
                 .findById(questionId)
                 .orElseThrow(

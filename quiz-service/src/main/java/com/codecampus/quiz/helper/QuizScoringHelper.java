@@ -49,12 +49,19 @@ public class QuizScoringHelper {
                         question.getText()
                                 .equalsIgnoreCase(ans.getAnswerText());
                 case MULTI_CHOICE -> {
-                    Set<String> correctIds = question.getOptions().stream()
-                            .filter(Option::isCorrect).map(Option::getId)
+                    String raw = ans.getSelectedOptionId();
+                    if (raw == null || raw.isBlank()) {
+                        yield false;
+                    }
+                    Set<String> chosen = Arrays.stream(raw.split(","))
+                            .map(String::trim)
+                            .filter(s -> !s.isEmpty())
                             .collect(toSet());
-                    Set<String> chosen =
-                            Arrays.stream(ans.getSelectedOptionId().split(","))
-                                    .collect(toSet());
+
+                    Set<String> correctIds = question.getOptions().stream()
+                            .filter(Option::isCorrect)
+                            .map(Option::getId)
+                            .collect(toSet());
                     yield correctIds.equals(chosen);
                 }
             };
