@@ -38,7 +38,6 @@ public interface QuestionMapper {
             @MappingTarget Question question
     );
 
-    /* ===== DTO → Entity (đã có) ===== */
     @Mapping(target = "quizDetail", ignore = true)
     Question toQuestion(
             com.codecampus.submission.dto.request.quiz.QuestionDto dto);
@@ -50,7 +49,6 @@ public interface QuestionMapper {
         }
     }
 
-    /* ===== Entity → gRPC (mới thêm) ===== */
     default QuestionDto toGrpc(Question q) {
         QuestionDto.Builder b = QuestionDto.newBuilder()
                 .setId(q.getId())

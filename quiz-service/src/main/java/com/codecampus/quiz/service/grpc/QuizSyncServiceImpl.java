@@ -29,57 +29,57 @@ public class QuizSyncServiceImpl
     @Transactional
     public void createQuizExercise(
             CreateQuizExerciseRequest createQuizRequest,
-            StreamObserver<Empty> streamObserver) {
+            StreamObserver<Empty> responseObserver) {
 
         quizService.createQuizExercise(createQuizRequest);
 
-        streamObserver.onNext(Empty.getDefaultInstance());
-        streamObserver.onCompleted();
+        responseObserver.onNext(Empty.getDefaultInstance());
+        responseObserver.onCompleted();
     }
 
     @Override
     @Transactional
     public void addQuizDetail(
             AddQuizDetailRequest addQuizRequest,
-            StreamObserver<Empty> streamObserver) {
+            StreamObserver<Empty> responseObserver) {
 
         quizService.addQuizDetail(addQuizRequest);
 
-        streamObserver.onNext(Empty.getDefaultInstance());
-        streamObserver.onCompleted();
+        responseObserver.onNext(Empty.getDefaultInstance());
+        responseObserver.onCompleted();
     }
 
     @Override
     @Transactional
     public void addQuestion(
             AddQuestionRequest addQuestionRequest,
-            StreamObserver<Empty> streamObserver) {
+            StreamObserver<Empty> responseObserver) {
 
         quizService.addQuestion(addQuestionRequest);
 
-        streamObserver.onNext(Empty.getDefaultInstance());
-        streamObserver.onCompleted();
+        responseObserver.onNext(Empty.getDefaultInstance());
+        responseObserver.onCompleted();
     }
 
     @Override
     @Transactional
     public void addOption(
-            AddOptionRequest req,
-            StreamObserver<Empty> obs) {
-        
-        quizService.addOption(req);
+            AddOptionRequest addOptionRequest,
+            StreamObserver<Empty> responseObserver) {
 
-        obs.onNext(Empty.getDefaultInstance());
-        obs.onCompleted();
+        quizService.addOption(addOptionRequest);
+
+        responseObserver.onNext(Empty.getDefaultInstance());
+        responseObserver.onCompleted();
     }
 
     @Override
     @Transactional
     public void upsertAssignment(
-            UpsertAssignmentRequest request,
+            UpsertAssignmentRequest upsertAssignmentRequest,
             StreamObserver<Empty> responseObserver) {
 
-        quizService.upsertAssignment(request);
+        quizService.upsertAssignment(upsertAssignmentRequest);
 
         responseObserver.onNext(Empty.getDefaultInstance());
         responseObserver.onCompleted();

@@ -1,5 +1,6 @@
 package com.codecampus.quiz.entity;
 
+import com.codecampus.quiz.entity.audit.AuditMetadata;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -10,6 +11,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import java.time.Instant;
 
@@ -21,7 +24,11 @@ import java.time.Instant;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "exercise_assignment")
-public class Assignment {
+@SQLDelete(sql = "UPDATE exercise_assignment " +
+        "SET deleted_by = ? , deleted_at = now() " +
+        "WHERE id = ?")
+@Where(clause = "deleted_at IS NULL")
+public class Assignment extends AuditMetadata {
     @Id
     String id;
 

@@ -1,9 +1,12 @@
 package com.codecampus.submission.controller;
 
+import com.codecampus.submission.constant.sort.SortField;
 import com.codecampus.submission.dto.common.ApiResponse;
+import com.codecampus.submission.dto.common.PageResponse;
 import com.codecampus.submission.dto.request.CreateExerciseRequest;
 import com.codecampus.submission.dto.request.UpdateExerciseRequest;
-import com.codecampus.submission.entity.Exercise;
+import com.codecampus.submission.dto.response.quiz.ExerciseDetailQuizDto;
+import com.codecampus.submission.dto.response.quiz.ExerciseQuizDto;
 import com.codecampus.submission.service.ExerciseService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -16,9 +19,8 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @Slf4j
 @Builder
@@ -30,45 +32,87 @@ public class ExerciseController {
     ExerciseService exerciseService;
 
     @PostMapping("/exercise")
-    ApiResponse<Exercise> createExercise(
+    ApiResponse<Void> createExercise(
             @RequestBody @Valid CreateExerciseRequest request) {
-        return ApiResponse.<Exercise>builder()
-                .result(exerciseService.createExercise(request))
+
+        exerciseService.createExercise(request);
+
+        return ApiResponse.<Void>builder()
                 .message("Tạo bài tập thành công!")
                 .build();
     }
 
 
     @PatchMapping("/exercise/{id}")
-    public ApiResponse<Exercise> updateExercise(
+    public ApiResponse<Void> updateExercise(
             @PathVariable String id,
             @RequestBody UpdateExerciseRequest request) {
-        return ApiResponse.<Exercise>builder()
-                .result(exerciseService.updateExercise(id, request))
+
+        exerciseService.updateExercise(id, request);
+
+        return ApiResponse.<Void>builder()
                 .message("Sửa exercise thành công!")
                 .build();
     }
 
     @GetMapping("/exercises")
-    ApiResponse<List<Exercise>> getAllExercises() {
-        return ApiResponse.<List<Exercise>>builder()
-                .result(exerciseService.getAllExercises())
+    ApiResponse<PageResponse<ExerciseQuizDto>> getAllExercises(
+            @RequestParam(defaultValue = "1") int exPage,
+            @RequestParam(defaultValue = "10") int exSize,
+            @RequestParam(defaultValue = "CREATED_AT") SortField exSortBy,
+            @RequestParam(defaultValue = "false") boolean exAsc,
+
+            @RequestParam(defaultValue = "1") int qPage,
+            @RequestParam(defaultValue = "5") int qSize,
+            @RequestParam(defaultValue = "ORDER_IN_QUIZ") SortField qSortBy,
+            @RequestParam(defaultValue = "false") boolean qAsc
+    ) {
+        return ApiResponse.<PageResponse<ExerciseQuizDto>>builder()
+                .result(exerciseService.getAllExercises(
+                        exPage, exSize,
+                        exSortBy, exAsc,
+                        qPage, qSize,
+                        qSortBy, qAsc)
+                )
                 .message("Lấy toàn bộ exercise thành công!")
                 .build();
     }
 
     @GetMapping("/exercises/self")
-    ApiResponse<List<Exercise>> getExercisesOf() {
-        return ApiResponse.<List<Exercise>>builder()
-                .result(exerciseService.getExercisesOf())
+    ApiResponse<PageResponse<ExerciseQuizDto>> getExercisesOf(
+            @RequestParam(defaultValue = "1") int exPage,
+            @RequestParam(defaultValue = "10") int exSize,
+            @RequestParam(defaultValue = "CREATED_AT") SortField exSortBy,
+            @RequestParam(defaultValue = "false") boolean exAsc,
+
+            @RequestParam(defaultValue = "1") int qPage,
+            @RequestParam(defaultValue = "5") int qSize,
+            @RequestParam(defaultValue = "ORDER_IN_QUIZ") SortField qSortBy,
+            @RequestParam(defaultValue = "false") boolean qAsc
+    ) {
+        return ApiResponse.<PageResponse<ExerciseQuizDto>>builder()
+                .result(exerciseService.getExercisesOf(
+                        exPage, exSize,
+                        exSortBy, exAsc,
+                        qPage, qSize,
+                        qSortBy, qAsc)
+                )
                 .message("Exercise của giáo viên!")
                 .build();
     }
 
     @GetMapping("/exercise/{id}")
-    ApiResponse<Exercise> getExercise(@PathVariable String id) {
-        return ApiResponse.<Exercise>builder()
-                .result(exerciseService.getExerciseOrThrow(id))
+    ApiResponse<ExerciseDetailQuizDto> getExercise(
+            @PathVariable String id,
+            @RequestParam(defaultValue = "1") int qPage,
+            @RequestParam(defaultValue = "5") int qSize,
+            @RequestParam(defaultValue = "ORDER_IN_QUIZ") SortField qSortBy,
+            @RequestParam(defaultValue = "false") boolean qAsc) {
+        return ApiResponse.<ExerciseDetailQuizDto>builder()
+                .result(exerciseService.getExerciseDetail(
+                        id,
+                        qPage, qSize,
+                        qSortBy, qAsc))
                 .message("Chi tiết exercise!")
                 .build();
     }

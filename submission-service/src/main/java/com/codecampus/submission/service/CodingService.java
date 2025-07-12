@@ -3,15 +3,19 @@ package com.codecampus.submission.service;
 import com.codecampus.submission.constant.submission.ExerciseType;
 import com.codecampus.submission.dto.request.coding.AddCodingDetailRequest;
 import com.codecampus.submission.dto.request.coding.TestCaseDto;
+import com.codecampus.submission.dto.request.coding.UpdateCodingDetailRequest;
+import com.codecampus.submission.dto.request.coding.UpdateTestCaseRequest;
 import com.codecampus.submission.entity.CodingDetail;
 import com.codecampus.submission.entity.Exercise;
 import com.codecampus.submission.entity.TestCase;
 import com.codecampus.submission.exception.AppException;
 import com.codecampus.submission.exception.ErrorCode;
+import com.codecampus.submission.mapper.CodingMapper;
 import com.codecampus.submission.mapper.TestCaseMapper;
 import com.codecampus.submission.repository.CodingDetailRepository;
 import com.codecampus.submission.repository.ExerciseRepository;
 import com.codecampus.submission.repository.TestCaseRepository;
+import com.codecampus.submission.service.grpc.GrpcCodingClient;
 import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -31,11 +35,18 @@ public class CodingService {
     CodingDetailRepository codingDetailRepository;
     TestCaseRepository testCaseRepository;
     ExerciseRepository exerciseRepository;
+    GrpcCodingClient grpcCodingClient;
 
     TestCaseMapper testCaseMapper;
+    CodingMapper codingMapper;
+
+    // HACK HARDCODE ĐỂ FIX BUG BÊN DƯỚI TẠM THỜI
+    // @PersistenceContext
+    // EntityManager em;
+
 
     @Transactional
-    public CodingDetail addCodingDetail(
+    public void addCodingDetail(
             String exerciseId,
             AddCodingDetailRequest addCodingRequest) {
 
@@ -49,29 +60,64 @@ public class CodingService {
             throw new AppException(ErrorCode.EXERCISE_TYPE);
         }
 
-        CodingDetail codingDetail = CodingDetail.builder()
-                .exercise(exercise)
-                .topic(addCodingRequest.topic())
-                .allowedLanguages(addCodingRequest.allowedLanguages())
-                .input(addCodingRequest.input())
-                .output(addCodingRequest.output())
-                .constraintText(addCodingRequest.constraintText())
-                .timeLimit(addCodingRequest.timeLimit())
-                .memoryLimit(addCodingRequest.memoryLimit())
-                .maxSubmissions(addCodingRequest.maxSubmissions())
-                .codeTemplate(addCodingRequest.codeTemplate())
-                .build();
+        CodingDetail codingDetail = new CodingDetail();
+        /*
+         * CodingDetail có @Id trùng với id của Exercise (@MapsId).
+         * Trong phương thức CodingService.addCodingDetail() ta tự đặt luôn giá trị id, nên khi
+         * JpaRepository.save() được gọi, Hibernate coi entity
+         * là “đã tồn tại” (vì id ≠ null) và phát lệnh UPDATE thay vì INSERT.
+         * Vì hàng chưa hề có trong bảng coding_detail, số bản ghi ảnh hưởng = 0 ⇒
+         * ObjectOptimisticLockingFailureException.
+         */
+        // codingDetail.setId(exerciseId);
+        codingDetail.setExercise(exercise);
+
+        codingDetail.setTopic(addCodingRequest.topic());
+        codingDetail.setAllowedLanguages(addCodingRequest.allowedLanguages());
+        codingDetail.setInput(addCodingRequest.input());
+        codingDetail.setOutput(addCodingRequest.output());
+        codingDetail.setConstraintText(addCodingRequest.constraintText());
+        codingDetail.setTimeLimit(addCodingRequest.timeLimit());
+        codingDetail.setMemoryLimit(addCodingRequest.memoryLimit());
+        codingDetail.setMaxSubmissions(addCodingRequest.maxSubmissions());
+        codingDetail.setCodeTemplate(addCodingRequest.codeTemplate());
+        codingDetail.setSolution(addCodingRequest.solution());
 
         addCodingRequest.testCases().forEach(tcDto -> {
             TestCase testCase = testCaseMapper.toTestCase(tcDto);
             testCase.setCodingDetail(codingDetail);
             codingDetail.getTestCases().add(testCase);
         });
-        return codingDetailRepository.save(codingDetail);
+
+//        exercise.setCodingDetail(codingDetail);
+        codingDetailRepository.save(codingDetail);
+
+        // HACK HARDCODE ĐỂ FIX CÁI BUG ID TRÊN TẠM THỜI
+        // em.persist(codingDetail);
+
+        grpcCodingClient.pushCodingDetail(codingDetail);
     }
 
     @Transactional
-    public TestCase addTestCase(
+    public void updateCodingDetail(
+            String exerciseId,
+            UpdateCodingDetailRequest updateCodingDetailRequest) {
+
+        Exercise exercise = getExerciseOrThrow(exerciseId);
+        CodingDetail codingDetail =
+                Optional.ofNullable(exercise.getCodingDetail())
+                        .orElseThrow(() -> new AppException(
+                                ErrorCode.CODING_DETAIL_NOT_FOUND));
+
+        codingMapper.patchUpdateCodingDetailRequest(codingDetail,
+                updateCodingDetailRequest);
+        CodingDetail saved = codingDetailRepository.save(codingDetail);
+
+        grpcCodingClient.pushCodingDetail(saved);
+    }
+
+    @Transactional
+    public void addTestCase(
             String exerciseId,
             TestCaseDto testCaseDto) throws BadRequestException {
 
@@ -86,7 +132,24 @@ public class CodingService {
         testCase.setCodingDetail(codingDetail);
         codingDetail.getTestCases().add(testCase);
 
-        return testCaseRepository.save(testCase);
+        TestCase testCaseSaved = testCaseRepository.save(testCase);
+
+        grpcCodingClient.pushTestCase(testCaseSaved);
+    }
+
+    @Transactional
+    public void updateTestCase(
+            String testCaseId,
+            UpdateTestCaseRequest request) {
+
+        TestCase tc = testCaseRepository.findById(testCaseId)
+                .orElseThrow(
+                        () -> new AppException(ErrorCode.TESTCASE_NOT_FOUND));
+
+        testCaseMapper.patch(tc, request);
+        TestCase saved = testCaseRepository.save(tc);
+
+        grpcCodingClient.pushTestCase(saved);
     }
 
     Exercise getExerciseOrThrow(String exerciseId) {

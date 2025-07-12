@@ -1,14 +1,16 @@
 package com.codecampus.submission.controller;
 
+import com.codecampus.submission.constant.sort.SortField;
 import com.codecampus.submission.dto.common.ApiResponse;
+import com.codecampus.submission.dto.common.PageResponse;
 import com.codecampus.submission.dto.request.quiz.AddQuizDetailRequest;
 import com.codecampus.submission.dto.request.quiz.OptionDto;
 import com.codecampus.submission.dto.request.quiz.QuestionDto;
 import com.codecampus.submission.dto.request.quiz.UpdateOptionRequest;
 import com.codecampus.submission.dto.request.quiz.UpdateQuestionRequest;
+import com.codecampus.submission.dto.response.quiz.QuizDetailSliceDto;
 import com.codecampus.submission.entity.Option;
 import com.codecampus.submission.entity.Question;
-import com.codecampus.submission.entity.QuizDetail;
 import com.codecampus.submission.service.ExerciseService;
 import com.codecampus.submission.service.QuizService;
 import jakarta.validation.Valid;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -38,76 +41,99 @@ public class QuizController {
 
 
     @PostMapping("/quiz/exercise/{exerciseId}/quiz-detail")
-    ApiResponse<QuizDetail> addQuizDetail(
+    ApiResponse<Void> addQuizDetail(
             @PathVariable("exerciseId") String exerciseId,
             @RequestBody @Valid AddQuizDetailRequest addQuizRequest) {
-        return ApiResponse.<QuizDetail>builder()
-                .result(quizService
-                        .addQuizDetail(exerciseId, addQuizRequest))
+
+        quizService.addQuizDetail(exerciseId, addQuizRequest);
+
+        return ApiResponse.<Void>builder()
                 .message("Tạo Quiz thành công!")
                 .build();
     }
 
     @PostMapping("/quiz/{exerciseId}/question")
-    ApiResponse<Question> addQuestion(
+    ApiResponse<Void> addQuestion(
             @PathVariable("exerciseId") String exerciseId,
             @RequestBody @Valid QuestionDto questionDto)
             throws BadRequestException {
-        return ApiResponse.<Question>builder()
-                .result(quizService.addQuestion(exerciseId, questionDto))
+
+        quizService.addQuestion(exerciseId, questionDto);
+
+        return ApiResponse.<Void>builder()
                 .message("Thêm câu hỏi cho quiz thành công!")
                 .build();
     }
 
     @PostMapping("/quiz/question/{questionId}/option")
-    ApiResponse<Option> addOption(
+    ApiResponse<Void> addOption(
             @PathVariable String questionId,
             @RequestBody @Valid OptionDto request) {
 
-        return ApiResponse.<Option>builder()
-                .result(quizService.addOption(questionId, request))
+        quizService.addOption(questionId, request);
+
+        return ApiResponse.<Void>builder()
                 .message("Thêm option thành công!")
                 .build();
     }
 
     @PatchMapping("/quiz/{exerciseId}/question/{questionId}")
-    ApiResponse<Question> updateQuestion(
+    ApiResponse<Void> updateQuestion(
             @PathVariable String exerciseId,
             @PathVariable String questionId,
             @RequestBody UpdateQuestionRequest request) {
-        return ApiResponse.<Question>builder()
-                .result(quizService.updateQuestion(exerciseId, questionId,
-                        request))
+
+        quizService.updateQuestion(exerciseId, questionId, request);
+
+        return ApiResponse.<Void>builder()
                 .message("Sửa question thành công!")
                 .build();
     }
 
     @PatchMapping("/quiz/question/option/{optionId}")
-    ApiResponse<Option> updateOption(
+    ApiResponse<Void> updateOption(
             @PathVariable String optionId,
             @RequestBody UpdateOptionRequest request) {
-        return ApiResponse.<Option>builder()
-                .result(quizService.updateOption(optionId, request))
+
+        quizService.updateOption(optionId, request);
+
+        return ApiResponse.<Void>builder()
                 .message("Sửa option thành công!")
                 .build();
     }
 
     /* ---------- QUIZ DETAIL ---------- */
     @GetMapping("/quiz/{exerciseId}/detail")
-    ApiResponse<QuizDetail> quizDetail(
-            @PathVariable String exerciseId) {
-        return ApiResponse.<QuizDetail>builder()
-                .result(quizService.getQuizDetail(exerciseId))
+    ApiResponse<QuizDetailSliceDto> getQuizDetail(
+            @PathVariable String exerciseId,
+            @RequestParam(defaultValue = "1") int qPage,
+            @RequestParam(defaultValue = "5") int qSize,
+            @RequestParam(defaultValue = "ORDER_IN_QUIZ") SortField qSortBy,
+            @RequestParam(defaultValue = "false") boolean qAsc) {
+        return ApiResponse.<QuizDetailSliceDto>builder()
+                .result(quizService.getQuizDetail(
+                        exerciseId,
+                        qPage, qSize,
+                        qSortBy, qAsc)
+                )
                 .message("Chi tiết quiz!")
                 .build();
     }
 
     /* ---------- QUESTION ---------- */
     @GetMapping("/quiz/{exerciseId}/questions")
-    ApiResponse<List<Question>> questionsOfQuiz(
-            @PathVariable String exerciseId) {
-        return ApiResponse.<List<Question>>builder()
-                .result(quizService.getQuestionsOfQuiz(exerciseId))
+    ApiResponse<PageResponse<Question>> getQuestionsOfQuiz(
+            @PathVariable String exerciseId,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "ORDER_IN_QUIZ") SortField sortBy,
+            @RequestParam(defaultValue = "false") boolean asc) {
+        return ApiResponse.<PageResponse<Question>>builder()
+                .result(quizService.getQuestionsOfQuiz(
+                        exerciseId,
+                        page, size,
+                        sortBy, asc
+                ))
                 .message("Danh sách câu hỏi!")
                 .build();
     }
@@ -122,7 +148,7 @@ public class QuizController {
 
     /* ---------- OPTION ---------- */
     @GetMapping("/question/{questionId}/option")
-    ApiResponse<List<Option>> optionsOfQuestion(
+    ApiResponse<List<Option>> getOptionsOfQuestion(
             @PathVariable String questionId) {
         return ApiResponse.<List<Option>>builder()
                 .result(quizService.getOptionsOfQuestion(questionId))

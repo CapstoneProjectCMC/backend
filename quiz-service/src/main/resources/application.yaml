@@ -5,15 +5,6 @@ server:
   servlet:
     context-path: /quiz
 
-grpc:
-  client:
-    submissionGrpc:
-      address: static://submission-service:9090
-      negotiationType: plaintext
-  server:
-    port: 9090
-    enableReflection: true
-
 spring:
   application:
     name: quiz-service
@@ -47,7 +38,11 @@ spring:
 #      key-serializer: org.apache.kafka.common.serialization.StringSerializer
 #      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
+grpc:
+  server:
+    port: 9591
+
 submission:
   grpc:
     host: localhost
-    port: 9091
+    port: 9590

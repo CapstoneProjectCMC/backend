@@ -1,18 +1,23 @@
 package com.codecampus.submission.service;
 
+import com.codecampus.submission.constant.sort.SortField;
 import com.codecampus.submission.constant.submission.ExerciseType;
+import com.codecampus.submission.dto.common.PageResponse;
 import com.codecampus.submission.dto.request.quiz.AddQuizDetailRequest;
 import com.codecampus.submission.dto.request.quiz.OptionDto;
 import com.codecampus.submission.dto.request.quiz.QuestionDto;
 import com.codecampus.submission.dto.request.quiz.UpdateOptionRequest;
 import com.codecampus.submission.dto.request.quiz.UpdateQuestionRequest;
+import com.codecampus.submission.dto.response.quiz.QuizDetailSliceDto;
 import com.codecampus.submission.entity.Exercise;
 import com.codecampus.submission.entity.Option;
 import com.codecampus.submission.entity.Question;
 import com.codecampus.submission.entity.QuizDetail;
 import com.codecampus.submission.exception.AppException;
 import com.codecampus.submission.exception.ErrorCode;
+import com.codecampus.submission.helper.PageResponseHelper;
 import com.codecampus.submission.helper.QuizHelper;
+import com.codecampus.submission.helper.SortHelper;
 import com.codecampus.submission.mapper.OptionMapper;
 import com.codecampus.submission.mapper.QuestionMapper;
 import com.codecampus.submission.repository.ExerciseRepository;
@@ -26,6 +31,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -46,8 +54,10 @@ public class QuizService {
     QuestionMapper questionMapper;
     OptionMapper optionMapper;
 
+    QuizHelper quizHelper;
+
     @Transactional
-    public QuizDetail addQuizDetail(
+    public void addQuizDetail(
             String exerciseId,
             AddQuizDetailRequest addQuizDetailRequest) {
         Exercise exercise = getExerciseOrThrow(exerciseId);
@@ -76,11 +86,10 @@ public class QuizService {
         quizDetailRepository.save(quizDetail);
 
         grpcQuizClient.pushQuizDetail(exerciseId, quizDetail);
-        return quizDetail;
     }
 
     @Transactional
-    public Question addQuestion(
+    public void addQuestion(
             String exerciseId,
             QuestionDto questionDto) throws BadRequestException {
 
@@ -102,11 +111,10 @@ public class QuizService {
         questionRepository.save(question);
 
         grpcQuizClient.pushQuestion(exerciseId, question);
-        return question;
     }
 
     @Transactional
-    public Option addOption(
+    public void addOption(
             String questionId,
             OptionDto optionDto) {
         Question question = getQuestionOrThrow(questionId);
@@ -120,12 +128,10 @@ public class QuizService {
                 question.getQuizDetail().getExercise().getId(),
                 questionId,
                 option);
-
-        return option;
     }
 
     @Transactional
-    public Question updateQuestion(
+    public void updateQuestion(
             String exerciseId,
             String questionId,
             UpdateQuestionRequest request) {
@@ -141,14 +147,13 @@ public class QuizService {
                 );
 
         questionMapper.patch(request, question);
-        QuizHelper.recalcQuiz(exercise.getQuizDetail());
+        quizHelper.recalcQuiz(exercise.getQuizDetail());
 
         grpcQuizClient.pushQuestion(exerciseId, question); // sync
-        return question;
     }
 
     @Transactional
-    public Option updateOption(
+    public void updateOption(
             String optionId,
             UpdateOptionRequest request) {
         Option option = optionRepository
@@ -161,19 +166,36 @@ public class QuizService {
         grpcQuizClient.pushQuestion(
                 option.getQuestion().getQuizDetail().getExercise().getId(),
                 option.getQuestion());
-        return option;
     }
 
-    public QuizDetail getQuizDetail(String exerciseId) {
-        return quizDetailRepository
-                .findById(exerciseId)
-                .orElseThrow(
-                        () -> new AppException(ErrorCode.EXERCISE_NOT_FOUND)
-                );
+    public QuizDetailSliceDto getQuizDetail(
+            String exerciseId,
+            int qPage, int qSize,
+            SortField qSortBy, boolean qAsc) {
+
+        Exercise exercise = getExerciseOrThrow(exerciseId);
+
+        return quizHelper.buildQuizSlice(
+                exercise,
+                qPage, qSize,
+                qSortBy, qAsc
+        );
     }
 
-    public List<Question> getQuestionsOfQuiz(String exerciseId) {
-        return questionRepository.findByQuizDetailId(exerciseId);
+    public PageResponse<Question> getQuestionsOfQuiz(
+            String exerciseId,
+            int page, int size,
+            SortField sortBy, boolean asc) {
+
+        Pageable pageable = PageRequest.of(
+                page - 1,
+                size,
+                SortHelper.build(sortBy, asc));
+
+        Page<Question> pageData = questionRepository
+                .findByQuizDetailId(exerciseId, pageable);
+
+        return PageResponseHelper.toPageResponse(pageData, page);
     }
 
     public List<Option> getOptionsOfQuestion(String questionId) {
@@ -181,8 +203,7 @@ public class QuizService {
     }
 
     public Question getQuestion(String id) {
-        return questionRepository
-                .findById(id)
+        return questionRepository.findById(id)
                 .orElseThrow(
                         () -> new AppException(ErrorCode.QUESTION_NOT_FOUND));
     }

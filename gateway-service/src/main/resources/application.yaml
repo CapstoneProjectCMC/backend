@@ -74,6 +74,16 @@ spring:
             - name: RateLimiter
               args:
                 routeId: coding_service
+        - id: quiz_service
+          #          uri: https://localhost:8085
+          uri: http://localhost:8085
+          predicates:
+            - Path=${app.api-prefix}/quiz/**
+          filters:
+            - StripPrefix=2
+            - name: RateLimiter
+              args:
+                routeId: quiz_service
 # Cấu hình rate limiter
 rate-limiter:
   default:

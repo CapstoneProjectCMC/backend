@@ -77,7 +77,7 @@ public class QuizService {
                     .findFirst()
                     .orElseGet(() -> {
                         Question newQuestion =
-                                quizMapper.toEntity(questionDto);
+                                quizMapper.toQuestion(questionDto);
                         newQuestion.setQuiz(quiz);
                         quiz.getQuestions().add(newQuestion);
                         return newQuestion;
@@ -95,7 +95,7 @@ public class QuizService {
         QuizExercise quiz = findQuizOrThrow(addQuestionRequest.getExerciseId());
 
         Question question =
-                quizMapper.toEntity(addQuestionRequest.getQuestion());
+                quizMapper.toQuestion(addQuestionRequest.getQuestion());
         question.setQuiz(quiz);
         QuizScoringHelper.recalc(quiz);
         questionRepository.save(question);
@@ -109,7 +109,7 @@ public class QuizService {
         Question question =
                 findQuestionOrThrow(addOptionRequest.getQuestionId());
 
-        Option option = quizMapper.toEntity(addOptionRequest.getOption());
+        Option option = quizMapper.toOption(addOptionRequest.getOption());
         option.setQuestion(question);
         question.getOptions().add(option);
     }

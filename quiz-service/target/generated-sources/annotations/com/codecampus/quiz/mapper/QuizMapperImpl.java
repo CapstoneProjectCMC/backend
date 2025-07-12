@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-07-10T02:23:25+0700",
+    date = "2025-07-12T18:29:45+0700",
     comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.7 (Oracle Corporation)"
 )
 @Component
@@ -58,7 +58,7 @@ public class QuizMapperImpl implements QuizMapper {
     }
 
     @Override
-    public QuizExercise toEntity(QuizExerciseDto dto) {
+    public QuizExercise toQuizExercise(QuizExerciseDto dto) {
         if ( dto == null ) {
             return null;
         }
@@ -75,7 +75,7 @@ public class QuizMapperImpl implements QuizMapper {
     }
 
     @Override
-    public Question toEntity(QuestionDto dto) {
+    public Question toQuestion(QuestionDto dto) {
         if ( dto == null ) {
             return null;
         }
@@ -97,7 +97,7 @@ public class QuizMapperImpl implements QuizMapper {
     }
 
     @Override
-    public Option toEntity(OptionDto dto) {
+    public Option toOption(OptionDto dto) {
         if ( dto == null ) {
             return null;
         }

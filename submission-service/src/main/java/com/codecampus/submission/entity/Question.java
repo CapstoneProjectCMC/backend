@@ -16,9 +16,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,6 +28,9 @@ import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @Builder
@@ -38,39 +40,39 @@ import org.hibernate.annotations.Where;
 @Entity
 @Table(name = "question")
 @SQLDelete(sql = "UPDATE question " +
-    "SET deleted_by = ? , deleted_at = now() " +
-    "WHERE id = ?")
+        "SET deleted_by = ? , deleted_at = now() " +
+        "WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
-public class Question extends AuditMetadata
-{
-  @Id
-  @GeneratedValue(strategy = GenerationType.UUID)
-  String id;
+public class Question extends AuditMetadata {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    String id;
 
-  @JsonBackReference
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "quiz_detail_id", nullable = false)
-  QuizDetail quizDetail;
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "quiz_detail_id", nullable = false)
+    QuizDetail quizDetail;
 
-  @Column(nullable = false, columnDefinition = "text")
-  String text;
+    @Column(nullable = false, columnDefinition = "text")
+    String text;
 
-  @Enumerated(EnumType.ORDINAL)
-  @Column(name = "question_type", nullable = false, columnDefinition = "smallint")
-  QuestionType questionType;
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "question_type", nullable = false, columnDefinition = "smallint")
+    QuestionType questionType;
 
-  @Column(nullable = false, columnDefinition = "smallint")
-  int points;
+    @Column(nullable = false, columnDefinition = "smallint")
+    int points;
 
-  @Column(name = "display_order")
-  int orderInQuiz;
+    @Column(name = "display_order")
+    int orderInQuiz;
 
-  // Optional
-  @JsonManagedReference
-  @OneToMany(mappedBy = "question",
-      fetch = FetchType.LAZY,
-      cascade = CascadeType.ALL,
-      orphanRemoval = true
-  )
-  List<Option> options = new ArrayList<>();
+    // Optional
+    @JsonManagedReference
+    @OneToMany(mappedBy = "question",
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    @OrderBy("order ASC")
+    List<Option> options = new ArrayList<>();
 }

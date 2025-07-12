@@ -22,7 +22,7 @@ import java.util.Optional;
 @Mapper(componentModel = "spring",
         unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface QuizMapper {
-    /* ===== gRPC  →  Entity (đồng bộ) =============== */
+
     private static QuestionType mapType(
             com.codecampus.quiz.constant.submission.QuestionType questionType) {
         return switch (questionType) {
@@ -46,23 +46,17 @@ public interface QuizMapper {
     );
 
     @Mapping(target = "questions", ignore = true)
-    QuizExercise toEntity(QuizExerciseDto dto);
+    QuizExercise toQuizExercise(QuizExerciseDto dto);
 
     @Mapping(target = "quiz", ignore = true)
     @Mapping(target = "questionType",
             expression = "java(asEntityEnum(dto.getQuestionType()))")
-    Question toEntity(QuestionDto dto);
+    Question toQuestion(QuestionDto dto);
 
-    /* ===== Entity → gRPC (học sinh) ================ */
 
     @Mapping(target = "question", ignore = true)
-    Option toEntity(OptionDto dto);
+    Option toOption(OptionDto dto);
 
-    /* ===== helpers ===== */
-
-    /**
-     * Trả về LoadQuizResponse và **không** đưa cờ correct ra ngoài.
-     */
     default LoadQuizResponse toLoadQuizResponse(QuizExercise quiz) {
 
         // Header exercise
@@ -103,7 +97,7 @@ public interface QuizMapper {
     }
 
     default OptionDto toDtoHideCorrect(Option o) {
-        // **Không** set field 'correct'
+        // Không set field 'correct'
         return OptionDto.newBuilder()
                 .setId(o.getId())
                 .setOptionText(o.getOptionText())

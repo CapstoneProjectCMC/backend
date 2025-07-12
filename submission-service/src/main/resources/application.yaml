@@ -45,7 +45,16 @@ spring:
 #      key-serializer: org.apache.kafka.common.serialization.StringSerializer
 #      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
+grpc:
+  server:
+    port: 9590
+
 quiz:
   grpc:
     host: localhost
-    port: 9090
+    port: 9591
+
+coding:
+  grpc:
+    host: localhost
+    port: 9592

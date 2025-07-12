@@ -48,7 +48,6 @@ public class GrpcQuizClient {
             log.error("[gRPC] pushExercise lỗi: {}", ex.getStatus(), ex);
             throw ex;
         }
-
     }
 
     @Transactional

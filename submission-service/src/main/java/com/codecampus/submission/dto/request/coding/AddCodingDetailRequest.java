@@ -13,5 +13,6 @@ public record AddCodingDetailRequest(
         int memoryLimit,
         int maxSubmissions,
         String codeTemplate,
-        List<TestCaseDto> testCases) {
+        List<TestCaseDto> testCases,
+        String solution) {
 }
