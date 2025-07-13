@@ -64,7 +64,7 @@ public class Submission extends AuditMetadata {
     @Column(nullable = false, columnDefinition = "smallint")
     SubmissionStatus status;
 
-    // ----- code-only fields -----
+    // ----- Code-only fields -----
     @Column(length = 20)
     String language;
 

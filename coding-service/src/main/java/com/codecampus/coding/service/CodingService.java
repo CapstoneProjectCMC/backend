@@ -2,14 +2,13 @@ package com.codecampus.coding.service;
 
 import com.codecampus.coding.entity.CodingExercise;
 import com.codecampus.coding.entity.TestCase;
-import com.codecampus.coding.exception.AppException;
-import com.codecampus.coding.exception.ErrorCode;
 import com.codecampus.coding.grpc.AddCodingDetailRequest;
 import com.codecampus.coding.grpc.AddTestCaseRequest;
 import com.codecampus.coding.grpc.CodingDetailDto;
 import com.codecampus.coding.grpc.CodingExerciseDto;
 import com.codecampus.coding.grpc.CreateCodingExerciseRequest;
 import com.codecampus.coding.grpc.TestCaseDto;
+import com.codecampus.coding.helper.CodingHelper;
 import com.codecampus.coding.mapper.CodingMapper;
 import com.codecampus.coding.repository.CodingExerciseRepository;
 import com.codecampus.coding.repository.TestCaseRepository;
@@ -31,6 +30,8 @@ public class CodingService {
 
     CodingMapper codingMapper;
 
+    CodingHelper codingHelper;
+
     @Transactional
     public void createCodingExercise(
             CreateCodingExerciseRequest createCodingRequest) {
@@ -40,7 +41,8 @@ public class CodingService {
                 .findById(exerciseDto.getId())
                 .orElseGet(CodingExercise::new);
 
-        codingMapper.patchCodingExerciseDto(codingExercise, exerciseDto);
+        codingMapper.patchCodingExerciseDtoToCodingExercise(codingExercise,
+                exerciseDto);
         codingExerciseRepository.save(codingExercise);
     }
 
@@ -51,37 +53,32 @@ public class CodingService {
         CodingDetailDto codingDetailDto = addCodingRequest.getDetail();
 
         CodingExercise codingExercise =
-                findCodingOrThrow(codingDetailDto.getExerciseId());
+                codingHelper.findCodingOrThrow(codingDetailDto.getExerciseId());
 
-        codingMapper.patchCodingDetailDto(codingExercise, codingDetailDto);
+        codingMapper.patchCodingDetailDtoToCodingExercise(codingExercise,
+                codingDetailDto);
 
         codingExerciseRepository.save(codingExercise);
     }
 
     @Transactional
-    public void addTestCase(AddTestCaseRequest req) {
-        TestCaseDto dto = req.getTestCase();
-        CodingExercise coding = findCodingOrThrow(dto.getExerciseId());
+    public void addTestCase(AddTestCaseRequest addTestCaseRequest) {
+        TestCaseDto testCaseDto = addTestCaseRequest.getTestCase();
+        CodingExercise coding =
+                codingHelper.findCodingOrThrow(testCaseDto.getExerciseId());
 
-        TestCase tc = coding.getTestCases().stream()
-                .filter(t -> t.getId().equals(dto.getId()))
+        TestCase testCase = coding.getTestCases().stream()
+                .filter(t -> t.getId().equals(testCaseDto.getId()))
                 .findFirst()
                 .orElseGet(() -> {
-                    TestCase nt = codingMapper.toTestCase(dto);
-                    nt.setExercise(coding);
-                    coding.getTestCases().add(nt);
-                    return nt;
+                    TestCase newTestCase =
+                            codingMapper.toTestCaseFromTestCaseDto(testCaseDto);
+                    newTestCase.setExercise(coding);
+                    coding.getTestCases().add(newTestCase);
+                    return newTestCase;
                 });
 
-        codingMapper.patchTestCaseDto(tc, dto);
-        testCaseRepository.save(tc);
-    }
-
-    public CodingExercise findCodingOrThrow(String exerciseId) {
-        return codingExerciseRepository
-                .findById(exerciseId)
-                .orElseThrow(
-                        () -> new AppException(ErrorCode.EXERCISE_NOT_FOUND)
-                );
+        codingMapper.patchTestCaseDtoToTestCase(testCase, testCaseDto);
+        testCaseRepository.save(testCase);
     }
 }

@@ -2,8 +2,8 @@ package com.codecampus.submission.mapper;
 
 import com.codecampus.submission.dto.request.CreateExerciseRequest;
 import com.codecampus.submission.dto.request.UpdateExerciseRequest;
-import com.codecampus.submission.dto.response.quiz.ExerciseDetailQuizDto;
-import com.codecampus.submission.dto.response.quiz.ExerciseQuizDto;
+import com.codecampus.submission.dto.response.quiz.ExerciseDetailQuizResponse;
+import com.codecampus.submission.dto.response.quiz.ExerciseQuizResponse;
 import com.codecampus.submission.dto.response.quiz.QuestionBriefDto;
 import com.codecampus.submission.dto.response.quiz.QuizDetailSliceDto;
 import com.codecampus.submission.entity.Exercise;
@@ -27,71 +27,68 @@ import java.util.List;
         unmappedTargetPolicy = ReportingPolicy.IGNORE
 )
 public interface ExerciseMapper {
+
     @Mapping(target = "userId", expression = "java(userId)")
     @Mapping(target = "visibility", expression =
             "java(request.orgId()==null || request.orgId().isBlank())")
-    Exercise toExercise(
+    Exercise toExerciseFromCreateExerciseRequest(
             CreateExerciseRequest request,
             @Context String userId);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void patch(
+    void patchUpdateExerciseRequestToExercise(
             UpdateExerciseRequest request,
             @MappingTarget Exercise exercise
     );
 
+    ExerciseQuizResponse toExerciseQuizResponseFromExercise(Exercise e);
+
+    @Mapping(target = "quizDetail", ignore = true)
+    ExerciseDetailQuizResponse toExerciseDetailQuizResponseFromExercise(
+            Exercise e);
+
     @Mapping(target = "type",
             expression = "java(question.getQuestionType().name())")
-    QuestionBriefDto toQuestionBriefDto(Question question);
+    QuestionBriefDto toQuestionBriefDtoFromQuestion(Question question);
 
-    default QuizDetailSliceDto toQuizDetailSliceDto(
-            QuizDetail q,
+    default QuizDetailSliceDto toQuizDetailSliceDtoFromQuizDetail(
+            QuizDetail quizDetail,
             Page<Question> questionPage,
-            @Context QuestionRepository repo) {
+            @Context QuestionRepository questionRepository) {
 
-        List<QuestionBriefDto> qs = questionPage.getContent()
-                .stream().map(this::toQuestionBriefDto).toList();
+        List<QuestionBriefDto> questionBriefDtos = questionPage
+                .getContent()
+                .stream()
+                .map(this::toQuestionBriefDtoFromQuestion)
+                .toList();
 
         return new QuizDetailSliceDto(
-                q.getId(),
-                q.getNumQuestions(),
-                q.getTotalPoints(),
+                quizDetail.getId(),
+                quizDetail.getNumQuestions(),
+                quizDetail.getTotalPoints(),
 
                 questionPage.getNumber() + 1,
                 questionPage.getTotalPages(),
                 questionPage.getSize(),
                 questionPage.getTotalElements(),
 
-                qs,
+                questionBriefDtos,
 
-                q.getCreatedBy(),
-                q.getCreatedAt(),
-                q.getUpdatedBy(),
-                q.getUpdatedAt(),
-                q.getDeletedBy(),
-                q.getDeletedAt()
+                quizDetail.getCreatedBy(),
+                quizDetail.getCreatedAt(),
+                quizDetail.getUpdatedBy(),
+                quizDetail.getUpdatedAt(),
+                quizDetail.getDeletedBy(),
+                quizDetail.getDeletedAt()
         );
-    }
-
-    @Mapping(target = "quizDetail", ignore = true)
-    ExerciseQuizDto toExerciseQuizDto(Exercise e);
-
-    @Mapping(target = "quizDetail", ignore = true)
-    ExerciseDetailQuizDto toExerciseDetailQuizDto(Exercise e);
-
-    @AfterMapping
-    default void attachQuizDetailExerciseQuizDto(
-            @MappingTarget ExerciseQuizDto.ExerciseQuizDtoBuilder b,
-            Exercise e,
-            @Context QuizDetailSliceDto quizDetail) {
-        b.quizDetail(quizDetail);
     }
 
     @AfterMapping
     default void attachQuizDetailExerciseDetailQuizDto(
-            @MappingTarget ExerciseDetailQuizDto.ExerciseDetailQuizDtoBuilder b,
-            Exercise e,
+            @MappingTarget
+            ExerciseDetailQuizResponse.ExerciseDetailQuizResponseBuilder builder,
+            Exercise exercise,
             @Context QuizDetailSliceDto quizDetail) {
-        b.quizDetail(quizDetail);
+        builder.quizDetail(quizDetail);
     }
 }

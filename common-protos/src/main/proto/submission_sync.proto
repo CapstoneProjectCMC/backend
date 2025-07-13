@@ -6,7 +6,6 @@ option java_outer_classname = "SubmissionSyncProto";
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/empty.proto";
 
-// ---------- DTO ----------
 message QuizSubmissionAnswerDto {
   string questionId = 1;
   string selectedOptionId = 2; // rỗng nếu FILL_BLANK
@@ -24,7 +23,6 @@ message QuizSubmissionDto {
   repeated QuizSubmissionAnswerDto answers = 7;
 }
 
-// ---------- Quiz-service → Submission-service ----------
 service SubmissionSyncService {
   rpc CreateQuizSubmission(CreateQuizSubmissionRequest)
       returns (google.protobuf.Empty);

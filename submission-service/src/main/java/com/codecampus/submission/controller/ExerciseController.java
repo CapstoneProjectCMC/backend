@@ -5,8 +5,8 @@ import com.codecampus.submission.dto.common.ApiResponse;
 import com.codecampus.submission.dto.common.PageResponse;
 import com.codecampus.submission.dto.request.CreateExerciseRequest;
 import com.codecampus.submission.dto.request.UpdateExerciseRequest;
-import com.codecampus.submission.dto.response.quiz.ExerciseDetailQuizDto;
-import com.codecampus.submission.dto.response.quiz.ExerciseQuizDto;
+import com.codecampus.submission.dto.response.quiz.ExerciseDetailQuizResponse;
+import com.codecampus.submission.dto.response.quiz.ExerciseQuizResponse;
 import com.codecampus.submission.service.ExerciseService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -44,7 +44,7 @@ public class ExerciseController {
 
 
     @PatchMapping("/exercise/{id}")
-    public ApiResponse<Void> updateExercise(
+    ApiResponse<Void> updateExercise(
             @PathVariable String id,
             @RequestBody UpdateExerciseRequest request) {
 
@@ -56,59 +56,44 @@ public class ExerciseController {
     }
 
     @GetMapping("/exercises")
-    ApiResponse<PageResponse<ExerciseQuizDto>> getAllExercises(
-            @RequestParam(defaultValue = "1") int exPage,
-            @RequestParam(defaultValue = "10") int exSize,
-            @RequestParam(defaultValue = "CREATED_AT") SortField exSortBy,
-            @RequestParam(defaultValue = "false") boolean exAsc,
-
-            @RequestParam(defaultValue = "1") int qPage,
-            @RequestParam(defaultValue = "5") int qSize,
-            @RequestParam(defaultValue = "ORDER_IN_QUIZ") SortField qSortBy,
-            @RequestParam(defaultValue = "false") boolean qAsc
+    ApiResponse<PageResponse<ExerciseQuizResponse>> getAllExercises(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "CREATED_AT") SortField sortBy,
+            @RequestParam(defaultValue = "false") boolean asc
     ) {
-        return ApiResponse.<PageResponse<ExerciseQuizDto>>builder()
+        return ApiResponse.<PageResponse<ExerciseQuizResponse>>builder()
                 .result(exerciseService.getAllExercises(
-                        exPage, exSize,
-                        exSortBy, exAsc,
-                        qPage, qSize,
-                        qSortBy, qAsc)
+                        page, size,
+                        sortBy, asc)
                 )
                 .message("Lấy toàn bộ exercise thành công!")
                 .build();
     }
 
     @GetMapping("/exercises/self")
-    ApiResponse<PageResponse<ExerciseQuizDto>> getExercisesOf(
-            @RequestParam(defaultValue = "1") int exPage,
-            @RequestParam(defaultValue = "10") int exSize,
-            @RequestParam(defaultValue = "CREATED_AT") SortField exSortBy,
-            @RequestParam(defaultValue = "false") boolean exAsc,
-
-            @RequestParam(defaultValue = "1") int qPage,
-            @RequestParam(defaultValue = "5") int qSize,
-            @RequestParam(defaultValue = "ORDER_IN_QUIZ") SortField qSortBy,
-            @RequestParam(defaultValue = "false") boolean qAsc
-    ) {
-        return ApiResponse.<PageResponse<ExerciseQuizDto>>builder()
+    ApiResponse<PageResponse<ExerciseQuizResponse>> getExercisesOf(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "CREATED_AT") SortField sortBy,
+            @RequestParam(defaultValue = "false") boolean asc) {
+        return ApiResponse.<PageResponse<ExerciseQuizResponse>>builder()
                 .result(exerciseService.getExercisesOf(
-                        exPage, exSize,
-                        exSortBy, exAsc,
-                        qPage, qSize,
-                        qSortBy, qAsc)
+                        page, size,
+                        sortBy, asc)
                 )
                 .message("Exercise của giáo viên!")
                 .build();
     }
 
     @GetMapping("/exercise/{id}")
-    ApiResponse<ExerciseDetailQuizDto> getExercise(
+    ApiResponse<ExerciseDetailQuizResponse> getExercise(
             @PathVariable String id,
             @RequestParam(defaultValue = "1") int qPage,
             @RequestParam(defaultValue = "5") int qSize,
             @RequestParam(defaultValue = "ORDER_IN_QUIZ") SortField qSortBy,
             @RequestParam(defaultValue = "false") boolean qAsc) {
-        return ApiResponse.<ExerciseDetailQuizDto>builder()
+        return ApiResponse.<ExerciseDetailQuizResponse>builder()
                 .result(exerciseService.getExerciseDetail(
                         id,
                         qPage, qSize,

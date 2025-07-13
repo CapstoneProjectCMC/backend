@@ -63,12 +63,7 @@ public class Question extends AuditMetadata {
     @OrderBy("order ASC")
     List<Option> options = new ArrayList<>();
 
-    /* ---------- helper ---------- */
-
-    /**
-     * Lấy Option theo id trong câu hỏi.
-     */
-    public Optional<Option> optionById(String optionId) {
+    public Optional<Option> findOptionById(String optionId) {
         return options.stream()
                 .filter(option -> option.getId().equals(optionId))
                 .findFirst();

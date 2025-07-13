@@ -23,7 +23,7 @@ import java.util.Optional;
         unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface QuizMapper {
 
-    private static QuestionType mapType(
+    private static QuestionType mapQuestionTypeToQuestionTypeGrpc(
             com.codecampus.quiz.constant.submission.QuestionType questionType) {
         return switch (questionType) {
             case SINGLE_CHOICE -> QuestionType.SINGLE_CHOICE;
@@ -34,30 +34,32 @@ public interface QuizMapper {
 
     @Mapping(target = "quiz", ignore = true)
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void patch(
-            QuestionDto request,
+    void patchQuestionDtoToQuestion(
+            QuestionDto questionDto,
             @MappingTarget Question question
     );
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void patchQuizExercise(
-            QuizExerciseDto request,
+    void patchQuizExerciseDtoToQuizExercise(
+            QuizExerciseDto quizExerciseDto,
             @MappingTarget QuizExercise quizExercise
     );
 
     @Mapping(target = "questions", ignore = true)
-    QuizExercise toQuizExercise(QuizExerciseDto dto);
+    QuizExercise toQuizExerciseFromQuizExerciseDto(
+            QuizExerciseDto quizExerciseDto);
 
     @Mapping(target = "quiz", ignore = true)
     @Mapping(target = "questionType",
-            expression = "java(asEntityEnum(dto.getQuestionType()))")
-    Question toQuestion(QuestionDto dto);
+            expression = "java(asEntityEnum(questionDto.getQuestionType()))")
+    Question toQuestionFromQuestionDto(QuestionDto questionDto);
 
 
     @Mapping(target = "question", ignore = true)
-    Option toOption(OptionDto dto);
+    Option toOptionFromOptionDto(OptionDto optionDto);
 
-    default LoadQuizResponse toLoadQuizResponse(QuizExercise quiz) {
+    default LoadQuizResponse toLoadQuizResponseFromQuizExercise(
+            QuizExercise quiz) {
 
         // Header exercise
         QuizExerciseDto exerciseDto = QuizExerciseDto.newBuilder()
@@ -76,41 +78,43 @@ public interface QuizMapper {
         // Questions (ẩn 'correct')
         quiz.getQuestions().stream()
                 .sorted(Comparator.comparingInt(Question::getOrderInQuiz))
-                .forEach(q -> response.addQuestions(toDtoHideCorrect(q)));
+                .forEach(q -> response.addQuestions(
+                        toQuestionDtoFromQuestionHideCorrect(q)));
 
         return response.build();
     }
 
-    default QuestionDto toDtoHideCorrect(Question q) {
-        QuestionDto.Builder b = QuestionDto.newBuilder()
-                .setId(q.getId())
-                .setText(q.getText())
-                .setQuestionType(mapType(q.getQuestionType()))
-                .setPoints(q.getPoints())
-                .setOrderInQuiz(q.getOrderInQuiz());
+    default QuestionDto toQuestionDtoFromQuestionHideCorrect(
+            Question question) {
+        QuestionDto.Builder builder = QuestionDto.newBuilder()
+                .setId(question.getId())
+                .setText(question.getText())
+                .setQuestionType(
+                        mapQuestionTypeToQuestionTypeGrpc(
+                                question.getQuestionType()))
+                .setPoints(question.getPoints())
+                .setOrderInQuiz(question.getOrderInQuiz());
 
-        q.getOptions().stream()
+        question.getOptions().stream()
                 .sorted(Comparator.comparing(Option::getOrder))
-                .forEach(o -> b.addOptions(toDtoHideCorrect(o)));
+                .forEach(
+                        option -> builder.addOptions(
+                                toOptionDtoFromOptionHideCorrect(option)));
 
-        return b.build();
+        return builder.build();
     }
 
-    default OptionDto toDtoHideCorrect(Option o) {
+    default OptionDto toOptionDtoFromOptionHideCorrect(
+            Option option) {
         // Không set field 'correct'
         return OptionDto.newBuilder()
-                .setId(o.getId())
-                .setOptionText(o.getOptionText())
-                .setOrder(o.getOrder())
+                .setId(option.getId())
+                .setOptionText(option.getOptionText())
+                .setOrder(option.getOrder())
                 .build();
     }
 
-    /* ----------------- Enum mapping ------------------ */
-
-    /**
-     * Map GRPC → Entity; UNRECOGNIZED gán mặc định SINGLE_CHOICE
-     */
-    default com.codecampus.quiz.constant.submission.QuestionType asEntityEnum(
+    default com.codecampus.quiz.constant.submission.QuestionType mapEntityEnumQuestionType(
             QuestionType t) {
         return switch (t) {
             case MULTI_CHOICE ->
@@ -122,10 +126,7 @@ public interface QuizMapper {
         };
     }
 
-    /**
-     * Map Entity → GRPC (không có UNRECOGNIZED)
-     */
-    default QuestionType asGrpcEnum(
+    default QuestionType mapGrpcEnumQuestionType(
             com.codecampus.quiz.constant.submission.QuestionType t) {
         return switch (t) {
             case MULTI_CHOICE -> QuestionType.MULTI_CHOICE;
@@ -135,7 +136,7 @@ public interface QuizMapper {
     }
 
     @AfterMapping
-    default void link(@MappingTarget Question question) {
+    default void linkOptionsToQuestion(@MappingTarget Question question) {
         if (question.getOptions() != null) {
             question.getOptions()
                     .forEach(option -> option.setQuestion(question));
@@ -143,7 +144,7 @@ public interface QuizMapper {
     }
 
     @Mapping(target = "questions", ignore = true)
-    default QuizExerciseDto toQuizExerciseDto(QuizExercise e) {
+    default QuizExerciseDto toQuizExerciseDtoFromQuizExercise(QuizExercise e) {
         return QuizExerciseDto.newBuilder()
                 .setId(e.getId())
                 .setTitle(e.getTitle())

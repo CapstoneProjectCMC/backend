@@ -23,60 +23,60 @@ public enum ErrorCode {
             "Lỗi chưa phân loại", INTERNAL_SERVER_ERROR),
 
     // 400 - Bad Request
-    INVALID_OTP(4008001, BAD_REQUEST_STATUS, "OTP không hợp lệ!", BAD_REQUEST),
-    OTP_EXPIRED(4008002, BAD_REQUEST_STATUS, "OTP đã hết hạn!", BAD_REQUEST),
-    EMAIL_SEND_FAILED(4008003, BAD_REQUEST_STATUS, "Gửi email thất bại!",
+    INVALID_OTP(4008401, BAD_REQUEST_STATUS, "OTP không hợp lệ!", BAD_REQUEST),
+    OTP_EXPIRED(4008402, BAD_REQUEST_STATUS, "OTP đã hết hạn!", BAD_REQUEST),
+    EMAIL_SEND_FAILED(4008403, BAD_REQUEST_STATUS, "Gửi email thất bại!",
             BAD_REQUEST),
-    ACCOUNT_NOT_ACTIVATED(4008004, BAD_REQUEST_STATUS,
+    ACCOUNT_NOT_ACTIVATED(4008404, BAD_REQUEST_STATUS,
             "Tài khoản chưa được kích hoạt!", BAD_REQUEST),
 
 
     // 401 - Unauthorized
-    UNAUTHENTICATED(4018001, UNAUTHORIZED_STATUS, "Chưa xác thực!",
+    UNAUTHENTICATED(4018401, UNAUTHORIZED_STATUS, "Chưa xác thực!",
             HttpStatus.UNAUTHORIZED),
-    INVALID_CREDENTIALS(4018002, UNAUTHORIZED_STATUS,
+    INVALID_CREDENTIALS(4018402, UNAUTHORIZED_STATUS,
             "Thông tin đăng nhập không hợp lệ!",
             HttpStatus.UNAUTHORIZED),
-    INVALID_TOKEN(4018003, UNAUTHORIZED_STATUS, "Token không hợp lệ!",
+    INVALID_TOKEN(4018403, UNAUTHORIZED_STATUS, "Token không hợp lệ!",
             HttpStatus.UNAUTHORIZED),
-    TOKEN_REVOKED(4018004, UNAUTHORIZED_STATUS, "Token đã bị thu hồi!",
+    TOKEN_REVOKED(4018404, UNAUTHORIZED_STATUS, "Token đã bị thu hồi!",
             HttpStatus.UNAUTHORIZED),
 
     // 403 - Forbidden
-    UNAUTHORIZED(40301, FORBIDDEN_STATUS, "Bạn không có quyền truy cập!",
+    UNAUTHORIZED(4038401, FORBIDDEN_STATUS, "Bạn không có quyền truy cập!",
             FORBIDDEN),
-    EXERCISE_FORBIDDEN(40301, FORBIDDEN_STATUS,
+    EXERCISE_FORBIDDEN(4038402, FORBIDDEN_STATUS,
             "Bạn không có quyền truy cập bài tập này!",
             FORBIDDEN),
 
     // 404 - Not Found
-    USER_NOT_FOUND(4048001, NOT_FOUND_STATUS, "Không tìm thấy người dùng!",
+    USER_NOT_FOUND(4048401, NOT_FOUND_STATUS, "Không tìm thấy người dùng!",
             NOT_FOUND),
-    ROLE_NOT_FOUND(4048002, NOT_FOUND_STATUS, "Không tìm thấy vai trò!",
+    ROLE_NOT_FOUND(4048402, NOT_FOUND_STATUS, "Không tìm thấy vai trò!",
             NOT_FOUND),
-    OTP_NOT_FOUND(4048003, NOT_FOUND_STATUS, "Không tìm thấy OTP!", NOT_FOUND),
-    EMAIL_NOT_FOUND(4048004, NOT_FOUND_STATUS, "Không tìm thấy email!",
+    OTP_NOT_FOUND(4048403, NOT_FOUND_STATUS, "Không tìm thấy OTP!", NOT_FOUND),
+    EMAIL_NOT_FOUND(4048404, NOT_FOUND_STATUS, "Không tìm thấy email!",
             NOT_FOUND),
-    EXERCISE_NOT_FOUND(4048005, NOT_FOUND_STATUS, "Không tìm thấy bài tập!",
+    EXERCISE_NOT_FOUND(4048405, NOT_FOUND_STATUS, "Không tìm thấy bài tập!",
             NOT_FOUND),
-    QUESTION_NOT_FOUND(4048006, NOT_FOUND_STATUS, "Không tìm thấy câu hỏi!",
+    QUESTION_NOT_FOUND(4048406, NOT_FOUND_STATUS, "Không tìm thấy câu hỏi!",
             NOT_FOUND),
 
 
     // 409 - Conflict
-    USER_ALREADY_EXISTS(4098001, CONFLICT_STATUS, "Người dùng đã tồn tại!",
+    USER_ALREADY_EXISTS(4098401, CONFLICT_STATUS, "Người dùng đã tồn tại!",
             CONFLICT),
-    EMAIL_ALREADY_EXISTS(4098002, CONFLICT_STATUS, "Email đã tồn tại!",
+    EMAIL_ALREADY_EXISTS(4098402, CONFLICT_STATUS, "Email đã tồn tại!",
             CONFLICT),
-    PASSWORD_ALREADY_EXISTS(4098003, CONFLICT_STATUS, "Mật khẩu đã tồn tại!",
+    PASSWORD_ALREADY_EXISTS(4098403, CONFLICT_STATUS, "Mật khẩu đã tồn tại!",
             CONFLICT),
-    EXERCISE_DUPLICATED(4098004, CONFLICT_STATUS, "Bài tập đã tồn tại!",
+    EXERCISE_DUPLICATED(4098404, CONFLICT_STATUS, "Bài tập đã tồn tại!",
             CONFLICT),
 
     // 500 - Internal Server Error
-    FAILED_GENERATE_TOKEN(5008001, INTERNAL_SERVER_STATUS,
+    FAILED_GENERATE_TOKEN(5008401, INTERNAL_SERVER_STATUS,
             "Lỗi tạo JWT token!", INTERNAL_SERVER_ERROR),
-    FAILED_VALIDATE_TOKEN(5008002, INTERNAL_SERVER_STATUS,
+    FAILED_VALIDATE_TOKEN(5008402, INTERNAL_SERVER_STATUS,
             "Lỗi xác thực token!", INTERNAL_SERVER_ERROR),
 
 

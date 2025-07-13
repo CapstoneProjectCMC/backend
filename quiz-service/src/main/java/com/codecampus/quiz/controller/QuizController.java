@@ -50,6 +50,7 @@ class QuizController {
                 .build();
     }
 
+    //FIXME Hardcode để fix được bug convert từ JSON sang protobuf hứng data
     @PostMapping("/{quizId}/submit")
     ApiResponse<SubmitQuizResponse> submitQuiz(
             @PathVariable String quizId,

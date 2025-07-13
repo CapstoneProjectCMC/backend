@@ -9,13 +9,16 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface SubmissionMapper {
-    QuizSubmissionDto toGrpc(QuizSubmission quizSubmission);
+    QuizSubmissionDto toQuizSubmissionDtoFromQuizSubmission(
+            QuizSubmission quizSubmission);
 
     @Mapping(target = "questionId", source = "question.id")
     @Mapping(target = "selectedOptionId", source = "selectedOption.id")
-    QuizSubmissionAnswerDto toGrpc(QuizSubmissionAnswer e);
+    QuizSubmissionAnswerDto toQuizSubmissionAnswerDtoFromQuizSubmissionAnswer(
+            QuizSubmissionAnswer e);
 
-    default com.google.protobuf.Timestamp map(java.time.Instant instant) {
+    default com.google.protobuf.Timestamp mapInstantToProtobufTimestamp(
+            java.time.Instant instant) {
         return com.google.protobuf.Timestamp.newBuilder()
                 .setSeconds(instant.getEpochSecond())
                 .setNanos(instant.getNano())

@@ -2,6 +2,7 @@ package com.codecampus.submission.service;
 
 import com.codecampus.submission.entity.Assignment;
 import com.codecampus.submission.entity.Exercise;
+import com.codecampus.submission.helper.ExerciseHelper;
 import com.codecampus.submission.repository.AssignmentRepository;
 import com.codecampus.submission.service.grpc.GrpcQuizClient;
 import lombok.AccessLevel;
@@ -19,7 +20,8 @@ import java.time.Instant;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AssignmentService {
     AssignmentRepository assignmentRepository;
-    ExerciseService exerciseService;
+
+    ExerciseHelper exerciseHelper;
     GrpcQuizClient grpcQuizClient;
 
     @Transactional
@@ -28,7 +30,7 @@ public class AssignmentService {
             String studentId,
             Instant dueAt) {
         Exercise exercise =
-                exerciseService.getExerciseOrThrow(exerciseId);
+                exerciseHelper.getExerciseOrThrow(exerciseId);
 
         Assignment assignment = assignmentRepository
                 .findByExerciseIdAndStudentId(exerciseId, studentId)

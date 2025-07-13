@@ -36,7 +36,6 @@
         <protobuf.version>4.30.2</protobuf.version>
         <protobuf.util.version>3.25.1</protobuf.util.version>
         <spring-cloud.version>2024.0.1</spring-cloud.version>
-        <spring-grpc.version>0.8.0</spring-grpc.version>
         <lombok.version>1.18.38</lombok.version>
         <mapstruct.version>1.6.3</mapstruct.version>
         <lombok.mapstruct.binding.version>0.2.0</lombok.mapstruct.binding.version>
@@ -44,6 +43,7 @@
         <nimbus-jose.version>10.3</nimbus-jose.version>
         <security-oauth2-jose.version>6.5.0</security-oauth2-jose.version>
         <jacoco.version>0.8.13</jacoco.version>
+        <grpc.server.starter.version>3.1.0.RELEASE</grpc.server.starter.version>
         <projectlombok-lombok.version>1.18.38</projectlombok-lombok.version>
 
         <!-- Build-plugin -->
@@ -112,8 +112,9 @@
 
         <!-- ========= gRPC & Protobuf ========= -->
         <dependency>
-            <groupId>org.springframework.grpc</groupId>
-            <artifactId>spring-grpc-server-web-spring-boot-starter</artifactId>
+            <groupId>net.devh</groupId>
+            <artifactId>grpc-server-spring-boot-starter</artifactId>
+            <version>${grpc.server.starter.version}</version>
         </dependency>
         <dependency>
             <groupId>io.grpc</groupId>
@@ -204,11 +205,6 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.springframework.grpc</groupId>
-            <artifactId>spring-grpc-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
@@ -226,13 +222,6 @@
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
                 <version>${spring-cloud.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.grpc</groupId>
-                <artifactId>spring-grpc-dependencies</artifactId>
-                <version>${spring-grpc.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -289,12 +278,16 @@
                 <version>${jacoco.version}</version>
                 <executions>
                     <execution>
-                        <goals><goal>prepare-agent</goal></goals>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
                     </execution>
                     <execution>
                         <id>report</id>
                         <phase>prepare-package</phase>
-                        <goals><goal>report</goal></goals>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
                     </execution>
                 </executions>
                 <configuration>
@@ -316,7 +309,9 @@
                     <execution>
                         <id>detect</id>
                         <phase>initialize</phase>
-                        <goals><goal>detect</goal></goals>
+                        <goals>
+                            <goal>detect</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>
@@ -327,14 +322,19 @@
                 <artifactId>protobuf-maven-plugin</artifactId>
                 <version>${protobuf.plugin.version}</version>
                 <configuration>
-                    <protocArtifact>com.google.protobuf:protoc:${protobuf.version}:exe:${os.detected.classifier}</protocArtifact>
+                    <protocArtifact>com.google.protobuf:protoc:${protobuf.version}:exe:${os.detected.classifier}
+                    </protocArtifact>
                     <pluginId>grpc-java</pluginId>
-                    <pluginArtifact>io.grpc:protoc-gen-grpc-java:${grpc.version}:exe:${os.detected.classifier}</pluginArtifact>
+                    <pluginArtifact>io.grpc:protoc-gen-grpc-java:${grpc.version}:exe:${os.detected.classifier}
+                    </pluginArtifact>
                 </configuration>
                 <executions>
                     <execution>
                         <id>proto-compile</id>
-                        <goals><goal>compile</goal><goal>compile-custom</goal></goals>
+                        <goals>
+                            <goal>compile</goal>
+                            <goal>compile-custom</goal>
+                        </goals>
                         <configuration>
                             <pluginParameter>jakarta_omit,@generated=omit</pluginParameter>
                         </configuration>

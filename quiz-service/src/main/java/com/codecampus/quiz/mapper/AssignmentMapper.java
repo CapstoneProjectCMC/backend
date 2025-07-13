@@ -13,27 +13,30 @@ import java.time.Instant;
 @Mapper(componentModel = "spring")
 public interface AssignmentMapper {
 
-    Assignment toEntity(AssignmentDto dto);
+    Assignment toAssignmentFromAssignmentDto(AssignmentDto assignmentDto);
 
-    @InheritInverseConfiguration(name = "toEntity")
-    AssignmentDto toGrpc(Assignment ent);
+    @InheritInverseConfiguration(name = "toAssignmentFromAssignmentDto")
+    AssignmentDto toAssignmentDtoFromAssignment(Assignment assignment);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void patch(
+    void patchAssignmentDtoToAssignment(
             AssignmentDto assignmentDto,
             @MappingTarget Assignment assignment
     );
 
-    default Instant map(com.google.protobuf.Timestamp ts) {
-        return ts == null ? null
-                : Instant.ofEpochSecond(ts.getSeconds(), ts.getNanos());
+    default Instant mapProtobufTimestampToInstant(
+            com.google.protobuf.Timestamp timestamp) {
+        return timestamp == null ? null
+                : Instant.ofEpochSecond(timestamp.getSeconds(),
+                timestamp.getNanos());
     }
 
-    default com.google.protobuf.Timestamp map(Instant i) {
-        return i == null ? null
+    default com.google.protobuf.Timestamp mapInstantToProtobufTimestamp(
+            Instant instant) {
+        return instant == null ? null
                 : com.google.protobuf.Timestamp.newBuilder()
-                .setSeconds(i.getEpochSecond())
-                .setNanos(i.getNano())
+                .setSeconds(instant.getEpochSecond())
+                .setNanos(instant.getNano())
                 .build();
     }
 }

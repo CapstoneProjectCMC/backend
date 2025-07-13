@@ -15,7 +15,7 @@ message CodingExerciseDto {
 }
 
 message CodingDetailDto {
-  string exerciseId = 1;          // = id của exercise
+  string exerciseId = 1; // = id của exercise
   repeated string allowedLanguages = 2;
   string input = 3;
   string output = 4;
@@ -30,10 +30,10 @@ message CodingDetailDto {
 
 message TestCaseDto {
   string id = 1;
-  string exerciseId = 2; // khoá phụ để tìm CodingDetail
+  string exerciseId = 2;
   string input = 3;
   string expectedOutput = 4;
-  bool   sample = 5;
+  bool sample = 5;
   string note = 6;
 }
 
@@ -48,7 +48,6 @@ service CodingSyncService {
       returns (google.protobuf.Empty);
   rpc UpsertTestCase (UpsertTestCaseRequest)
       returns (google.protobuf.Empty);
-
 }
 
 message CreateCodingExerciseRequest {

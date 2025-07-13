@@ -10,7 +10,6 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,13 +20,12 @@ import java.time.Instant;
 @RestController
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-@RequestMapping("/assignment")
 public class AssignmentController {
 
     AssignmentService assignmentService;
 
-    @PostMapping
-    ApiResponse<Assignment> create(
+    @PostMapping("/assignment")
+    ApiResponse<Assignment> assignExercise(
             @RequestParam String exerciseId,
             @RequestParam String studentId,
             @RequestParam

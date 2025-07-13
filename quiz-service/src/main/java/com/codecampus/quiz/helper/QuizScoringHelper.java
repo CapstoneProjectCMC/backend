@@ -35,7 +35,7 @@ public class QuizScoringHelper {
 
         for (AnswerDto ans : request.getAnswersList()) {
             Question question = quizExercise
-                    .findQuestion(ans.getQuestionId())
+                    .findQuestionById(ans.getQuestionId())
                     .orElseThrow(
                             () -> new AppException(ErrorCode.QUESTION_NOT_FOUND)
                     );
@@ -76,7 +76,7 @@ public class QuizScoringHelper {
                     .submission(submission)
                     .question(question)
                     .selectedOption(
-                            question.optionById(ans.getSelectedOptionId())
+                            question.findOptionById(ans.getSelectedOptionId())
                                     .orElse(null))
                     .answerText(ans.getAnswerText())
                     .correct(correct)

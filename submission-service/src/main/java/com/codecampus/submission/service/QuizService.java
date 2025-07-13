@@ -8,7 +8,6 @@ import com.codecampus.submission.dto.request.quiz.OptionDto;
 import com.codecampus.submission.dto.request.quiz.QuestionDto;
 import com.codecampus.submission.dto.request.quiz.UpdateOptionRequest;
 import com.codecampus.submission.dto.request.quiz.UpdateQuestionRequest;
-import com.codecampus.submission.dto.response.quiz.QuizDetailSliceDto;
 import com.codecampus.submission.entity.Exercise;
 import com.codecampus.submission.entity.Option;
 import com.codecampus.submission.entity.Question;
@@ -76,7 +75,7 @@ public class QuizService {
         int total = 0;
         for (QuestionDto questionDto : addQuizDetailRequest.questions()) {
             Question question =
-                    questionMapper.toQuestion(questionDto);
+                    questionMapper.toQuestionFromQuestionDto(questionDto);
             question.setQuizDetail(quizDetail);
             quizDetail.getQuestions().add(question);
             total += question.getPoints();
@@ -101,7 +100,7 @@ public class QuizService {
                 );
 
         Question question =
-                questionMapper.toQuestion(questionDto);
+                questionMapper.toQuestionFromQuestionDto(questionDto);
         question.setQuizDetail(quizDetail);
 
         quizDetail.getQuestions().add(question);
@@ -119,7 +118,7 @@ public class QuizService {
             OptionDto optionDto) {
         Question question = getQuestionOrThrow(questionId);
 
-        Option option = optionMapper.toOption(optionDto);
+        Option option = optionMapper.toOptionFromOptionDto(optionDto);
         option.setQuestion(question);
         question.getOptions().add(option);
         optionRepository.save(option);
@@ -146,7 +145,7 @@ public class QuizService {
                         () -> new AppException(ErrorCode.QUESTION_NOT_FOUND)
                 );
 
-        questionMapper.patch(request, question);
+        questionMapper.patchUpdateQuestionRequestToQuestion(request, question);
         quizHelper.recalcQuiz(exercise.getQuizDetail());
 
         grpcQuizClient.pushQuestion(exerciseId, question); // sync
@@ -161,25 +160,11 @@ public class QuizService {
                 .orElseThrow(
                         () -> new AppException(ErrorCode.OPTION_NOT_FOUND)
                 );
-        optionMapper.patch(request, option);
+        optionMapper.patchUpdateOptionRequestToOption(request, option);
 
         grpcQuizClient.pushQuestion(
                 option.getQuestion().getQuizDetail().getExercise().getId(),
                 option.getQuestion());
-    }
-
-    public QuizDetailSliceDto getQuizDetail(
-            String exerciseId,
-            int qPage, int qSize,
-            SortField qSortBy, boolean qAsc) {
-
-        Exercise exercise = getExerciseOrThrow(exerciseId);
-
-        return quizHelper.buildQuizSlice(
-                exercise,
-                qPage, qSize,
-                qSortBy, qAsc
-        );
     }
 
     public PageResponse<Question> getQuestionsOfQuiz(

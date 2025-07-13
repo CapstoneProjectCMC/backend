@@ -36,7 +36,9 @@ public class GrpcCodingClient {
         try {
             CreateCodingExerciseRequest createRequest =
                     CreateCodingExerciseRequest.newBuilder()
-                            .setExercise(codingMapper.toGrpc(exercise))
+                            .setExercise(
+                                    codingMapper.toCodingExerciseDtoFromExercise(
+                                            exercise))
                             .build();
             stub.createCodingExercise(createRequest);
         } catch (StatusRuntimeException ex) {
@@ -49,7 +51,9 @@ public class GrpcCodingClient {
     public void pushCodingDetail(CodingDetail codingDetail) {
         AddCodingDetailRequest addCodingRequest =
                 AddCodingDetailRequest.newBuilder()
-                        .setDetail(codingMapper.toGrpc(codingDetail))
+                        .setDetail(
+                                codingMapper.toCodingDetailDtoFromCodingDetail(
+                                        codingDetail))
                         .build();
 
         stub.addCodingDetail(addCodingRequest);
@@ -58,7 +62,7 @@ public class GrpcCodingClient {
     @Transactional
     public void pushTestCase(TestCase testCase) {
         AddTestCaseRequest addTestRequest = AddTestCaseRequest.newBuilder()
-                .setTestCase(codingMapper.toGrpc(testCase))
+                .setTestCase(codingMapper.toTestCaseDtoFromTestCase(testCase))
                 .build();
 
         stub.addTestCase(addTestRequest);
@@ -67,7 +71,7 @@ public class GrpcCodingClient {
     @Transactional
     public void upsertTestCase(TestCase tc) {
         UpsertTestCaseRequest req = UpsertTestCaseRequest.newBuilder()
-                .setTestCase(codingMapper.toGrpc(tc))
+                .setTestCase(codingMapper.toTestCaseDtoFromTestCase(tc))
                 .build();
         stub.upsertTestCase(req);
     }

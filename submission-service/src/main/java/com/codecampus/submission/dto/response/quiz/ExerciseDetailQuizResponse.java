@@ -1,5 +1,6 @@
 package com.codecampus.submission.dto.response.quiz;
 
+import com.codecampus.submission.constant.submission.Difficulty;
 import com.codecampus.submission.constant.submission.ExerciseType;
 import lombok.Builder;
 
@@ -8,12 +9,16 @@ import java.time.Instant;
 import java.util.Set;
 
 @Builder
-public record ExerciseDetailQuizDto(
+// Mặc định cho phép response cả null khi Dev
+// Khi build thì KHÔNG response null
+// @JsonInclude(JsonInclude.Include.NON_NULL)
+public record ExerciseDetailQuizResponse(
         String id,
         String userId,
         String title,
         String description,
         ExerciseType exerciseType,
+        Difficulty difficulty,
         String orgId,
         boolean active,
         BigDecimal cost,

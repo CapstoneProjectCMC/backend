@@ -9,9 +9,12 @@ import org.mapstruct.Mapping;
 public interface AssignmentMapper {
 
     @Mapping(target = "exerciseId", source = "exercise.id")
-    AssignmentDto toGrpc(Assignment assignment);
+    AssignmentDto toAssignmentDtoFromAssignment(
+            Assignment assignment);
 
-    default com.google.protobuf.Timestamp map(java.time.Instant instant) {
+    default com.google.protobuf.Timestamp mapInstantToProtobufTimestamp(
+            java.time.Instant instant) {
+
         return instant == null ? null
                 : com.google.protobuf.Timestamp.newBuilder()
                 .setSeconds(instant.getEpochSecond())
@@ -19,9 +22,11 @@ public interface AssignmentMapper {
                 .build();
     }
 
-    default java.time.Instant map(com.google.protobuf.Timestamp ts) {
-        return ts == null ? null
-                : java.time.Instant.ofEpochSecond(ts.getSeconds(),
-                ts.getNanos());
+    default java.time.Instant mapProtobufTimestampToInstant(
+            com.google.protobuf.Timestamp timestamp) {
+
+        return timestamp == null ? null
+                : java.time.Instant.ofEpochSecond(
+                timestamp.getSeconds(), timestamp.getNanos());
     }
 }

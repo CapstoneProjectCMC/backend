@@ -84,7 +84,7 @@ public class CodingService {
         codingDetail.setSolution(addCodingRequest.solution());
 
         addCodingRequest.testCases().forEach(tcDto -> {
-            TestCase testCase = testCaseMapper.toTestCase(tcDto);
+            TestCase testCase = testCaseMapper.toTestCaseFromTestCaseDto(tcDto);
             testCase.setCodingDetail(codingDetail);
             codingDetail.getTestCases().add(testCase);
         });
@@ -109,7 +109,7 @@ public class CodingService {
                         .orElseThrow(() -> new AppException(
                                 ErrorCode.CODING_DETAIL_NOT_FOUND));
 
-        codingMapper.patchUpdateCodingDetailRequest(codingDetail,
+        codingMapper.patchUpdateCodingDetailRequestToCodingDetail(codingDetail,
                 updateCodingDetailRequest);
         CodingDetail saved = codingDetailRepository.save(codingDetail);
 
@@ -128,7 +128,8 @@ public class CodingService {
                         () -> new BadRequestException("Chưa có CodingDetail")
                 );
 
-        TestCase testCase = testCaseMapper.toTestCase(testCaseDto);
+        TestCase testCase =
+                testCaseMapper.toTestCaseFromTestCaseDto(testCaseDto);
         testCase.setCodingDetail(codingDetail);
         codingDetail.getTestCases().add(testCase);
 
@@ -146,7 +147,7 @@ public class CodingService {
                 .orElseThrow(
                         () -> new AppException(ErrorCode.TESTCASE_NOT_FOUND));
 
-        testCaseMapper.patch(tc, request);
+        testCaseMapper.patchUpdateTestCaseRequestToTestCase(tc, request);
         TestCase saved = testCaseRepository.save(tc);
 
         grpcCodingClient.pushTestCase(saved);

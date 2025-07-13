@@ -11,7 +11,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 public class GrpcExceptionAdvice {
     @GrpcExceptionHandler(AppException.class)
     public Status handleApp(AppException ex) {
-        // Business error → INVALID_ARGUMENT
         return Status.INVALID_ARGUMENT.withDescription(ex.getMessage());
     }
 

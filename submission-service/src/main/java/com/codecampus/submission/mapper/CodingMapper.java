@@ -19,32 +19,34 @@ import java.util.Optional;
 @Mapper(componentModel = "spring")
 public interface CodingMapper {
     @Mapping(target = "exerciseId", source = "exercise.id")
-    CodingDetailDto toGrpc(CodingDetail codingDetail);
+    CodingDetailDto toCodingDetailDtoFromCodingDetail(
+            CodingDetail codingDetail);
 
     @Mapping(target = "exerciseId", source = "codingDetail.exercise.id")
-    TestCaseDto toGrpc(TestCase testCase);
+    TestCaseDto toTestCaseDtoFromTestCase(
+            TestCase testCase);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void patchCodingDetail(
+    void patchCodingDetailDtoToCodingDetail(
             @MappingTarget CodingDetail codingDetail,
             CodingDetailDto codingDetailDto);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void patchTestCase(
+    void patchTestCaseDtoToTestCase(
             @MappingTarget TestCase testCase,
             TestCaseDto testCaseDto);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void patchUpdateCodingDetailRequest(
+    void patchUpdateCodingDetailRequestToCodingDetail(
             @MappingTarget CodingDetail codingDetail,
             UpdateCodingDetailRequest updateCodingDetailRequest);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void patchUpdateTestCaseRequest(
+    void patchUpdateTestCaseRequestToTestCase(
             UpdateTestCaseRequest request,
             @MappingTarget TestCase testCase);
 
-    default CodingExerciseDto toGrpc(Exercise e) {
+    default CodingExerciseDto toCodingExerciseDtoFromExercise(Exercise e) {
         return CodingExerciseDto.newBuilder()
                 .setId(e.getId())
                 .setTitle(e.getTitle())

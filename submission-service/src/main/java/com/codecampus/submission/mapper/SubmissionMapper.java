@@ -21,55 +21,36 @@ public interface SubmissionMapper {
             expression = "java(java.time.Instant.ofEpochSecond(" +
                     "dto.getSubmittedAt().getSeconds(), " +
                     "dto.getSubmittedAt().getNanos()))")
-    Submission toEntity(
+    Submission toSubmissionFromQuizSubmissionDto(
             QuizSubmissionDto dto,
             @Context Exercise exercise,
             @Context QuestionRepository questionRepository);
 
     @AfterMapping
-    default void link(@MappingTarget Submission sub,
-                      QuizSubmissionDto dto,
-                      @Context Exercise exercise,
-                      @Context QuestionRepository questionRepo) {
+    default void linkQuizSubmissionDtoToSubmission(
+            @MappingTarget Submission submission,
+            QuizSubmissionDto quizSubmissionDto,
+            @Context Exercise exercise,
+            @Context QuestionRepository questionRepository) {
 
-        dto.getAnswersList().forEach(a -> {
-            Question q = questionRepo.findById(a.getQuestionId())
-                    .orElseThrow();
+        submission.setExercise(exercise);
+
+        quizSubmissionDto.getAnswersList().forEach(answerDto -> {
+            Question question =
+                    questionRepository.findById(answerDto.getQuestionId())
+                            .orElseThrow();
             SubmissionAnswer ans = new SubmissionAnswer(
-                    new SubmissionAnswerId(sub.getId(), q.getId()),
-                    sub, q,
-                    q.getOptions().stream()
-                            .filter(o -> o.getId()
-                                    .equals(a.getSelectedOptionId()))
+                    new SubmissionAnswerId(submission.getId(),
+                            question.getId()),
+                    submission, question,
+                    question.getOptions().stream()
+                            .filter(option -> option.getId()
+                                    .equals(answerDto.getSelectedOptionId()))
                             .findFirst()
                             .orElse(null),
-                    a.getAnswerText(),
-                    a.getCorrect());
-            sub.getAnswers().add(ans);
-        });
-    }
-
-    @AfterMapping
-    default void afterMapping(
-            @MappingTarget Submission sub,
-            QuizSubmissionDto dto,
-            @Context Exercise exercise,
-            @Context QuestionRepository questionRepo) {
-
-        sub.setExercise(exercise);
-
-        dto.getAnswersList().forEach(a -> {
-            Question q = questionRepo.findById(a.getQuestionId()).orElseThrow();
-            SubmissionAnswer ans = new SubmissionAnswer(
-                    new SubmissionAnswerId(sub.getId(), q.getId()),
-                    sub, q,
-                    q.getOptions().stream()
-                            .filter(o -> o.getId()
-                                    .equals(a.getSelectedOptionId()))
-                            .findFirst().orElse(null),
-                    a.getAnswerText(),
-                    a.getCorrect());
-            sub.getAnswers().add(ans);
+                    answerDto.getAnswerText(),
+                    answerDto.getCorrect());
+            submission.getAnswers().add(ans);
         });
     }
 }

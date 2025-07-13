@@ -66,7 +66,6 @@ public class Question extends AuditMetadata {
     @Column(name = "display_order")
     int orderInQuiz;
 
-    // Optional
     @JsonManagedReference
     @OneToMany(mappedBy = "question",
             fetch = FetchType.LAZY,

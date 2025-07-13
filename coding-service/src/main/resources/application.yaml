@@ -12,6 +12,15 @@ server:
 #    key-store-password: dinhanst2832004
 #    key-password: dinhanst2832004
 
+grpc:
+  server:
+    port: 9592
+
+submission:
+  grpc:
+    host: localhost
+    port: 9590
+
 spring:
   application:
     name: coding-service
@@ -27,7 +36,3 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
-
-grpc:
-  server:
-    port: 9592

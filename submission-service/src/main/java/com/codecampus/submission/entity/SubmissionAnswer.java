@@ -38,14 +38,12 @@ public class SubmissionAnswer extends AuditMetadata {
     @EmbeddedId
     SubmissionAnswerId id;
 
-    // ---- FK tới Submission (dùng submission_id của khóa) ----
     @JsonBackReference
-    @MapsId("submissionId")                     // trùng field trong Id
+    @MapsId("submissionId")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "submission_id")
     Submission submission;
 
-    // ---- FK tới Question (dùng question_id của khóa) ----
     @MapsId("questionId")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id")
@@ -53,10 +51,10 @@ public class SubmissionAnswer extends AuditMetadata {
 
     @JoinColumn(name = "selected_option")
     @OneToOne(fetch = FetchType.LAZY)
-    Option selectedOption;   // FK tới Option nếu dạng trắc nghiệm
+    Option selectedOption;
 
     @Column(name = "answer_text", columnDefinition = "text")
-    String answerText;         // nếu fill-in-blank …
+    String answerText;
 
     @Column(name = "is_correct", nullable = false)
     boolean correct;

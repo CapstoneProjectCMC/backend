@@ -50,13 +50,7 @@ public class QuizExercise extends AuditMetadata {
     )
     List<Question> questions = new ArrayList<>();
 
-    /* ---------- helper  ---------- */
-
-    /**
-     * Tìm câu hỏi theo id.
-     * Trả về Optional.empty() nếu không thấy.
-     */
-    public Optional<Question> findQuestion(String questionId) {
+    public Optional<Question> findQuestionById(String questionId) {
         return questions.stream()
                 .filter(q -> q.getId().equals(questionId))
                 .findFirst();

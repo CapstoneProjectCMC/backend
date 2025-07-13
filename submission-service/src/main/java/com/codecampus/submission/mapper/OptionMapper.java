@@ -13,12 +13,13 @@ import org.mapstruct.ReportingPolicy;
 @Mapper(componentModel = "spring",
         unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface OptionMapper {
+
+    @Mapping(target = "question", ignore = true)
+    Option toOptionFromOptionDto(OptionDto dto);
+
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void patch(
+    void patchUpdateOptionRequestToOption(
             UpdateOptionRequest request,
             @MappingTarget Option option
     );
-
-    @Mapping(target = "question", ignore = true)
-    Option toOption(OptionDto dto);
 }

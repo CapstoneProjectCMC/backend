@@ -17,6 +17,7 @@ import com.codecampus.quiz.grpc.QuizExerciseDto;
 import com.codecampus.quiz.grpc.SubmitQuizRequest;
 import com.codecampus.quiz.grpc.SubmitQuizResponse;
 import com.codecampus.quiz.grpc.UpsertAssignmentRequest;
+import com.codecampus.quiz.helper.QuizHelper;
 import com.codecampus.quiz.helper.QuizScoringHelper;
 import com.codecampus.quiz.mapper.AssignmentMapper;
 import com.codecampus.quiz.mapper.QuizMapper;
@@ -49,6 +50,8 @@ public class QuizService {
     QuizMapper quizMapper;
     SubmissionMapper submissionMapper;
 
+    QuizHelper quizHelper;
+
     SubmissionSyncServiceGrpc.SubmissionSyncServiceBlockingStub submissionStub;
 
     @Transactional
@@ -60,30 +63,32 @@ public class QuizService {
                 .findById(exerciseDto.getId())
                 .orElseGet(QuizExercise::new);
 
-        quizMapper.patchQuizExercise(exerciseDto, quizExercise);
+        quizMapper.patchQuizExerciseDtoToQuizExercise(
+                exerciseDto, quizExercise);
         quizExerciseRepository.save(quizExercise);
     }
 
     @Transactional
     public void addQuizDetail(
             AddQuizDetailRequest addQuizRequest) {
-        QuizExercise quiz = findQuizOrThrow(addQuizRequest.getExerciseId());
+        QuizExercise quiz =
+                quizHelper.findQuizOrThrow(addQuizRequest.getExerciseId());
 
         addQuizRequest.getQuestionsList().forEach(questionDto -> {
             Question question = quiz.getQuestions()
                     .stream()
-                    .filter(x -> x.getId()
+                    .filter(q -> q.getId()
                             .equals(questionDto.getId()))
                     .findFirst()
                     .orElseGet(() -> {
                         Question newQuestion =
-                                quizMapper.toQuestion(questionDto);
+                                quizMapper.toQuestionFromQuestionDto(
+                                        questionDto);
                         newQuestion.setQuiz(quiz);
                         quiz.getQuestions().add(newQuestion);
                         return newQuestion;
                     });
-
-            quizMapper.patch(questionDto, question);
+            quizMapper.patchQuestionDtoToQuestion(questionDto, question);
         });
         QuizScoringHelper.recalc(quiz);
         quizExerciseRepository.save(quiz);
@@ -92,10 +97,12 @@ public class QuizService {
     @Transactional
     public void addQuestion(
             AddQuestionRequest addQuestionRequest) {
-        QuizExercise quiz = findQuizOrThrow(addQuestionRequest.getExerciseId());
+        QuizExercise quiz =
+                quizHelper.findQuizOrThrow(addQuestionRequest.getExerciseId());
 
         Question question =
-                quizMapper.toQuestion(addQuestionRequest.getQuestion());
+                quizMapper.toQuestionFromQuestionDto(
+                        addQuestionRequest.getQuestion());
         question.setQuiz(quiz);
         QuizScoringHelper.recalc(quiz);
         questionRepository.save(question);
@@ -103,15 +110,19 @@ public class QuizService {
 
     @Transactional
     public void addOption(AddOptionRequest addOptionRequest) {
-        QuizExercise quiz =
-                findQuizOrThrow(addOptionRequest.getExerciseId());
-
         Question question =
-                findQuestionOrThrow(addOptionRequest.getQuestionId());
+                quizHelper.findQuestionOrThrow(
+                        addOptionRequest.getQuestionId());
 
-        Option option = quizMapper.toOption(addOptionRequest.getOption());
+        Option option =
+                quizMapper.toOptionFromOptionDto(addOptionRequest.getOption());
         option.setQuestion(question);
         question.getOptions().add(option);
+    }
+
+    public QuizExerciseDto getQuizExerciseDto(String quizId) {
+        QuizExercise quizExercise = quizHelper.findQuizOrThrow(quizId);
+        return quizMapper.toQuizExerciseDtoFromQuizExercise(quizExercise);
     }
 
     @Transactional
@@ -124,14 +135,17 @@ public class QuizService {
             throw new AppException(ErrorCode.UNAUTHORIZED);
         }
 
-        QuizExercise quizExercise = findQuizOrThrow(exerciseId);
+        QuizExercise quizExercise =
+                quizHelper.findQuizOrThrow(exerciseId);
 
-        return quizMapper.toLoadQuizResponse(quizExercise); // Đã ẩn correct
+        return quizMapper.toLoadQuizResponseFromQuizExercise(
+                quizExercise); // Đã ẩn correct
     }
 
     @Transactional
     public SubmitQuizResponse submitQuiz(SubmitQuizRequest request) {
-        QuizExercise quizExercise = findQuizOrThrow(request.getExerciseId());
+        QuizExercise quizExercise =
+                quizHelper.findQuizOrThrow(request.getExerciseId());
 
         QuizSubmission quizSubmission = QuizScoringHelper.score(
                 quizExercise, request);
@@ -141,7 +155,9 @@ public class QuizService {
         // Sync sang submission-service
         submissionStub.createQuizSubmission(
                 CreateQuizSubmissionRequest.newBuilder()
-                        .setSubmission(submissionMapper.toGrpc(quizSubmission))
+                        .setSubmission(
+                                submissionMapper.toQuizSubmissionDtoFromQuizSubmission(
+                                        quizSubmission))
                         .build()
         );
 
@@ -161,32 +177,11 @@ public class QuizService {
                 .findById(assignmentDto.getId())
                 .orElseGet(Assignment::new);
 
-        assignmentMapper.patch(
+        assignmentMapper.patchAssignmentDtoToAssignment(
                 assignmentDto,
                 assignment
         );
         assignmentRepository.save(assignment);
-    }
-
-    public QuizExerciseDto getQuizExerciseDto(String quizId) {
-        QuizExercise quizExercise = findQuizOrThrow(quizId);
-        return quizMapper.toQuizExerciseDto(quizExercise);
-    }
-
-    public QuizExercise findQuizOrThrow(String exerciseId) {
-        return quizExerciseRepository
-                .findById(exerciseId)
-                .orElseThrow(
-                        () -> new AppException(ErrorCode.EXERCISE_NOT_FOUND)
-                );
-    }
-
-    public Question findQuestionOrThrow(String questionId) {
-        return questionRepository
-                .findById(questionId)
-                .orElseThrow(
-                        () -> new AppException(ErrorCode.QUESTION_NOT_FOUND)
-                );
     }
 }
 

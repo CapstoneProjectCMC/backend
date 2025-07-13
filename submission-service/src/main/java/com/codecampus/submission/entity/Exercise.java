@@ -13,9 +13,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import java.math.BigDecimal;
-import java.time.Instant;
-import java.util.Set;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,6 +23,10 @@ import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
+import java.math.BigDecimal;
+import java.time.Instant;
+import java.util.Set;
+
 @Getter
 @Setter
 @Builder
@@ -35,70 +36,68 @@ import org.hibernate.annotations.Where;
 @Entity
 @Table(name = "exercise")
 @SQLDelete(sql = "UPDATE exercise " +
-    "SET deleted_by = ? , deleted_at = now() " +
-    "WHERE id = ?")
+        "SET deleted_by = ? , deleted_at = now() " +
+        "WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
-public class Exercise extends AuditMetadata
-{
-  @Id
-  @GeneratedValue(strategy = GenerationType.UUID)
-  String id;
+public class Exercise extends AuditMetadata {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    String id;
 
-  @Column(name = "user_id", nullable = false)
-  String userId; // người tạo
+    @Column(name = "user_id", nullable = false)
+    String userId; // người tạo
 
-  @Column(length = 100, nullable = false)
-  String title;
+    @Column(length = 100, nullable = false)
+    String title;
 
-  @Column(columnDefinition = "text")
-  String description;
+    @Column(columnDefinition = "text")
+    String description;
 
-  @Enumerated(EnumType.STRING)
-  @Column(name = "exercise_type", nullable = false)
-  ExerciseType exerciseType;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "exercise_type", nullable = false)
+    ExerciseType exerciseType;
 
-  // liên kết chi tiết code / quiz (One-To-One)
-  @OneToOne(mappedBy = "exercise", cascade = CascadeType.ALL)
-  CodingDetail codingDetail;
+    @OneToOne(mappedBy = "exercise", cascade = CascadeType.ALL)
+    CodingDetail codingDetail;
 
-  @OneToOne(mappedBy = "exercise", cascade = CascadeType.ALL)
-  QuizDetail quizDetail;
+    @OneToOne(mappedBy = "exercise", cascade = CascadeType.ALL)
+    QuizDetail quizDetail;
 
-  @Enumerated(EnumType.ORDINAL)
-  @Column(nullable = false, columnDefinition = "smallint default 1")
-  Difficulty difficulty = Difficulty.EASY;
+    @Enumerated(EnumType.ORDINAL)
+    @Column(nullable = false, columnDefinition = "smallint default 1")
+    Difficulty difficulty = Difficulty.EASY;
 
-  @Column(name = "org_id")
-  String orgId;                // nullable
+    @Column(name = "org_id")
+    String orgId;
 
-  @Column(nullable = false)
-  boolean visibility;          // true = public
+    @Column(nullable = false)
+    boolean visibility;
 
-  @Column(name = "is_active", nullable = false)
-  boolean active = true;
+    @Column(name = "is_active", nullable = false)
+    boolean active = true;
 
-  @Column(nullable = false)
-  BigDecimal cost = BigDecimal.ZERO;
+    @Column(nullable = false)
+    BigDecimal cost = BigDecimal.ZERO;
 
-  @Column(name = "free_for_org", nullable = false)
-  boolean freeForOrg;
+    @Column(name = "free_for_org", nullable = false)
+    boolean freeForOrg;
 
-  Instant startTime;
-  Instant endTime;
+    Instant startTime;
+    Instant endTime;
 
-  @Column(columnDefinition = "smallint")
-  int duration;            // phút; nullable
+    @Column(columnDefinition = "smallint")
+    int duration;
 
-  @Column(name = "allow_discussion_id")
-  String allowDiscussionId;
+    @Column(name = "allow_discussion_id")
+    String allowDiscussionId;
 
-  @Column(name = "resource_ids", columnDefinition = "text[]")
-  Set<String> resourceIds;
+    @Column(name = "resource_ids", columnDefinition = "text[]")
+    Set<String> resourceIds;
 
-  @Column(name = "tags", columnDefinition = "text[]")
-  Set<String> tags;
+    @Column(name = "tags", columnDefinition = "text[]")
+    Set<String> tags;
 
-  @Column(name = "allow_ai_question", nullable = false)
-  @Builder.Default
-  boolean allowAiQuestion = false;
+    @Builder.Default
+    @Column(name = "allow_ai_question", nullable = false)
+    boolean allowAiQuestion = false;
 }

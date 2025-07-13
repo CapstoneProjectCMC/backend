@@ -10,14 +10,13 @@ import java.util.Optional;
 @Mapper(componentModel = "spring",
         unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface QuizMapper {
-    default QuizExerciseDto toGrpc(
+    default QuizExerciseDto toQuizExerciseDtoFromExercise(
             Exercise exercise) {
         return QuizExerciseDto.newBuilder()
                 .setId(exercise.getId())
                 .setTitle(exercise.getTitle())
                 .setDescription(Optional.ofNullable(exercise.getDescription())
                         .orElse(""))
-                // Trong 1 ngày k xa t sẽ bỏ 2 dòng thừa này
                 .setTotalPoints(
                         exercise.getQuizDetail() == null ? 0 :
                                 exercise.getQuizDetail().getTotalPoints())

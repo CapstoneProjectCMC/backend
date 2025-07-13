@@ -13,27 +13,32 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 
 @Mapper(componentModel = "spring")
 public interface CodingMapper {
-    CodingExerciseDto toCodingExerciseDto(CodingExercise e);
+    CodingExerciseDto toCodingExerciseDtoFromCodingExercise(
+            CodingExercise codingExercise);
 
     @Mapping(target = "allowedLanguages", ignore = true)
-    CodingExercise toCodingExercise(CodingDetailDto dto);
+    CodingExercise toCodingExerciseFromCodingDetailDto(
+            CodingDetailDto codingDetailDto);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void patchCodingExerciseDto(@MappingTarget CodingExercise ex,
-                                CodingExerciseDto dto);
+    void patchCodingExerciseDtoToCodingExercise(
+            @MappingTarget CodingExercise codingExercise,
+            CodingExerciseDto codingExerciseDto);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "allowedLanguages",
-            expression = "java(dto.getAllowedLanguagesList()==null ? null : new java.util.HashSet<>(dto.getAllowedLanguagesList()))")
-    void patchCodingDetailDto(@MappingTarget CodingExercise ex,
-                              CodingDetailDto dto);
+            expression = "java(codingDetailDto.getAllowedLanguagesList()==null ? null : new java.util.HashSet<>(codingDetailDto.getAllowedLanguagesList()))")
+    void patchCodingDetailDtoToCodingExercise(
+            @MappingTarget CodingExercise codingExercise,
+            CodingDetailDto codingDetailDto);
 
     @Mapping(target = "exercise", ignore = true)
-    TestCase toTestCase(TestCaseDto dto);
+    TestCase toTestCaseFromTestCaseDto(TestCaseDto testCaseDto);
 
     @Mapping(target = "exerciseId", source = "exercise.id")
-    TestCaseDto toTestCaseDto(TestCase t);
+    TestCaseDto toTestCaseDtoFromTestCase(TestCase t);
 
-    void patchTestCaseDto(@MappingTarget TestCase testCase,
-                          TestCaseDto dto);
+    void patchTestCaseDtoToTestCase(
+            @MappingTarget TestCase testCase,
+            TestCaseDto testCaseDto);
 }

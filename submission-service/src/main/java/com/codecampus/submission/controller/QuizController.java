@@ -8,7 +8,6 @@ import com.codecampus.submission.dto.request.quiz.OptionDto;
 import com.codecampus.submission.dto.request.quiz.QuestionDto;
 import com.codecampus.submission.dto.request.quiz.UpdateOptionRequest;
 import com.codecampus.submission.dto.request.quiz.UpdateQuestionRequest;
-import com.codecampus.submission.dto.response.quiz.QuizDetailSliceDto;
 import com.codecampus.submission.entity.Option;
 import com.codecampus.submission.entity.Question;
 import com.codecampus.submission.service.ExerciseService;
@@ -102,25 +101,6 @@ public class QuizController {
                 .build();
     }
 
-    /* ---------- QUIZ DETAIL ---------- */
-    @GetMapping("/quiz/{exerciseId}/detail")
-    ApiResponse<QuizDetailSliceDto> getQuizDetail(
-            @PathVariable String exerciseId,
-            @RequestParam(defaultValue = "1") int qPage,
-            @RequestParam(defaultValue = "5") int qSize,
-            @RequestParam(defaultValue = "ORDER_IN_QUIZ") SortField qSortBy,
-            @RequestParam(defaultValue = "false") boolean qAsc) {
-        return ApiResponse.<QuizDetailSliceDto>builder()
-                .result(quizService.getQuizDetail(
-                        exerciseId,
-                        qPage, qSize,
-                        qSortBy, qAsc)
-                )
-                .message("Chi tiết quiz!")
-                .build();
-    }
-
-    /* ---------- QUESTION ---------- */
     @GetMapping("/quiz/{exerciseId}/questions")
     ApiResponse<PageResponse<Question>> getQuestionsOfQuiz(
             @PathVariable String exerciseId,
@@ -146,7 +126,6 @@ public class QuizController {
                 .build();
     }
 
-    /* ---------- OPTION ---------- */
     @GetMapping("/question/{questionId}/option")
     ApiResponse<List<Option>> getOptionsOfQuestion(
             @PathVariable String questionId) {

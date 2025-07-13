@@ -41,7 +41,9 @@ public class GrpcQuizClient {
         try {
             CreateQuizExerciseRequest createRequest =
                     CreateQuizExerciseRequest.newBuilder()
-                            .setExercise(quizMapper.toGrpc(exercise))
+                            .setExercise(
+                                    quizMapper.toQuizExerciseDtoFromExercise(
+                                            exercise))
                             .build();
             stub.createQuizExercise(createRequest);
         } catch (StatusRuntimeException ex) {
@@ -60,7 +62,7 @@ public class GrpcQuizClient {
                         .addAllQuestions(
                                 quizDetail.getQuestions()
                                         .stream()
-                                        .map(questionMapper::toGrpc)
+                                        .map(questionMapper::toQuestionDtoFromQuestion)
                                         .toList())
                         .build();
         stub.addQuizDetail(addQuizRequest);
@@ -73,7 +75,8 @@ public class GrpcQuizClient {
         AddQuestionRequest addQuestionRequest =
                 AddQuestionRequest.newBuilder()
                         .setExerciseId(exerciseId)
-                        .setQuestion(questionMapper.toGrpc(question))
+                        .setQuestion(questionMapper.toQuestionDtoFromQuestion(
+                                question))
                         .build();
         stub.addQuestion(addQuestionRequest);
     }
@@ -86,7 +89,7 @@ public class GrpcQuizClient {
         AddOptionRequest addOptionRequest = AddOptionRequest.newBuilder()
                 .setExerciseId(exerciseId)
                 .setQuestionId(questionId)
-                .setOption(questionMapper.toGrpc(option))
+                .setOption(questionMapper.toOptionDtoFromOption(option))
                 .build();
 
         stub.addOption(addOptionRequest);
@@ -95,7 +98,8 @@ public class GrpcQuizClient {
     @Transactional
     public void pushAssignment(Assignment assignment) {
         UpsertAssignmentRequest request = UpsertAssignmentRequest.newBuilder()
-                .setAssignment(assignmentMapper.toGrpc(assignment))
+                .setAssignment(assignmentMapper.toAssignmentDtoFromAssignment(
+                        assignment))
                 .build();
 
         stub.upsertAssignment(request);
