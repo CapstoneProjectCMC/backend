@@ -19,6 +19,8 @@ import org.mapstruct.ReportingPolicy;
 import java.util.Comparator;
 import java.util.Optional;
 
+import static java.util.stream.Collectors.toSet;
+
 @Mapper(componentModel = "spring",
         unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface QuizMapper {
@@ -61,27 +63,12 @@ public interface QuizMapper {
     default LoadQuizResponse toLoadQuizResponseFromQuizExercise(
             QuizExercise quiz) {
 
-        // Header exercise
-        QuizExerciseDto exerciseDto = QuizExerciseDto.newBuilder()
-                .setId(quiz.getId())
-                .setTitle(quiz.getTitle())
-                .setDescription(
-                        quiz.getDescription() == null ? "" :
-                                quiz.getDescription())
-                .setTotalPoints(quiz.getTotalPoints())
-                .setNumQuestions(quiz.getNumQuestions())
+        return LoadQuizResponse.newBuilder()
+                .setExercise(toQuizExerciseDtoFromQuizExercise(quiz))
+                .addAllQuestions(quiz.getQuestions().stream()
+                        .map(this::toQuestionDtoFromQuestionHideCorrect)
+                        .collect(toSet()))
                 .build();
-
-        LoadQuizResponse.Builder response = LoadQuizResponse.newBuilder()
-                .setExercise(exerciseDto);
-
-        // Questions (ẩn 'correct')
-        quiz.getQuestions().stream()
-                .sorted(Comparator.comparingInt(Question::getOrderInQuiz))
-                .forEach(q -> response.addQuestions(
-                        toQuestionDtoFromQuestionHideCorrect(q)));
-
-        return response.build();
     }
 
     default QuestionDto toQuestionDtoFromQuestionHideCorrect(

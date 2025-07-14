@@ -33,60 +33,88 @@ public class QuizScoringHelper {
                 .totalPoints(quizExercise.getTotalPoints())
                 .build();
 
-        for (AnswerDto ans : request.getAnswersList()) {
+        for (AnswerDto answerDto : request.getAnswersList()) {
             Question question = quizExercise
-                    .findQuestionById(ans.getQuestionId())
+                    .findQuestionById(answerDto.getQuestionId())
                     .orElseThrow(
                             () -> new AppException(ErrorCode.QUESTION_NOT_FOUND)
                     );
 
             boolean correct = switch (question.getQuestionType()) {
-                case SINGLE_CHOICE -> question.getOptions().stream()
-                        .filter(Option::isCorrect)
-                        .anyMatch(option -> option.getId()
-                                .equals(ans.getSelectedOptionId()));
-                case FILL_BLANK -> question.getOptions().isEmpty() &&
-                        question.getText()
-                                .equalsIgnoreCase(ans.getAnswerText());
-                case MULTI_CHOICE -> {
-                    String raw = ans.getSelectedOptionId();
-                    if (raw == null || raw.isBlank()) {
-                        yield false;
-                    }
-                    Set<String> chosen = Arrays.stream(raw.split(","))
-                            .map(String::trim)
-                            .filter(s -> !s.isEmpty())
-                            .collect(toSet());
-
-                    Set<String> correctIds = question.getOptions().stream()
-                            .filter(Option::isCorrect)
-                            .map(Option::getId)
-                            .collect(toSet());
-                    yield correctIds.equals(chosen);
-                }
+                case SINGLE_CHOICE -> checkSingleChoice(question, answerDto);
+                case MULTI_CHOICE -> checkMultiChoice(question, answerDto);
+                case FILL_BLANK -> checkFillBlank(question, answerDto);
             };
 
             if (correct) {
                 score += question.getPoints();
             }
 
-            QuizSubmissionAnswer detail = QuizSubmissionAnswer.builder()
-                    .id(new QuizSubmissionAnswerId(submission.getId(),
-                            question.getId()))
-                    .submission(submission)
-                    .question(question)
-                    .selectedOption(
-                            question.findOptionById(ans.getSelectedOptionId())
-                                    .orElse(null))
-                    .answerText(ans.getAnswerText())
-                    .correct(correct)
-                    .build();
-
+            QuizSubmissionAnswer detail =
+                    buildSubmissionAnswer(
+                            submission,
+                            question,
+                            answerDto,
+                            correct
+                    );
             submission.getAnswers().add(detail);
         }
 
         submission.setScore(score);
         return submission;
+    }
+
+    public static boolean checkSingleChoice(
+            Question question, AnswerDto answerDto) {
+        return question.getOptions().stream()
+                .filter(Option::isCorrect)
+                .map(Option::getId)
+                .anyMatch(correctId -> correctId.equals(
+                        answerDto.getSelectedOptionId()));
+    }
+
+    public static boolean checkMultiChoice(
+            Question question, AnswerDto answerDto) {
+        Set<String> correctIds = question.getOptions().stream()
+                .filter(Option::isCorrect)
+                .map(Option::getId)
+                .collect(toSet());
+
+        Set<String> selectedIds = Arrays.stream(
+                        answerDto.getSelectedOptionId().split(","))
+                .collect(toSet());
+
+        return correctIds.equals(selectedIds);
+    }
+
+    public static boolean checkFillBlank(
+            Question question,
+            AnswerDto answerDto) {
+        return question.getOptions().stream()
+                .filter(Option::isCorrect)
+                .map(Option::getOptionText)
+                .anyMatch(correctAnswer ->
+                        correctAnswer.equalsIgnoreCase(
+                                answerDto.getAnswerText().trim()));
+    }
+
+    public static QuizSubmissionAnswer buildSubmissionAnswer(
+            QuizSubmission submission,
+            Question question,
+            AnswerDto answerDto,
+            boolean correct) {
+
+        return QuizSubmissionAnswer.builder()
+                .id(new QuizSubmissionAnswerId(submission.getId(),
+                        question.getId()))
+                .submission(submission)
+                .question(question)
+                .selectedOption(
+                        question.findOptionById(answerDto.getSelectedOptionId())
+                                .orElse(null))
+                .answerText(answerDto.getAnswerText())
+                .correct(correct)
+                .build();
     }
 
     public static void recalc(QuizExercise quiz) {
