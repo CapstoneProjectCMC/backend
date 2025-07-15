@@ -1,4 +1,5 @@
-﻿using FileService.DataAccess.Interfaces;
+﻿using FileService.Core.Enums;
+using FileService.DataAccess.Interfaces;
 using FileService.DataAccess.Models;
 
 namespace FileService.Api.Utils
@@ -19,23 +20,24 @@ namespace FileService.Api.Utils
                 {
                     var seed = new FileDocument
                     {
-                        FileName = "example.pdf",
-                        FileType = "application/pdf",
-                        Size = 123456,
-                        Url = "https://example.com/files/example.pdf",
-                        Checksum = "demo-checksum",
-                        Category = "giáo trình",
+                        FileName = "20250413_134739.mp4",
+                        FileType = "video/mp4",
+                        Size = 22316829,
+                        Url = "/static/39509bcb-83ce-4794-bf76-ab46dc69bdd3.mp4",
+                        Checksum = "check-sum-demo",
+                        Category = FileCategory.Video,
                         Description = "Seed file để kiểm tra MongoDB",
-                        ThumbnailUrl = "https://example.com/thumbs/example.png",
-                        TranscodingStatus = "finished",
-                        Tags = new() { "seed", "mongodb" },
-                        IsLectureVideo = false,
-                        IsTextbook = true,
-                        OrgId = "demo-org",
-                        ViewCount = 5,
-                        Rating = 4.8,
+                        ThumbnailUrl = "/thumbnails/e02ea408-c424-46a1-8936-06a51bd69bab.jpg",
+                        TranscodingStatus = "success",
+                        Tags = new() { "#seed", "#mongodb" },
+                        IsLectureVideo = true,
+                        IsTextbook = false,
+                        OrgId = null,
+                        ViewCount = 0,
+                        Rating = 0,
                         AssociatedResourceIds = new() { "demo-resource" },
-                        CreatedBy = Guid.NewGuid()
+                        CreatedBy = Guid.NewGuid(),
+                        CreatedAt = DateTime.UtcNow
                     };
 
                     repo.CreateAsync(seed).Wait();
@@ -43,7 +45,7 @@ namespace FileService.Api.Utils
                 }
                 else
                 {
-                    Console.WriteLine("Dữ liệu đã tồn tại, không cần seed.");
+                    Console.WriteLine("Data existed. Need not seed");
                 }
             }
 
@@ -51,3 +53,6 @@ namespace FileService.Api.Utils
         }
     }
 }
+
+
+

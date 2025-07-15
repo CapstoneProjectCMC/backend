@@ -17,6 +17,7 @@ using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Bson.Serialization;
 using FileService.Service.Implementation;
 using FileService.Service.Interfaces;
+using Microsoft.Extensions.FileProviders;
 
 BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
 
@@ -36,12 +37,17 @@ builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.Re
 
 builder.Services.AddHttpContextAccessor();
 
+var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+Console.WriteLine($"ASPNETCORE_ENVIRONMENT: {env}");
+
+var minioConfig = builder.Configuration.GetSection("MinioConfig").Get<MinioConfig>();
+Console.WriteLine($"Minio Endpoint: {minioConfig?.Endpoint}");
+Console.WriteLine($"Full MinioConfig: {Newtonsoft.Json.JsonConvert.SerializeObject(minioConfig)}");
+
 builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection("MongoDbSettings"));
 builder.Services.Configure<FfmpegSettings>(builder.Configuration.GetSection("FfmpegSettings"));
-//builder.Services.Configure<FfmpegSettings>(options =>
-//{
-//    options.ExecutablePath = Path.Combine(builder.Environment.ContentRootPath, "Tools", "ffmpeg");
-//});
+builder.Services.Configure<MinioConfig>(builder.Configuration.GetSection("AppSettings:MinioConfig"));
+
 
 
 
@@ -68,6 +74,7 @@ builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<UserContext>();
 builder.Services.AddScoped<IFileDocumentService, FileDocumentService>();
 builder.Services.AddScoped<IFfmpegService, FfmpegService>();
+builder.Services.AddScoped<IMinioService, MinioService>();
 
 
 builder.Services.Configure<IdentityOptions>(options =>
@@ -151,6 +158,12 @@ builder.Services.AddSwaggerGen(c =>
     );
 });
 
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.Limits.MaxRequestBodySize = 104857600; // 100 MB
+});
+
+
 var app = builder.Build();
 
 // Migrate MongoDB and seed data if necessary
@@ -164,7 +177,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseStaticFiles();
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")),
+    RequestPath = ""
+});
 
 
 app.UseCors(MyAllowSpecificOrigins);

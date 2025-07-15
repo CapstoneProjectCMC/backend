@@ -50,6 +50,12 @@ namespace FileService.DataAccess.Implementation
         
         public async Task<bool> AnyAsync(Expression<Func<T, bool>> predicate) =>
             await _collection.Find(predicate).AnyAsync();
+
+        public async Task<bool> ExistsAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await _collection.Find(predicate).AnyAsync();
+        }
+
         public async Task<T> CreateAsync(T obj)
         {
             obj.CreatedBy = _userContext.UserId;

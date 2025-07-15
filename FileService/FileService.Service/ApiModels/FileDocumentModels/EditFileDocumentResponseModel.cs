@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FileService.Core.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,7 +20,7 @@ namespace FileService.Service.ApiModels.FileDocumentModels
 
         public string Checksum { get; set; } // SHA256 checksum của file để kiểm tra tính toàn vẹn
 
-        public string Category { get; set; } // bài giảng, giáo trình, file thường
+        public FileCategory Category { get; set; } // bài giảng, giáo trình, file thường
 
         public bool IsActive { get; set; } = true;
 
@@ -28,6 +29,9 @@ namespace FileService.Service.ApiModels.FileDocumentModels
         public string Description { get; set; }
 
         public string ThumbnailUrl { get; set; } // cho video, hình ảnh
+
+        public TimeSpan? Duration { get; set; } // video duration, nếu là video thì có giá trị
+        public string? HlsUrl { get; set; } // đường dẫn .m3u8 cho video HLS
 
         public string TranscodingStatus { get; set; } // running, finished, failed
 

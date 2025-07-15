@@ -14,6 +14,7 @@ namespace FileService.Core.ApiModels
         public SecretKey SecretKey { get; set; }
         public MongoDbSettings MongoDbSettings { get; set; }
         public FfmpegSettings FfmpegSettings { get; set; }
+        public MinioConfig MinioConfig { get; set; }
     }
 
     public class Jwt
@@ -58,5 +59,12 @@ namespace FileService.Core.ApiModels
         public string ExecutablePath { get; set; } // Path to the ffmpeg executable
     }
 
-
+    public class MinioConfig
+    {
+        public string Endpoint { get; set; }
+        public string AccessKey { get; set; }
+        public string SecretKey { get; set; }
+        public string BucketName { get; set; }
+        public bool Secure { get; set; }
+    }
 }
