@@ -6,5 +6,6 @@ namespace FileService.Service.ApiModels.FileDocumentModels
         public string ThumbnailUrl { get; set; }
         public TimeSpan? Duration { get; set; }
         public string Status { get; set; } // finished, failed
+        public string HlsUrl { get; set; } 
     }
 }

@@ -15,6 +15,7 @@ namespace FileService.DataAccess.Interfaces
         Task<IEnumerable<T>> FilterAsync(Expression<Func<T, bool>> predicate);
         Task<T> FindOneAsync(Expression<Func<T, bool>> predicate);
         Task<bool> AnyAsync(Expression<Func<T, bool>> predicate);
+        Task<bool> ExistsAsync(Expression<Func<T, bool>> predicate);
         Task<T> CreateAsync(T document);
         Task UpdateAsync(T document);
         Task InsertManyAsync(IEnumerable<T> documents);

@@ -2,12 +2,13 @@
 using FileService.Core.Enums;
 using FileService.Core.Exceptions;
 using FileService.Core.Helpers;
-using FileService.DataAccess.Implementation;
 using FileService.DataAccess.Interfaces;
 using FileService.DataAccess.Models;
 using FileService.Service.ApiModels.FileDocumentModels;
 using FileService.Service.Dtos.FileDocumentDtos;
 using FileService.Service.Interfaces;
+using System;
+using System.Security.AccessControl;
 
 namespace FileService.Service.Implementation
 {
@@ -16,17 +17,21 @@ namespace FileService.Service.Implementation
         private readonly IRepository<FileDocument> _fileDocumentRepository;
         private readonly UserContext _userContext;
         private readonly IFfmpegService _ffmpegService;
+        private readonly IMinioService _minioService;
+
 
         public FileDocumentService(
             AppSettings appSettings,
             UserContext userContext,
             IFfmpegService ffmpegService,
+            IMinioService minioService,
             IRepository<FileDocument> fileDocumentRepository)
              : base(appSettings, userContext)
         {
             _fileDocumentRepository = fileDocumentRepository;
             _userContext = userContext;
             _ffmpegService = ffmpegService;
+            _minioService = minioService;
         }
 
         private void ValidatePagingModel(FileDocumentDto fileDocumentDto)
@@ -59,6 +64,8 @@ namespace FileService.Service.Implementation
                 Description = file.Description,
                 OrgId = file.OrgId,
                 ThumbnailUrl = file.ThumbnailUrl,
+                HlsUrl = file.HlsUrl,
+                Duration = file.Duration,
                 IsLectureVideo = file.IsLectureVideo,
                 IsTextbook = file.IsTextbook,
                 TranscodingStatus = file.TranscodingStatus,
@@ -70,14 +77,17 @@ namespace FileService.Service.Implementation
         {
             var file = await _fileDocumentRepository.GetByIdAsync(id);
             if (file == null || file.IsRemoved)
-                throw new ErrorException(StatusCodeEnum.A02); 
+                throw new ErrorException(StatusCodeEnum.A02);
+
+            // Tạo presigned URL từ MinIO
+            var presignedUrl = await _minioService.GetFileAsync(file.Url.TrimStart('/')); // Loại bỏ '/' đầu nếu có
 
             return new FileDocumentModel
             {
                 Id = file.Id,
                 FileName = file.FileName,
                 FileType = file.FileType,
-                Url = file.Url,
+                Url = presignedUrl,
                 Size = file.Size,
                 Checksum = file.Checksum,
                 Category = file.Category,
@@ -88,10 +98,12 @@ namespace FileService.Service.Implementation
                 Description = file.Description,
                 OrgId = file.OrgId,
                 ThumbnailUrl = file.ThumbnailUrl,
+                Duration = file.Duration,
                 IsLectureVideo = file.IsLectureVideo,
                 IsTextbook = file.IsTextbook,
                 TranscodingStatus = file.TranscodingStatus,
-                AssociatedResourceIds = file.AssociatedResourceIds
+                AssociatedResourceIds = file.AssociatedResourceIds,
+                HlsUrl = file.HlsUrl
             };
         }
 
@@ -100,22 +112,47 @@ namespace FileService.Service.Implementation
             if (dto.File == null || dto.File.Length == 0)
                 throw new ErrorException(StatusCodeEnum.A01);
 
+            if (string.IsNullOrWhiteSpace(dto.File.FileName))
+                throw new ErrorException(StatusCodeEnum.A04);
+
+            if (dto.File.FileName.Length > 255)
+                throw new ErrorException(StatusCodeEnum.A05);
+
+            if (dto.Tags == null || !dto.Tags.Any())
+                throw new ErrorException(StatusCodeEnum.A06);
+
+            if (string.IsNullOrWhiteSpace(dto.Category.ToString()))
+                throw new ErrorException(StatusCodeEnum.A07);
+
             var fileId = Guid.NewGuid();
 
             var ext = Path.GetExtension(dto.File.FileName);
-            var fileName = fileId + ext;
+            var fileName = $"files/{fileId}{ext}";
 
-            //save file to BE folder 
-            var staticPath = Path.Combine("wwwroot", "static");
-            if (!Directory.Exists(staticPath))
-            {
-                Directory.CreateDirectory(staticPath);
-            }
-
-            var filePath = Path.Combine(staticPath, fileName);
-            await using (var stream = new FileStream(filePath, FileMode.Create))
+            //tạo và tải file tạm
+            var tempFilePath = Path.GetTempFileName();
+            await using (var stream = new FileStream(tempFilePath, FileMode.Create))
             {
                 await dto.File.CopyToAsync(stream);
+            }
+
+            //upload lên MinIO
+
+            await _minioService.UploadFileAsync(fileName, tempFilePath, dto.File.ContentType);
+
+            //xóa file tạm với kiểm tra
+            if (File.Exists(tempFilePath))
+            {
+                try
+                {
+                    File.Delete(tempFilePath);
+                    Console.WriteLine($"Deleted temp file: {tempFilePath}");
+                }
+                catch (IOException ex)
+                {
+                    Console.WriteLine($"Failed to delete file {tempFilePath}: {ex.Message}");
+                    throw;
+                }
             }
 
             var file = new FileDocument
@@ -124,7 +161,7 @@ namespace FileService.Service.Implementation
                 FileName = dto.File.FileName,
                 FileType = dto.File.ContentType,
                 Size = dto.File.Length,
-                Url = $"/static/{fileName}",
+                Url = fileName,
                 Description = dto.Description,
                 Category = dto.Category,
                 Tags = dto.Tags ?? new List<string>(),
@@ -136,7 +173,10 @@ namespace FileService.Service.Implementation
                 IsTextbook = dto.IsTextbook
             };
 
-            file.Checksum = await FileHelper.ComputeChecksumAsync(dto.File.OpenReadStream());
+            var checksum = await FileHelper.ComputeChecksumAsync(dto.File.OpenReadStream());
+            var exists = await _fileDocumentRepository.ExistsAsync(f => f.Checksum == checksum && !f.IsRemoved);
+            if (exists)
+                throw new ErrorException(StatusCodeEnum.A03);
 
             if (dto.IsLectureVideo)
             {
@@ -148,6 +188,7 @@ namespace FileService.Service.Implementation
                     file.Duration = result.Duration;
                     file.ViewCount = 0;
                     file.Rating = 0;
+                    file.HlsUrl = result.HlsUrl; 
                 }
                 catch (Exception)
                 {
@@ -163,6 +204,26 @@ namespace FileService.Service.Implementation
             var file = await _fileDocumentRepository.GetByIdAsync(id);
             if (file == null || file.IsRemoved)
                 throw new ErrorException(StatusCodeEnum.A02);
+
+            if (string.IsNullOrWhiteSpace(dto.FileName))
+                throw new ErrorException(StatusCodeEnum.A04);
+
+            if (dto.FileName.Length > 255)
+                throw new ErrorException(StatusCodeEnum.A05);
+
+
+            if (dto.Tags == null || !dto.Tags.Any())
+                throw new ErrorException(StatusCodeEnum.A06);
+
+            if (string.IsNullOrWhiteSpace(dto.Category.ToString()))
+                throw new ErrorException(StatusCodeEnum.A07);
+
+            // check if file with same name already exists
+            var nameExisted = await _fileDocumentRepository.ExistsAsync(x =>
+                x.Id != id && !x.IsDeleted && x.FileName.ToLower() == dto.FileName.ToLower());
+
+            if (nameExisted)
+                throw new ErrorException(StatusCodeEnum.A08);
 
             file.FileName = dto.FileName;
             file.Category = dto.Category;
@@ -180,14 +241,42 @@ namespace FileService.Service.Implementation
             {
                 file.FileType = dto.File.ContentType;
                 file.Size = dto.File.Length;
-                file.Checksum = await FileHelper.ComputeChecksumAsync(dto.File.OpenReadStream());
 
-                // save to override file in the static folder
-                var savePath = Path.Combine("wwwroot", "static", file.Id.ToString());
-                using (var stream = new FileStream(savePath, FileMode.Create))
+                var checksum = await FileHelper.ComputeChecksumAsync(dto.File.OpenReadStream());
+                var exists = await _fileDocumentRepository.ExistsAsync(f => f.Checksum == checksum && f.Id != file.Id && !f.IsRemoved);
+                if (exists)
+                    throw new ErrorException(StatusCodeEnum.A03);
+
+                // Xóa file cũ trên MinIO
+                await _minioService.RemoveFileAsync(file.Url.TrimStart('/'));
+
+                //xóa thumbnail và hls cũ nếu là video
+                if (file.IsLectureVideo)
+                {
+                    if (!string.IsNullOrEmpty(file.ThumbnailUrl))
+                    {
+                        await _minioService.RemoveFileAsync(file.ThumbnailUrl.TrimStart('/'));
+                    }
+                    if (!string.IsNullOrEmpty(file.HlsUrl))
+                    {
+                        // Xóa master playlist và các segment
+                        var hlsBasePath = file.HlsUrl.Replace("master.m3u8", "").TrimEnd('/');
+                        await _minioService.RemoveFileAsync(hlsBasePath + "master.m3u8");
+                        for (int i = 0; i <= 5; i++)
+                        {
+                            var segmentPrefix = $"{hlsBasePath}v{i}/segment";
+                            await _minioService.RemoveFileAsync($"{segmentPrefix}0.ts"); // Xóa ít nhất 1 segment để test
+                        }
+                    }
+                }
+
+                // Tải file mới lên MinIO
+                var tempFilePath = Path.GetTempFileName();
+                await using (var stream = new FileStream(tempFilePath, FileMode.Create))
                 {
                     await dto.File.CopyToAsync(stream);
                 }
+                await _minioService.UploadFileAsync(file.Url.TrimStart('/'), tempFilePath, dto.File.ContentType);
 
                 if (dto.IsLectureVideo)
                 {
@@ -199,15 +288,45 @@ namespace FileService.Service.Implementation
                         file.Duration = result.Duration;
                         file.ViewCount ??= 0;
                         file.Rating ??= 0;
+                        file.HlsUrl = result.HlsUrl; // Lưu đường dẫn HLS nếu có
                     }
                     catch
                     {
                         file.TranscodingStatus = "failed";
                     }
                 }
+                else
+                {
+                    // Nếu không phải video, xóa thumbnail và HLS cũ nếu tồn tại
+                    if (!string.IsNullOrEmpty(file.ThumbnailUrl))
+                        await _minioService.RemoveFileAsync(file.ThumbnailUrl.TrimStart('/'));
+                    if (!string.IsNullOrEmpty(file.HlsUrl))
+                        await _minioService.RemoveFileAsync(file.HlsUrl.TrimStart('/'));
+                    file.ThumbnailUrl = null;
+                    file.HlsUrl = null;
+                    file.Duration = null;
+                    file.TranscodingStatus = null;
+                }
+
+                // Xóa tệp tạm
+                if (File.Exists(tempFilePath))
+                {
+                    try
+                    {
+                        File.Delete(tempFilePath);
+                        Console.WriteLine($"Deleted temp file: {tempFilePath}");
+                    }
+                    catch (IOException ex)
+                    {
+                        Console.WriteLine($"Failed to delete file {tempFilePath}: {ex.Message}");
+                        throw;
+                    }
+                }
             }
 
             await _fileDocumentRepository.UpdateAsync(file);
+
+            var presignedUrl = await _minioService.GetFileAsync(file.Url.TrimStart('/'));
 
             return new EditFileDocumentResponseModel
             {
@@ -221,27 +340,50 @@ namespace FileService.Service.Implementation
                 IsTextbook = file.IsTextbook,
                 OrgId = file.OrgId,
                 FileType = file.FileType,
-                Url = file.Url,
+                Url = presignedUrl,
                 Size = file.Size,
                 Checksum = file.Checksum,
                 ThumbnailUrl = file.ThumbnailUrl,
                 TranscodingStatus = file.TranscodingStatus,
                 AssociatedResourceIds = file.AssociatedResourceIds,
                 ViewCount = file.ViewCount,
-                Rating = file.Rating
+                Rating = file.Rating,
+                Duration = file.Duration,
+                HlsUrl = file.HlsUrl
             };
         }
 
         public async Task DeleteAsync(Guid id)
         {
             var file = await _fileDocumentRepository.GetByIdAsync(id);
-            if (file == null)
+            if (file == null || file.IsRemoved)
                 throw new ErrorException(StatusCodeEnum.A02);
 
+            // Xóa file trên MinIO
+            await _minioService.RemoveFileAsync(file.Url.TrimStart('/'));
+
+            // Xóa thumbnail và HLS nếu là video
+            if (file.IsLectureVideo)
+            {
+                if (!string.IsNullOrEmpty(file.ThumbnailUrl))
+                    await _minioService.RemoveFileAsync(file.ThumbnailUrl.TrimStart('/'));
+                if (!string.IsNullOrEmpty(file.HlsUrl))
+                {
+                    var hlsBasePath = file.HlsUrl.Replace("master.m3u8", "").TrimEnd('/');
+                    await _minioService.RemoveFileAsync(hlsBasePath + "master.m3u8");
+                    for (int i = 0; i <= 5; i++)
+                    {
+                        var segmentPrefix = $"{hlsBasePath}v{i}/segment";
+                        await _minioService.RemoveFileAsync($"{segmentPrefix}0.ts"); // Xóa ít nhất 1 segment
+                    }
+                }
+            }
+
+            //soft delete
             file.IsRemoved = true;
             file.DeletedAt = DateTime.UtcNow;
             file.DeletedBy = _userContext.UserId;
-            await _fileDocumentRepository.DeleteAsync(id);
+            await _fileDocumentRepository.UpdateAsync(file);
         }
     }
 }

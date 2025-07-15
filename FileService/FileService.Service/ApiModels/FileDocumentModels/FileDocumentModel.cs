@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
+﻿using FileService.Core.Enums;
+using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace FileService.Service.ApiModels.FileDocumentModels
     public class FileDocumentModel
     {
         public Guid Id { get; set; }
-        public string FileName { get; set; }
+        public string? FileName { get; set; }
 
         public string FileType { get; set; } // video/mp4, application/pdf, image/jpeg
 
@@ -20,7 +21,7 @@ namespace FileService.Service.ApiModels.FileDocumentModels
 
         public string Checksum { get; set; } // SHA256 kiểm tra tính toàn vẹn, bảo mật
 
-        public string Category { get; set; } // bài giảng, giáo trình, file thường
+        public FileCategory Category { get; set; } // bài giảng, giáo trình, file thường
 
         public bool IsActive { get; set; } = true;
 
@@ -53,5 +54,8 @@ namespace FileService.Service.ApiModels.FileDocumentModels
 
         //for video files
         public TimeSpan? Duration { get; set; }
+
+        // đường dẫn .m3u8 cho video HLS
+        public string? HlsUrl { get; set; }
     }
 }

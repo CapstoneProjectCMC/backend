@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using FileService.Core.Enums;
+using Microsoft.AspNetCore.Http;
+using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -12,7 +15,9 @@ namespace FileService.Service.Dtos.FileDocumentDtos
     {
         [Required]
         public IFormFile File { get; set; }
-        public string Category { get; set; } // bài giảng, giáo trình, file thường
+      //  public string? FileName { get; set; } 
+        [BsonRepresentation(BsonType.String)]
+        public FileCategory Category { get; set; } // bài giảng, giáo trình, file thường
         public string Description { get; set; }
         public List<string> Tags { get; set; } = new(); // #java, #code
         

@@ -1,0 +1,18 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace FileService.Service.Interfaces
+{
+    public interface IMinioService
+    {
+        Task UploadFileAsync(string objectName, string filePath, string contentType);
+        Task<string> GetFileAsync(string objectName);
+        Task<string> GeneratePresignedUrlAsync(string objectName, int expirySeconds);
+        Task EnsureBucketExistsAsync();
+        Task RemoveFileAsync(string objectName);
+
+    }
+}

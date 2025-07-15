@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using FileService.Core.Enums;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace FileService.Service.Dtos.FileDocumentDtos
     {
         public IFormFile File { get; set; } 
         public string FileName { get; set; }
-        public string Category { get; set; } // bài giảng, giáo trình, file thường
+        public FileCategory Category { get; set; } // bài giảng, giáo trình, file thường
         public string Description { get; set; }
         public List<string> Tags { get; set; } = new(); // #java, #code
 
