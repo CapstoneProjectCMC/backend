@@ -53,7 +53,7 @@ public interface QuizMapper {
 
     @Mapping(target = "quiz", ignore = true)
     @Mapping(target = "questionType",
-            expression = "java(asEntityEnum(questionDto.getQuestionType()))")
+            expression = "java(mapEntityEnumQuestionType(questionDto.getQuestionType()))")
     Question toQuestionFromQuestionDto(QuestionDto questionDto);
 
 

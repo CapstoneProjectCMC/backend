@@ -1,0 +1,24 @@
+server:
+  port: 8087
+  #  http:
+  #    port: 8007
+  servlet:
+    context-path: /search
+
+spring:
+  application:
+    name: search-service
+  elasticsearch:
+    uris: http://localhost:9200
+    username: elasticsearch_search
+    password: dinhanst2832004
+
+  kafka:
+    bootstrap-servers: localhost:9094
+    consumer:
+      group-id: quiz-result-aggregator
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"

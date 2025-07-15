@@ -46,6 +46,7 @@ public class QuizSubmission extends AuditMetadata {
     int score;
     int totalPoints;
 
+    @Builder.Default
     @JsonManagedReference
     @OneToMany(
             mappedBy = "submission",

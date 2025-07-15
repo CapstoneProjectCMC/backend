@@ -9,7 +9,7 @@ services:
     environment:
       - POSTGRESQL_USERNAME=${IDENTITY_USERNAME}
       - POSTGRESQL_PASSWORD=${IDENTITY_DB_PASSWORD}
-      - POSTGRESQL_DATABASE=identity_db
+      - POSTGRESQL_DATABASE=${IDENTITY_DATABASE}
       - POSTGRESQL_POSTGRES_PASSWORD=${IDENTITY_DB_PASSWORD}
     ports:
       - "5431:5432"
@@ -29,7 +29,7 @@ services:
     environment:
       - POSTGRESQL_USERNAME=${QUIZ_USERNAME}
       - POSTGRESQL_PASSWORD=${QUIZ_DB_PASSWORD}
-      - POSTGRESQL_DATABASE=quiz_db
+      - POSTGRESQL_DATABASE=${QUIZ_DATABASE}
       - POSTGRESQL_POSTGRES_PASSWORD=${QUIZ_DB_PASSWORD}
     ports:
       - "5433:5432"
@@ -49,7 +49,7 @@ services:
     environment:
       - POSTGRESQL_USERNAME=${SUBMISSION_USERNAME}
       - POSTGRESQL_PASSWORD=${SUBMISSION_DB_PASSWORD}
-      - POSTGRESQL_DATABASE=submission_db
+      - POSTGRESQL_DATABASE=${SUBMISSION_DATABASE}
       - POSTGRESQL_POSTGRES_PASSWORD=${SUBMISSION_DB_PASSWORD}
     ports:
       - "5434:5432"
@@ -69,7 +69,7 @@ services:
     environment:
       - POSTGRESQL_USERNAME=${CODING_USERNAME}
       - POSTGRESQL_PASSWORD=${CODING_DB_PASSWORD}
-      - POSTGRESQL_DATABASE=coding_db
+      - POSTGRESQL_DATABASE=${CODING_DATABASE}
       - POSTGRESQL_POSTGRES_PASSWORD=${CODING_DB_PASSWORD}
     ports:
       - "5435:5432"
@@ -131,6 +131,110 @@ services:
       retries: 5
     networks: [ backend ]
 
+  # ---------- Redis ----------
+  redis:
+    image: bitnami/redis:latest
+    container_name: redis
+    restart: unless-stopped
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_AOF_ENABLED=yes          # bật AOF để an toàn dữ liệu
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/bitnami/redis/data
+    healthcheck:
+      test: [ "CMD", "redis-cli", "-a", "${REDIS_PASSWORD}", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: [ backend ]
+
+  # ---------- MinIO ----------
+  minio:
+    image: bitnami/minio:latest
+    container_name: minio
+    restart: unless-stopped
+    environment:
+      - MINIO_ROOT_USER=${MINIO_ROOT_USER}
+      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
+    command: server /data --console-address ":9001"
+    ports:
+      - "9000:9000"   # S3 API
+      - "9001:9001"   # Console UI
+    volumes:
+      - minio_data:/bitnami/minio/data
+    healthcheck:
+      test: [ "CMD", "bash", "-c", "mc alias set minio http://localhost:9000 ${MINIO_ROOT_USER} ${MINIO_ROOT_PASSWORD} && mc ls minio" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks: [ backend ]
+
+  # ---------- Elasticsearch ----------
+  elasticsearch:
+    image: bitnami/elasticsearch:latest
+    container_name: elasticsearch
+    restart: unless-stopped
+    environment:
+      - ELASTICSEARCH_NODE_NAME=elastic-node-1
+      - ELASTICSEARCH_USERNAME=${ELASTIC_USERNAME}
+      - ELASTICSEARCH_PASSWORD=${ELASTIC_PASSWORD}   # mặc định user “elastic”
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g                   # điều chỉnh RAM tùy máy
+      # Cấu hình single‑node để chạy dễ dàng
+      - discovery.type=single-node
+    ports:
+      - "9200:9200"
+    volumes:
+      - elasticsearch_data:/bitnami/elasticsearch/data
+    healthcheck:
+      test: [ "CMD", "bash", "-c", "curl -s -u elastic:${ELASTIC_PASSWORD} http://localhost:9200/_cluster/health | grep -q '\"status\":\"green\"\\|\"status\":\"yellow\"'" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks: [ backend ]
+
+  # ---------- Kibana ----------
+  kibana:
+    image: bitnami/kibana:latest
+    container_name: kibana
+    restart: unless-stopped
+    environment:
+      - KIBANA_ELASTICSEARCH_URL=http://elasticsearch:9200
+      - ELASTICSEARCH_PASSWORD=${ELASTIC_PASSWORD}
+    ports:
+      - "5601:5601"
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    networks: [ backend ]
+
+  # ---------- MongoDB ----------
+  mongodb:
+    image: bitnami/mongodb:latest
+    container_name: mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      # Tài khoản quản trị
+      - MONGODB_ROOT_PASSWORD=${MONGODB_ROOT_PASSWORD}
+      # Tài khoản ứng dụng (tuỳ chọn – dùng khi bạn không muốn chạy bằng root)
+      - MONGODB_USERNAME=${MONGODB_USERNAME}
+      - MONGODB_PASSWORD=${MONGODB_PASSWORD}
+      - MONGODB_DATABASE=${MONGODB_DATABASE}
+      # Nếu chỉ chạy single‑node, KHÔNG khai báo replica‑set
+      # Muốn bật replica set: thêm MONGODB_REPLICA_SET_MODE=primary,...
+    volumes:
+      - mongo_data:/bitnami/mongodb
+    healthcheck:
+      test: [ "CMD-SHELL",
+              "mongo admin -u root -p $$MONGODB_ROOT_PASSWORD --eval 'db.adminCommand(\"ping\")' || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: [ backend ]
+
 networks:
   backend:
 
@@ -141,3 +245,7 @@ volumes:
   coding_pg_data:
   kafka_data:
   neo4j_data:
+  redis_data:
+  minio_data:
+  elasticsearch_data:
+  mongo_data:

@@ -2,6 +2,7 @@ package com.codecampus.quiz.mapper;
 
 import com.codecampus.quiz.entity.QuizSubmission;
 import com.codecampus.quiz.entity.QuizSubmissionAnswer;
+import com.codecampus.quiz.grpc.AnswerDto;
 import com.codecampus.submission.grpc.QuizSubmissionAnswerDto;
 import com.codecampus.submission.grpc.QuizSubmissionDto;
 import org.mapstruct.Mapper;
@@ -16,6 +17,10 @@ public interface SubmissionMapper {
     @Mapping(target = "selectedOptionId", source = "selectedOption.id")
     QuizSubmissionAnswerDto toQuizSubmissionAnswerDtoFromQuizSubmissionAnswer(
             QuizSubmissionAnswer e);
+
+    QuizSubmissionAnswer toQuizSubmissionAnswerFromAnswerDto(
+            AnswerDto answerDto);
+
 
     default com.google.protobuf.Timestamp mapInstantToProtobufTimestamp(
             java.time.Instant instant) {
