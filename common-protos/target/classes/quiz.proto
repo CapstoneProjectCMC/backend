@@ -5,6 +5,7 @@ option java_multiple_files = true;
 option java_package = "com.codecampus.quiz.grpc";
 option java_outer_classname = "QuizProto";
 import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
 
 // ---------- DTO ----------
 message OptionDto {
@@ -36,36 +37,17 @@ message QuizExerciseDto {
   int32   numQuestions = 5;
 }
 
-// ---------- Internal sync – Submission-Service → Quiz-Service ----------
-service QuizSyncService {
-  rpc CreateQuizExercise(CreateQuizExerciseRequest) returns (.google.protobuf.Empty);
-  rpc AddQuizDetail     (AddQuizDetailRequest)      returns (.google.protobuf.Empty);
-  rpc AddQuestion       (AddQuestionRequest)        returns (.google.protobuf.Empty);
-}
-
-message CreateQuizExerciseRequest {
-  QuizExerciseDto exercise = 1;
-}
-
-message AddQuizDetailRequest {
-  string exerciseId = 1;
-  repeated QuestionDto questions = 2;
-}
-
-message AddQuestionRequest {
-  string      exerciseId = 1;
-  QuestionDto question = 2;
-}
-
-// ---------- Student play ----------
-service QuizPlayService {
-  rpc LoadQuiz  (LoadQuizRequest)  returns (LoadQuizResponse);
-  rpc SubmitQuiz(SubmitQuizRequest) returns (SubmitQuizResponse);
+message AssignmentDto {
+  string id = 1;
+  string exerciseId = 2;
+  string studentId = 3;
+  google.protobuf.Timestamp dueAt = 4;
+  bool   completed = 5;
 }
 
 message LoadQuizRequest {
   string exerciseId = 1;
-  string studentId = 2;
+  string studentId = 2; // Cần để kiểm tra assignment
 }
 message LoadQuizResponse {
   QuizExerciseDto          exercise = 1;
@@ -87,4 +69,43 @@ message SubmitQuizResponse {
   int32 score = 1;
   int32 totalPoints = 2;
   bool  passed = 3;
+}
+
+// ---------- Internal sync – Submission-Service → Quiz-Service ----------
+service QuizSyncService {
+  rpc CreateQuizExercise(CreateQuizExerciseRequest) returns (.google.protobuf.Empty);
+  rpc AddQuizDetail (AddQuizDetailRequest) returns (.google.protobuf.Empty);
+  rpc AddQuestion (AddQuestionRequest) returns (.google.protobuf.Empty);
+  rpc AddOption (AddOptionRequest) returns (google.protobuf.Empty);
+  rpc UpsertAssignment (UpsertAssignmentRequest)  returns (.google.protobuf.Empty);
+}
+
+message CreateQuizExerciseRequest {
+  QuizExerciseDto exercise = 1;
+}
+
+message AddQuizDetailRequest {
+  string exerciseId = 1;
+  repeated QuestionDto questions = 2;
+}
+
+message AddQuestionRequest {
+  string      exerciseId = 1;
+  QuestionDto question = 2;
+}
+
+message AddOptionRequest {
+  string exerciseId = 1;
+  string questionId = 2;
+  OptionDto option = 3;
+}
+
+message UpsertAssignmentRequest {
+  AssignmentDto assignment = 1;
+}
+
+// ---------- Student play ----------
+service QuizPlayService {
+  rpc LoadQuiz  (LoadQuizRequest)  returns (LoadQuizResponse);
+  rpc SubmitQuiz(SubmitQuizRequest) returns (SubmitQuizResponse);
 }

@@ -11,62 +11,102 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-07-08T04:07:55+0700",
+    date = "2025-07-14T17:20:10+0700",
     comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.7 (Oracle Corporation)"
 )
 @Component
 public class QuizMapperImpl implements QuizMapper {
 
     @Override
-    public QuizExercise toEntity(QuizExerciseDto dto) {
-        if ( dto == null ) {
+    public void patchQuestionDtoToQuestion(QuestionDto questionDto, Question question) {
+        if ( questionDto == null ) {
+            return;
+        }
+
+        if ( questionDto.getId() != null ) {
+            question.setId( questionDto.getId() );
+        }
+        if ( questionDto.getText() != null ) {
+            question.setText( questionDto.getText() );
+        }
+        if ( questionDto.getQuestionType() != null ) {
+            question.setQuestionType( mapEntityEnumQuestionType( questionDto.getQuestionType() ) );
+        }
+        question.setPoints( questionDto.getPoints() );
+        question.setOrderInQuiz( questionDto.getOrderInQuiz() );
+
+        linkOptionsToQuestion( question );
+    }
+
+    @Override
+    public void patchQuizExerciseDtoToQuizExercise(QuizExerciseDto quizExerciseDto, QuizExercise quizExercise) {
+        if ( quizExerciseDto == null ) {
+            return;
+        }
+
+        if ( quizExerciseDto.getId() != null ) {
+            quizExercise.setId( quizExerciseDto.getId() );
+        }
+        if ( quizExerciseDto.getTitle() != null ) {
+            quizExercise.setTitle( quizExerciseDto.getTitle() );
+        }
+        if ( quizExerciseDto.getDescription() != null ) {
+            quizExercise.setDescription( quizExerciseDto.getDescription() );
+        }
+        quizExercise.setTotalPoints( quizExerciseDto.getTotalPoints() );
+        quizExercise.setNumQuestions( quizExerciseDto.getNumQuestions() );
+    }
+
+    @Override
+    public QuizExercise toQuizExerciseFromQuizExerciseDto(QuizExerciseDto quizExerciseDto) {
+        if ( quizExerciseDto == null ) {
             return null;
         }
 
         QuizExercise.QuizExerciseBuilder quizExercise = QuizExercise.builder();
 
-        quizExercise.id( dto.getId() );
-        quizExercise.title( dto.getTitle() );
-        quizExercise.description( dto.getDescription() );
-        quizExercise.totalPoints( dto.getTotalPoints() );
-        quizExercise.numQuestions( dto.getNumQuestions() );
+        quizExercise.id( quizExerciseDto.getId() );
+        quizExercise.title( quizExerciseDto.getTitle() );
+        quizExercise.description( quizExerciseDto.getDescription() );
+        quizExercise.totalPoints( quizExerciseDto.getTotalPoints() );
+        quizExercise.numQuestions( quizExerciseDto.getNumQuestions() );
 
         return quizExercise.build();
     }
 
     @Override
-    public Question toEntity(QuestionDto dto) {
-        if ( dto == null ) {
+    public Question toQuestionFromQuestionDto(QuestionDto questionDto) {
+        if ( questionDto == null ) {
             return null;
         }
 
         Question.QuestionBuilder question = Question.builder();
 
-        question.id( dto.getId() );
-        question.text( dto.getText() );
-        question.points( dto.getPoints() );
-        question.orderInQuiz( dto.getOrderInQuiz() );
+        question.id( questionDto.getId() );
+        question.text( questionDto.getText() );
+        question.points( questionDto.getPoints() );
+        question.orderInQuiz( questionDto.getOrderInQuiz() );
 
-        question.questionType( asEntityEnum(dto.getQuestionType()) );
+        question.questionType( mapEntityEnumQuestionType(questionDto.getQuestionType()) );
 
         Question questionResult = question.build();
 
-        link( questionResult );
+        linkOptionsToQuestion( questionResult );
 
         return questionResult;
     }
 
     @Override
-    public Option toEntity(OptionDto dto) {
-        if ( dto == null ) {
+    public Option toOptionFromOptionDto(OptionDto optionDto) {
+        if ( optionDto == null ) {
             return null;
         }
 
         Option.OptionBuilder option = Option.builder();
 
-        option.id( dto.getId() );
-        option.optionText( dto.getOptionText() );
-        option.order( dto.getOrder() );
+        option.id( optionDto.getId() );
+        option.optionText( optionDto.getOptionText() );
+        option.order( optionDto.getOrder() );
 
         return option.build();
     }

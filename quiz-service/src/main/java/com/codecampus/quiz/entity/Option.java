@@ -1,5 +1,7 @@
 package com.codecampus.quiz.entity;
 
+import com.codecampus.quiz.entity.audit.AuditMetadata;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -13,6 +15,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 @Getter
 @Setter
@@ -22,19 +26,23 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "question_option")
-public class Option
-{
-  @Id
-  String id;
+@SQLDelete(sql = "UPDATE question_option " +
+        "SET deleted_by = ? , deleted_at = now() " +
+        "WHERE id = ?")
+@Where(clause = "deleted_at IS NULL")
+public class Option extends AuditMetadata {
+    @Id
+    String id;
 
-  @ManyToOne
-  @JoinColumn(name = "question_id", nullable = false)
-  Question question;
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "question_id", nullable = false)
+    Question question;
 
-  @Column(name = "option_text")
-  String optionText;
-  boolean correct;
+    @Column(name = "option_text")
+    String optionText;
+    boolean correct;
 
-  @Column(name = "display_order")
-  String order;
+    @Column(name = "display_order")
+    String order;
 }

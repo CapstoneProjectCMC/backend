@@ -6,13 +6,13 @@ server:
     context-path: /quiz
 
 grpc:
-  client:
-    submissionGrpc:
-      address: static://submission-service:9090
-      negotiationType: plaintext
   server:
-    port: 9090
-    enableReflection: true
+    port: 9591
+
+submission:
+  grpc:
+    host: localhost
+    port: 9590
 
 spring:
   application:

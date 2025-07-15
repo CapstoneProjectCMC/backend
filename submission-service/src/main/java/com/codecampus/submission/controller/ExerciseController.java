@@ -1,30 +1,25 @@
 package com.codecampus.submission.controller;
 
+import com.codecampus.submission.constant.sort.SortField;
 import com.codecampus.submission.dto.common.ApiResponse;
-import com.codecampus.submission.dto.request.AddCodingDetailRequest;
-import com.codecampus.submission.dto.request.AddQuizDetailRequest;
+import com.codecampus.submission.dto.common.PageResponse;
 import com.codecampus.submission.dto.request.CreateExerciseRequest;
-import com.codecampus.submission.dto.request.QuestionDto;
-import com.codecampus.submission.dto.request.TestCaseDto;
-import com.codecampus.submission.entity.CodingDetail;
-import com.codecampus.submission.entity.Exercise;
-import com.codecampus.submission.entity.Question;
-import com.codecampus.submission.entity.QuizDetail;
-import com.codecampus.submission.entity.TestCase;
-import com.codecampus.submission.service.CodingService;
+import com.codecampus.submission.dto.request.UpdateExerciseRequest;
+import com.codecampus.submission.dto.response.quiz.ExerciseDetailQuizResponse;
+import com.codecampus.submission.dto.response.quiz.ExerciseQuizResponse;
 import com.codecampus.submission.service.ExerciseService;
-import com.codecampus.submission.service.QuizService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.coyote.BadRequestException;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -32,65 +27,78 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-@RequestMapping("/exercises")
-public class ExerciseController
-{
-  ExerciseService exerciseService;
-  QuizService quizService;
-  CodingService codingService;
+public class ExerciseController {
 
-  @PostMapping
-  ApiResponse<Exercise> createExercise(
-      @RequestBody @Valid CreateExerciseRequest request)
-  {
-    return ApiResponse.<Exercise>builder()
-        .result(exerciseService.createExercise(request))
-        .message("Tạo bài tập thành công!")
-        .build();
-  }
+    ExerciseService exerciseService;
 
-  @PostMapping("/{exerciseId}/quiz-detail")
-  ApiResponse<QuizDetail> addQuizDetail(
-      @PathVariable("exerciseId") String exerciseId,
-      @RequestBody @Valid AddQuizDetailRequest addQuizRequest)
-  {
-    return ApiResponse.<QuizDetail>builder()
-        .result(quizService
-            .addQuizDetail(exerciseId, addQuizRequest))
-        .message("Tạo Quiz thành công!")
-        .build();
-  }
+    @PostMapping("/exercise")
+    ApiResponse<Void> createExercise(
+            @RequestBody @Valid CreateExerciseRequest request) {
 
-  @PostMapping("/{exerciseId}/coding-detail")
-  ApiResponse<CodingDetail> addCodingDetail(
-      @PathVariable("exerciseId") String exerciseId,
-      @RequestBody @Valid AddCodingDetailRequest addCodingRequest)
-  {
-    return ApiResponse.<CodingDetail>builder()
-        .result(codingService.addCodingDetail(exerciseId, addCodingRequest))
-        .message("Tạo Coding thành công!")
-        .build();
-  }
+        exerciseService.createExercise(request);
 
-  @PostMapping("/{exerciseId}/quiz/questions")
-  ApiResponse<Question> addQuestion(
-      @PathVariable("exerciseId") String exerciseId,
-      @RequestBody @Valid QuestionDto questionDto) throws BadRequestException
-  {
-    return ApiResponse.<Question>builder()
-        .result(quizService.addQuestion(exerciseId, questionDto))
-        .message("Thêm câu hỏi cho quiz thành công!")
-        .build();
-  }
+        return ApiResponse.<Void>builder()
+                .message("Tạo bài tập thành công!")
+                .build();
+    }
 
-  @PostMapping("/{exerciseId}/coding/test-cases")
-  ApiResponse<TestCase> addTestCase(
-      @PathVariable("exerciseId") String exerciseId,
-      @RequestBody @Valid TestCaseDto testCaseDto) throws BadRequestException
-  {
-    return ApiResponse.<TestCase>builder()
-        .result(codingService.addTestCase(exerciseId, testCaseDto))
-        .message("Thêm testcase cho coding thành công!")
-        .build();
-  }
+
+    @PatchMapping("/exercise/{id}")
+    ApiResponse<Void> updateExercise(
+            @PathVariable String id,
+            @RequestBody UpdateExerciseRequest request) {
+
+        exerciseService.updateExercise(id, request);
+
+        return ApiResponse.<Void>builder()
+                .message("Sửa exercise thành công!")
+                .build();
+    }
+
+    @GetMapping("/exercises")
+    ApiResponse<PageResponse<ExerciseQuizResponse>> getAllExercises(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "CREATED_AT") SortField sortBy,
+            @RequestParam(defaultValue = "false") boolean asc
+    ) {
+        return ApiResponse.<PageResponse<ExerciseQuizResponse>>builder()
+                .result(exerciseService.getAllExercises(
+                        page, size,
+                        sortBy, asc)
+                )
+                .message("Lấy toàn bộ exercise thành công!")
+                .build();
+    }
+
+    @GetMapping("/exercises/self")
+    ApiResponse<PageResponse<ExerciseQuizResponse>> getExercisesOf(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "CREATED_AT") SortField sortBy,
+            @RequestParam(defaultValue = "false") boolean asc) {
+        return ApiResponse.<PageResponse<ExerciseQuizResponse>>builder()
+                .result(exerciseService.getExercisesOf(
+                        page, size,
+                        sortBy, asc)
+                )
+                .message("Exercise của giáo viên!")
+                .build();
+    }
+
+    @GetMapping("/exercise/{id}")
+    ApiResponse<ExerciseDetailQuizResponse> getExercise(
+            @PathVariable String id,
+            @RequestParam(defaultValue = "1") int qPage,
+            @RequestParam(defaultValue = "5") int qSize,
+            @RequestParam(defaultValue = "ORDER_IN_QUIZ") SortField qSortBy,
+            @RequestParam(defaultValue = "false") boolean qAsc) {
+        return ApiResponse.<ExerciseDetailQuizResponse>builder()
+                .result(exerciseService.getExerciseDetail(
+                        id,
+                        qPage, qSize,
+                        qSortBy, qAsc))
+                .message("Chi tiết exercise!")
+                .build();
+    }
 }

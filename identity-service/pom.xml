@@ -86,13 +86,6 @@
             <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>${projectlombok-lombok.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
         <!-- ===== Spring Cloud & integration ===== -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
@@ -154,6 +147,12 @@
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
             <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${projectlombok-lombok.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- ===== Security / JWT extras ===== -->
@@ -282,12 +281,16 @@
                 <version>${jacoco.version}</version>
                 <executions>
                     <execution>
-                        <goals><goal>prepare-agent</goal></goals>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
                     </execution>
                     <execution>
                         <id>report</id>
                         <phase>prepare-package</phase>
-                        <goals><goal>report</goal></goals>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
                     </execution>
                 </executions>
                 <configuration>
@@ -309,7 +312,9 @@
                     <execution>
                         <id>detect</id>
                         <phase>initialize</phase>
-                        <goals><goal>detect</goal></goals>
+                        <goals>
+                            <goal>detect</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>
@@ -331,7 +336,10 @@
                 <executions>
                     <execution>
                         <id>proto-compile</id>
-                        <goals><goal>compile</goal><goal>compile-custom</goal></goals>
+                        <goals>
+                            <goal>compile</goal>
+                            <goal>compile-custom</goal>
+                        </goals>
                         <configuration>
                             <pluginParameter>jakarta_omit,@generated=omit</pluginParameter>
                         </configuration>

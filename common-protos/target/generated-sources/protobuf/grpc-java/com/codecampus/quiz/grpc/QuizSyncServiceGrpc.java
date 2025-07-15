@@ -111,6 +111,68 @@ public final class QuizSyncServiceGrpc {
     return getAddQuestionMethod;
   }
 
+  private static volatile io.grpc.MethodDescriptor<com.codecampus.quiz.grpc.AddOptionRequest,
+      com.google.protobuf.Empty> getAddOptionMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "AddOption",
+      requestType = com.codecampus.quiz.grpc.AddOptionRequest.class,
+      responseType = com.google.protobuf.Empty.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<com.codecampus.quiz.grpc.AddOptionRequest,
+      com.google.protobuf.Empty> getAddOptionMethod() {
+    io.grpc.MethodDescriptor<com.codecampus.quiz.grpc.AddOptionRequest, com.google.protobuf.Empty> getAddOptionMethod;
+    if ((getAddOptionMethod = QuizSyncServiceGrpc.getAddOptionMethod) == null) {
+      synchronized (QuizSyncServiceGrpc.class) {
+        if ((getAddOptionMethod = QuizSyncServiceGrpc.getAddOptionMethod) == null) {
+          QuizSyncServiceGrpc.getAddOptionMethod = getAddOptionMethod =
+              io.grpc.MethodDescriptor.<com.codecampus.quiz.grpc.AddOptionRequest, com.google.protobuf.Empty>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "AddOption"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.codecampus.quiz.grpc.AddOptionRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.google.protobuf.Empty.getDefaultInstance()))
+              .setSchemaDescriptor(new QuizSyncServiceMethodDescriptorSupplier("AddOption"))
+              .build();
+        }
+      }
+    }
+    return getAddOptionMethod;
+  }
+
+  private static volatile io.grpc.MethodDescriptor<com.codecampus.quiz.grpc.UpsertAssignmentRequest,
+      com.google.protobuf.Empty> getUpsertAssignmentMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "UpsertAssignment",
+      requestType = com.codecampus.quiz.grpc.UpsertAssignmentRequest.class,
+      responseType = com.google.protobuf.Empty.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<com.codecampus.quiz.grpc.UpsertAssignmentRequest,
+      com.google.protobuf.Empty> getUpsertAssignmentMethod() {
+    io.grpc.MethodDescriptor<com.codecampus.quiz.grpc.UpsertAssignmentRequest, com.google.protobuf.Empty> getUpsertAssignmentMethod;
+    if ((getUpsertAssignmentMethod = QuizSyncServiceGrpc.getUpsertAssignmentMethod) == null) {
+      synchronized (QuizSyncServiceGrpc.class) {
+        if ((getUpsertAssignmentMethod = QuizSyncServiceGrpc.getUpsertAssignmentMethod) == null) {
+          QuizSyncServiceGrpc.getUpsertAssignmentMethod = getUpsertAssignmentMethod =
+              io.grpc.MethodDescriptor.<com.codecampus.quiz.grpc.UpsertAssignmentRequest, com.google.protobuf.Empty>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "UpsertAssignment"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.codecampus.quiz.grpc.UpsertAssignmentRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.google.protobuf.Empty.getDefaultInstance()))
+              .setSchemaDescriptor(new QuizSyncServiceMethodDescriptorSupplier("UpsertAssignment"))
+              .build();
+        }
+      }
+    }
+    return getUpsertAssignmentMethod;
+  }
+
   /**
    * Creates a new async stub that supports all call types for the service
    */
@@ -197,6 +259,20 @@ public final class QuizSyncServiceGrpc {
         io.grpc.stub.StreamObserver<com.google.protobuf.Empty> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getAddQuestionMethod(), responseObserver);
     }
+
+    /**
+     */
+    default void addOption(com.codecampus.quiz.grpc.AddOptionRequest request,
+        io.grpc.stub.StreamObserver<com.google.protobuf.Empty> responseObserver) {
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getAddOptionMethod(), responseObserver);
+    }
+
+    /**
+     */
+    default void upsertAssignment(com.codecampus.quiz.grpc.UpsertAssignmentRequest request,
+        io.grpc.stub.StreamObserver<com.google.protobuf.Empty> responseObserver) {
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getUpsertAssignmentMethod(), responseObserver);
+    }
   }
 
   /**
@@ -255,6 +331,22 @@ public final class QuizSyncServiceGrpc {
       io.grpc.stub.ClientCalls.asyncUnaryCall(
           getChannel().newCall(getAddQuestionMethod(), getCallOptions()), request, responseObserver);
     }
+
+    /**
+     */
+    public void addOption(com.codecampus.quiz.grpc.AddOptionRequest request,
+        io.grpc.stub.StreamObserver<com.google.protobuf.Empty> responseObserver) {
+      io.grpc.stub.ClientCalls.asyncUnaryCall(
+          getChannel().newCall(getAddOptionMethod(), getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     */
+    public void upsertAssignment(com.codecampus.quiz.grpc.UpsertAssignmentRequest request,
+        io.grpc.stub.StreamObserver<com.google.protobuf.Empty> responseObserver) {
+      io.grpc.stub.ClientCalls.asyncUnaryCall(
+          getChannel().newCall(getUpsertAssignmentMethod(), getCallOptions()), request, responseObserver);
+    }
   }
 
   /**
@@ -296,6 +388,20 @@ public final class QuizSyncServiceGrpc {
       return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getAddQuestionMethod(), getCallOptions(), request);
     }
+
+    /**
+     */
+    public com.google.protobuf.Empty addOption(com.codecampus.quiz.grpc.AddOptionRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getAddOptionMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public com.google.protobuf.Empty upsertAssignment(com.codecampus.quiz.grpc.UpsertAssignmentRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getUpsertAssignmentMethod(), getCallOptions(), request);
+    }
   }
 
   /**
@@ -336,6 +442,20 @@ public final class QuizSyncServiceGrpc {
     public com.google.protobuf.Empty addQuestion(com.codecampus.quiz.grpc.AddQuestionRequest request) {
       return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getAddQuestionMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public com.google.protobuf.Empty addOption(com.codecampus.quiz.grpc.AddOptionRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getAddOptionMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public com.google.protobuf.Empty upsertAssignment(com.codecampus.quiz.grpc.UpsertAssignmentRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getUpsertAssignmentMethod(), getCallOptions(), request);
     }
   }
 
@@ -381,11 +501,29 @@ public final class QuizSyncServiceGrpc {
       return io.grpc.stub.ClientCalls.futureUnaryCall(
           getChannel().newCall(getAddQuestionMethod(), getCallOptions()), request);
     }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<com.google.protobuf.Empty> addOption(
+        com.codecampus.quiz.grpc.AddOptionRequest request) {
+      return io.grpc.stub.ClientCalls.futureUnaryCall(
+          getChannel().newCall(getAddOptionMethod(), getCallOptions()), request);
+    }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<com.google.protobuf.Empty> upsertAssignment(
+        com.codecampus.quiz.grpc.UpsertAssignmentRequest request) {
+      return io.grpc.stub.ClientCalls.futureUnaryCall(
+          getChannel().newCall(getUpsertAssignmentMethod(), getCallOptions()), request);
+    }
   }
 
   private static final int METHODID_CREATE_QUIZ_EXERCISE = 0;
   private static final int METHODID_ADD_QUIZ_DETAIL = 1;
   private static final int METHODID_ADD_QUESTION = 2;
+  private static final int METHODID_ADD_OPTION = 3;
+  private static final int METHODID_UPSERT_ASSIGNMENT = 4;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -414,6 +552,14 @@ public final class QuizSyncServiceGrpc {
           break;
         case METHODID_ADD_QUESTION:
           serviceImpl.addQuestion((com.codecampus.quiz.grpc.AddQuestionRequest) request,
+              (io.grpc.stub.StreamObserver<com.google.protobuf.Empty>) responseObserver);
+          break;
+        case METHODID_ADD_OPTION:
+          serviceImpl.addOption((com.codecampus.quiz.grpc.AddOptionRequest) request,
+              (io.grpc.stub.StreamObserver<com.google.protobuf.Empty>) responseObserver);
+          break;
+        case METHODID_UPSERT_ASSIGNMENT:
+          serviceImpl.upsertAssignment((com.codecampus.quiz.grpc.UpsertAssignmentRequest) request,
               (io.grpc.stub.StreamObserver<com.google.protobuf.Empty>) responseObserver);
           break;
         default:
@@ -455,6 +601,20 @@ public final class QuizSyncServiceGrpc {
               com.codecampus.quiz.grpc.AddQuestionRequest,
               com.google.protobuf.Empty>(
                 service, METHODID_ADD_QUESTION)))
+        .addMethod(
+          getAddOptionMethod(),
+          io.grpc.stub.ServerCalls.asyncUnaryCall(
+            new MethodHandlers<
+              com.codecampus.quiz.grpc.AddOptionRequest,
+              com.google.protobuf.Empty>(
+                service, METHODID_ADD_OPTION)))
+        .addMethod(
+          getUpsertAssignmentMethod(),
+          io.grpc.stub.ServerCalls.asyncUnaryCall(
+            new MethodHandlers<
+              com.codecampus.quiz.grpc.UpsertAssignmentRequest,
+              com.google.protobuf.Empty>(
+                service, METHODID_UPSERT_ASSIGNMENT)))
         .build();
   }
 
@@ -506,6 +666,8 @@ public final class QuizSyncServiceGrpc {
               .addMethod(getCreateQuizExerciseMethod())
               .addMethod(getAddQuizDetailMethod())
               .addMethod(getAddQuestionMethod())
+              .addMethod(getAddOptionMethod())
+              .addMethod(getUpsertAssignmentMethod())
               .build();
         }
       }

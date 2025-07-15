@@ -87,6 +87,10 @@ private static final long serialVersionUID = 0L;
   @SuppressWarnings("serial")
   private volatile java.lang.Object studentId_ = "";
   /**
+   * <pre>
+   * Cần để kiểm tra assignment
+   * </pre>
+   *
    * <code>string studentId = 2;</code>
    * @return The studentId.
    */
@@ -104,6 +108,10 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
+   * <pre>
+   * Cần để kiểm tra assignment
+   * </pre>
+   *
    * <code>string studentId = 2;</code>
    * @return The bytes for studentId.
    */
@@ -514,6 +522,10 @@ private static final long serialVersionUID = 0L;
 
     private java.lang.Object studentId_ = "";
     /**
+     * <pre>
+     * Cần để kiểm tra assignment
+     * </pre>
+     *
      * <code>string studentId = 2;</code>
      * @return The studentId.
      */
@@ -530,6 +542,10 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
+     * <pre>
+     * Cần để kiểm tra assignment
+     * </pre>
+     *
      * <code>string studentId = 2;</code>
      * @return The bytes for studentId.
      */
@@ -547,6 +563,10 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
+     * <pre>
+     * Cần để kiểm tra assignment
+     * </pre>
+     *
      * <code>string studentId = 2;</code>
      * @param value The studentId to set.
      * @return This builder for chaining.
@@ -560,6 +580,10 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
+     * <pre>
+     * Cần để kiểm tra assignment
+     * </pre>
+     *
      * <code>string studentId = 2;</code>
      * @return This builder for chaining.
      */
@@ -570,6 +594,10 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
+     * <pre>
+     * Cần để kiểm tra assignment
+     * </pre>
+     *
      * <code>string studentId = 2;</code>
      * @param value The bytes for studentId to set.
      * @return This builder for chaining.

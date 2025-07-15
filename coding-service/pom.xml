@@ -36,7 +36,6 @@
         <grpc.version>1.72.0</grpc.version>
         <protobuf.version>4.30.2</protobuf.version>
         <spring-cloud.version>2024.0.1</spring-cloud.version>
-        <spring-grpc.version>0.8.0</spring-grpc.version>
 
         <lombok.version>1.18.38</lombok.version>
         <mapstruct.version>1.6.3</mapstruct.version>
@@ -46,6 +45,7 @@
         <nimbus-jose.version>10.3</nimbus-jose.version>
         <security-oauth2-jose.version>6.5.0</security-oauth2-jose.version>
         <jacoco.version>0.8.13</jacoco.version>
+        <grpc.server.starter.version>3.1.0.RELEASE</grpc.server.starter.version>
 
         <!-- Build-plugin versions -->
         <protobuf.plugin.version>0.6.1</protobuf.plugin.version>   <!-- xolstice/protobuf -->
@@ -99,8 +99,9 @@
 
         <!-- ===== gRPC & Protobuf ===== -->
         <dependency>
-            <groupId>org.springframework.grpc</groupId>
-            <artifactId>spring-grpc-server-web-spring-boot-starter</artifactId>
+            <groupId>net.devh</groupId>
+            <artifactId>grpc-server-spring-boot-starter</artifactId>
+            <version>${grpc.server.starter.version}</version>
         </dependency>
         <dependency>
             <groupId>io.grpc</groupId>
@@ -219,13 +220,6 @@
                 <scope>import</scope>
             </dependency>
             <dependency>
-                <groupId>org.springframework.grpc</groupId>
-                <artifactId>spring-grpc-dependencies</artifactId>
-                <version>${spring-grpc.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            <dependency>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>${jacoco.version}</version>
@@ -276,12 +270,16 @@
                 <version>${jacoco.version}</version>
                 <executions>
                     <execution>
-                        <goals><goal>prepare-agent</goal></goals>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
                     </execution>
                     <execution>
                         <id>report</id>
                         <phase>prepare-package</phase>
-                        <goals><goal>report</goal></goals>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
                     </execution>
                 </executions>
                 <configuration>
@@ -303,7 +301,9 @@
                     <execution>
                         <id>detect</id>
                         <phase>initialize</phase>
-                        <goals><goal>detect</goal></goals>
+                        <goals>
+                            <goal>detect</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>
@@ -325,7 +325,10 @@
                 <executions>
                     <execution>
                         <id>proto-compile</id>
-                        <goals><goal>compile</goal><goal>compile-custom</goal></goals>
+                        <goals>
+                            <goal>compile</goal>
+                            <goal>compile-custom</goal>
+                        </goals>
                         <configuration>
                             <pluginParameter>jakarta_omit,@generated=omit</pluginParameter>
                         </configuration>

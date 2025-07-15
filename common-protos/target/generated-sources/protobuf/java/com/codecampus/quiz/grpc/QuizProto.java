@@ -41,20 +41,10 @@ public final class QuizProto {
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_quiz_QuizExerciseDto_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_quiz_CreateQuizExerciseRequest_descriptor;
+    internal_static_quiz_AssignmentDto_descriptor;
   static final 
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_quiz_CreateQuizExerciseRequest_fieldAccessorTable;
-  static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_quiz_AddQuizDetailRequest_descriptor;
-  static final 
-    com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_quiz_AddQuizDetailRequest_fieldAccessorTable;
-  static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_quiz_AddQuestionRequest_descriptor;
-  static final 
-    com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_quiz_AddQuestionRequest_fieldAccessorTable;
+      internal_static_quiz_AssignmentDto_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
     internal_static_quiz_LoadQuizRequest_descriptor;
   static final 
@@ -80,6 +70,31 @@ public final class QuizProto {
   static final 
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_quiz_SubmitQuizResponse_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_quiz_CreateQuizExerciseRequest_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_quiz_CreateQuizExerciseRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_quiz_AddQuizDetailRequest_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_quiz_AddQuizDetailRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_quiz_AddQuestionRequest_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_quiz_AddQuestionRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_quiz_AddOptionRequest_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_quiz_AddOptionRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_quiz_UpsertAssignmentRequest_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_quiz_UpsertAssignmentRequest_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -90,48 +105,61 @@ public final class QuizProto {
   static {
     java.lang.String[] descriptorData = {
       "\n\nquiz.proto\022\004quiz\032\033google/protobuf/empt" +
-      "y.proto\":\n\tOptionDto\022\n\n\002id\030\001 \001(\t\022\022\n\nopti" +
-      "onText\030\002 \001(\t\022\r\n\005order\030\003 \001(\t\"\230\001\n\013Question" +
-      "Dto\022\n\n\002id\030\001 \001(\t\022\014\n\004text\030\002 \001(\t\022(\n\014questio" +
-      "nType\030\003 \001(\0162\022.quiz.QuestionType\022\016\n\006point" +
-      "s\030\004 \001(\005\022\023\n\013orderInQuiz\030\005 \001(\005\022 \n\007options\030" +
-      "\006 \003(\0132\017.quiz.OptionDto\"l\n\017QuizExerciseDt" +
-      "o\022\n\n\002id\030\001 \001(\t\022\r\n\005title\030\002 \001(\t\022\023\n\013descript" +
-      "ion\030\003 \001(\t\022\023\n\013totalPoints\030\004 \001(\005\022\024\n\014numQue" +
-      "stions\030\005 \001(\005\"D\n\031CreateQuizExerciseReques" +
-      "t\022\'\n\010exercise\030\001 \001(\0132\025.quiz.QuizExerciseD" +
-      "to\"P\n\024AddQuizDetailRequest\022\022\n\nexerciseId" +
-      "\030\001 \001(\t\022$\n\tquestions\030\002 \003(\0132\021.quiz.Questio" +
-      "nDto\"M\n\022AddQuestionRequest\022\022\n\nexerciseId" +
-      "\030\001 \001(\t\022#\n\010question\030\002 \001(\0132\021.quiz.Question" +
-      "Dto\"8\n\017LoadQuizRequest\022\022\n\nexerciseId\030\001 \001" +
-      "(\t\022\021\n\tstudentId\030\002 \001(\t\"a\n\020LoadQuizRespons" +
-      "e\022\'\n\010exercise\030\001 \001(\0132\025.quiz.QuizExerciseD" +
-      "to\022$\n\tquestions\030\002 \003(\0132\021.quiz.QuestionDto" +
-      "\"M\n\tAnswerDto\022\022\n\nquestionId\030\001 \001(\t\022\030\n\020sel" +
-      "ectedOptionId\030\002 \001(\t\022\022\n\nanswerText\030\003 \001(\t\"" +
-      "\\\n\021SubmitQuizRequest\022\022\n\nexerciseId\030\001 \001(\t" +
-      "\022\021\n\tstudentId\030\002 \001(\t\022 \n\007answers\030\003 \003(\0132\017.q" +
-      "uiz.AnswerDto\"H\n\022SubmitQuizResponse\022\r\n\005s" +
-      "core\030\001 \001(\005\022\023\n\013totalPoints\030\002 \001(\005\022\016\n\006passe" +
-      "d\030\003 \001(\010*C\n\014QuestionType\022\021\n\rSINGLE_CHOICE" +
-      "\020\000\022\020\n\014MULTI_CHOICE\020\001\022\016\n\nFILL_BLANK\020\0022\346\001\n" +
-      "\017QuizSyncService\022M\n\022CreateQuizExercise\022\037" +
-      ".quiz.CreateQuizExerciseRequest\032\026.google" +
-      ".protobuf.Empty\022C\n\rAddQuizDetail\022\032.quiz." +
-      "AddQuizDetailRequest\032\026.google.protobuf.E" +
-      "mpty\022?\n\013AddQuestion\022\030.quiz.AddQuestionRe" +
-      "quest\032\026.google.protobuf.Empty2\215\001\n\017QuizPl" +
-      "ayService\0229\n\010LoadQuiz\022\025.quiz.LoadQuizReq" +
-      "uest\032\026.quiz.LoadQuizResponse\022?\n\nSubmitQu" +
-      "iz\022\027.quiz.SubmitQuizRequest\032\030.quiz.Submi" +
-      "tQuizResponseB\'\n\030com.codecampus.quiz.grp" +
-      "cB\tQuizProtoP\001b\006proto3"
+      "y.proto\032\037google/protobuf/timestamp.proto" +
+      "\":\n\tOptionDto\022\n\n\002id\030\001 \001(\t\022\022\n\noptionText\030" +
+      "\002 \001(\t\022\r\n\005order\030\003 \001(\t\"\230\001\n\013QuestionDto\022\n\n\002" +
+      "id\030\001 \001(\t\022\014\n\004text\030\002 \001(\t\022(\n\014questionType\030\003" +
+      " \001(\0162\022.quiz.QuestionType\022\016\n\006points\030\004 \001(\005" +
+      "\022\023\n\013orderInQuiz\030\005 \001(\005\022 \n\007options\030\006 \003(\0132\017" +
+      ".quiz.OptionDto\"l\n\017QuizExerciseDto\022\n\n\002id" +
+      "\030\001 \001(\t\022\r\n\005title\030\002 \001(\t\022\023\n\013description\030\003 \001" +
+      "(\t\022\023\n\013totalPoints\030\004 \001(\005\022\024\n\014numQuestions\030" +
+      "\005 \001(\005\"\200\001\n\rAssignmentDto\022\n\n\002id\030\001 \001(\t\022\022\n\ne" +
+      "xerciseId\030\002 \001(\t\022\021\n\tstudentId\030\003 \001(\t\022)\n\005du" +
+      "eAt\030\004 \001(\0132\032.google.protobuf.Timestamp\022\021\n" +
+      "\tcompleted\030\005 \001(\010\"8\n\017LoadQuizRequest\022\022\n\ne" +
+      "xerciseId\030\001 \001(\t\022\021\n\tstudentId\030\002 \001(\t\"a\n\020Lo" +
+      "adQuizResponse\022\'\n\010exercise\030\001 \001(\0132\025.quiz." +
+      "QuizExerciseDto\022$\n\tquestions\030\002 \003(\0132\021.qui" +
+      "z.QuestionDto\"M\n\tAnswerDto\022\022\n\nquestionId" +
+      "\030\001 \001(\t\022\030\n\020selectedOptionId\030\002 \001(\t\022\022\n\nansw" +
+      "erText\030\003 \001(\t\"\\\n\021SubmitQuizRequest\022\022\n\nexe" +
+      "rciseId\030\001 \001(\t\022\021\n\tstudentId\030\002 \001(\t\022 \n\007answ" +
+      "ers\030\003 \003(\0132\017.quiz.AnswerDto\"H\n\022SubmitQuiz" +
+      "Response\022\r\n\005score\030\001 \001(\005\022\023\n\013totalPoints\030\002" +
+      " \001(\005\022\016\n\006passed\030\003 \001(\010\"D\n\031CreateQuizExerci" +
+      "seRequest\022\'\n\010exercise\030\001 \001(\0132\025.quiz.QuizE" +
+      "xerciseDto\"P\n\024AddQuizDetailRequest\022\022\n\nex" +
+      "erciseId\030\001 \001(\t\022$\n\tquestions\030\002 \003(\0132\021.quiz" +
+      ".QuestionDto\"M\n\022AddQuestionRequest\022\022\n\nex" +
+      "erciseId\030\001 \001(\t\022#\n\010question\030\002 \001(\0132\021.quiz." +
+      "QuestionDto\"[\n\020AddOptionRequest\022\022\n\nexerc" +
+      "iseId\030\001 \001(\t\022\022\n\nquestionId\030\002 \001(\t\022\037\n\006optio" +
+      "n\030\003 \001(\0132\017.quiz.OptionDto\"B\n\027UpsertAssign" +
+      "mentRequest\022\'\n\nassignment\030\001 \001(\0132\023.quiz.A" +
+      "ssignmentDto*C\n\014QuestionType\022\021\n\rSINGLE_C" +
+      "HOICE\020\000\022\020\n\014MULTI_CHOICE\020\001\022\016\n\nFILL_BLANK\020" +
+      "\0022\356\002\n\017QuizSyncService\022M\n\022CreateQuizExerc" +
+      "ise\022\037.quiz.CreateQuizExerciseRequest\032\026.g" +
+      "oogle.protobuf.Empty\022C\n\rAddQuizDetail\022\032." +
+      "quiz.AddQuizDetailRequest\032\026.google.proto" +
+      "buf.Empty\022?\n\013AddQuestion\022\030.quiz.AddQuest" +
+      "ionRequest\032\026.google.protobuf.Empty\022;\n\tAd" +
+      "dOption\022\026.quiz.AddOptionRequest\032\026.google" +
+      ".protobuf.Empty\022I\n\020UpsertAssignment\022\035.qu" +
+      "iz.UpsertAssignmentRequest\032\026.google.prot" +
+      "obuf.Empty2\215\001\n\017QuizPlayService\0229\n\010LoadQu" +
+      "iz\022\025.quiz.LoadQuizRequest\032\026.quiz.LoadQui" +
+      "zResponse\022?\n\nSubmitQuiz\022\027.quiz.SubmitQui" +
+      "zRequest\032\030.quiz.SubmitQuizResponseB\'\n\030co" +
+      "m.codecampus.quiz.grpcB\tQuizProtoP\001b\006pro" +
+      "to3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
           com.google.protobuf.EmptyProto.getDescriptor(),
+          com.google.protobuf.TimestampProto.getDescriptor(),
         });
     internal_static_quiz_OptionDto_descriptor =
       getDescriptor().getMessageTypes().get(0);
@@ -151,56 +179,75 @@ public final class QuizProto {
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_quiz_QuizExerciseDto_descriptor,
         new java.lang.String[] { "Id", "Title", "Description", "TotalPoints", "NumQuestions", });
-    internal_static_quiz_CreateQuizExerciseRequest_descriptor =
+    internal_static_quiz_AssignmentDto_descriptor =
       getDescriptor().getMessageTypes().get(3);
-    internal_static_quiz_CreateQuizExerciseRequest_fieldAccessorTable = new
+    internal_static_quiz_AssignmentDto_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-        internal_static_quiz_CreateQuizExerciseRequest_descriptor,
-        new java.lang.String[] { "Exercise", });
-    internal_static_quiz_AddQuizDetailRequest_descriptor =
-      getDescriptor().getMessageTypes().get(4);
-    internal_static_quiz_AddQuizDetailRequest_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-        internal_static_quiz_AddQuizDetailRequest_descriptor,
-        new java.lang.String[] { "ExerciseId", "Questions", });
-    internal_static_quiz_AddQuestionRequest_descriptor =
-      getDescriptor().getMessageTypes().get(5);
-    internal_static_quiz_AddQuestionRequest_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-        internal_static_quiz_AddQuestionRequest_descriptor,
-        new java.lang.String[] { "ExerciseId", "Question", });
+        internal_static_quiz_AssignmentDto_descriptor,
+        new java.lang.String[] { "Id", "ExerciseId", "StudentId", "DueAt", "Completed", });
     internal_static_quiz_LoadQuizRequest_descriptor =
-      getDescriptor().getMessageTypes().get(6);
+      getDescriptor().getMessageTypes().get(4);
     internal_static_quiz_LoadQuizRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_quiz_LoadQuizRequest_descriptor,
         new java.lang.String[] { "ExerciseId", "StudentId", });
     internal_static_quiz_LoadQuizResponse_descriptor =
-      getDescriptor().getMessageTypes().get(7);
+      getDescriptor().getMessageTypes().get(5);
     internal_static_quiz_LoadQuizResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_quiz_LoadQuizResponse_descriptor,
         new java.lang.String[] { "Exercise", "Questions", });
     internal_static_quiz_AnswerDto_descriptor =
-      getDescriptor().getMessageTypes().get(8);
+      getDescriptor().getMessageTypes().get(6);
     internal_static_quiz_AnswerDto_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_quiz_AnswerDto_descriptor,
         new java.lang.String[] { "QuestionId", "SelectedOptionId", "AnswerText", });
     internal_static_quiz_SubmitQuizRequest_descriptor =
-      getDescriptor().getMessageTypes().get(9);
+      getDescriptor().getMessageTypes().get(7);
     internal_static_quiz_SubmitQuizRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_quiz_SubmitQuizRequest_descriptor,
         new java.lang.String[] { "ExerciseId", "StudentId", "Answers", });
     internal_static_quiz_SubmitQuizResponse_descriptor =
-      getDescriptor().getMessageTypes().get(10);
+      getDescriptor().getMessageTypes().get(8);
     internal_static_quiz_SubmitQuizResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_quiz_SubmitQuizResponse_descriptor,
         new java.lang.String[] { "Score", "TotalPoints", "Passed", });
+    internal_static_quiz_CreateQuizExerciseRequest_descriptor =
+      getDescriptor().getMessageTypes().get(9);
+    internal_static_quiz_CreateQuizExerciseRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_quiz_CreateQuizExerciseRequest_descriptor,
+        new java.lang.String[] { "Exercise", });
+    internal_static_quiz_AddQuizDetailRequest_descriptor =
+      getDescriptor().getMessageTypes().get(10);
+    internal_static_quiz_AddQuizDetailRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_quiz_AddQuizDetailRequest_descriptor,
+        new java.lang.String[] { "ExerciseId", "Questions", });
+    internal_static_quiz_AddQuestionRequest_descriptor =
+      getDescriptor().getMessageTypes().get(11);
+    internal_static_quiz_AddQuestionRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_quiz_AddQuestionRequest_descriptor,
+        new java.lang.String[] { "ExerciseId", "Question", });
+    internal_static_quiz_AddOptionRequest_descriptor =
+      getDescriptor().getMessageTypes().get(12);
+    internal_static_quiz_AddOptionRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_quiz_AddOptionRequest_descriptor,
+        new java.lang.String[] { "ExerciseId", "QuestionId", "Option", });
+    internal_static_quiz_UpsertAssignmentRequest_descriptor =
+      getDescriptor().getMessageTypes().get(13);
+    internal_static_quiz_UpsertAssignmentRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_quiz_UpsertAssignmentRequest_descriptor,
+        new java.lang.String[] { "Assignment", });
     descriptor.resolveAllFeaturesImmutable();
     com.google.protobuf.EmptyProto.getDescriptor();
+    com.google.protobuf.TimestampProto.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

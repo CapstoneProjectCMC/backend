@@ -8,133 +8,137 @@ import com.codecampus.quiz.grpc.OptionDto;
 import com.codecampus.quiz.grpc.QuestionDto;
 import com.codecampus.quiz.grpc.QuestionType;
 import com.codecampus.quiz.grpc.QuizExerciseDto;
-import java.util.Comparator;
 import org.mapstruct.AfterMapping;
+import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 
+import java.util.Comparator;
+import java.util.Optional;
+
+import static java.util.stream.Collectors.toSet;
+
 @Mapper(componentModel = "spring",
-    unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface QuizMapper
-{
-  /* ===== gRPC  →  Entity (đồng bộ) =============== */
+        unmappedTargetPolicy = ReportingPolicy.IGNORE)
+public interface QuizMapper {
 
-  private static QuestionType mapType(
-      com.codecampus.quiz.constant.submission.QuestionType questionType)
-  {
-    return switch (questionType)
-    {
-      case SINGLE_CHOICE -> QuestionType.SINGLE_CHOICE;
-      case MULTI_CHOICE -> QuestionType.MULTI_CHOICE;
-      case FILL_BLANK -> QuestionType.FILL_BLANK;
-    };
-  }
-
-  @Mapping(target = "questions", ignore = true)
-  QuizExercise toEntity(QuizExerciseDto dto);
-
-  @Mapping(target = "quiz", ignore = true)
-  @Mapping(target = "questionType",
-      expression = "java(asEntityEnum(dto.getQuestionType()))")
-  Question toEntity(QuestionDto dto);
-
-  /* ===== Entity → gRPC (học sinh) ================ */
-
-  @Mapping(target = "question", ignore = true)
-  Option toEntity(OptionDto dto);
-
-  /* ===== helpers ===== */
-
-  /**
-   * Trả về LoadQuizResponse và **không** đưa cờ correct ra ngoài.
-   */
-  default LoadQuizResponse toLoadQuizResponse(QuizExercise quiz)
-  {
-
-    // Header exercise
-    QuizExerciseDto exerciseDto = QuizExerciseDto.newBuilder()
-        .setId(quiz.getId())
-        .setTitle(quiz.getTitle())
-        .setDescription(
-            quiz.getDescription() == null ? "" : quiz.getDescription())
-        .setTotalPoints(quiz.getTotalPoints())
-        .setNumQuestions(quiz.getNumQuestions())
-        .build();
-
-    LoadQuizResponse.Builder response = LoadQuizResponse.newBuilder()
-        .setExercise(exerciseDto);
-
-    // Questions (ẩn 'correct')
-    quiz.getQuestions().stream()
-        .sorted(Comparator.comparingInt(Question::getOrderInQuiz))
-        .forEach(q -> response.addQuestions(toDtoHideCorrect(q)));
-
-    return response.build();
-  }
-
-  default QuestionDto toDtoHideCorrect(Question q)
-  {
-    QuestionDto.Builder b = QuestionDto.newBuilder()
-        .setId(q.getId())
-        .setText(q.getText())
-        .setQuestionType(mapType(q.getQuestionType()))
-        .setPoints(q.getPoints())
-        .setOrderInQuiz(q.getOrderInQuiz());
-
-    q.getOptions().stream()
-        .sorted(Comparator.comparing(Option::getOrder))
-        .forEach(o -> b.addOptions(toDtoHideCorrect(o)));
-
-    return b.build();
-  }
-
-  default OptionDto toDtoHideCorrect(Option o)
-  {
-    // **Không** set field 'correct'
-    return OptionDto.newBuilder()
-        .setId(o.getId())
-        .setOptionText(o.getOptionText())
-        .setOrder(o.getOrder())
-        .build();
-  }
-
-  /* ----------------- Enum mapping ------------------ */
-
-  /**
-   * Map GRPC → Entity; UNRECOGNIZED gán mặc định SINGLE_CHOICE
-   */
-  default com.codecampus.quiz.constant.submission.QuestionType asEntityEnum(QuestionType t)
-  {
-    return switch (t)
-    {
-      case MULTI_CHOICE -> com.codecampus.quiz.constant.submission.QuestionType.MULTI_CHOICE;
-      case FILL_BLANK -> com.codecampus.quiz.constant.submission.QuestionType.FILL_BLANK;
-      case SINGLE_CHOICE, UNRECOGNIZED ->
-          com.codecampus.quiz.constant.submission.QuestionType.SINGLE_CHOICE;
-    };
-  }
-
-  /**
-   * Map Entity → GRPC (không có UNRECOGNIZED)
-   */
-  default QuestionType asGrpcEnum(com.codecampus.quiz.constant.submission.QuestionType t)
-  {
-    return switch (t)
-    {
-      case MULTI_CHOICE -> QuestionType.MULTI_CHOICE;
-      case FILL_BLANK -> QuestionType.FILL_BLANK;
-      case SINGLE_CHOICE -> QuestionType.SINGLE_CHOICE;
-    };
-  }
-
-  @AfterMapping
-  default void link(@MappingTarget Question question)
-  {
-    if (question.getOptions() != null)
-    {
-      question.getOptions().forEach(option -> option.setQuestion(question));
+    private static QuestionType mapQuestionTypeToQuestionTypeGrpc(
+            com.codecampus.quiz.constant.submission.QuestionType questionType) {
+        return switch (questionType) {
+            case SINGLE_CHOICE -> QuestionType.SINGLE_CHOICE;
+            case MULTI_CHOICE -> QuestionType.MULTI_CHOICE;
+            case FILL_BLANK -> QuestionType.FILL_BLANK;
+        };
     }
-  }
+
+    @Mapping(target = "quiz", ignore = true)
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    void patchQuestionDtoToQuestion(
+            QuestionDto questionDto,
+            @MappingTarget Question question
+    );
+
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    void patchQuizExerciseDtoToQuizExercise(
+            QuizExerciseDto quizExerciseDto,
+            @MappingTarget QuizExercise quizExercise
+    );
+
+    @Mapping(target = "questions", ignore = true)
+    QuizExercise toQuizExerciseFromQuizExerciseDto(
+            QuizExerciseDto quizExerciseDto);
+
+    @Mapping(target = "quiz", ignore = true)
+    @Mapping(target = "questionType",
+            expression = "java(mapEntityEnumQuestionType(questionDto.getQuestionType()))")
+    Question toQuestionFromQuestionDto(QuestionDto questionDto);
+
+
+    @Mapping(target = "question", ignore = true)
+    Option toOptionFromOptionDto(OptionDto optionDto);
+
+    default LoadQuizResponse toLoadQuizResponseFromQuizExercise(
+            QuizExercise quiz) {
+
+        return LoadQuizResponse.newBuilder()
+                .setExercise(toQuizExerciseDtoFromQuizExercise(quiz))
+                .addAllQuestions(quiz.getQuestions().stream()
+                        .map(this::toQuestionDtoFromQuestionHideCorrect)
+                        .collect(toSet()))
+                .build();
+    }
+
+    default QuestionDto toQuestionDtoFromQuestionHideCorrect(
+            Question question) {
+        QuestionDto.Builder builder = QuestionDto.newBuilder()
+                .setId(question.getId())
+                .setText(question.getText())
+                .setQuestionType(
+                        mapQuestionTypeToQuestionTypeGrpc(
+                                question.getQuestionType()))
+                .setPoints(question.getPoints())
+                .setOrderInQuiz(question.getOrderInQuiz());
+
+        question.getOptions().stream()
+                .sorted(Comparator.comparing(Option::getOrder))
+                .forEach(
+                        option -> builder.addOptions(
+                                toOptionDtoFromOptionHideCorrect(option)));
+
+        return builder.build();
+    }
+
+    default OptionDto toOptionDtoFromOptionHideCorrect(
+            Option option) {
+        // Không set field 'correct'
+        return OptionDto.newBuilder()
+                .setId(option.getId())
+                .setOptionText(option.getOptionText())
+                .setOrder(option.getOrder())
+                .build();
+    }
+
+    default com.codecampus.quiz.constant.submission.QuestionType mapEntityEnumQuestionType(
+            QuestionType t) {
+        return switch (t) {
+            case MULTI_CHOICE ->
+                    com.codecampus.quiz.constant.submission.QuestionType.MULTI_CHOICE;
+            case FILL_BLANK ->
+                    com.codecampus.quiz.constant.submission.QuestionType.FILL_BLANK;
+            case SINGLE_CHOICE, UNRECOGNIZED ->
+                    com.codecampus.quiz.constant.submission.QuestionType.SINGLE_CHOICE;
+        };
+    }
+
+    default QuestionType mapGrpcEnumQuestionType(
+            com.codecampus.quiz.constant.submission.QuestionType t) {
+        return switch (t) {
+            case MULTI_CHOICE -> QuestionType.MULTI_CHOICE;
+            case FILL_BLANK -> QuestionType.FILL_BLANK;
+            case SINGLE_CHOICE -> QuestionType.SINGLE_CHOICE;
+        };
+    }
+
+    @AfterMapping
+    default void linkOptionsToQuestion(@MappingTarget Question question) {
+        if (question.getOptions() != null) {
+            question.getOptions()
+                    .forEach(option -> option.setQuestion(question));
+        }
+    }
+
+    @Mapping(target = "questions", ignore = true)
+    default QuizExerciseDto toQuizExerciseDtoFromQuizExercise(QuizExercise e) {
+        return QuizExerciseDto.newBuilder()
+                .setId(e.getId())
+                .setTitle(e.getTitle())
+                .setDescription(
+                        Optional.ofNullable(e.getDescription()).orElse(""))
+                .setTotalPoints(e.getTotalPoints())
+                .setNumQuestions(e.getNumQuestions())
+                .build();
+    }
 }

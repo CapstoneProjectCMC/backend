@@ -22,11 +22,19 @@ public interface LoadQuizRequestOrBuilder extends
       getExerciseIdBytes();
 
   /**
+   * <pre>
+   * Cần để kiểm tra assignment
+   * </pre>
+   *
    * <code>string studentId = 2;</code>
    * @return The studentId.
    */
   java.lang.String getStudentId();
   /**
+   * <pre>
+   * Cần để kiểm tra assignment
+   * </pre>
+   *
    * <code>string studentId = 2;</code>
    * @return The bytes for studentId.
    */
