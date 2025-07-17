@@ -23,6 +23,7 @@ public interface QuizMapper {
                 .setNumQuestions(
                         exercise.getQuizDetail() == null ? 0 :
                                 exercise.getQuizDetail().getNumQuestions())
+                .setDuration(exercise.getDuration())
                 .build();
     }
 }

@@ -139,6 +139,7 @@ public interface QuizMapper {
                         Optional.ofNullable(e.getDescription()).orElse(""))
                 .setTotalPoints(e.getTotalPoints())
                 .setNumQuestions(e.getNumQuestions())
+                .setDuration(e.getDuration())
                 .build();
     }
 }

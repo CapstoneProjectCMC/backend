@@ -65,6 +65,7 @@ message SubmitQuizRequest {
   string studentId = 2;
   repeated AnswerDto answers = 3;
 }
+
 message SubmitQuizResponse {
   int32 score = 1;
   int32 totalPoints = 2;

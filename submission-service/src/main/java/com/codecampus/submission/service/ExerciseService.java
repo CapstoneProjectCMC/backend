@@ -19,6 +19,7 @@ import com.codecampus.submission.helper.QuizHelper;
 import com.codecampus.submission.helper.SortHelper;
 import com.codecampus.submission.mapper.ExerciseMapper;
 import com.codecampus.submission.mapper.SubmissionMapper;
+import com.codecampus.submission.repository.AssignmentRepository;
 import com.codecampus.submission.repository.ExerciseRepository;
 import com.codecampus.submission.repository.QuestionRepository;
 import com.codecampus.submission.repository.SubmissionRepository;
@@ -43,6 +44,7 @@ public class ExerciseService {
     ExerciseRepository exerciseRepository;
     QuestionRepository questionRepository;
     SubmissionRepository submissionRepository;
+    AssignmentRepository assignmentRepository;
 
     GrpcQuizClient grpcQuizClient;
     GrpcCodingClient grpcCodingClient;
@@ -82,6 +84,13 @@ public class ExerciseService {
                 submissionMapper.toSubmissionFromQuizSubmissionDto(
                         dto, exercise, questionRepository);
         submissionRepository.save(submission);
+
+        // Set Complete
+        if (dto.getScore() >= dto.getTotalPoints()) {
+            assignmentRepository.findByExerciseIdAndStudentId(
+                            dto.getExerciseId(), dto.getStudentId())
+                    .ifPresent(a -> a.setCompleted(true));
+        }
     }
 
     @Transactional
