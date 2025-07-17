@@ -26,7 +26,7 @@ public interface LoadQuizResponseOrBuilder extends
 
   /**
    * <pre>
-   * **OptionDto.correct bị lược bỏ**
+   * OptionDto.correct bị lược bỏ
    * </pre>
    *
    * <code>repeated .quiz.QuestionDto questions = 2;</code>
@@ -35,7 +35,7 @@ public interface LoadQuizResponseOrBuilder extends
       getQuestionsList();
   /**
    * <pre>
-   * **OptionDto.correct bị lược bỏ**
+   * OptionDto.correct bị lược bỏ
    * </pre>
    *
    * <code>repeated .quiz.QuestionDto questions = 2;</code>
@@ -43,7 +43,7 @@ public interface LoadQuizResponseOrBuilder extends
   com.codecampus.quiz.grpc.QuestionDto getQuestions(int index);
   /**
    * <pre>
-   * **OptionDto.correct bị lược bỏ**
+   * OptionDto.correct bị lược bỏ
    * </pre>
    *
    * <code>repeated .quiz.QuestionDto questions = 2;</code>
@@ -51,7 +51,7 @@ public interface LoadQuizResponseOrBuilder extends
   int getQuestionsCount();
   /**
    * <pre>
-   * **OptionDto.correct bị lược bỏ**
+   * OptionDto.correct bị lược bỏ
    * </pre>
    *
    * <code>repeated .quiz.QuestionDto questions = 2;</code>
@@ -60,7 +60,7 @@ public interface LoadQuizResponseOrBuilder extends
       getQuestionsOrBuilderList();
   /**
    * <pre>
-   * **OptionDto.correct bị lược bỏ**
+   * OptionDto.correct bị lược bỏ
    * </pre>
    *
    * <code>repeated .quiz.QuestionDto questions = 2;</code>

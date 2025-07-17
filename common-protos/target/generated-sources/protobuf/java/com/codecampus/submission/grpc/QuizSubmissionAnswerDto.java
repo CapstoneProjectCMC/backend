@@ -6,10 +6,6 @@
 package com.codecampus.submission.grpc;
 
 /**
- * <pre>
- * ---------- DTO ----------
- * </pre>
- *
  * Protobuf type {@code submission.QuizSubmissionAnswerDto}
  */
 public final class QuizSubmissionAnswerDto extends
@@ -374,10 +370,6 @@ private static final long serialVersionUID = 0L;
     return builder;
   }
   /**
-   * <pre>
-   * ---------- DTO ----------
-   * </pre>
-   *
    * Protobuf type {@code submission.QuizSubmissionAnswerDto}
    */
   public static final class Builder extends

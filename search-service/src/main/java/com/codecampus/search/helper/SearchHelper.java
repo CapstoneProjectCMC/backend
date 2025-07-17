@@ -3,7 +3,6 @@ package com.codecampus.search.helper;
 import co.elastic.clients.elasticsearch._types.FieldValue;
 import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
 import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.UtilityClass;
 
@@ -15,7 +14,6 @@ import static java.util.stream.Collectors.toList;
 
 @UtilityClass
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-@RequiredArgsConstructor
 public class SearchHelper {
 
     public <T> void addTermFilter(

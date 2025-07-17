@@ -3,9 +3,6 @@ package com.codecampus.submission.grpc;
 import static io.grpc.MethodDescriptor.generateFullMethodName;
 
 /**
- * <pre>
- * ---------- Quiz-service → Submission-service ----------
- * </pre>
  */
 @javax.annotation.Generated(
     value = "by gRPC proto compiler (version 1.72.0)",
@@ -109,9 +106,6 @@ public final class SubmissionSyncServiceGrpc {
   }
 
   /**
-   * <pre>
-   * ---------- Quiz-service → Submission-service ----------
-   * </pre>
    */
   public interface AsyncService {
 
@@ -125,9 +119,6 @@ public final class SubmissionSyncServiceGrpc {
 
   /**
    * Base class for the server implementation of the service SubmissionSyncService.
-   * <pre>
-   * ---------- Quiz-service → Submission-service ----------
-   * </pre>
    */
   public static abstract class SubmissionSyncServiceImplBase
       implements io.grpc.BindableService, AsyncService {
@@ -139,9 +130,6 @@ public final class SubmissionSyncServiceGrpc {
 
   /**
    * A stub to allow clients to do asynchronous rpc calls to service SubmissionSyncService.
-   * <pre>
-   * ---------- Quiz-service → Submission-service ----------
-   * </pre>
    */
   public static final class SubmissionSyncServiceStub
       extends io.grpc.stub.AbstractAsyncStub<SubmissionSyncServiceStub> {
@@ -167,9 +155,6 @@ public final class SubmissionSyncServiceGrpc {
 
   /**
    * A stub to allow clients to do synchronous rpc calls to service SubmissionSyncService.
-   * <pre>
-   * ---------- Quiz-service → Submission-service ----------
-   * </pre>
    */
   public static final class SubmissionSyncServiceBlockingV2Stub
       extends io.grpc.stub.AbstractBlockingStub<SubmissionSyncServiceBlockingV2Stub> {
@@ -194,9 +179,6 @@ public final class SubmissionSyncServiceGrpc {
 
   /**
    * A stub to allow clients to do limited synchronous rpc calls to service SubmissionSyncService.
-   * <pre>
-   * ---------- Quiz-service → Submission-service ----------
-   * </pre>
    */
   public static final class SubmissionSyncServiceBlockingStub
       extends io.grpc.stub.AbstractBlockingStub<SubmissionSyncServiceBlockingStub> {
@@ -221,9 +203,6 @@ public final class SubmissionSyncServiceGrpc {
 
   /**
    * A stub to allow clients to do ListenableFuture-style rpc calls to service SubmissionSyncService.
-   * <pre>
-   * ---------- Quiz-service → Submission-service ----------
-   * </pre>
    */
   public static final class SubmissionSyncServiceFutureStub
       extends io.grpc.stub.AbstractFutureStub<SubmissionSyncServiceFutureStub> {

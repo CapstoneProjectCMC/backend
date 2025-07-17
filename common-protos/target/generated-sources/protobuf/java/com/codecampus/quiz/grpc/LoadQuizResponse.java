@@ -75,7 +75,7 @@ private static final long serialVersionUID = 0L;
   private java.util.List<com.codecampus.quiz.grpc.QuestionDto> questions_;
   /**
    * <pre>
-   * **OptionDto.correct bị lược bỏ**
+   * OptionDto.correct bị lược bỏ
    * </pre>
    *
    * <code>repeated .quiz.QuestionDto questions = 2;</code>
@@ -86,7 +86,7 @@ private static final long serialVersionUID = 0L;
   }
   /**
    * <pre>
-   * **OptionDto.correct bị lược bỏ**
+   * OptionDto.correct bị lược bỏ
    * </pre>
    *
    * <code>repeated .quiz.QuestionDto questions = 2;</code>
@@ -98,7 +98,7 @@ private static final long serialVersionUID = 0L;
   }
   /**
    * <pre>
-   * **OptionDto.correct bị lược bỏ**
+   * OptionDto.correct bị lược bỏ
    * </pre>
    *
    * <code>repeated .quiz.QuestionDto questions = 2;</code>
@@ -109,7 +109,7 @@ private static final long serialVersionUID = 0L;
   }
   /**
    * <pre>
-   * **OptionDto.correct bị lược bỏ**
+   * OptionDto.correct bị lược bỏ
    * </pre>
    *
    * <code>repeated .quiz.QuestionDto questions = 2;</code>
@@ -120,7 +120,7 @@ private static final long serialVersionUID = 0L;
   }
   /**
    * <pre>
-   * **OptionDto.correct bị lược bỏ**
+   * OptionDto.correct bị lược bỏ
    * </pre>
    *
    * <code>repeated .quiz.QuestionDto questions = 2;</code>
@@ -654,7 +654,7 @@ private static final long serialVersionUID = 0L;
 
     /**
      * <pre>
-     * **OptionDto.correct bị lược bỏ**
+     * OptionDto.correct bị lược bỏ
      * </pre>
      *
      * <code>repeated .quiz.QuestionDto questions = 2;</code>
@@ -668,7 +668,7 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * **OptionDto.correct bị lược bỏ**
+     * OptionDto.correct bị lược bỏ
      * </pre>
      *
      * <code>repeated .quiz.QuestionDto questions = 2;</code>
@@ -682,7 +682,7 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * **OptionDto.correct bị lược bỏ**
+     * OptionDto.correct bị lược bỏ
      * </pre>
      *
      * <code>repeated .quiz.QuestionDto questions = 2;</code>
@@ -696,7 +696,7 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * **OptionDto.correct bị lược bỏ**
+     * OptionDto.correct bị lược bỏ
      * </pre>
      *
      * <code>repeated .quiz.QuestionDto questions = 2;</code>
@@ -717,7 +717,7 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * **OptionDto.correct bị lược bỏ**
+     * OptionDto.correct bị lược bỏ
      * </pre>
      *
      * <code>repeated .quiz.QuestionDto questions = 2;</code>
@@ -735,7 +735,7 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * **OptionDto.correct bị lược bỏ**
+     * OptionDto.correct bị lược bỏ
      * </pre>
      *
      * <code>repeated .quiz.QuestionDto questions = 2;</code>
@@ -755,7 +755,7 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * **OptionDto.correct bị lược bỏ**
+     * OptionDto.correct bị lược bỏ
      * </pre>
      *
      * <code>repeated .quiz.QuestionDto questions = 2;</code>
@@ -776,7 +776,7 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * **OptionDto.correct bị lược bỏ**
+     * OptionDto.correct bị lược bỏ
      * </pre>
      *
      * <code>repeated .quiz.QuestionDto questions = 2;</code>
@@ -794,7 +794,7 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * **OptionDto.correct bị lược bỏ**
+     * OptionDto.correct bị lược bỏ
      * </pre>
      *
      * <code>repeated .quiz.QuestionDto questions = 2;</code>
@@ -812,7 +812,7 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * **OptionDto.correct bị lược bỏ**
+     * OptionDto.correct bị lược bỏ
      * </pre>
      *
      * <code>repeated .quiz.QuestionDto questions = 2;</code>
@@ -831,7 +831,7 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * **OptionDto.correct bị lược bỏ**
+     * OptionDto.correct bị lược bỏ
      * </pre>
      *
      * <code>repeated .quiz.QuestionDto questions = 2;</code>
@@ -848,7 +848,7 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * **OptionDto.correct bị lược bỏ**
+     * OptionDto.correct bị lược bỏ
      * </pre>
      *
      * <code>repeated .quiz.QuestionDto questions = 2;</code>
@@ -865,7 +865,7 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * **OptionDto.correct bị lược bỏ**
+     * OptionDto.correct bị lược bỏ
      * </pre>
      *
      * <code>repeated .quiz.QuestionDto questions = 2;</code>
@@ -876,7 +876,7 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * **OptionDto.correct bị lược bỏ**
+     * OptionDto.correct bị lược bỏ
      * </pre>
      *
      * <code>repeated .quiz.QuestionDto questions = 2;</code>
@@ -890,7 +890,7 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * **OptionDto.correct bị lược bỏ**
+     * OptionDto.correct bị lược bỏ
      * </pre>
      *
      * <code>repeated .quiz.QuestionDto questions = 2;</code>
@@ -905,7 +905,7 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * **OptionDto.correct bị lược bỏ**
+     * OptionDto.correct bị lược bỏ
      * </pre>
      *
      * <code>repeated .quiz.QuestionDto questions = 2;</code>
@@ -916,7 +916,7 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * **OptionDto.correct bị lược bỏ**
+     * OptionDto.correct bị lược bỏ
      * </pre>
      *
      * <code>repeated .quiz.QuestionDto questions = 2;</code>
@@ -928,7 +928,7 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * **OptionDto.correct bị lược bỏ**
+     * OptionDto.correct bị lược bỏ
      * </pre>
      *
      * <code>repeated .quiz.QuestionDto questions = 2;</code>

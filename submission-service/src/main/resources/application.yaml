@@ -41,20 +41,23 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+#      acks: all
+#      retries: 3
+#      # optional: giảm latency
+#      linger-ms: 5            # gộp record <= 5 MS rồi mới gửi
+#      batch-size: 16384       # 16 KB
+#      compression-type: lz4   # nén nhẹ – giảm băng thông
 #  data:
 #    redis:
 #      host: redis-master     # dịch vụ trong compose
 #      port: 6379
 #      password: dinhanst2832004
-#  kafka:
-#    bootstrap-servers: localhost:9094
-#    consumer:
-#      group-id: quiz-result-aggregator
-#      auto-offset-reset: earliest
-#      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-#      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
-#      properties:
-#        spring.json.trusted.packages: "*"
-#    producer:
-#      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-#      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+app:
+  event:
+    exercise-events: "exercise-events"

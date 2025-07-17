@@ -1,23 +1,24 @@
-package com.codecampus.submission.dto.response.quiz;
+package com.codecampus.submission.dto.response.quiz.detail;
 
 import lombok.Builder;
 
 import java.time.Instant;
+import java.util.List;
 
 @Builder
-// Mặc định cho phép response cả null khi Dev
-// Khi build thì KHÔNG response null
-// @JsonInclude(JsonInclude.Include.NON_NULL)
-public record QuestionBriefDto(
+public record QuestionDetailResponse(
         String id,
         String text,
         int points,
         String type,
         int orderInQuiz,
+        List<OptionDetailResponse> options,
+        // audit (giữ lại nếu cần hiển thị)
         String createdBy,
         Instant createdAt,
         String updatedBy,
         Instant updatedAt,
         String deletedBy,
-        Instant deletedAt) {
+        Instant deletedAt
+) {
 }

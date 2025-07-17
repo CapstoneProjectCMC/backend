@@ -6,10 +6,6 @@
 package com.codecampus.quiz.grpc;
 
 /**
- * <pre>
- * ---------- DTO ----------
- * </pre>
- *
  * Protobuf type {@code quiz.OptionDto}
  */
 public final class OptionDto extends
@@ -351,10 +347,6 @@ private static final long serialVersionUID = 0L;
     return builder;
   }
   /**
-   * <pre>
-   * ---------- DTO ----------
-   * </pre>
-   *
    * Protobuf type {@code quiz.OptionDto}
    */
   public static final class Builder extends

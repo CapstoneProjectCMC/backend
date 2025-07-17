@@ -24,8 +24,10 @@ public class ExerciseIndexer {
     ExerciseMapper exerciseMapper;
     ObjectMapper objectMapper;
 
-    @KafkaListener(topics = "exercise-events", groupId = "search-service")
-    public void onMessage(String raw) throws IOException {
+    @KafkaListener(
+            topics = "exercise-events",
+            groupId = "search-service")
+    public void onMessageExercise(String raw) throws IOException {
         ExerciseEvent exerciseEvent =
                 objectMapper.readValue(raw, ExerciseEvent.class);
         switch (exerciseEvent.getType()) {

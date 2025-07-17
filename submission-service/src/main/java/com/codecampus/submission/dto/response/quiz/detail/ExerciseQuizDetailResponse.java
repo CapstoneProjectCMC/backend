@@ -1,4 +1,4 @@
-package com.codecampus.submission.dto.response.quiz;
+package com.codecampus.submission.dto.response.quiz.detail;
 
 import com.codecampus.submission.constant.submission.Difficulty;
 import com.codecampus.submission.constant.submission.ExerciseType;
@@ -9,10 +9,7 @@ import java.time.Instant;
 import java.util.Set;
 
 @Builder
-// Mặc định cho phép response cả null khi Dev
-// Khi build thì KHÔNG response null
-// @JsonInclude(JsonInclude.Include.NON_NULL)
-public record ExerciseDetailQuizResponse(
+public record ExerciseQuizDetailResponse(
         String id,
         String userId,
         String title,
@@ -29,11 +26,14 @@ public record ExerciseDetailQuizResponse(
         String allowDiscussionId,
         Set<String> resourceIds,
         Set<String> tags,
-        QuizDetailSliceDto quizDetail,
+        boolean allowAiQuestion,                      // <<< MỚI
+        QuizDetailSliceDetailResponse quizDetail,     // <<< Question + Option
+        // audit
         String createdBy,
         Instant createdAt,
         String updatedBy,
         Instant updatedAt,
         String deletedBy,
-        Instant deletedAt) {
+        Instant deletedAt
+) {
 }

@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,7 +26,8 @@ public class ExerciseSearchController {
 
     ExerciseSearchService exerciseSearchService;
 
-    public ApiResponse<Page<ExerciseDocument>> search(
+    @GetMapping
+    ApiResponse<Page<ExerciseDocument>> search(
             @RequestParam(required = false) String q,
             @RequestParam(required = false) Set<String> tags,
             @RequestParam(required = false) Integer difficulty,

@@ -1,4 +1,4 @@
-package com.codecampus.submission.dto.response.quiz;
+package com.codecampus.submission.dto.response.quiz.detail;
 
 import lombok.Builder;
 
@@ -6,10 +6,7 @@ import java.time.Instant;
 import java.util.List;
 
 @Builder
-// Mặc định cho phép response cả null khi Dev
-// Khi build thì KHÔNG response null
-// @JsonInclude(JsonInclude.Include.NON_NULL)
-public record QuizDetailSliceDto(
+public record QuizDetailSliceDetailResponse(
         String id,
         int numQuestions,
         int totalPoints,
@@ -20,11 +17,13 @@ public record QuizDetailSliceDto(
         int pageSize,
         long totalElements,
 
-        List<QuestionBriefDto> questions,
+        List<QuestionDetailResponse> questions,
+        
         String createdBy,
         Instant createdAt,
         String updatedBy,
         Instant updatedAt,
         String deletedBy,
-        Instant deletedAt) {
+        Instant deletedAt
+) {
 }

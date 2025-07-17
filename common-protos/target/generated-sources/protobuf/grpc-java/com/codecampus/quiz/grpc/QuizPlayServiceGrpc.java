@@ -3,9 +3,6 @@ package com.codecampus.quiz.grpc;
 import static io.grpc.MethodDescriptor.generateFullMethodName;
 
 /**
- * <pre>
- * ---------- Student play ----------
- * </pre>
  */
 @javax.annotation.Generated(
     value = "by gRPC proto compiler (version 1.72.0)",
@@ -140,9 +137,6 @@ public final class QuizPlayServiceGrpc {
   }
 
   /**
-   * <pre>
-   * ---------- Student play ----------
-   * </pre>
    */
   public interface AsyncService {
 
@@ -163,9 +157,6 @@ public final class QuizPlayServiceGrpc {
 
   /**
    * Base class for the server implementation of the service QuizPlayService.
-   * <pre>
-   * ---------- Student play ----------
-   * </pre>
    */
   public static abstract class QuizPlayServiceImplBase
       implements io.grpc.BindableService, AsyncService {
@@ -177,9 +168,6 @@ public final class QuizPlayServiceGrpc {
 
   /**
    * A stub to allow clients to do asynchronous rpc calls to service QuizPlayService.
-   * <pre>
-   * ---------- Student play ----------
-   * </pre>
    */
   public static final class QuizPlayServiceStub
       extends io.grpc.stub.AbstractAsyncStub<QuizPlayServiceStub> {
@@ -213,9 +201,6 @@ public final class QuizPlayServiceGrpc {
 
   /**
    * A stub to allow clients to do synchronous rpc calls to service QuizPlayService.
-   * <pre>
-   * ---------- Student play ----------
-   * </pre>
    */
   public static final class QuizPlayServiceBlockingV2Stub
       extends io.grpc.stub.AbstractBlockingStub<QuizPlayServiceBlockingV2Stub> {
@@ -247,9 +232,6 @@ public final class QuizPlayServiceGrpc {
 
   /**
    * A stub to allow clients to do limited synchronous rpc calls to service QuizPlayService.
-   * <pre>
-   * ---------- Student play ----------
-   * </pre>
    */
   public static final class QuizPlayServiceBlockingStub
       extends io.grpc.stub.AbstractBlockingStub<QuizPlayServiceBlockingStub> {
@@ -281,9 +263,6 @@ public final class QuizPlayServiceGrpc {
 
   /**
    * A stub to allow clients to do ListenableFuture-style rpc calls to service QuizPlayService.
-   * <pre>
-   * ---------- Student play ----------
-   * </pre>
    */
   public static final class QuizPlayServiceFutureStub
       extends io.grpc.stub.AbstractFutureStub<QuizPlayServiceFutureStub> {

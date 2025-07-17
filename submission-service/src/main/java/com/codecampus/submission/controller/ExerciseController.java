@@ -5,8 +5,8 @@ import com.codecampus.submission.dto.common.ApiResponse;
 import com.codecampus.submission.dto.common.PageResponse;
 import com.codecampus.submission.dto.request.CreateExerciseRequest;
 import com.codecampus.submission.dto.request.UpdateExerciseRequest;
-import com.codecampus.submission.dto.response.quiz.ExerciseDetailQuizResponse;
 import com.codecampus.submission.dto.response.quiz.ExerciseQuizResponse;
+import com.codecampus.submission.dto.response.quiz.detail.ExerciseQuizDetailResponse;
 import com.codecampus.submission.service.ExerciseService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -87,13 +87,13 @@ public class ExerciseController {
     }
 
     @GetMapping("/exercise/{id}")
-    ApiResponse<ExerciseDetailQuizResponse> getExercise(
+    ApiResponse<ExerciseQuizDetailResponse> getExercise(
             @PathVariable String id,
             @RequestParam(defaultValue = "1") int qPage,
             @RequestParam(defaultValue = "5") int qSize,
             @RequestParam(defaultValue = "ORDER_IN_QUIZ") SortField qSortBy,
             @RequestParam(defaultValue = "false") boolean qAsc) {
-        return ApiResponse.<ExerciseDetailQuizResponse>builder()
+        return ApiResponse.<ExerciseQuizDetailResponse>builder()
                 .result(exerciseService.getExerciseDetail(
                         id,
                         qPage, qSize,

@@ -22,19 +22,11 @@ public interface TestCaseDtoOrBuilder extends
       getIdBytes();
 
   /**
-   * <pre>
-   * khoá phụ để tìm CodingDetail
-   * </pre>
-   *
    * <code>string exerciseId = 2;</code>
    * @return The exerciseId.
    */
   java.lang.String getExerciseId();
   /**
-   * <pre>
-   * khoá phụ để tìm CodingDetail
-   * </pre>
-   *
    * <code>string exerciseId = 2;</code>
    * @return The bytes for exerciseId.
    */

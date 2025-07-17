@@ -28,7 +28,9 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class GrpcQuizClient {
+
     QuizSyncServiceGrpc.QuizSyncServiceBlockingStub stub;
+
     QuestionMapper questionMapper;
     QuizMapper quizMapper;
     AssignmentMapper assignmentMapper;

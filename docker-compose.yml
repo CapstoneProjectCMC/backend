@@ -158,7 +158,7 @@ services:
     environment:
       - MINIO_ROOT_USER=${MINIO_ROOT_USER}
       - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
-    command: server /data --console-address ":9001"
+    command: server /bitnami/minio/data --console-address ":9001"
     ports:
       - "9000:9000"   # S3 API
       - "9001:9001"   # Console UI
@@ -173,22 +173,24 @@ services:
 
   # ---------- Elasticsearch ----------
   elasticsearch:
-    image: bitnami/elasticsearch:latest
+    image: bitnami/elasticsearch:8.7.0
     container_name: elasticsearch
     restart: unless-stopped
     environment:
       - ELASTICSEARCH_NODE_NAME=elastic-node-1
       - ELASTICSEARCH_USERNAME=${ELASTIC_USERNAME}
-      - ELASTICSEARCH_PASSWORD=${ELASTIC_PASSWORD}   # mặc định user “elastic”
+      - ELASTICSEARCH_PASSWORD=${ELASTIC_PASSWORD}
       - ES_JAVA_OPTS=-Xms1g -Xmx1g                   # điều chỉnh RAM tùy máy
       # Cấu hình single‑node để chạy dễ dàng
       - discovery.type=single-node
+      - ELASTICSEARCH_PLUGINS=analysis-icu
+      - BITNAMI_DEBUG=true
     ports:
       - "9200:9200"
     volumes:
       - elasticsearch_data:/bitnami/elasticsearch/data
     healthcheck:
-      test: [ "CMD", "bash", "-c", "curl -s -u elastic:${ELASTIC_PASSWORD} http://localhost:9200/_cluster/health | grep -q '\"status\":\"green\"\\|\"status\":\"yellow\"'" ]
+      test: [ "CMD", "bash", "-c", "curl -s -u $${ELASTIC_USERNAME}:$${ELASTIC_PASSWORD} http://localhost:9200/_cluster/health | grep -q '\"status\":\"green\"\\|\"status\":\"yellow\"'" ]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -196,7 +198,7 @@ services:
 
   # ---------- Kibana ----------
   kibana:
-    image: bitnami/kibana:latest
+    image: bitnami/kibana:8.7.0
     container_name: kibana
     restart: unless-stopped
     environment:

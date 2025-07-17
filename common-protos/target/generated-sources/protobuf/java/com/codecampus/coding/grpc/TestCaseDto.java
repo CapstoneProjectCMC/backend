@@ -90,10 +90,6 @@ private static final long serialVersionUID = 0L;
   @SuppressWarnings("serial")
   private volatile java.lang.Object exerciseId_ = "";
   /**
-   * <pre>
-   * khoá phụ để tìm CodingDetail
-   * </pre>
-   *
    * <code>string exerciseId = 2;</code>
    * @return The exerciseId.
    */
@@ -111,10 +107,6 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
-   * <pre>
-   * khoá phụ để tìm CodingDetail
-   * </pre>
-   *
    * <code>string exerciseId = 2;</code>
    * @return The bytes for exerciseId.
    */
@@ -749,10 +741,6 @@ private static final long serialVersionUID = 0L;
 
     private java.lang.Object exerciseId_ = "";
     /**
-     * <pre>
-     * khoá phụ để tìm CodingDetail
-     * </pre>
-     *
      * <code>string exerciseId = 2;</code>
      * @return The exerciseId.
      */
@@ -769,10 +757,6 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <pre>
-     * khoá phụ để tìm CodingDetail
-     * </pre>
-     *
      * <code>string exerciseId = 2;</code>
      * @return The bytes for exerciseId.
      */
@@ -790,10 +774,6 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <pre>
-     * khoá phụ để tìm CodingDetail
-     * </pre>
-     *
      * <code>string exerciseId = 2;</code>
      * @param value The exerciseId to set.
      * @return This builder for chaining.
@@ -807,10 +787,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     * khoá phụ để tìm CodingDetail
-     * </pre>
-     *
      * <code>string exerciseId = 2;</code>
      * @return This builder for chaining.
      */
@@ -821,10 +797,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     * khoá phụ để tìm CodingDetail
-     * </pre>
-     *
      * <code>string exerciseId = 2;</code>
      * @param value The bytes for exerciseId to set.
      * @return This builder for chaining.

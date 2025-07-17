@@ -5,9 +5,9 @@ import com.codecampus.submission.constant.submission.ExerciseType;
 import com.codecampus.submission.dto.common.PageResponse;
 import com.codecampus.submission.dto.request.CreateExerciseRequest;
 import com.codecampus.submission.dto.request.UpdateExerciseRequest;
-import com.codecampus.submission.dto.response.quiz.ExerciseDetailQuizResponse;
 import com.codecampus.submission.dto.response.quiz.ExerciseQuizResponse;
-import com.codecampus.submission.dto.response.quiz.QuizDetailSliceDto;
+import com.codecampus.submission.dto.response.quiz.detail.ExerciseQuizDetailResponse;
+import com.codecampus.submission.dto.response.quiz.detail.QuizDetailSliceDetailResponse;
 import com.codecampus.submission.entity.Exercise;
 import com.codecampus.submission.entity.Submission;
 import com.codecampus.submission.grpc.CreateQuizSubmissionRequest;
@@ -24,6 +24,7 @@ import com.codecampus.submission.repository.QuestionRepository;
 import com.codecampus.submission.repository.SubmissionRepository;
 import com.codecampus.submission.service.grpc.GrpcCodingClient;
 import com.codecampus.submission.service.grpc.GrpcQuizClient;
+import com.codecampus.submission.service.kafka.ExerciseEventProducer;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -45,6 +46,7 @@ public class ExerciseService {
 
     GrpcQuizClient grpcQuizClient;
     GrpcCodingClient grpcCodingClient;
+    ExerciseEventProducer exerciseEventProducer;
 
     ExerciseMapper exerciseMapper;
     SubmissionMapper submissionMapper;
@@ -63,6 +65,8 @@ public class ExerciseService {
         } else if (exercise.getExerciseType() == ExerciseType.CODING) {
             grpcCodingClient.pushExercise(exercise);
         }
+
+        exerciseEventProducer.publishCreatedExerciseEvent(exercise);
     }
 
 
@@ -88,6 +92,7 @@ public class ExerciseService {
         exerciseMapper.patchUpdateExerciseRequestToExercise(request, exercise);
 
         grpcQuizClient.pushExercise(exercise);
+        exerciseEventProducer.publishUpdatedExerciseEvent(exercise);
     }
 
     public PageResponse<ExerciseQuizResponse> getAllExercises(
@@ -122,7 +127,7 @@ public class ExerciseService {
         return PageResponseHelper.toPageResponse(pageData, page);
     }
 
-    public ExerciseDetailQuizResponse getExerciseDetail(
+    public ExerciseQuizDetailResponse getExerciseDetail(
             String exerciseId,
             int qPage, int qSize,
             SortField qSortBy, boolean qAsc) {
@@ -130,38 +135,36 @@ public class ExerciseService {
         Exercise exercise =
                 exerciseHelper.getExerciseOrThrow(exerciseId);
 
-        QuizDetailSliceDto qSlice = quizHelper.buildQuizSlice(
-                exercise, qPage, qSize, qSortBy, qAsc
-        );
+        QuizDetailSliceDetailResponse qSlice =
+                quizHelper.buildQuizSliceWithOptions(
+                        exercise, qPage, qSize, qSortBy, qAsc
+                );
 
-        ExerciseDetailQuizResponse exerciseDetailQuizResponse =
-                exerciseMapper.toExerciseDetailQuizResponseFromExercise(
-                        exercise);
-
-        return new ExerciseDetailQuizResponse(
-                exerciseDetailQuizResponse.id(),
-                exerciseDetailQuizResponse.userId(),
-                exerciseDetailQuizResponse.title(),
-                exerciseDetailQuizResponse.description(),
-                exerciseDetailQuizResponse.exerciseType(),
-                exerciseDetailQuizResponse.difficulty(),
-                exerciseDetailQuizResponse.orgId(),
-                exerciseDetailQuizResponse.active(),
-                exerciseDetailQuizResponse.cost(),
-                exerciseDetailQuizResponse.freeForOrg(),
-                exerciseDetailQuizResponse.startTime(),
-                exerciseDetailQuizResponse.endTime(),
-                exerciseDetailQuizResponse.duration(),
-                exerciseDetailQuizResponse.allowDiscussionId(),
-                exerciseDetailQuizResponse.resourceIds(),
-                exerciseDetailQuizResponse.tags(),
-                qSlice,
-                exerciseDetailQuizResponse.createdBy(),
-                exerciseDetailQuizResponse.createdAt(),
-                exerciseDetailQuizResponse.updatedBy(),
-                exerciseDetailQuizResponse.updatedAt(),
-                exerciseDetailQuizResponse.deletedBy(),
-                exerciseDetailQuizResponse.deletedAt()
-        );
+        return ExerciseQuizDetailResponse.builder()
+                .id(exercise.getId())
+                .userId(exercise.getUserId())
+                .title(exercise.getTitle())
+                .description(exercise.getDescription())
+                .exerciseType(exercise.getExerciseType())
+                .difficulty(exercise.getDifficulty())
+                .orgId(exercise.getOrgId())
+                .active(exercise.isActive())
+                .cost(exercise.getCost())
+                .freeForOrg(exercise.isFreeForOrg())
+                .startTime(exercise.getStartTime())
+                .endTime(exercise.getEndTime())
+                .duration(exercise.getDuration())
+                .allowDiscussionId(exercise.getAllowDiscussionId())
+                .resourceIds(exercise.getResourceIds())
+                .tags(exercise.getTags())
+                .allowAiQuestion(exercise.isAllowAiQuestion())
+                .quizDetail(qSlice)
+                .createdBy(exercise.getCreatedBy())
+                .createdAt(exercise.getCreatedAt())
+                .updatedBy(exercise.getUpdatedBy())
+                .updatedAt(exercise.getUpdatedAt())
+                .deletedBy(exercise.getDeletedBy())
+                .deletedAt(exercise.getDeletedAt())
+                .build();
     }
 }

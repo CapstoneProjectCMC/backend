@@ -11,6 +11,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
+import org.springframework.data.elasticsearch.annotations.InnerField;
+import org.springframework.data.elasticsearch.annotations.MultiField;
 
 import java.time.Instant;
 import java.util.Set;
@@ -30,16 +32,34 @@ public class ExerciseDocument {
     @Id
     String id;
 
-    @Field(type = Text, analyzer = "vietnamese")
+    @Field(type = Text, analyzer = "icu_analyzer", searchAnalyzer = "icu_analyzer")
     String title;
 
-    @Field(type = Keyword, analyzer = "vietnamese")
+    @Field(type = Text, analyzer = "icu_analyzer", searchAnalyzer = "icu_analyzer")
     String description;
 
-    @Field(type = Keyword, analyzer = "vietnamese")
+    @MultiField(
+            mainField = @Field(type = Keyword),
+            otherFields = {
+                    @InnerField(
+                            suffix = "search",
+                            type = Text,
+                            analyzer = "icu_analyzer",
+                            searchAnalyzer = "icu_analyzer")
+            }
+    )
     String exerciseType;
 
-    @Field(type = Keyword, analyzer = "vietnamese")
+    @MultiField(
+            mainField = @Field(type = Keyword),
+            otherFields = {
+                    @InnerField(
+                            suffix = "search",
+                            type = Text,
+                            analyzer = "icu_analyzer",
+                            searchAnalyzer = "icu_analyzer")
+            }
+    )
     Set<String> tags;
 
     @Field(type = FieldType.Integer)

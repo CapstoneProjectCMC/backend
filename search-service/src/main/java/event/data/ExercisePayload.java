@@ -1,4 +1,4 @@
-package com.codecampus.search.dto.data;
+package event.data;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
