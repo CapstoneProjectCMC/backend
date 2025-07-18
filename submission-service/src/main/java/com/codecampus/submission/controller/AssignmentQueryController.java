@@ -1,8 +1,7 @@
 package com.codecampus.submission.controller;
 
 import com.codecampus.submission.dto.common.ApiResponse;
-import com.codecampus.submission.dto.response.quiz.MyAssignmentResponse;
-import com.codecampus.submission.helper.AuthenticationHelper;
+import com.codecampus.submission.dto.response.assignment.MyAssignmentResponse;
 import com.codecampus.submission.service.AssignmentQueryService;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -25,10 +24,8 @@ public class AssignmentQueryController {
 
     @GetMapping("/assignments/self")
     ApiResponse<List<MyAssignmentResponse>> myAssignments() {
-        String studentId = AuthenticationHelper.getMyUserId();
         return ApiResponse.<List<MyAssignmentResponse>>builder()
-                .result(assignmentQueryService.getAssignmentsForStudent(
-                        studentId))
+                .result(assignmentQueryService.getAssignmentsForStudent())
                 .message("Danh sách bài tập được giao cho bạn!")
                 .build();
     }

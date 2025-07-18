@@ -77,23 +77,30 @@ public class ExerciseService {
     @Transactional
     public void createQuizSubmission(
             CreateQuizSubmissionRequest request) {
-        QuizSubmissionDto dto = request.getSubmission();
+        QuizSubmissionDto quizSubmissionDto = request.getSubmission();
 
         Exercise exercise = exerciseHelper
-                .getExerciseOrThrow(dto.getExerciseId());
+                .getExerciseOrThrow(quizSubmissionDto.getExerciseId());
 
-        Submission submission =
-                submissionMapper.toSubmissionFromQuizSubmissionDto(
-                        dto, exercise, questionRepository);
+        Submission submission = submissionMapper
+                .toSubmissionFromQuizSubmissionDto(
+                        quizSubmissionDto,
+                        exercise,
+                        questionRepository
+                );
         submissionRepository.save(submission);
 
         // Set Complete
-        if (dto.getScore() >= dto.getTotalPoints()) {
-            assignmentRepository.findByExerciseIdAndStudentId(
-                            dto.getExerciseId(), dto.getStudentId())
+        if (quizSubmissionDto.getScore() >=
+                quizSubmissionDto.getTotalPoints()) {
+            assignmentRepository
+                    .findByExerciseIdAndStudentId(
+                            quizSubmissionDto.getExerciseId(),
+                            quizSubmissionDto.getStudentId())
                     .ifPresent(a -> a.setCompleted(true));
         }
 
+        // Cập nhật xếp hạng contest
         contestService.updateRankingOnSubmission(submission);
     }
 

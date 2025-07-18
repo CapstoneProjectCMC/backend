@@ -2,6 +2,7 @@ package com.codecampus.submission.service;
 
 import com.codecampus.submission.dto.response.quiz.QuizAttemptHistoryResponse;
 import com.codecampus.submission.entity.Submission;
+import com.codecampus.submission.helper.AuthenticationHelper;
 import com.codecampus.submission.helper.SubmissionHelper;
 import com.codecampus.submission.repository.SubmissionRepository;
 import lombok.AccessLevel;
@@ -24,10 +25,10 @@ public class SubmissionHistoryService {
     SubmissionRepository submissionRepository;
 
     @Transactional(readOnly = true)
-    public List<QuizAttemptHistoryResponse> getQuizAttemptHistoriesForStudent(
-            String studentId) {
+    public List<QuizAttemptHistoryResponse> getQuizAttemptHistoriesForStudent() {
         return submissionRepository
-                .findQuizSubmissionsByStudent(studentId)
+                .findQuizSubmissionsByStudent(
+                        AuthenticationHelper.getMyUserId())
                 .stream()
                 .sorted(Comparator
                         .comparing(Submission::getScore,

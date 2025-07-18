@@ -1,6 +1,6 @@
 package com.codecampus.submission.helper;
 
-import com.codecampus.submission.dto.response.quiz.MyAssignmentResponse;
+import com.codecampus.submission.dto.response.assignment.MyAssignmentResponse;
 import com.codecampus.submission.entity.Assignment;
 import com.codecampus.submission.entity.Exercise;
 import com.codecampus.submission.repository.SubmissionRepository;

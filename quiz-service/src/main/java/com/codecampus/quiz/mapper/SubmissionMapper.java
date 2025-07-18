@@ -40,8 +40,9 @@ public interface SubmissionMapper {
                         mapInstantToProtobufTimestamp(
                                 quizSubmission.getSubmittedAt()))
                 .setTimeTakenSeconds(quizSubmission.getTimeTakenSeconds());
-        quizSubmission.getAnswers().forEach(a -> builder.addAnswers(
-                toQuizSubmissionAnswerDtoFromQuizSubmissionAnswer(a)));
+        quizSubmission.getAnswers()
+                .forEach(a -> builder.addAnswers(
+                        toQuizSubmissionAnswerDtoFromQuizSubmissionAnswer(a)));
         return builder.build();
     }
 }

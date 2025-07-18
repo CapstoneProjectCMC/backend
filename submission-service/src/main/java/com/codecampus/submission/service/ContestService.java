@@ -1,12 +1,13 @@
 package com.codecampus.submission.service;
 
-import com.codecampus.submission.dto.response.quiz.contest.CreateContestRequest;
-import com.codecampus.submission.dto.response.quiz.contest.MyContestResponse;
+import com.codecampus.submission.dto.request.contest.CreateContestRequest;
+import com.codecampus.submission.dto.response.contest.MyContestResponse;
 import com.codecampus.submission.entity.Contest;
 import com.codecampus.submission.entity.Exercise;
 import com.codecampus.submission.entity.Submission;
 import com.codecampus.submission.helper.AuthenticationHelper;
 import com.codecampus.submission.helper.ContestHelper;
+import com.codecampus.submission.mapper.ContestMapper;
 import com.codecampus.submission.repository.ContestRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,8 @@ public class ContestService {
 
     ContestRepository contestRepository;
 
+    ContestMapper contestMapper;
+
     AssignmentService assignmentService;
     ContestHelper contestHelper;
 
@@ -39,33 +42,11 @@ public class ContestService {
                 contestHelper.getExercisesAndCheckExerciseTypeFromCreateContestRequest(
                         createContestRequest);
 
-        int totalQuestions = exercises
-                .stream()
-                .mapToInt(e -> switch (e.getExerciseType()) {
-                    case QUIZ -> e.getQuizDetail() != null ?
-                            e.getQuizDetail().getNumQuestions() : 0;
-                    case CODING -> e.getCodingDetail() != null ?
-                            e.getCodingDetail().getTestCases().size() : 0;
-                })
-                .sum();
-
-        int totalDuration = exercises
-                .stream()
-                .mapToInt(Exercise::getDuration)
-                .sum();
-
-        Contest contest = Contest.builder()
-                .title(createContestRequest.title())
-                .description(createContestRequest.description())
-                .orgId(AuthenticationHelper.getMyUserId())
-                .startTime(createContestRequest.startTime())
-                .endTime(createContestRequest.endTime())
-                .rankPublic(createContestRequest.rankPublic())
-                .rankRevealTime(createContestRequest.rankRevealTime())
-                .antiCheatConfig(createContestRequest.antiCheatConfig())
-                .exercises(exercises)
-                .build();
-
+        // TODO HARDCODE VÌ CHƯA CÓ TỔ CHỨC
+        Contest contest = contestMapper.toContestFromCreateContestRequest(
+                createContestRequest);
+        contest.setOrgId("ĐÂY LÀ ID TỔ CHỨC");
+        contest.setExercises(exercises);
         contestRepository.save(contest);
 
         for (String studentId : createContestRequest.studentIds()) {
@@ -82,17 +63,17 @@ public class ContestService {
 
 
     @Transactional(readOnly = true)
-    public List<MyContestResponse> getMyContests(
-            String studentId) {
+    public List<MyContestResponse> getMyContests() {
+
+        String studentId = AuthenticationHelper.getMyUserId();
 
         List<Contest> contests =
                 contestRepository.findAllContestsForStudent(studentId);
 
-        Instant now = Instant.now();
-
-        return contests.stream()
-                .map(c -> contestHelper.toMyContestResponseFromContest(
-                        c, studentId, now))
+        return contests
+                .stream()
+                .map(contest -> contestHelper.toMyContestResponseFromContest(
+                        contest, studentId, Instant.now()))
                 .sorted(Comparator.comparing(MyContestResponse::startTime))
                 .toList();
     }
@@ -103,8 +84,8 @@ public class ContestService {
         // Lấy contests chứa exercise này
         List<Contest> contests = contestRepository.findAllContestsByExerciseId(
                 submission.getExercise().getId());
-        for (Contest c : contests) {
-            contestHelper.recomputeContestScoreForStudent(c,
+        for (Contest contest : contests) {
+            contestHelper.recomputeContestScoreForStudent(contest,
                     submission.getUserId());
         }
     }

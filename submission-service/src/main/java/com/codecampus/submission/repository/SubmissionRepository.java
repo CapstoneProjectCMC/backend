@@ -29,6 +29,15 @@ public interface SubmissionRepository
     List<Submission> findQuizSubmissionsByStudent(String studentId);
 
     @Query("""
+            select s
+                from Submission s
+                join fetch s.exercise e
+            where s.userId = :studentId
+                and e.exerciseType = com.codecampus.submission.constant.submission.ExerciseType.CODING
+            """)
+    List<Submission> findCodingSubmissionsByStudent(String studentId);
+
+    @Query("""
                  select s
                    from Submission s
                    join s.exercise e
@@ -42,6 +51,19 @@ public interface SubmissionRepository
             String studentId);
 
     @Query("""
+                 select s
+                   from Submission s
+                   join s.exercise e
+                   join e.contests c
+                  where c.id = :contestId
+                    and s.userId = :studentId
+                    and e.exerciseType = com.codecampus.submission.constant.submission.ExerciseType.CODING
+            """)
+    List<Submission> findCodingSubmissionByContestAndStudent(
+            String contestId,
+            String studentId);
+
+    @Query("""
             select s
               from Submission s
               join s.exercise e
@@ -49,7 +71,7 @@ public interface SubmissionRepository
                and e.id in :exerciseIds
              order by s.score desc, s.timeTakenSeconds asc nulls last
             """)
-    List<Submission> findBestPerQuizSubmissionExercises(
+    List<Submission> findBestPerSubmissionExercises(
             String studentId,
             Collection<String> exerciseIds);
 
@@ -59,6 +81,7 @@ public interface SubmissionRepository
                where s.exercise.id = :exerciseId
                  and s.userId = :studentId
             """)
-    Integer findBestScoreFromExercise(String exerciseId, String studentId);
+    Integer findBestScoreFromExercise(
+            String exerciseId, String studentId);
 }
 

@@ -1,4 +1,4 @@
-package com.codecampus.submission.dto.response.quiz.contest;
+package com.codecampus.submission.dto.response.contest;
 
 import com.codecampus.submission.entity.data.AntiCheatConfig;
 

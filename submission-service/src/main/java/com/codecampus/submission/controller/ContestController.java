@@ -2,12 +2,11 @@ package com.codecampus.submission.controller;
 
 import com.codecampus.submission.constant.submission.ExerciseType;
 import com.codecampus.submission.dto.common.ApiResponse;
-import com.codecampus.submission.dto.response.quiz.contest.ContestResponse;
-import com.codecampus.submission.dto.response.quiz.contest.CreateContestRequest;
-import com.codecampus.submission.dto.response.quiz.contest.MyContestResponse;
+import com.codecampus.submission.dto.request.contest.CreateContestRequest;
+import com.codecampus.submission.dto.response.contest.ContestResponse;
+import com.codecampus.submission.dto.response.contest.MyContestResponse;
 import com.codecampus.submission.entity.Contest;
 import com.codecampus.submission.entity.Exercise;
-import com.codecampus.submission.helper.AuthenticationHelper;
 import com.codecampus.submission.service.ContestService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -48,18 +47,20 @@ public class ContestController {
                         : (e.getCodingDetail() != null ?
                         e.getCodingDetail().getTestCases().size() : 0))
                 .sum();
+
         int totalDuration =
                 contest.getExercises().stream().mapToInt(Exercise::getDuration)
                         .sum();
 
-        ContestResponse rsp = new ContestResponse(
-                contest.getId(), contest.getTitle(), contest.getDescription(),
-                contest.getStartTime(), contest.getEndTime(),
-                contest.isRankPublic(), contest.getRankRevealTime(),
-                totalQuestions, totalDuration, contest.getAntiCheatConfig()
-        );
         return ApiResponse.<ContestResponse>builder()
-                .result(rsp)
+                .result(new ContestResponse(
+                        contest.getId(),
+                        contest.getTitle(), contest.getDescription(),
+                        contest.getStartTime(), contest.getEndTime(),
+                        contest.isRankPublic(), contest.getRankRevealTime(),
+                        totalQuestions, totalDuration,
+                        contest.getAntiCheatConfig()
+                ))
                 .message("Tạo kỳ thi thành công!")
                 .build();
     }
@@ -68,9 +69,8 @@ public class ContestController {
     @GetMapping("/self")
     @PreAuthorize("hasRole('STUDENT')")
     ApiResponse<List<MyContestResponse>> myContests() {
-        String studentId = AuthenticationHelper.getMyUserId();
         return ApiResponse.<List<MyContestResponse>>builder()
-                .result(contestService.getMyContests(studentId))
+                .result(contestService.getMyContests())
                 .message("Các kỳ thi của bạn!")
                 .build();
     }

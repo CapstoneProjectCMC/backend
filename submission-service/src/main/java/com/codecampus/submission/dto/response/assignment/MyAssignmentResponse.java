@@ -1,4 +1,4 @@
-package com.codecampus.submission.dto.response.quiz;
+package com.codecampus.submission.dto.response.assignment;
 
 import java.time.Instant;
 
