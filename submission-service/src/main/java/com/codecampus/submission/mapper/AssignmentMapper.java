@@ -1,26 +1,32 @@
 package com.codecampus.submission.mapper;
 
-import com.codecampus.submission.dto.response.exercise.AssignmentResponse;
+import com.codecampus.quiz.grpc.AssignmentDto;
 import com.codecampus.submission.entity.Assignment;
-import com.codecampus.submission.mapper.filter.RoleFilterMapper;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-@Mapper(
-    componentModel = "spring",
-    uses = {ExerciseMapper.class}
-)
-public interface AssignmentMapper
-    extends RoleFilterMapper<Assignment, AssignmentResponse> {
-  AssignmentResponse toAssignmentResponse(Assignment assignment);
+@Mapper(componentModel = "spring")
+public interface AssignmentMapper {
 
+    @Mapping(target = "exerciseId", source = "exercise.id")
+    AssignmentDto toAssignmentDtoFromAssignment(
+            Assignment assignment);
 
-  @Override
-  default void filterForUser(AssignmentResponse assignmentResponse) {
-    RoleFilterMapper.super.filterForUser(assignmentResponse);
-  }
+    default com.google.protobuf.Timestamp mapInstantToProtobufTimestamp(
+            java.time.Instant instant) {
 
-  @Override
-  default void filterForTeacher(AssignmentResponse assignmentResponse) {
-    RoleFilterMapper.super.filterForTeacher(assignmentResponse);
-  }
+        return instant == null ? null
+                : com.google.protobuf.Timestamp.newBuilder()
+                .setSeconds(instant.getEpochSecond())
+                .setNanos(instant.getNano())
+                .build();
+    }
+
+    default java.time.Instant mapProtobufTimestampToInstant(
+            com.google.protobuf.Timestamp timestamp) {
+
+        return timestamp == null ? null
+                : java.time.Instant.ofEpochSecond(
+                timestamp.getSeconds(), timestamp.getNanos());
+    }
 }

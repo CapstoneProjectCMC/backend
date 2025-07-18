@@ -8,9 +8,11 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public enum QuestionType {
-  MULTIPLE_CHOICE(1),
-  FILL_IN_BLANK(2),
-  CODE_OUTPUT(3);
+public enum QuestionType
+{
+  SINGLE_CHOICE(0),
+  MULTI_CHOICE(1),
+  FILL_BLANK(2);
+  
   int code;
 }

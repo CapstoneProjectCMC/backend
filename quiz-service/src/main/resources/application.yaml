@@ -6,12 +6,13 @@ server:
     context-path: /quiz
 
 grpc:
-  client:
-    submissionGrpc:
-      address: static://submission-service:9090
-      negotiationType: plaintext
   server:
-    port: 9090
+    port: 9591
+
+submission:
+  grpc:
+    host: localhost
+    port: 9590
 
 spring:
   application:
@@ -28,20 +29,20 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
-  data:
-    redis:
-      host: redis-master     # dịch vụ trong compose
-      port: 6379
-      password: ${REDIS_PASSWORD}
-  kafka:
-    consumer:
-      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
-      properties:
-        spring.json.trusted.packages: "com.codecampus.*"
-    producer:
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-
-kafka:
-  bootstrap-servers: kafka1:9092,kafka2:9092,kafka3:9092
-  topic:
-    exercise-created: exercise.created
+#  data:
+#    redis:
+#      host: redis-master     # dịch vụ trong compose
+#      port: 6379
+#      password: dinhanst2832004
+#  kafka:
+#    bootstrap-servers: localhost:9094
+#    consumer:
+#      group-id: quiz-result-aggregator
+#      auto-offset-reset: earliest
+#      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+#      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+#      properties:
+#        spring.json.trusted.packages: "*"
+#    producer:
+#      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+#      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer

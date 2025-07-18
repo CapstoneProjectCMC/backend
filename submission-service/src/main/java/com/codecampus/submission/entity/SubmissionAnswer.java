@@ -1,6 +1,8 @@
 package com.codecampus.submission.entity;
 
+import com.codecampus.submission.entity.audit.AuditMetadata;
 import com.codecampus.submission.entity.data.SubmissionAnswerId;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
@@ -8,6 +10,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -28,32 +31,31 @@ import org.hibernate.annotations.Where;
 @Entity
 @Table(name = "submission_answer")
 @SQLDelete(sql = "UPDATE submission_answer " +
-    "SET deleted_by = ? , deleted_at = now() " +
-    "WHERE id = ?")
+        "SET deleted_by = ? , deleted_at = now() " +
+        "WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
-public class SubmissionAnswer
-{
-  @EmbeddedId
-  SubmissionAnswerId id;
+public class SubmissionAnswer extends AuditMetadata {
+    @EmbeddedId
+    SubmissionAnswerId id;
 
-  // ---- FK tới Submission (dùng submission_id của khóa) ----
-  @MapsId("submissionId")                     // trùng field trong Id
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "submission_id")
-  Submission submission;
+    @JsonBackReference
+    @MapsId("submissionId")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "submission_id")
+    Submission submission;
 
-  // ---- FK tới Question (dùng question_id của khóa) ----
-  @MapsId("questionId")
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "question_id")
-  Question question;
+    @MapsId("questionId")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "question_id")
+    Question question;
 
-  @Column(name = "selected_option")
-  String selectedOptionId;   // FK tới Option nếu dạng trắc nghiệm
+    @JoinColumn(name = "selected_option")
+    @OneToOne(fetch = FetchType.LAZY)
+    Option selectedOption;
 
-  @Column(name = "answer_text", columnDefinition = "text")
-  String answerText;         // nếu fill-in-blank …
+    @Column(name = "answer_text", columnDefinition = "text")
+    String answerText;
 
-  @Column(name = "is_correct", nullable = false)
-  boolean correct;
+    @Column(name = "is_correct", nullable = false)
+    boolean correct;
 }

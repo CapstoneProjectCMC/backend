@@ -1,14 +1,14 @@
 package com.codecampus.profile.service;
 
-import static com.codecampus.profile.utils.PageResponseUtils.toPageResponse;
+import static com.codecampus.profile.helper.PageResponseHelper.toPageResponse;
 
 import com.codecampus.profile.dto.common.PageResponse;
 import com.codecampus.profile.entity.properties.exercise.AssignedOrgExercise;
 import com.codecampus.profile.entity.properties.organization.CreatedOrg;
 import com.codecampus.profile.entity.properties.organization.MemberOrg;
+import com.codecampus.profile.helper.SecurityHelper;
 import com.codecampus.profile.repository.OrgRepository;
 import com.codecampus.profile.repository.UserProfileRepository;
-import com.codecampus.profile.utils.SecurityUtils;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -32,7 +32,7 @@ public class OrganizationService
   {
     Pageable pageable = PageRequest.of(page - 1, size);
     var pageData = userProfileRepository
-        .findCreatedOrgs(SecurityUtils.getMyUserId(), pageable);
+        .findCreatedOrgs(SecurityHelper.getMyUserId(), pageable);
 
     return toPageResponse(pageData, page);
   }
@@ -42,7 +42,7 @@ public class OrganizationService
   {
     Pageable pageable = PageRequest.of(page - 1, size);
     var pageData = userProfileRepository
-        .findMemberOrgs(SecurityUtils.getMyUserId(), pageable);
+        .findMemberOrgs(SecurityHelper.getMyUserId(), pageable);
 
     return toPageResponse(pageData, page);
   }
@@ -53,7 +53,7 @@ public class OrganizationService
     Pageable p = PageRequest.of(page - 1, size);
     return toPageResponse(
         userProfileRepository.findMemberOrgsByRole(
-            SecurityUtils.getMyUserId(), "TEACHER", p),
+            SecurityHelper.getMyUserId(), "TEACHER", p),
         page);
   }
 
@@ -63,7 +63,7 @@ public class OrganizationService
     Pageable p = PageRequest.of(page - 1, size);
     return toPageResponse(
         userProfileRepository.findMemberOrgsByRole(
-            SecurityUtils.getMyUserId(), "ADMIN", p),
+            SecurityHelper.getMyUserId(), "ADMIN", p),
         page);
   }
 

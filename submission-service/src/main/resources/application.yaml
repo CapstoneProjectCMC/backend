@@ -12,6 +12,20 @@ server:
 #    key-store-password: dinhanst2832004
 #    key-password: dinhanst2832004
 
+grpc:
+  server:
+    port: 9590
+
+quiz:
+  grpc:
+    host: localhost
+    port: 9591
+
+coding:
+  grpc:
+    host: localhost
+    port: 9592
+
 spring:
   application:
     name: submission-service
@@ -27,22 +41,23 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
-  data:
-    redis:
-      host: redis-master     # dịch vụ trong compose
-      port: 6379
-      password: ${REDIS_PASSWORD}
   kafka:
-    consumer:
-      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
-      properties:
-        spring.json.trusted.packages: "com.codecampus.*"
+    bootstrap-servers: localhost:9092
     producer:
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+#      acks: all
+#      retries: 3
+#      # optional: giảm latency
+#      linger-ms: 5            # gộp record <= 5 MS rồi mới gửi
+#      batch-size: 16384       # 16 KB
+#      compression-type: lz4   # nén nhẹ – giảm băng thông
+#  data:
+#    redis:
+#      host: redis-master     # dịch vụ trong compose
+#      port: 6379
+#      password: dinhanst2832004
 
-kafka:
-  bootstrap-servers: kafka1:9092,kafka2:9092,kafka3:9092
-  topic:
-    exercise-created: exercise.created
-
-
+app:
+  event:
+    exercise-events: "exercise-events"

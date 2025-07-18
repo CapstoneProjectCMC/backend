@@ -1,11 +1,11 @@
 package com.codecampus.profile.service;
 
-import static com.codecampus.profile.utils.PageResponseUtils.toPageResponse;
+import static com.codecampus.profile.helper.PageResponseHelper.toPageResponse;
 
 import com.codecampus.profile.dto.common.PageResponse;
 import com.codecampus.profile.entity.properties.subcribe.SubscribedTo;
+import com.codecampus.profile.helper.SecurityHelper;
 import com.codecampus.profile.repository.UserProfileRepository;
-import com.codecampus.profile.utils.SecurityUtils;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -18,14 +18,16 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class PackageService {
+public class PackageService
+{
   UserProfileRepository userProfileRepository;
 
   public PageResponse<SubscribedTo> getMySubscriptions(
-      int page, int size) {
+      int page, int size)
+  {
     Pageable pageable = PageRequest.of(page - 1, size);
     var pageData = userProfileRepository
-        .findSubscriptions(SecurityUtils.getMyUserId(), pageable);
+        .findSubscriptions(SecurityHelper.getMyUserId(), pageable);
 
     return toPageResponse(pageData, page);
   }

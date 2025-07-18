@@ -1,6 +1,7 @@
 package com.codecampus.submission.entity;
 
 import com.codecampus.submission.entity.audit.AuditMetadata;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -38,9 +39,10 @@ public class TestCase extends AuditMetadata
   @GeneratedValue(strategy = GenerationType.UUID)
   String id;
 
+  @JsonBackReference
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "exercise_id", nullable = false)
-  Exercise exercise;
+  @JoinColumn(name = "coding_detail_id", nullable = false)
+  CodingDetail codingDetail;
 
   @Column(nullable = false, columnDefinition = "text")
   String input;

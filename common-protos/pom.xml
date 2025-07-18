@@ -16,15 +16,22 @@
     <artifactId>common-protos</artifactId>
 
     <properties>
-        <java.annotation.api>1.3.2</java.annotation.api>
+        <!-- javax.annotation-api không nằm trong BOM của parent -->
+        <javax.annotation-api.version>1.3.2</javax.annotation-api.version>
+
+        <!-- Extension version (không kế thừa từ pluginManagement) -->
+        <os.maven.plugin.version>1.7.1</os.maven.plugin.version>
     </properties>
 
     <dependencies>
+        <!-- ===== Annotation (build-time) ===== -->
         <dependency>
             <groupId>javax.annotation</groupId>
             <artifactId>javax.annotation-api</artifactId>
-            <version>${java.annotation.api}</version>
+            <version>${javax.annotation-api.version}</version>
         </dependency>
+
+        <!-- ===== gRPC & Protobuf (version lấy từ BOM cha) ===== -->
         <dependency>
             <groupId>io.grpc</groupId>
             <artifactId>grpc-netty-shaded</artifactId>
@@ -44,14 +51,17 @@
     </dependencies>
 
     <build>
+        <!-- Extension cần version riêng -->
         <extensions>
             <extension>
                 <groupId>kr.motd.maven</groupId>
                 <artifactId>os-maven-plugin</artifactId>
+                <version>${os.maven.plugin.version}</version>
             </extension>
         </extensions>
 
         <plugins>
+            <!-- Version plugin & protoc đã khai báo trong pluginManagement của parent -->
             <plugin>
                 <groupId>org.xolstice.maven.plugins</groupId>
                 <artifactId>protobuf-maven-plugin</artifactId>

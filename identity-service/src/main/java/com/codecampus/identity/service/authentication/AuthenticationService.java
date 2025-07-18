@@ -285,13 +285,19 @@ public class AuthenticationService
     try
     {
       userRepository.save(user);
-
-      // Gửi OTP qua email
-      otpService.sendOtp(request);
-      profileSyncHelper.createProfile(user, request);   // 👍
+      profileSyncHelper.createProfile(user, request);
     } catch (DataIntegrityViolationException e)
     {
       throw new AppException(ErrorCode.USER_ALREADY_EXISTS);
+    }
+
+    try
+    {
+      // Gửi OTP qua email
+      otpService.sendOtp(request);
+    } catch (AppException e)
+    {
+      throw new AppException(ErrorCode.FAILED_SEND_EMAIL);
     }
   }
 
@@ -479,7 +485,6 @@ public class AuthenticationService
         .refreshExpiry(refreshToken.getJWTClaimsSet().getExpirationTime().toInstant())
         .authenticated(true)
         .enabled(user.isEnabled())
-        .active(true)
         .build();
   }
 }

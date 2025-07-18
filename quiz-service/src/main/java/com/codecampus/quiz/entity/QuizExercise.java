@@ -1,12 +1,12 @@
 package com.codecampus.quiz.entity;
 
+import com.codecampus.quiz.entity.audit.AuditMetadata;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,6 +14,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Getter
 @Setter
@@ -23,15 +29,30 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "quiz_exercise")
-public class QuizExercise
-{
-  @Id
-  String id;
+@SQLDelete(sql = "UPDATE quiz_exercise " +
+        "SET deleted_by = ? , deleted_at = now() " +
+        "WHERE id = ?")
+@Where(clause = "deleted_at IS NULL")
+public class QuizExercise extends AuditMetadata {
+    @Id
+    String id;
 
-  @OneToMany(
-      mappedBy = "exercise",
-      cascade = CascadeType.ALL,
-      orphanRemoval = true
-  )
-  List<QuizQuestion> questions = new ArrayList<>();
+    String title;
+    String description;
+    int totalPoints;
+    int numQuestions;
+
+    @JsonManagedReference
+    @OneToMany(
+            mappedBy = "quiz",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    List<Question> questions = new ArrayList<>();
+
+    public Optional<Question> findQuestionById(String questionId) {
+        return questions.stream()
+                .filter(q -> q.getId().equals(questionId))
+                .findFirst();
+    }
 }

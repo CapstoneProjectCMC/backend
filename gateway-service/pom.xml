@@ -26,46 +26,65 @@
         <url/>
     </scm>
     <properties>
+        <!-- Java -->
         <java.version>21</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+
+        <!-- Spring / Cloud -->
         <spring-cloud.version>2024.0.1</spring-cloud.version>
-        <projectlombok-lombok.version>1.18.38</projectlombok-lombok.version>
-        <bucket4j-core.version>8.10.1</bucket4j-core.version>
-        <ben-manes.caffeine.version>3.2.0</ben-manes.caffeine.version>
-        <spring-webflux.version>7.0.0-M5</spring-webflux.version>
-        <contract-stub-runner.version>4.2.1</contract-stub-runner.version>
+
+        <!-- Lib versions -->
+        <lombok.version>1.18.38</lombok.version>
+        <bucket4j.version>8.10.1</bucket4j.version>
+        <caffeine.version>3.2.0</caffeine.version>
+        <tomcat.embed.version>11.0.8</tomcat.embed.version>
         <reactor-test.version>3.8.0-M3</reactor-test.version>
-        <mockito-core.vesion>5.18.0</mockito-core.vesion>
+        <mockito.version>5.18.0</mockito.version>
+
+        <!-- Plugin versions -->
+        <maven.compiler.plugin.version>3.12.1</maven.compiler.plugin.version>
     </properties>
     <dependencies>
-
+        <!-- ===== Spring Cloud Gateway & WebFlux ===== -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-gateway</artifactId>
         </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>${projectlombok-lombok.version}</version>
-            <scope>provided</scope>
+        <dependency> <!-- Feign (mô-đun core, dùng cho filter gọi nội bộ) -->
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-openfeign-core</artifactId>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/io.projectreactor/reactor-test -->
+        <!-- ===== Rate-limiting & Cache (Bucket4j + Caffeine) ===== -->
         <dependency>
-            <groupId>io.projectreactor</groupId>
-            <artifactId>reactor-test</artifactId>
-            <version>${reactor-test.version}</version>
-            <scope>test</scope>
+            <groupId>com.bucket4j</groupId>
+            <artifactId>bucket4j-core</artifactId>
+            <version>${bucket4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+            <version>${caffeine.version}</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.apache.tomcat.embed/tomcat-embed-core -->
+        <!-- ===== Container servlet (Tomcat 11 embed) ===== -->
         <dependency>
             <groupId>org.apache.tomcat.embed</groupId>
             <artifactId>tomcat-embed-core</artifactId>
-            <version>11.0.8</version>
+            <version>${tomcat.embed.version}</version>
         </dependency>
 
+        <!-- ===== Lombok ===== -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- ===== Dev/runtime helpers ===== -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
@@ -73,39 +92,26 @@
             <optional>true</optional>
         </dependency>
 
+        <!-- ===== Testing ===== -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.mockito/mockito-core -->
+        <dependency>
+            <groupId>io.projectreactor</groupId>
+            <artifactId>reactor-test</artifactId>
+            <version>${reactor-test.version}</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>${mockito-core.vesion}</version>
+            <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
-
-        <!-- https://mvnrepository.com/artifact/com.bucket4j/bucket4j-core -->
-        <dependency>
-            <groupId>com.bucket4j</groupId>
-            <artifactId>bucket4j-core</artifactId>
-            <version>${bucket4j-core.version}</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/com.github.ben-manes.caffeine/caffeine -->
-        <!--        Lưu trữ bucket theo client-->
-        <dependency>
-            <groupId>com.github.ben-manes.caffeine</groupId>
-            <artifactId>caffeine</artifactId>
-            <version>${ben-manes.caffeine.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-openfeign-core</artifactId>
-        </dependency>
     </dependencies>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -120,21 +126,30 @@
 
     <build>
         <plugins>
+
+            <!-- ==== Compiler + Lombok APT ==== -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven.compiler.plugin.version}</version>
                 <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
                     <annotationProcessorPaths>
                         <path>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>
+
+            <!-- ==== Spring Boot repackage ==== -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <!-- version kế thừa từ spring-boot-starter-parent -->
                 <configuration>
                     <excludes>
                         <exclude>

@@ -1,6 +1,7 @@
 package com.codecampus.submission.entity;
 
 import com.codecampus.submission.entity.audit.AuditMetadata;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -27,27 +28,27 @@ import org.hibernate.annotations.Where;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table(name = "option")
+@Table(name = "question_option")
 @SQLDelete(sql = "UPDATE option " +
-    "SET deleted_by = ? , deleted_at = now() " +
-    "WHERE id = ?")
+        "SET deleted_by = ? , deleted_at = now() " +
+        "WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
-public class Option extends AuditMetadata
-{
-  @Id
-  @GeneratedValue(strategy = GenerationType.UUID)
-  String id;
+public class Option extends AuditMetadata {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    String id;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "question_id", nullable = false)
-  Question question;
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "question_id", nullable = false)
+    Question question;
 
-  @Column(name = "option_text", nullable = false, columnDefinition = "text")
-  String optionText;
+    @Column(name = "option_text", nullable = false, columnDefinition = "text")
+    String optionText;
 
-  @Column(name = "is_correct", nullable = false)
-  boolean correct;
+    @Column(name = "is_correct", nullable = false)
+    boolean correct;
 
-  @Column(name = "display_order", length = 1)
-  String order;   // 'A','B',...
+    @Column(name = "display_order", length = 1)
+    String order;
 }

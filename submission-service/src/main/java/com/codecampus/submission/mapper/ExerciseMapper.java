@@ -1,33 +1,35 @@
 package com.codecampus.submission.mapper;
 
-import com.codecampus.submission.dto.request.ExerciseCreationRequest;
-import com.codecampus.submission.dto.response.exercise.ExerciseSummaryResponse;
+import com.codecampus.submission.dto.request.CreateExerciseRequest;
+import com.codecampus.submission.dto.request.UpdateExerciseRequest;
+import com.codecampus.submission.dto.response.quiz.ExerciseQuizResponse;
 import com.codecampus.submission.entity.Exercise;
-import com.codecampus.submission.mapper.filter.RoleFilterMapper;
 import org.mapstruct.BeanMapping;
+import org.mapstruct.Context;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
+import org.mapstruct.ReportingPolicy;
 
-@Mapper(componentModel = "spring")
-public interface ExerciseMapper
-    extends RoleFilterMapper<Exercise, ExerciseSummaryResponse>
-{
+@Mapper(
+        componentModel = "spring",
+        unmappedTargetPolicy = ReportingPolicy.IGNORE
+)
+public interface ExerciseMapper {
 
-  ExerciseSummaryResponse toExerciseSummaryResponse(Exercise exercise);
+    @Mapping(target = "userId", expression = "java(userId)")
+    @Mapping(target = "visibility", expression =
+            "java(request.orgId()==null || request.orgId().isBlank())")
+    Exercise toExerciseFromCreateExerciseRequest(
+            CreateExerciseRequest request,
+            @Context String userId);
 
-  @BeanMapping(ignoreUnmappedSourceProperties = {"exerciseType", "coding", "quiz"})
-  Exercise toExercise(ExerciseCreationRequest request);
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    void patchUpdateExerciseRequestToExercise(
+            UpdateExerciseRequest request,
+            @MappingTarget Exercise exercise
+    );
 
-  @Override
-  default void filterForUser(ExerciseSummaryResponse response)
-  {
-    RoleFilterMapper.super.filterForUser(response);
-    response.setUserId(null);
-  }
-
-  @Override
-  default void filterForTeacher(
-      ExerciseSummaryResponse response)
-  {
-    RoleFilterMapper.super.filterForTeacher(response);
-  }
+    ExerciseQuizResponse toExerciseQuizResponseFromExercise(Exercise e);
 }

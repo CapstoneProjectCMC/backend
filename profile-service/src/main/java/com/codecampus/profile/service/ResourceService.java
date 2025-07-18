@@ -1,6 +1,6 @@
 package com.codecampus.profile.service;
 
-import static com.codecampus.profile.utils.PageResponseUtils.toPageResponse;
+import static com.codecampus.profile.helper.PageResponseHelper.toPageResponse;
 
 import com.codecampus.profile.constant.type.ResourceType;
 import com.codecampus.profile.dto.common.PageResponse;
@@ -10,9 +10,9 @@ import com.codecampus.profile.entity.properties.resource.ReportedResource;
 import com.codecampus.profile.entity.properties.resource.SavedResource;
 import com.codecampus.profile.exception.AppException;
 import com.codecampus.profile.exception.ErrorCode;
+import com.codecampus.profile.helper.SecurityHelper;
 import com.codecampus.profile.repository.FileResourceRepository;
 import com.codecampus.profile.repository.UserProfileRepository;
-import com.codecampus.profile.utils.SecurityUtils;
 import java.time.Instant;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -74,7 +74,7 @@ public class ResourceService
   {
     Pageable pageable = PageRequest.of(page - 1, size);
     var data = userProfileRepository.findSavedResourcesByType(
-        SecurityUtils.getMyUserId(), type.name(), pageable);
+        SecurityHelper.getMyUserId(), type.name(), pageable);
     return toPageResponse(data, page);
   }
 
