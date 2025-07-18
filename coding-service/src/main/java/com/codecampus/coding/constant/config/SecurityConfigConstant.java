@@ -18,6 +18,7 @@ public class SecurityConfigConstant {
       "/hello",
       "/health",
       "/actuator/**",
+      "/code/compile",
   };
 
   // FRONTEND ENDPOINT
