@@ -21,6 +21,7 @@ public interface SubmissionMapper {
             expression = "java(java.time.Instant.ofEpochSecond(" +
                     "dto.getSubmittedAt().getSeconds(), " +
                     "dto.getSubmittedAt().getNanos()))")
+    @Mapping(target = "timeTakenSeconds", source = "dto.timeTakenSeconds")
     Submission toSubmissionFromQuizSubmissionDto(
             QuizSubmissionDto dto,
             @Context Exercise exercise,

@@ -253,6 +253,17 @@ private static final long serialVersionUID = 0L;
     return answers_.get(index);
   }
 
+  public static final int TIMETAKENSECONDS_FIELD_NUMBER = 8;
+  private int timeTakenSeconds_ = 0;
+  /**
+   * <code>int32 timeTakenSeconds = 8;</code>
+   * @return The timeTakenSeconds.
+   */
+  @java.lang.Override
+  public int getTimeTakenSeconds() {
+    return timeTakenSeconds_;
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -288,6 +299,9 @@ private static final long serialVersionUID = 0L;
     for (int i = 0; i < answers_.size(); i++) {
       output.writeMessage(7, answers_.get(i));
     }
+    if (timeTakenSeconds_ != 0) {
+      output.writeInt32(8, timeTakenSeconds_);
+    }
     getUnknownFields().writeTo(output);
   }
 
@@ -322,6 +336,10 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(7, answers_.get(i));
     }
+    if (timeTakenSeconds_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt32Size(8, timeTakenSeconds_);
+    }
     size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
     return size;
@@ -354,6 +372,8 @@ private static final long serialVersionUID = 0L;
     }
     if (!getAnswersList()
         .equals(other.getAnswersList())) return false;
+    if (getTimeTakenSeconds()
+        != other.getTimeTakenSeconds()) return false;
     if (!getUnknownFields().equals(other.getUnknownFields())) return false;
     return true;
   }
@@ -383,6 +403,8 @@ private static final long serialVersionUID = 0L;
       hash = (37 * hash) + ANSWERS_FIELD_NUMBER;
       hash = (53 * hash) + getAnswersList().hashCode();
     }
+    hash = (37 * hash) + TIMETAKENSECONDS_FIELD_NUMBER;
+    hash = (53 * hash) + getTimeTakenSeconds();
     hash = (29 * hash) + getUnknownFields().hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -538,6 +560,7 @@ private static final long serialVersionUID = 0L;
         answersBuilder_.clear();
       }
       bitField0_ = (bitField0_ & ~0x00000040);
+      timeTakenSeconds_ = 0;
       return this;
     }
 
@@ -606,6 +629,9 @@ private static final long serialVersionUID = 0L;
             : submittedAtBuilder_.build();
         to_bitField0_ |= 0x00000001;
       }
+      if (((from_bitField0_ & 0x00000080) != 0)) {
+        result.timeTakenSeconds_ = timeTakenSeconds_;
+      }
       result.bitField0_ |= to_bitField0_;
     }
 
@@ -670,6 +696,9 @@ private static final long serialVersionUID = 0L;
             answersBuilder_.addAllMessages(other.answers_);
           }
         }
+      }
+      if (other.getTimeTakenSeconds() != 0) {
+        setTimeTakenSeconds(other.getTimeTakenSeconds());
       }
       this.mergeUnknownFields(other.getUnknownFields());
       onChanged();
@@ -742,6 +771,11 @@ private static final long serialVersionUID = 0L;
               }
               break;
             } // case 58
+            case 64: {
+              timeTakenSeconds_ = input.readInt32();
+              bitField0_ |= 0x00000080;
+              break;
+            } // case 64
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -1398,6 +1432,38 @@ private static final long serialVersionUID = 0L;
         answers_ = null;
       }
       return answersBuilder_;
+    }
+
+    private int timeTakenSeconds_ ;
+    /**
+     * <code>int32 timeTakenSeconds = 8;</code>
+     * @return The timeTakenSeconds.
+     */
+    @java.lang.Override
+    public int getTimeTakenSeconds() {
+      return timeTakenSeconds_;
+    }
+    /**
+     * <code>int32 timeTakenSeconds = 8;</code>
+     * @param value The timeTakenSeconds to set.
+     * @return This builder for chaining.
+     */
+    public Builder setTimeTakenSeconds(int value) {
+
+      timeTakenSeconds_ = value;
+      bitField0_ |= 0x00000080;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>int32 timeTakenSeconds = 8;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearTimeTakenSeconds() {
+      bitField0_ = (bitField0_ & ~0x00000080);
+      timeTakenSeconds_ = 0;
+      onChanged();
+      return this;
     }
 
     // @@protoc_insertion_point(builder_scope:submission.QuizSubmissionDto)

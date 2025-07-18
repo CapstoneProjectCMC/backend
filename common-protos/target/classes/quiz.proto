@@ -64,12 +64,13 @@ message SubmitQuizRequest {
   string exerciseId = 1;
   string studentId = 2;
   repeated AnswerDto answers = 3;
+  int32 timeTakenSeconds = 4;
 }
-
 message SubmitQuizResponse {
   int32 score = 1;
   int32 totalPoints = 2;
   bool passed = 3;
+  int32 timeTakenSeconds = 4;
 }
 
 service QuizSyncService {

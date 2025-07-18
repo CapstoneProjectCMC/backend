@@ -6,7 +6,7 @@ import com.codecampus.submission.dto.common.PageResponse;
 import com.codecampus.submission.dto.request.CreateExerciseRequest;
 import com.codecampus.submission.dto.request.UpdateExerciseRequest;
 import com.codecampus.submission.dto.response.quiz.ExerciseQuizResponse;
-import com.codecampus.submission.dto.response.quiz.detail.ExerciseQuizDetailResponse;
+import com.codecampus.submission.dto.response.quiz.quiz_detail.ExerciseQuizDetailResponse;
 import com.codecampus.submission.service.ExerciseService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;

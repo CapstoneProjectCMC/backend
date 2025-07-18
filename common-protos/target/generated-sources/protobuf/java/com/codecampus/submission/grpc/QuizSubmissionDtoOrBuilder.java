@@ -95,4 +95,10 @@ public interface QuizSubmissionDtoOrBuilder extends
    */
   com.codecampus.submission.grpc.QuizSubmissionAnswerDtoOrBuilder getAnswersOrBuilder(
       int index);
+
+  /**
+   * <code>int32 timeTakenSeconds = 8;</code>
+   * @return The timeTakenSeconds.
+   */
+  int getTimeTakenSeconds();
 }

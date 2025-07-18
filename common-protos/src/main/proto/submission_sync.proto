@@ -21,6 +21,7 @@ message QuizSubmissionDto {
   int32  totalPoints = 5;
   google.protobuf.Timestamp submittedAt = 6;
   repeated QuizSubmissionAnswerDto answers = 7;
+  int32 timeTakenSeconds = 8;
 }
 
 service SubmissionSyncService {

@@ -1,9 +1,9 @@
 package com.codecampus.submission.helper;
 
 import com.codecampus.submission.constant.sort.SortField;
-import com.codecampus.submission.dto.response.quiz.detail.OptionDetailResponse;
-import com.codecampus.submission.dto.response.quiz.detail.QuestionDetailResponse;
-import com.codecampus.submission.dto.response.quiz.detail.QuizDetailSliceDetailResponse;
+import com.codecampus.submission.dto.response.quiz.quiz_detail.OptionDetailResponse;
+import com.codecampus.submission.dto.response.quiz.quiz_detail.QuestionDetailResponse;
+import com.codecampus.submission.dto.response.quiz.quiz_detail.QuizDetailSliceDetailResponse;
 import com.codecampus.submission.entity.Exercise;
 import com.codecampus.submission.entity.Option;
 import com.codecampus.submission.entity.Question;

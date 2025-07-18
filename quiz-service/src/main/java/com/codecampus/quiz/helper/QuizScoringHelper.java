@@ -31,6 +31,7 @@ public class QuizScoringHelper {
                 .studentId(request.getStudentId())
                 .submittedAt(Instant.now())
                 .totalPoints(quizExercise.getTotalPoints())
+                .timeTakenSeconds(request.getTimeTakenSeconds())
                 .build();
 
         for (AnswerDto answerDto : request.getAnswersList()) {

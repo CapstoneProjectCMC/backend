@@ -74,6 +74,9 @@ public class Submission extends AuditMetadata {
     Integer runtime;
     Integer memoryUsed;
 
+    @Column(name = "time_taken_seconds")
+    Integer timeTakenSeconds;
+
     @JsonManagedReference
     @OneToMany(mappedBy = "submission",
             fetch = FetchType.LAZY,

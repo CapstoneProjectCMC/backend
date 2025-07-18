@@ -1,4 +1,4 @@
-package com.codecampus.submission.dto.response.quiz.detail;
+package com.codecampus.submission.dto.response.quiz.quiz_detail;
 
 import com.codecampus.submission.constant.submission.Difficulty;
 import com.codecampus.submission.constant.submission.ExerciseType;

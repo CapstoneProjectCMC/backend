@@ -6,8 +6,8 @@ import com.codecampus.submission.dto.common.PageResponse;
 import com.codecampus.submission.dto.request.CreateExerciseRequest;
 import com.codecampus.submission.dto.request.UpdateExerciseRequest;
 import com.codecampus.submission.dto.response.quiz.ExerciseQuizResponse;
-import com.codecampus.submission.dto.response.quiz.detail.ExerciseQuizDetailResponse;
-import com.codecampus.submission.dto.response.quiz.detail.QuizDetailSliceDetailResponse;
+import com.codecampus.submission.dto.response.quiz.quiz_detail.ExerciseQuizDetailResponse;
+import com.codecampus.submission.dto.response.quiz.quiz_detail.QuizDetailSliceDetailResponse;
 import com.codecampus.submission.entity.Exercise;
 import com.codecampus.submission.entity.Submission;
 import com.codecampus.submission.grpc.CreateQuizSubmissionRequest;
@@ -45,6 +45,8 @@ public class ExerciseService {
     QuestionRepository questionRepository;
     SubmissionRepository submissionRepository;
     AssignmentRepository assignmentRepository;
+
+    ContestService contestService;
 
     GrpcQuizClient grpcQuizClient;
     GrpcCodingClient grpcCodingClient;
@@ -91,6 +93,8 @@ public class ExerciseService {
                             dto.getExerciseId(), dto.getStudentId())
                     .ifPresent(a -> a.setCompleted(true));
         }
+
+        contestService.updateRankingOnSubmission(submission);
     }
 
     @Transactional

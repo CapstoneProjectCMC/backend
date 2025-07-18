@@ -10,8 +10,6 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface SubmissionMapper {
-    QuizSubmissionDto toQuizSubmissionDtoFromQuizSubmission(
-            QuizSubmission quizSubmission);
 
     @Mapping(target = "questionId", source = "question.id")
     @Mapping(target = "selectedOptionId", source = "selectedOption.id")
@@ -28,5 +26,22 @@ public interface SubmissionMapper {
                 .setSeconds(instant.getEpochSecond())
                 .setNanos(instant.getNano())
                 .build();
+    }
+
+    default QuizSubmissionDto toQuizSubmissionDtoFromQuizSubmission(
+            QuizSubmission quizSubmission) {
+        QuizSubmissionDto.Builder builder = QuizSubmissionDto.newBuilder()
+                .setId(quizSubmission.getId())
+                .setExerciseId(quizSubmission.getExerciseId())
+                .setStudentId(quizSubmission.getStudentId())
+                .setScore(quizSubmission.getScore())
+                .setTotalPoints(quizSubmission.getTotalPoints())
+                .setSubmittedAt(
+                        mapInstantToProtobufTimestamp(
+                                quizSubmission.getSubmittedAt()))
+                .setTimeTakenSeconds(quizSubmission.getTimeTakenSeconds());
+        quizSubmission.getAnswers().forEach(a -> builder.addAnswers(
+                toQuizSubmissionAnswerDtoFromQuizSubmissionAnswer(a)));
+        return builder.build();
     }
 }

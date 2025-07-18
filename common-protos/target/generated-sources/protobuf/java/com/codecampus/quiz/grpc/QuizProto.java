@@ -123,37 +123,38 @@ public final class QuizProto {
       "cise\030\001 \001(\0132\025.quiz.QuizExerciseDto\022$\n\tque" +
       "stions\030\002 \003(\0132\021.quiz.QuestionDto\"M\n\tAnswe" +
       "rDto\022\022\n\nquestionId\030\001 \001(\t\022\030\n\020selectedOpti" +
-      "onId\030\002 \001(\t\022\022\n\nanswerText\030\003 \001(\t\"\\\n\021Submit" +
+      "onId\030\002 \001(\t\022\022\n\nanswerText\030\003 \001(\t\"v\n\021Submit" +
       "QuizRequest\022\022\n\nexerciseId\030\001 \001(\t\022\021\n\tstude" +
       "ntId\030\002 \001(\t\022 \n\007answers\030\003 \003(\0132\017.quiz.Answe" +
-      "rDto\"H\n\022SubmitQuizResponse\022\r\n\005score\030\001 \001(" +
-      "\005\022\023\n\013totalPoints\030\002 \001(\005\022\016\n\006passed\030\003 \001(\010\"D" +
-      "\n\031CreateQuizExerciseRequest\022\'\n\010exercise\030" +
-      "\001 \001(\0132\025.quiz.QuizExerciseDto\"P\n\024AddQuizD" +
-      "etailRequest\022\022\n\nexerciseId\030\001 \001(\t\022$\n\tques" +
-      "tions\030\002 \003(\0132\021.quiz.QuestionDto\"M\n\022AddQue" +
-      "stionRequest\022\022\n\nexerciseId\030\001 \001(\t\022#\n\010ques" +
-      "tion\030\002 \001(\0132\021.quiz.QuestionDto\"[\n\020AddOpti" +
-      "onRequest\022\022\n\nexerciseId\030\001 \001(\t\022\022\n\nquestio" +
-      "nId\030\002 \001(\t\022\037\n\006option\030\003 \001(\0132\017.quiz.OptionD" +
-      "to\"B\n\027UpsertAssignmentRequest\022\'\n\nassignm" +
-      "ent\030\001 \001(\0132\023.quiz.AssignmentDto*C\n\014Questi" +
-      "onType\022\021\n\rSINGLE_CHOICE\020\000\022\020\n\014MULTI_CHOIC" +
-      "E\020\001\022\016\n\nFILL_BLANK\020\0022\356\002\n\017QuizSyncService\022" +
-      "M\n\022CreateQuizExercise\022\037.quiz.CreateQuizE" +
-      "xerciseRequest\032\026.google.protobuf.Empty\022C" +
-      "\n\rAddQuizDetail\022\032.quiz.AddQuizDetailRequ" +
-      "est\032\026.google.protobuf.Empty\022?\n\013AddQuesti" +
-      "on\022\030.quiz.AddQuestionRequest\032\026.google.pr" +
-      "otobuf.Empty\022;\n\tAddOption\022\026.quiz.AddOpti" +
-      "onRequest\032\026.google.protobuf.Empty\022I\n\020Ups" +
-      "ertAssignment\022\035.quiz.UpsertAssignmentReq" +
-      "uest\032\026.google.protobuf.Empty2\215\001\n\017QuizPla" +
-      "yService\0229\n\010LoadQuiz\022\025.quiz.LoadQuizRequ" +
-      "est\032\026.quiz.LoadQuizResponse\022?\n\nSubmitQui" +
-      "z\022\027.quiz.SubmitQuizRequest\032\030.quiz.Submit" +
-      "QuizResponseB\'\n\030com.codecampus.quiz.grpc" +
-      "B\tQuizProtoP\001b\006proto3"
+      "rDto\022\030\n\020timeTakenSeconds\030\004 \001(\005\"b\n\022Submit" +
+      "QuizResponse\022\r\n\005score\030\001 \001(\005\022\023\n\013totalPoin" +
+      "ts\030\002 \001(\005\022\016\n\006passed\030\003 \001(\010\022\030\n\020timeTakenSec" +
+      "onds\030\004 \001(\005\"D\n\031CreateQuizExerciseRequest\022" +
+      "\'\n\010exercise\030\001 \001(\0132\025.quiz.QuizExerciseDto" +
+      "\"P\n\024AddQuizDetailRequest\022\022\n\nexerciseId\030\001" +
+      " \001(\t\022$\n\tquestions\030\002 \003(\0132\021.quiz.QuestionD" +
+      "to\"M\n\022AddQuestionRequest\022\022\n\nexerciseId\030\001" +
+      " \001(\t\022#\n\010question\030\002 \001(\0132\021.quiz.QuestionDt" +
+      "o\"[\n\020AddOptionRequest\022\022\n\nexerciseId\030\001 \001(" +
+      "\t\022\022\n\nquestionId\030\002 \001(\t\022\037\n\006option\030\003 \001(\0132\017." +
+      "quiz.OptionDto\"B\n\027UpsertAssignmentReques" +
+      "t\022\'\n\nassignment\030\001 \001(\0132\023.quiz.AssignmentD" +
+      "to*C\n\014QuestionType\022\021\n\rSINGLE_CHOICE\020\000\022\020\n" +
+      "\014MULTI_CHOICE\020\001\022\016\n\nFILL_BLANK\020\0022\356\002\n\017Quiz" +
+      "SyncService\022M\n\022CreateQuizExercise\022\037.quiz" +
+      ".CreateQuizExerciseRequest\032\026.google.prot" +
+      "obuf.Empty\022C\n\rAddQuizDetail\022\032.quiz.AddQu" +
+      "izDetailRequest\032\026.google.protobuf.Empty\022" +
+      "?\n\013AddQuestion\022\030.quiz.AddQuestionRequest" +
+      "\032\026.google.protobuf.Empty\022;\n\tAddOption\022\026." +
+      "quiz.AddOptionRequest\032\026.google.protobuf." +
+      "Empty\022I\n\020UpsertAssignment\022\035.quiz.UpsertA" +
+      "ssignmentRequest\032\026.google.protobuf.Empty" +
+      "2\215\001\n\017QuizPlayService\0229\n\010LoadQuiz\022\025.quiz." +
+      "LoadQuizRequest\032\026.quiz.LoadQuizResponse\022" +
+      "?\n\nSubmitQuiz\022\027.quiz.SubmitQuizRequest\032\030" +
+      ".quiz.SubmitQuizResponseB\'\n\030com.codecamp" +
+      "us.quiz.grpcB\tQuizProtoP\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -208,13 +209,13 @@ public final class QuizProto {
     internal_static_quiz_SubmitQuizRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_quiz_SubmitQuizRequest_descriptor,
-        new java.lang.String[] { "ExerciseId", "StudentId", "Answers", });
+        new java.lang.String[] { "ExerciseId", "StudentId", "Answers", "TimeTakenSeconds", });
     internal_static_quiz_SubmitQuizResponse_descriptor =
       getDescriptor().getMessageTypes().get(8);
     internal_static_quiz_SubmitQuizResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_quiz_SubmitQuizResponse_descriptor,
-        new java.lang.String[] { "Score", "TotalPoints", "Passed", });
+        new java.lang.String[] { "Score", "TotalPoints", "Passed", "TimeTakenSeconds", });
     internal_static_quiz_CreateQuizExerciseRequest_descriptor =
       getDescriptor().getMessageTypes().get(9);
     internal_static_quiz_CreateQuizExerciseRequest_fieldAccessorTable = new
