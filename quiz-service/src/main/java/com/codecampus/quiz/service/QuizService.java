@@ -17,6 +17,7 @@ import com.codecampus.quiz.grpc.QuizExerciseDto;
 import com.codecampus.quiz.grpc.SubmitQuizRequest;
 import com.codecampus.quiz.grpc.SubmitQuizResponse;
 import com.codecampus.quiz.grpc.UpsertAssignmentRequest;
+import com.codecampus.quiz.helper.AuthenticationHelper;
 import com.codecampus.quiz.helper.QuizHelper;
 import com.codecampus.quiz.helper.QuizScoringHelper;
 import com.codecampus.quiz.mapper.AssignmentMapper;
@@ -84,11 +85,29 @@ public class QuizService {
                         Question newQuestion =
                                 quizMapper.toQuestionFromQuestionDto(
                                         questionDto);
+
+
                         newQuestion.setQuiz(quiz);
                         quiz.getQuestions().add(newQuestion);
                         return newQuestion;
                     });
             quizMapper.patchQuestionDtoToQuestion(questionDto, question);
+
+            questionDto.getOptionsList().forEach(optionDto -> {
+                Option option = question.getOptions()
+                        .stream()
+                        .filter(o -> o.getId().equals(optionDto.getId()))
+                        .findFirst()
+                        .orElseGet(() -> {
+                            Option newOption =
+                                    quizMapper.toOptionFromOptionDto(optionDto);
+                            newOption.setQuestion(question);
+                            question.getOptions().add(newOption);
+                            return newOption;
+                        });
+                quizMapper.patchOptionDtoToOption(optionDto, option);
+            });
+
         });
         QuizScoringHelper.recalc(quiz);
         quizExerciseRepository.save(quiz);
@@ -127,11 +146,13 @@ public class QuizService {
 
     @Transactional
     public LoadQuizResponse loadQuiz(
-            String exerciseId, String studentId) {
+            String exerciseId) {
 
-        if (studentId != null &&
-                !assignmentRepository.existsByExerciseIdAndStudentId(exerciseId,
-                        studentId)) {
+        String studentId = AuthenticationHelper.getMyUserId();
+
+        if (!assignmentRepository
+                .existsByExerciseIdAndStudentId(
+                        exerciseId, studentId)) {
             throw new AppException(ErrorCode.UNAUTHORIZED);
         }
 
@@ -166,6 +187,7 @@ public class QuizService {
                 .setTotalPoints(quizSubmission.getTotalPoints())
                 .setPassed(quizSubmission.getScore() ==
                         quizSubmission.getTotalPoints())
+                .setTimeTakenSeconds(quizSubmission.getTimeTakenSeconds())
                 .build();
     }
 

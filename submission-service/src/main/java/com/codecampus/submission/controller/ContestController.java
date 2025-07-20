@@ -14,7 +14,6 @@ import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,7 +34,7 @@ public class ContestController {
 
     // Giáo viên tạo contest
     @PostMapping
-    @PreAuthorize("hasRole('TEACHER')")
+    // @PreAuthorize("hasRole('TEACHER')")
     ApiResponse<ContestResponse> createContest(
             @RequestBody @Valid CreateContestRequest createContestRequest) {
         Contest contest = contestService.createContest(createContestRequest);
@@ -67,7 +66,7 @@ public class ContestController {
 
     // Học sinh xem contest của mình
     @GetMapping("/self")
-    @PreAuthorize("hasRole('STUDENT')")
+    // @PreAuthorize("hasRole('STUDENT')")
     ApiResponse<List<MyContestResponse>> myContests() {
         return ApiResponse.<List<MyContestResponse>>builder()
                 .result(contestService.getMyContests())

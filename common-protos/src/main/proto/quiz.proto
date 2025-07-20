@@ -11,6 +11,13 @@ message OptionDto {
   string id = 1;
   string optionText = 2;
   string order = 3;   // 'A','B',...
+  bool correct = 4;
+}
+
+message OptionDtoLoadResponse {
+  string id = 1;
+  string optionText = 2;
+  string order = 3;   // 'A','B',...
 }
 
 enum QuestionType {
@@ -26,6 +33,15 @@ message QuestionDto {
   int32 points = 4;
   int32 orderInQuiz = 5;
   repeated OptionDto options = 6;
+}
+
+message QuestionDtoLoadResponse {
+  string id = 1;
+  string text = 2;
+  QuestionType questionType = 3;
+  int32 points = 4;
+  int32 orderInQuiz = 5;
+  repeated OptionDtoLoadResponse options = 6;
 }
 
 message QuizExerciseDto {
@@ -51,7 +67,7 @@ message LoadQuizRequest {
 }
 message LoadQuizResponse {
   QuizExerciseDto exercise = 1;
-  repeated QuestionDto questions = 2; // OptionDto.correct bị lược bỏ
+  repeated QuestionDtoLoadResponse questions = 2; // OptionDto.correct bị lược bỏ
 }
 
 message AnswerDto {

@@ -83,5 +83,6 @@ public class Submission extends AuditMetadata {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
+    @Builder.Default
     List<SubmissionAnswer> answers = new ArrayList<>();
 }

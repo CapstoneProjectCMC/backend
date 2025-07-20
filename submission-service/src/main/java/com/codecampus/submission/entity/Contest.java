@@ -21,8 +21,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
+import org.hibernate.type.SqlTypes;
 
 import java.time.Instant;
 import java.util.Set;
@@ -65,6 +67,7 @@ public class Contest extends AuditMetadata {
 
     Instant rankRevealTime;
 
+    @JdbcTypeCode(SqlTypes.JSON)
     @Convert(converter = AntiCheatConfigConverter.class)
     @Column(name = "anti_cheat_config", columnDefinition = "jsonb")
     AntiCheatConfig antiCheatConfig;

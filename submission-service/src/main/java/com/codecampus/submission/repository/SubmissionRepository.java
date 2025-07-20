@@ -12,6 +12,10 @@ import java.util.Optional;
 @Repository
 public interface SubmissionRepository
         extends JpaRepository<Submission, String> {
+
+    List<Submission> findByUserIdOrderBySubmittedAtDesc(
+            String userId);
+
     List<Submission> findByUserId(
             String userId);
 

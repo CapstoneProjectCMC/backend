@@ -1,6 +1,8 @@
 package com.codecampus.submission.service;
 
+import com.codecampus.submission.dto.response.MySubmissionResponse;
 import com.codecampus.submission.dto.response.quiz.QuizAttemptHistoryResponse;
+import com.codecampus.submission.entity.QuizDetail;
 import com.codecampus.submission.entity.Submission;
 import com.codecampus.submission.helper.AuthenticationHelper;
 import com.codecampus.submission.helper.SubmissionHelper;
@@ -38,6 +40,36 @@ public class SubmissionHistoryService {
                                 s.getTimeTakenSeconds()).orElse(
                                 Integer.MAX_VALUE)))
                 .map(SubmissionHelper::mapSubmissionToQuizAttemptHistoryResponse)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<MySubmissionResponse> mySubmissions() {
+        String userId = AuthenticationHelper.getMyUserId();
+
+        return submissionRepository
+                .findByUserIdOrderBySubmittedAtDesc(userId)
+                .stream()
+                .map(submission -> new MySubmissionResponse(
+                        submission.getId(),
+                        submission.getExercise().getId(),
+                        submission.getExercise().getTitle(),
+                        submission.getScore(),
+                        switch (submission.getExercise().getExerciseType()) {
+                            case QUIZ -> Optional.ofNullable(
+                                            submission.getExercise().getQuizDetail())
+                                    .map(QuizDetail::getTotalPoints)
+                                    .orElse(null);
+                            case CODING -> Optional.ofNullable(
+                                            submission.getExercise().getCodingDetail())
+                                    .map(codingDetail -> codingDetail.getTestCases()
+                                            .size())
+                                    .orElse(null);
+                        },
+                        submission.getTimeTakenSeconds(),
+                        submission.getSubmittedAt(),
+                        submission.getStatus().name()
+                ))
                 .toList();
     }
 }

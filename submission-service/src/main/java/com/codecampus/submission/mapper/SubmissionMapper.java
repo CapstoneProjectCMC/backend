@@ -1,5 +1,6 @@
 package com.codecampus.submission.mapper;
 
+import com.codecampus.submission.constant.submission.SubmissionStatus;
 import com.codecampus.submission.entity.Exercise;
 import com.codecampus.submission.entity.Question;
 import com.codecampus.submission.entity.Submission;
@@ -16,7 +17,9 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = "spring")
 public interface SubmissionMapper {
 
+    @Mapping(target = "id", ignore = true)             // QUAN TRỌNG
     @Mapping(target = "exercise", ignore = true)
+    @Mapping(target = "userId", source = "studentId")
     @Mapping(target = "submittedAt",
             expression = "java(java.time.Instant.ofEpochSecond(" +
                     "dto.getSubmittedAt().getSeconds(), " +
@@ -34,6 +37,18 @@ public interface SubmissionMapper {
             @Context QuestionRepository questionRepository) {
 
         submission.setExercise(exercise);
+
+        /* ---- GÁN STATUS ---- */
+        int score = quizSubmissionDto.getScore();
+        int totalPoints = quizSubmissionDto.getTotalPoints();
+
+        SubmissionStatus status = switch (score) {
+            case 0 -> SubmissionStatus.FAILED;
+            default -> (score >= totalPoints)
+                    ? SubmissionStatus.PASSED
+                    : SubmissionStatus.PARTIAL;
+        };
+        submission.setStatus(status);
 
         quizSubmissionDto.getAnswersList().forEach(answerDto -> {
             Question question =

@@ -5,8 +5,8 @@
 
 package com.codecampus.quiz.grpc;
 
-public interface OptionDtoOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:quiz.OptionDto)
+public interface OptionDtoLoadResponseOrBuilder extends
+    // @@protoc_insertion_point(interface_extends:quiz.OptionDtoLoadResponse)
     com.google.protobuf.MessageOrBuilder {
 
   /**
@@ -52,10 +52,4 @@ public interface OptionDtoOrBuilder extends
    */
   com.google.protobuf.ByteString
       getOrderBytes();
-
-  /**
-   * <code>bool correct = 4;</code>
-   * @return The correct.
-   */
-  boolean getCorrect();
 }

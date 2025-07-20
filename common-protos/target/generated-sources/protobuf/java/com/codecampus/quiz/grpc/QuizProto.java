@@ -31,10 +31,20 @@ public final class QuizProto {
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_quiz_OptionDto_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_quiz_OptionDtoLoadResponse_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_quiz_OptionDtoLoadResponse_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
     internal_static_quiz_QuestionDto_descriptor;
   static final 
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_quiz_QuestionDto_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_quiz_QuestionDtoLoadResponse_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_quiz_QuestionDtoLoadResponse_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
     internal_static_quiz_QuizExerciseDto_descriptor;
   static final 
@@ -106,22 +116,29 @@ public final class QuizProto {
     java.lang.String[] descriptorData = {
       "\n\nquiz.proto\022\004quiz\032\033google/protobuf/empt" +
       "y.proto\032\037google/protobuf/timestamp.proto" +
-      "\":\n\tOptionDto\022\n\n\002id\030\001 \001(\t\022\022\n\noptionText\030" +
-      "\002 \001(\t\022\r\n\005order\030\003 \001(\t\"\230\001\n\013QuestionDto\022\n\n\002" +
-      "id\030\001 \001(\t\022\014\n\004text\030\002 \001(\t\022(\n\014questionType\030\003" +
-      " \001(\0162\022.quiz.QuestionType\022\016\n\006points\030\004 \001(\005" +
-      "\022\023\n\013orderInQuiz\030\005 \001(\005\022 \n\007options\030\006 \003(\0132\017" +
-      ".quiz.OptionDto\"~\n\017QuizExerciseDto\022\n\n\002id" +
-      "\030\001 \001(\t\022\r\n\005title\030\002 \001(\t\022\023\n\013description\030\003 \001" +
-      "(\t\022\023\n\013totalPoints\030\004 \001(\005\022\024\n\014numQuestions\030" +
-      "\005 \001(\005\022\020\n\010duration\030\006 \001(\005\"\200\001\n\rAssignmentDt" +
-      "o\022\n\n\002id\030\001 \001(\t\022\022\n\nexerciseId\030\002 \001(\t\022\021\n\tstu" +
-      "dentId\030\003 \001(\t\022)\n\005dueAt\030\004 \001(\0132\032.google.pro" +
-      "tobuf.Timestamp\022\021\n\tcompleted\030\005 \001(\010\"8\n\017Lo" +
-      "adQuizRequest\022\022\n\nexerciseId\030\001 \001(\t\022\021\n\tstu" +
-      "dentId\030\002 \001(\t\"a\n\020LoadQuizResponse\022\'\n\010exer" +
-      "cise\030\001 \001(\0132\025.quiz.QuizExerciseDto\022$\n\tque" +
-      "stions\030\002 \003(\0132\021.quiz.QuestionDto\"M\n\tAnswe" +
+      "\"K\n\tOptionDto\022\n\n\002id\030\001 \001(\t\022\022\n\noptionText\030" +
+      "\002 \001(\t\022\r\n\005order\030\003 \001(\t\022\017\n\007correct\030\004 \001(\010\"F\n" +
+      "\025OptionDtoLoadResponse\022\n\n\002id\030\001 \001(\t\022\022\n\nop" +
+      "tionText\030\002 \001(\t\022\r\n\005order\030\003 \001(\t\"\230\001\n\013Questi" +
+      "onDto\022\n\n\002id\030\001 \001(\t\022\014\n\004text\030\002 \001(\t\022(\n\014quest" +
+      "ionType\030\003 \001(\0162\022.quiz.QuestionType\022\016\n\006poi" +
+      "nts\030\004 \001(\005\022\023\n\013orderInQuiz\030\005 \001(\005\022 \n\007option" +
+      "s\030\006 \003(\0132\017.quiz.OptionDto\"\260\001\n\027QuestionDto" +
+      "LoadResponse\022\n\n\002id\030\001 \001(\t\022\014\n\004text\030\002 \001(\t\022(" +
+      "\n\014questionType\030\003 \001(\0162\022.quiz.QuestionType" +
+      "\022\016\n\006points\030\004 \001(\005\022\023\n\013orderInQuiz\030\005 \001(\005\022,\n" +
+      "\007options\030\006 \003(\0132\033.quiz.OptionDtoLoadRespo" +
+      "nse\"~\n\017QuizExerciseDto\022\n\n\002id\030\001 \001(\t\022\r\n\005ti" +
+      "tle\030\002 \001(\t\022\023\n\013description\030\003 \001(\t\022\023\n\013totalP" +
+      "oints\030\004 \001(\005\022\024\n\014numQuestions\030\005 \001(\005\022\020\n\010dur" +
+      "ation\030\006 \001(\005\"\200\001\n\rAssignmentDto\022\n\n\002id\030\001 \001(" +
+      "\t\022\022\n\nexerciseId\030\002 \001(\t\022\021\n\tstudentId\030\003 \001(\t" +
+      "\022)\n\005dueAt\030\004 \001(\0132\032.google.protobuf.Timest" +
+      "amp\022\021\n\tcompleted\030\005 \001(\010\"8\n\017LoadQuizReques" +
+      "t\022\022\n\nexerciseId\030\001 \001(\t\022\021\n\tstudentId\030\002 \001(\t" +
+      "\"m\n\020LoadQuizResponse\022\'\n\010exercise\030\001 \001(\0132\025" +
+      ".quiz.QuizExerciseDto\0220\n\tquestions\030\002 \003(\013" +
+      "2\035.quiz.QuestionDtoLoadResponse\"M\n\tAnswe" +
       "rDto\022\022\n\nquestionId\030\001 \001(\t\022\030\n\020selectedOpti" +
       "onId\030\002 \001(\t\022\022\n\nanswerText\030\003 \001(\t\"v\n\021Submit" +
       "QuizRequest\022\022\n\nexerciseId\030\001 \001(\t\022\021\n\tstude" +
@@ -167,81 +184,93 @@ public final class QuizProto {
     internal_static_quiz_OptionDto_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_quiz_OptionDto_descriptor,
+        new java.lang.String[] { "Id", "OptionText", "Order", "Correct", });
+    internal_static_quiz_OptionDtoLoadResponse_descriptor =
+      getDescriptor().getMessageTypes().get(1);
+    internal_static_quiz_OptionDtoLoadResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_quiz_OptionDtoLoadResponse_descriptor,
         new java.lang.String[] { "Id", "OptionText", "Order", });
     internal_static_quiz_QuestionDto_descriptor =
-      getDescriptor().getMessageTypes().get(1);
+      getDescriptor().getMessageTypes().get(2);
     internal_static_quiz_QuestionDto_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_quiz_QuestionDto_descriptor,
         new java.lang.String[] { "Id", "Text", "QuestionType", "Points", "OrderInQuiz", "Options", });
+    internal_static_quiz_QuestionDtoLoadResponse_descriptor =
+      getDescriptor().getMessageTypes().get(3);
+    internal_static_quiz_QuestionDtoLoadResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_quiz_QuestionDtoLoadResponse_descriptor,
+        new java.lang.String[] { "Id", "Text", "QuestionType", "Points", "OrderInQuiz", "Options", });
     internal_static_quiz_QuizExerciseDto_descriptor =
-      getDescriptor().getMessageTypes().get(2);
+      getDescriptor().getMessageTypes().get(4);
     internal_static_quiz_QuizExerciseDto_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_quiz_QuizExerciseDto_descriptor,
         new java.lang.String[] { "Id", "Title", "Description", "TotalPoints", "NumQuestions", "Duration", });
     internal_static_quiz_AssignmentDto_descriptor =
-      getDescriptor().getMessageTypes().get(3);
+      getDescriptor().getMessageTypes().get(5);
     internal_static_quiz_AssignmentDto_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_quiz_AssignmentDto_descriptor,
         new java.lang.String[] { "Id", "ExerciseId", "StudentId", "DueAt", "Completed", });
     internal_static_quiz_LoadQuizRequest_descriptor =
-      getDescriptor().getMessageTypes().get(4);
+      getDescriptor().getMessageTypes().get(6);
     internal_static_quiz_LoadQuizRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_quiz_LoadQuizRequest_descriptor,
         new java.lang.String[] { "ExerciseId", "StudentId", });
     internal_static_quiz_LoadQuizResponse_descriptor =
-      getDescriptor().getMessageTypes().get(5);
+      getDescriptor().getMessageTypes().get(7);
     internal_static_quiz_LoadQuizResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_quiz_LoadQuizResponse_descriptor,
         new java.lang.String[] { "Exercise", "Questions", });
     internal_static_quiz_AnswerDto_descriptor =
-      getDescriptor().getMessageTypes().get(6);
+      getDescriptor().getMessageTypes().get(8);
     internal_static_quiz_AnswerDto_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_quiz_AnswerDto_descriptor,
         new java.lang.String[] { "QuestionId", "SelectedOptionId", "AnswerText", });
     internal_static_quiz_SubmitQuizRequest_descriptor =
-      getDescriptor().getMessageTypes().get(7);
+      getDescriptor().getMessageTypes().get(9);
     internal_static_quiz_SubmitQuizRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_quiz_SubmitQuizRequest_descriptor,
         new java.lang.String[] { "ExerciseId", "StudentId", "Answers", "TimeTakenSeconds", });
     internal_static_quiz_SubmitQuizResponse_descriptor =
-      getDescriptor().getMessageTypes().get(8);
+      getDescriptor().getMessageTypes().get(10);
     internal_static_quiz_SubmitQuizResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_quiz_SubmitQuizResponse_descriptor,
         new java.lang.String[] { "Score", "TotalPoints", "Passed", "TimeTakenSeconds", });
     internal_static_quiz_CreateQuizExerciseRequest_descriptor =
-      getDescriptor().getMessageTypes().get(9);
+      getDescriptor().getMessageTypes().get(11);
     internal_static_quiz_CreateQuizExerciseRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_quiz_CreateQuizExerciseRequest_descriptor,
         new java.lang.String[] { "Exercise", });
     internal_static_quiz_AddQuizDetailRequest_descriptor =
-      getDescriptor().getMessageTypes().get(10);
+      getDescriptor().getMessageTypes().get(12);
     internal_static_quiz_AddQuizDetailRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_quiz_AddQuizDetailRequest_descriptor,
         new java.lang.String[] { "ExerciseId", "Questions", });
     internal_static_quiz_AddQuestionRequest_descriptor =
-      getDescriptor().getMessageTypes().get(11);
+      getDescriptor().getMessageTypes().get(13);
     internal_static_quiz_AddQuestionRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_quiz_AddQuestionRequest_descriptor,
         new java.lang.String[] { "ExerciseId", "Question", });
     internal_static_quiz_AddOptionRequest_descriptor =
-      getDescriptor().getMessageTypes().get(12);
+      getDescriptor().getMessageTypes().get(14);
     internal_static_quiz_AddOptionRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_quiz_AddOptionRequest_descriptor,
         new java.lang.String[] { "ExerciseId", "QuestionId", "Option", });
     internal_static_quiz_UpsertAssignmentRequest_descriptor =
-      getDescriptor().getMessageTypes().get(13);
+      getDescriptor().getMessageTypes().get(15);
     internal_static_quiz_UpsertAssignmentRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_quiz_UpsertAssignmentRequest_descriptor,

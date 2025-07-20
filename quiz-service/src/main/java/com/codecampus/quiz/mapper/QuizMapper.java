@@ -5,7 +5,9 @@ import com.codecampus.quiz.entity.Question;
 import com.codecampus.quiz.entity.QuizExercise;
 import com.codecampus.quiz.grpc.LoadQuizResponse;
 import com.codecampus.quiz.grpc.OptionDto;
+import com.codecampus.quiz.grpc.OptionDtoLoadResponse;
 import com.codecampus.quiz.grpc.QuestionDto;
+import com.codecampus.quiz.grpc.QuestionDtoLoadResponse;
 import com.codecampus.quiz.grpc.QuestionType;
 import com.codecampus.quiz.grpc.QuizExerciseDto;
 import org.mapstruct.AfterMapping;
@@ -41,6 +43,13 @@ public interface QuizMapper {
             @MappingTarget Question question
     );
 
+    @Mapping(target = "question", ignore = true)
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    void patchOptionDtoToOption(
+            OptionDto optionDto,
+            @MappingTarget Option option
+    );
+
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void patchQuizExerciseDtoToQuizExercise(
             QuizExerciseDto quizExerciseDto,
@@ -66,35 +75,37 @@ public interface QuizMapper {
         return LoadQuizResponse.newBuilder()
                 .setExercise(toQuizExerciseDtoFromQuizExercise(quiz))
                 .addAllQuestions(quiz.getQuestions().stream()
-                        .map(this::toQuestionDtoFromQuestionHideCorrect)
+                        .map(this::toQuestionDtoLoadResponseFromQuestionHideCorrect)
                         .collect(toSet()))
                 .build();
     }
 
-    default QuestionDto toQuestionDtoFromQuestionHideCorrect(
+    default QuestionDtoLoadResponse toQuestionDtoLoadResponseFromQuestionHideCorrect(
             Question question) {
-        QuestionDto.Builder builder = QuestionDto.newBuilder()
-                .setId(question.getId())
-                .setText(question.getText())
-                .setQuestionType(
-                        mapQuestionTypeToQuestionTypeGrpc(
-                                question.getQuestionType()))
-                .setPoints(question.getPoints())
-                .setOrderInQuiz(question.getOrderInQuiz());
+        QuestionDtoLoadResponse.Builder builder =
+                QuestionDtoLoadResponse.newBuilder()
+                        .setId(question.getId())
+                        .setText(question.getText())
+                        .setQuestionType(
+                                mapQuestionTypeToQuestionTypeGrpc(
+                                        question.getQuestionType()))
+                        .setPoints(question.getPoints())
+                        .setOrderInQuiz(question.getOrderInQuiz());
 
         question.getOptions().stream()
                 .sorted(Comparator.comparing(Option::getOrder))
                 .forEach(
                         option -> builder.addOptions(
-                                toOptionDtoFromOptionHideCorrect(option)));
+                                toOptionDtoLoadResponseFromOptionHideCorrect(
+                                        option)));
 
         return builder.build();
     }
 
-    default OptionDto toOptionDtoFromOptionHideCorrect(
+    default OptionDtoLoadResponse toOptionDtoLoadResponseFromOptionHideCorrect(
             Option option) {
         // Không set field 'correct'
-        return OptionDto.newBuilder()
+        return OptionDtoLoadResponse.newBuilder()
                 .setId(option.getId())
                 .setOptionText(option.getOptionText())
                 .setOrder(option.getOrder())

@@ -72,6 +72,7 @@ public interface QuestionMapper {
                 .setId(option.getId())
                 .setOptionText(option.getOptionText())
                 .setOrder(option.getOrder())
+                .setCorrect(option.isCorrect())
                 .build();
     }
 }

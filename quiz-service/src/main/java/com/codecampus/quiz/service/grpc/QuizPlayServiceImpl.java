@@ -29,8 +29,7 @@ public class QuizPlayServiceImpl
             LoadQuizRequest loadQuizRequest,
             StreamObserver<LoadQuizResponse> responseObserver) {
         LoadQuizResponse response = quizService.loadQuiz(
-                loadQuizRequest.getExerciseId(),
-                loadQuizRequest.getStudentId()
+                loadQuizRequest.getExerciseId()
         );
 
         responseObserver.onNext(response);

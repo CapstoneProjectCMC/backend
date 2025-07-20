@@ -6,12 +6,12 @@
 package com.codecampus.quiz.grpc;
 
 /**
- * Protobuf type {@code quiz.OptionDto}
+ * Protobuf type {@code quiz.OptionDtoLoadResponse}
  */
-public final class OptionDto extends
+public final class OptionDtoLoadResponse extends
     com.google.protobuf.GeneratedMessage implements
-    // @@protoc_insertion_point(message_implements:quiz.OptionDto)
-    OptionDtoOrBuilder {
+    // @@protoc_insertion_point(message_implements:quiz.OptionDtoLoadResponse)
+    OptionDtoLoadResponseOrBuilder {
 private static final long serialVersionUID = 0L;
   static {
     com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
@@ -20,13 +20,13 @@ private static final long serialVersionUID = 0L;
       /* minor= */ 30,
       /* patch= */ 2,
       /* suffix= */ "",
-      OptionDto.class.getName());
+      OptionDtoLoadResponse.class.getName());
   }
-  // Use OptionDto.newBuilder() to construct.
-  private OptionDto(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+  // Use OptionDtoLoadResponse.newBuilder() to construct.
+  private OptionDtoLoadResponse(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
     super(builder);
   }
-  private OptionDto() {
+  private OptionDtoLoadResponse() {
     id_ = "";
     optionText_ = "";
     order_ = "";
@@ -34,15 +34,15 @@ private static final long serialVersionUID = 0L;
 
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return com.codecampus.quiz.grpc.QuizProto.internal_static_quiz_OptionDto_descriptor;
+    return com.codecampus.quiz.grpc.QuizProto.internal_static_quiz_OptionDtoLoadResponse_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return com.codecampus.quiz.grpc.QuizProto.internal_static_quiz_OptionDto_fieldAccessorTable
+    return com.codecampus.quiz.grpc.QuizProto.internal_static_quiz_OptionDtoLoadResponse_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            com.codecampus.quiz.grpc.OptionDto.class, com.codecampus.quiz.grpc.OptionDto.Builder.class);
+            com.codecampus.quiz.grpc.OptionDtoLoadResponse.class, com.codecampus.quiz.grpc.OptionDtoLoadResponse.Builder.class);
   }
 
   public static final int ID_FIELD_NUMBER = 1;
@@ -170,17 +170,6 @@ private static final long serialVersionUID = 0L;
     }
   }
 
-  public static final int CORRECT_FIELD_NUMBER = 4;
-  private boolean correct_ = false;
-  /**
-   * <code>bool correct = 4;</code>
-   * @return The correct.
-   */
-  @java.lang.Override
-  public boolean getCorrect() {
-    return correct_;
-  }
-
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -204,9 +193,6 @@ private static final long serialVersionUID = 0L;
     if (!com.google.protobuf.GeneratedMessage.isStringEmpty(order_)) {
       com.google.protobuf.GeneratedMessage.writeString(output, 3, order_);
     }
-    if (correct_ != false) {
-      output.writeBool(4, correct_);
-    }
     getUnknownFields().writeTo(output);
   }
 
@@ -225,10 +211,6 @@ private static final long serialVersionUID = 0L;
     if (!com.google.protobuf.GeneratedMessage.isStringEmpty(order_)) {
       size += com.google.protobuf.GeneratedMessage.computeStringSize(3, order_);
     }
-    if (correct_ != false) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeBoolSize(4, correct_);
-    }
     size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
     return size;
@@ -239,10 +221,10 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof com.codecampus.quiz.grpc.OptionDto)) {
+    if (!(obj instanceof com.codecampus.quiz.grpc.OptionDtoLoadResponse)) {
       return super.equals(obj);
     }
-    com.codecampus.quiz.grpc.OptionDto other = (com.codecampus.quiz.grpc.OptionDto) obj;
+    com.codecampus.quiz.grpc.OptionDtoLoadResponse other = (com.codecampus.quiz.grpc.OptionDtoLoadResponse) obj;
 
     if (!getId()
         .equals(other.getId())) return false;
@@ -250,8 +232,6 @@ private static final long serialVersionUID = 0L;
         .equals(other.getOptionText())) return false;
     if (!getOrder()
         .equals(other.getOrder())) return false;
-    if (getCorrect()
-        != other.getCorrect()) return false;
     if (!getUnknownFields().equals(other.getUnknownFields())) return false;
     return true;
   }
@@ -269,52 +249,49 @@ private static final long serialVersionUID = 0L;
     hash = (53 * hash) + getOptionText().hashCode();
     hash = (37 * hash) + ORDER_FIELD_NUMBER;
     hash = (53 * hash) + getOrder().hashCode();
-    hash = (37 * hash) + CORRECT_FIELD_NUMBER;
-    hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
-        getCorrect());
     hash = (29 * hash) + getUnknownFields().hashCode();
     memoizedHashCode = hash;
     return hash;
   }
 
-  public static com.codecampus.quiz.grpc.OptionDto parseFrom(
+  public static com.codecampus.quiz.grpc.OptionDtoLoadResponse parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static com.codecampus.quiz.grpc.OptionDto parseFrom(
+  public static com.codecampus.quiz.grpc.OptionDtoLoadResponse parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static com.codecampus.quiz.grpc.OptionDto parseFrom(
+  public static com.codecampus.quiz.grpc.OptionDtoLoadResponse parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static com.codecampus.quiz.grpc.OptionDto parseFrom(
+  public static com.codecampus.quiz.grpc.OptionDtoLoadResponse parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static com.codecampus.quiz.grpc.OptionDto parseFrom(byte[] data)
+  public static com.codecampus.quiz.grpc.OptionDtoLoadResponse parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static com.codecampus.quiz.grpc.OptionDto parseFrom(
+  public static com.codecampus.quiz.grpc.OptionDtoLoadResponse parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static com.codecampus.quiz.grpc.OptionDto parseFrom(java.io.InputStream input)
+  public static com.codecampus.quiz.grpc.OptionDtoLoadResponse parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessage
         .parseWithIOException(PARSER, input);
   }
-  public static com.codecampus.quiz.grpc.OptionDto parseFrom(
+  public static com.codecampus.quiz.grpc.OptionDtoLoadResponse parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -322,26 +299,26 @@ private static final long serialVersionUID = 0L;
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
 
-  public static com.codecampus.quiz.grpc.OptionDto parseDelimitedFrom(java.io.InputStream input)
+  public static com.codecampus.quiz.grpc.OptionDtoLoadResponse parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessage
         .parseDelimitedWithIOException(PARSER, input);
   }
 
-  public static com.codecampus.quiz.grpc.OptionDto parseDelimitedFrom(
+  public static com.codecampus.quiz.grpc.OptionDtoLoadResponse parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessage
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static com.codecampus.quiz.grpc.OptionDto parseFrom(
+  public static com.codecampus.quiz.grpc.OptionDtoLoadResponse parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessage
         .parseWithIOException(PARSER, input);
   }
-  public static com.codecampus.quiz.grpc.OptionDto parseFrom(
+  public static com.codecampus.quiz.grpc.OptionDtoLoadResponse parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -354,7 +331,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(com.codecampus.quiz.grpc.OptionDto prototype) {
+  public static Builder newBuilder(com.codecampus.quiz.grpc.OptionDtoLoadResponse prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -370,26 +347,26 @@ private static final long serialVersionUID = 0L;
     return builder;
   }
   /**
-   * Protobuf type {@code quiz.OptionDto}
+   * Protobuf type {@code quiz.OptionDtoLoadResponse}
    */
   public static final class Builder extends
       com.google.protobuf.GeneratedMessage.Builder<Builder> implements
-      // @@protoc_insertion_point(builder_implements:quiz.OptionDto)
-      com.codecampus.quiz.grpc.OptionDtoOrBuilder {
+      // @@protoc_insertion_point(builder_implements:quiz.OptionDtoLoadResponse)
+      com.codecampus.quiz.grpc.OptionDtoLoadResponseOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return com.codecampus.quiz.grpc.QuizProto.internal_static_quiz_OptionDto_descriptor;
+      return com.codecampus.quiz.grpc.QuizProto.internal_static_quiz_OptionDtoLoadResponse_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.codecampus.quiz.grpc.QuizProto.internal_static_quiz_OptionDto_fieldAccessorTable
+      return com.codecampus.quiz.grpc.QuizProto.internal_static_quiz_OptionDtoLoadResponse_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              com.codecampus.quiz.grpc.OptionDto.class, com.codecampus.quiz.grpc.OptionDto.Builder.class);
+              com.codecampus.quiz.grpc.OptionDtoLoadResponse.class, com.codecampus.quiz.grpc.OptionDtoLoadResponse.Builder.class);
     }
 
-    // Construct using com.codecampus.quiz.grpc.OptionDto.newBuilder()
+    // Construct using com.codecampus.quiz.grpc.OptionDtoLoadResponse.newBuilder()
     private Builder() {
 
     }
@@ -406,24 +383,23 @@ private static final long serialVersionUID = 0L;
       id_ = "";
       optionText_ = "";
       order_ = "";
-      correct_ = false;
       return this;
     }
 
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return com.codecampus.quiz.grpc.QuizProto.internal_static_quiz_OptionDto_descriptor;
+      return com.codecampus.quiz.grpc.QuizProto.internal_static_quiz_OptionDtoLoadResponse_descriptor;
     }
 
     @java.lang.Override
-    public com.codecampus.quiz.grpc.OptionDto getDefaultInstanceForType() {
-      return com.codecampus.quiz.grpc.OptionDto.getDefaultInstance();
+    public com.codecampus.quiz.grpc.OptionDtoLoadResponse getDefaultInstanceForType() {
+      return com.codecampus.quiz.grpc.OptionDtoLoadResponse.getDefaultInstance();
     }
 
     @java.lang.Override
-    public com.codecampus.quiz.grpc.OptionDto build() {
-      com.codecampus.quiz.grpc.OptionDto result = buildPartial();
+    public com.codecampus.quiz.grpc.OptionDtoLoadResponse build() {
+      com.codecampus.quiz.grpc.OptionDtoLoadResponse result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -431,14 +407,14 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public com.codecampus.quiz.grpc.OptionDto buildPartial() {
-      com.codecampus.quiz.grpc.OptionDto result = new com.codecampus.quiz.grpc.OptionDto(this);
+    public com.codecampus.quiz.grpc.OptionDtoLoadResponse buildPartial() {
+      com.codecampus.quiz.grpc.OptionDtoLoadResponse result = new com.codecampus.quiz.grpc.OptionDtoLoadResponse(this);
       if (bitField0_ != 0) { buildPartial0(result); }
       onBuilt();
       return result;
     }
 
-    private void buildPartial0(com.codecampus.quiz.grpc.OptionDto result) {
+    private void buildPartial0(com.codecampus.quiz.grpc.OptionDtoLoadResponse result) {
       int from_bitField0_ = bitField0_;
       if (((from_bitField0_ & 0x00000001) != 0)) {
         result.id_ = id_;
@@ -449,23 +425,20 @@ private static final long serialVersionUID = 0L;
       if (((from_bitField0_ & 0x00000004) != 0)) {
         result.order_ = order_;
       }
-      if (((from_bitField0_ & 0x00000008) != 0)) {
-        result.correct_ = correct_;
-      }
     }
 
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof com.codecampus.quiz.grpc.OptionDto) {
-        return mergeFrom((com.codecampus.quiz.grpc.OptionDto)other);
+      if (other instanceof com.codecampus.quiz.grpc.OptionDtoLoadResponse) {
+        return mergeFrom((com.codecampus.quiz.grpc.OptionDtoLoadResponse)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(com.codecampus.quiz.grpc.OptionDto other) {
-      if (other == com.codecampus.quiz.grpc.OptionDto.getDefaultInstance()) return this;
+    public Builder mergeFrom(com.codecampus.quiz.grpc.OptionDtoLoadResponse other) {
+      if (other == com.codecampus.quiz.grpc.OptionDtoLoadResponse.getDefaultInstance()) return this;
       if (!other.getId().isEmpty()) {
         id_ = other.id_;
         bitField0_ |= 0x00000001;
@@ -480,9 +453,6 @@ private static final long serialVersionUID = 0L;
         order_ = other.order_;
         bitField0_ |= 0x00000004;
         onChanged();
-      }
-      if (other.getCorrect() != false) {
-        setCorrect(other.getCorrect());
       }
       this.mergeUnknownFields(other.getUnknownFields());
       onChanged();
@@ -525,11 +495,6 @@ private static final long serialVersionUID = 0L;
               bitField0_ |= 0x00000004;
               break;
             } // case 26
-            case 32: {
-              correct_ = input.readBool();
-              bitField0_ |= 0x00000008;
-              break;
-            } // case 32
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -783,55 +748,23 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private boolean correct_ ;
-    /**
-     * <code>bool correct = 4;</code>
-     * @return The correct.
-     */
-    @java.lang.Override
-    public boolean getCorrect() {
-      return correct_;
-    }
-    /**
-     * <code>bool correct = 4;</code>
-     * @param value The correct to set.
-     * @return This builder for chaining.
-     */
-    public Builder setCorrect(boolean value) {
-
-      correct_ = value;
-      bitField0_ |= 0x00000008;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>bool correct = 4;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearCorrect() {
-      bitField0_ = (bitField0_ & ~0x00000008);
-      correct_ = false;
-      onChanged();
-      return this;
-    }
-
-    // @@protoc_insertion_point(builder_scope:quiz.OptionDto)
+    // @@protoc_insertion_point(builder_scope:quiz.OptionDtoLoadResponse)
   }
 
-  // @@protoc_insertion_point(class_scope:quiz.OptionDto)
-  private static final com.codecampus.quiz.grpc.OptionDto DEFAULT_INSTANCE;
+  // @@protoc_insertion_point(class_scope:quiz.OptionDtoLoadResponse)
+  private static final com.codecampus.quiz.grpc.OptionDtoLoadResponse DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new com.codecampus.quiz.grpc.OptionDto();
+    DEFAULT_INSTANCE = new com.codecampus.quiz.grpc.OptionDtoLoadResponse();
   }
 
-  public static com.codecampus.quiz.grpc.OptionDto getDefaultInstance() {
+  public static com.codecampus.quiz.grpc.OptionDtoLoadResponse getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
-  private static final com.google.protobuf.Parser<OptionDto>
-      PARSER = new com.google.protobuf.AbstractParser<OptionDto>() {
+  private static final com.google.protobuf.Parser<OptionDtoLoadResponse>
+      PARSER = new com.google.protobuf.AbstractParser<OptionDtoLoadResponse>() {
     @java.lang.Override
-    public OptionDto parsePartialFrom(
+    public OptionDtoLoadResponse parsePartialFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -850,17 +783,17 @@ private static final long serialVersionUID = 0L;
     }
   };
 
-  public static com.google.protobuf.Parser<OptionDto> parser() {
+  public static com.google.protobuf.Parser<OptionDtoLoadResponse> parser() {
     return PARSER;
   }
 
   @java.lang.Override
-  public com.google.protobuf.Parser<OptionDto> getParserForType() {
+  public com.google.protobuf.Parser<OptionDtoLoadResponse> getParserForType() {
     return PARSER;
   }
 
   @java.lang.Override
-  public com.codecampus.quiz.grpc.OptionDto getDefaultInstanceForType() {
+  public com.codecampus.quiz.grpc.OptionDtoLoadResponse getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 
