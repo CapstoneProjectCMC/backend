@@ -1,6 +1,9 @@
 package com.codecampus.submission.mapper;
 
+import com.codecampus.submission.constant.submission.ExerciseType;
 import com.codecampus.submission.constant.submission.SubmissionStatus;
+import com.codecampus.submission.dto.response.AllSubmissionHistoryResponse;
+import com.codecampus.submission.dto.response.quiz.QuizAttemptHistoryResponse;
 import com.codecampus.submission.entity.Exercise;
 import com.codecampus.submission.entity.Question;
 import com.codecampus.submission.entity.Submission;
@@ -67,5 +70,46 @@ public interface SubmissionMapper {
                     answerDto.getCorrect());
             submission.getAnswers().add(ans);
         });
+    }
+
+    default QuizAttemptHistoryResponse mapSubmissionToQuizAttemptHistoryResponse(
+            Submission submission) {
+        return new QuizAttemptHistoryResponse(
+                submission.getId(),
+                submission.getExercise().getId(),
+                submission.getExercise().getTitle(),
+                submission.getScore(),
+                submission.getExercise().getQuizDetail() == null
+                        ? null
+                        : submission.getExercise().getQuizDetail()
+                        .getTotalPoints(),
+                submission.getTimeTakenSeconds(),
+                submission.getSubmittedAt()
+        );
+    }
+
+    default AllSubmissionHistoryResponse mapSubmissionToAllSubmissionHistoryResponse(
+            Submission submission) {
+        Exercise exercise = submission.getExercise();
+        Integer totalPoints = null;
+
+        if (exercise.getExerciseType() == ExerciseType.QUIZ &&
+                exercise.getQuizDetail() != null) {
+            totalPoints = exercise.getQuizDetail().getTotalPoints();
+        } else if (exercise.getExerciseType() == ExerciseType.CODING &&
+                exercise.getCodingDetail() != null) {
+            totalPoints = exercise.getCodingDetail().getTestCases().size();
+        }
+
+        return new AllSubmissionHistoryResponse(
+                submission.getId(),
+                exercise.getId(),
+                exercise.getTitle(),
+                exercise.getExerciseType(),
+                submission.getScore(),
+                totalPoints,
+                submission.getTimeTakenSeconds(),
+                submission.getSubmittedAt()
+        );
     }
 }

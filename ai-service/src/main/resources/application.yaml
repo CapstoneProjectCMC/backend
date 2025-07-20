@@ -15,12 +15,29 @@ server:
 spring:
   application:
     name: ai-service
+  datasource:
+    url: jdbc:postgresql://localhost:5436/ai_db
+    username: postgres_ai
+    password: dinhanst2832004
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
   ai:
     openai:
-      # Hard code ?? ti?n test
+      # Hard code để test
       api-key: AIzaSyDeZ3rEpzrleMCvvwLK3xHnqXYyTdxVhFs
       chat:
         base-url: https://generativelanguage.googleapis.com
         completions-path: /v1beta/openai/chat/completions
         options:
           model: gemini-2.0-flash
+    chat:
+      memory:
+        repository:
+          jdbc:
+            initialize-schema: always

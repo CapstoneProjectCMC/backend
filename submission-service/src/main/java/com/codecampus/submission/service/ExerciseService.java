@@ -47,6 +47,7 @@ public class ExerciseService {
     AssignmentRepository assignmentRepository;
 
     ContestService contestService;
+    AssignmentService assignmentService;
 
     GrpcQuizClient grpcQuizClient;
     GrpcCodingClient grpcCodingClient;
@@ -98,6 +99,11 @@ public class ExerciseService {
                             quizSubmissionDto.getExerciseId(),
                             quizSubmissionDto.getStudentId())
                     .ifPresent(a -> a.setCompleted(true));
+
+            assignmentService.markCompleted(
+                    quizSubmissionDto.getExerciseId(),
+                    quizSubmissionDto.getStudentId()
+            );
         }
 
         // Cập nhật xếp hạng contest

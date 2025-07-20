@@ -43,56 +43,21 @@ public class ContestHelper {
             String studentId,
             Instant now) {
 
-        int totalQuestions = contest
-                .getExercises()
-                .stream()
-                .mapToInt(this::questionsOf)
-                .sum();
+        int totalQuestions = calculateContestTotalQuestions(contest);
 
-        int totalDuration = contest
-                .getExercises()
-                .stream()
-                .mapToInt(Exercise::getDuration)
-                .sum();
+        int totalDuration = calculateContestTotalDuration(contest);
 
         // maxScore = tổng điểm theo loại
-        int maxScore = contest
-                .getExercises()
-                .stream()
-                .mapToInt(e -> {
-                    if (e.getExerciseType() == ExerciseType.QUIZ &&
-                            e.getQuizDetail() != null) {
-                        return e.getQuizDetail().getTotalPoints();
-                    }
-                    // coding: tạm dùng số test case
-                    if (e.getExerciseType() == ExerciseType.CODING &&
-                            e.getCodingDetail() != null) {
-                        return e.getCodingDetail().getTestCases()
-                                .size(); // hoặc 100/…
-                    }
-                    return 0;
-                }).sum();
-
+        int maxScore = calculateContestMaxScore(contest);
 
         // tổng điểm đạt được & tổng thời gian
         List<Submission> quizSubmission = submissionRepository
                 .findQuizSubmissionByContestAndStudent(
                         contest.getId(), studentId);
 
-        int totalScore = quizSubmission
-                .stream()
-                .mapToInt(s -> Optional
-                        .ofNullable(s.getScore())
-                        .orElse(0)
-                )
-                .sum();
+        int totalScore = calculateQuizSubmissionTotalScore(quizSubmission);
 
-        int totalTime = quizSubmission
-                .stream()
-                .mapToInt(s -> Optional
-                        .ofNullable(s.getTimeTakenSeconds())
-                        .orElse(0))
-                .sum();
+        int totalTime = calculateQuizSubmissionTotalTime(quizSubmission);
 
         boolean completed = isContestCompletedForStudent(
                 contest, studentId);
@@ -273,11 +238,59 @@ public class ContestHelper {
         }
     }
 
-    public int maxScoreOfContest(Contest contest) {
+    public int calculateContestTotalQuestions(Contest contest) {
         return contest
                 .getExercises()
                 .stream()
                 .mapToInt(this::questionsOf)
+                .sum();
+    }
+
+    public int calculateContestTotalDuration(Contest contest) {
+        return contest
+                .getExercises()
+                .stream()
+                .mapToInt(Exercise::getDuration)
+                .sum();
+    }
+
+    public int calculateContestMaxScore(Contest contest) {
+        return contest
+                .getExercises()
+                .stream()
+                .mapToInt(e -> {
+                    if (e.getExerciseType() == ExerciseType.QUIZ &&
+                            e.getQuizDetail() != null) {
+                        return e.getQuizDetail().getTotalPoints();
+                    }
+                    // coding: tạm dùng số test case
+                    if (e.getExerciseType() == ExerciseType.CODING &&
+                            e.getCodingDetail() != null) {
+                        return e.getCodingDetail().getTestCases()
+                                .size(); // hoặc 100/…
+                    }
+                    return 0;
+                }).sum();
+    }
+
+    public int calculateQuizSubmissionTotalTime(
+            List<Submission> quizSubmission) {
+        return quizSubmission
+                .stream()
+                .mapToInt(s -> Optional
+                        .ofNullable(s.getTimeTakenSeconds())
+                        .orElse(0))
+                .sum();
+    }
+
+    public int calculateQuizSubmissionTotalScore(
+            List<Submission> quizSubmission) {
+        return quizSubmission
+                .stream()
+                .mapToInt(s -> Optional
+                        .ofNullable(s.getScore())
+                        .orElse(0)
+                )
                 .sum();
     }
 }

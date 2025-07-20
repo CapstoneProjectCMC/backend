@@ -1,7 +1,7 @@
 package com.codecampus.submission.controller;
 
 import com.codecampus.submission.dto.common.ApiResponse;
-import com.codecampus.submission.dto.response.MySubmissionResponse;
+import com.codecampus.submission.dto.response.AllSubmissionHistoryResponse;
 import com.codecampus.submission.dto.response.quiz.QuizAttemptHistoryResponse;
 import com.codecampus.submission.service.SubmissionHistoryService;
 import lombok.AccessLevel;
@@ -30,9 +30,9 @@ public class SubmissionHistoryController {
                 .build();
     }
 
-    @GetMapping("/submission/self")
-    public ApiResponse<List<MySubmissionResponse>> mySubmissions() {
-        return ApiResponse.<List<MySubmissionResponse>>builder()
+    @GetMapping("/submission/self/history")
+    public ApiResponse<List<AllSubmissionHistoryResponse>> mySubmissions() {
+        return ApiResponse.<List<AllSubmissionHistoryResponse>>builder()
                 .result(submissionHistoryService.mySubmissions())
                 .message("Tất cả bài nộp của bạn")
                 .build();

@@ -1,11 +1,10 @@
 package com.codecampus.submission.service;
 
-import com.codecampus.submission.dto.response.MySubmissionResponse;
+import com.codecampus.submission.dto.response.AllSubmissionHistoryResponse;
 import com.codecampus.submission.dto.response.quiz.QuizAttemptHistoryResponse;
-import com.codecampus.submission.entity.QuizDetail;
 import com.codecampus.submission.entity.Submission;
 import com.codecampus.submission.helper.AuthenticationHelper;
-import com.codecampus.submission.helper.SubmissionHelper;
+import com.codecampus.submission.mapper.SubmissionMapper;
 import com.codecampus.submission.repository.SubmissionRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +25,8 @@ public class SubmissionHistoryService {
 
     SubmissionRepository submissionRepository;
 
+    SubmissionMapper submissionMapper;
+
     @Transactional(readOnly = true)
     public List<QuizAttemptHistoryResponse> getQuizAttemptHistoriesForStudent() {
         return submissionRepository
@@ -39,37 +40,15 @@ public class SubmissionHistoryService {
                         .thenComparing(s -> Optional.ofNullable(
                                 s.getTimeTakenSeconds()).orElse(
                                 Integer.MAX_VALUE)))
-                .map(SubmissionHelper::mapSubmissionToQuizAttemptHistoryResponse)
+                .map(submissionMapper::mapSubmissionToQuizAttemptHistoryResponse)
                 .toList();
     }
 
     @Transactional(readOnly = true)
-    public List<MySubmissionResponse> mySubmissions() {
-        String userId = AuthenticationHelper.getMyUserId();
-
-        return submissionRepository
-                .findByUserIdOrderBySubmittedAtDesc(userId)
-                .stream()
-                .map(submission -> new MySubmissionResponse(
-                        submission.getId(),
-                        submission.getExercise().getId(),
-                        submission.getExercise().getTitle(),
-                        submission.getScore(),
-                        switch (submission.getExercise().getExerciseType()) {
-                            case QUIZ -> Optional.ofNullable(
-                                            submission.getExercise().getQuizDetail())
-                                    .map(QuizDetail::getTotalPoints)
-                                    .orElse(null);
-                            case CODING -> Optional.ofNullable(
-                                            submission.getExercise().getCodingDetail())
-                                    .map(codingDetail -> codingDetail.getTestCases()
-                                            .size())
-                                    .orElse(null);
-                        },
-                        submission.getTimeTakenSeconds(),
-                        submission.getSubmittedAt(),
-                        submission.getStatus().name()
-                ))
+    public List<AllSubmissionHistoryResponse> mySubmissions() {
+        String studentId = AuthenticationHelper.getMyUserId();
+        return submissionRepository.findByUserId(studentId).stream()
+                .map(submissionMapper::mapSubmissionToAllSubmissionHistoryResponse)
                 .toList();
     }
 }

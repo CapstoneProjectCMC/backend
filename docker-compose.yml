@@ -82,6 +82,26 @@ services:
       retries: 5
     networks: [ backend ]
 
+  ai-db:
+    image: bitnami/postgresql:latest
+    container_name: ai-db
+    restart: unless-stopped
+    environment:
+      - POSTGRESQL_USERNAME=${AI_USERNAME}
+      - POSTGRESQL_PASSWORD=${AI_DB_PASSWORD}
+      - POSTGRESQL_DATABASE=${AI_DATABASE}
+      - POSTGRESQL_POSTGRES_PASSWORD=${AI_DB_PASSWORD}
+    ports:
+      - "5436:5432"
+    volumes:
+      - ai_pg_data:/bitnami/postgresql
+    healthcheck:
+      test: [ "CMD-SHELL","pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: [ backend ]
+
   # ----------  Kafka  ----------
   kafka:
     image: bitnami/kafka:latest
@@ -245,6 +265,7 @@ volumes:
   submission_pg_data:
   quiz_pg_data:
   coding_pg_data:
+  ai_pg_data:
   kafka_data:
   neo4j_data:
   redis_data:
