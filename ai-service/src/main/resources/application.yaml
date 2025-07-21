@@ -41,3 +41,14 @@ spring:
         repository:
           jdbc:
             initialize-schema: always
+  cloud:
+    openfeign:
+      client:
+        config:
+          default:
+            connectTimeout: 3000
+            readTimeout: 10000
+
+#app:
+#  services:
+#    submission: http://localhost:8083/submission

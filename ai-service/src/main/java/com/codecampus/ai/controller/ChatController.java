@@ -16,11 +16,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
+@Slf4j
+@Builder
 @RestController
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-@Builder
-@Slf4j
 public class ChatController {
     ChatService chatService;
 

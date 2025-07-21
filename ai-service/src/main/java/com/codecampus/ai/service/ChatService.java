@@ -2,6 +2,7 @@ package com.codecampus.ai.service;
 
 import com.codecampus.ai.dto.request.BillItem;
 import com.codecampus.ai.dto.request.ChatRequest;
+import com.codecampus.ai.helper.AuthenticationHelper;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
@@ -49,6 +50,8 @@ public class ChatService {
     public List<BillItem> chatWithImage(
             MultipartFile file,
             String message) {
+        String conversationId = AuthenticationHelper.getMyUserId();
+
         Media media = Media.builder()
                 .mimeType(MimeTypeUtils.parseMimeType(
                         file.getContentType()))
@@ -59,21 +62,27 @@ public class ChatService {
                 .temperature(0D)
                 .build();
 
+        ParameterizedTypeReference<List<BillItem>> billItemType =
+                new ParameterizedTypeReference<List<BillItem>>() {
+                };
+
         return chatClient.prompt()
                 .options(chatOptions)
                 .system("You are CodeCampus.AI")
-                .user(promptUserSpec -> {
-                    promptUserSpec.media(media)
-                            .text(message);
+                .user(promptUserSpec -> promptUserSpec.media(media)
+                        .text(message))
+                .advisors(advisorSpec -> {
+                    advisorSpec.param(
+                            ChatMemory.CONVERSATION_ID, conversationId
+                    );
                 })
                 .call()
-                .entity(new ParameterizedTypeReference<List<BillItem>>() {
-                });
+                .entity(billItemType);
     }
 
-    public String chat(ChatRequest request) {
+    public String chat(ChatRequest chatRequest) {
 
-        String conversationId = "conversation1";
+        String conversationId = AuthenticationHelper.getMyUserId();
         SystemMessage systemMessage = new SystemMessage(
                 """
                         You are CodeCampus.AI
@@ -82,7 +91,7 @@ public class ChatService {
         );
 
         UserMessage userMessage = new UserMessage(
-                request.message()
+                chatRequest.message()
         );
 
         Prompt prompt = new Prompt(systemMessage, userMessage);
