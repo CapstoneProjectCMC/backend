@@ -1,6 +1,5 @@
 package com.codecampus.ai.service;
 
-import com.codecampus.ai.dto.request.BillItem;
 import com.codecampus.ai.dto.request.ChatRequest;
 import com.codecampus.ai.helper.AuthenticationHelper;
 import lombok.AccessLevel;
@@ -16,12 +15,9 @@ import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.prompt.ChatOptions;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.content.Media;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 @Service
 @Slf4j
@@ -47,7 +43,7 @@ public class ChatService {
                 .build();
     }
 
-    public List<BillItem> chatWithImage(
+    public String chatWithImage(
             MultipartFile file,
             String message) {
         String conversationId = AuthenticationHelper.getMyUserId();
@@ -62,10 +58,6 @@ public class ChatService {
                 .temperature(0D)
                 .build();
 
-        ParameterizedTypeReference<List<BillItem>> billItemType =
-                new ParameterizedTypeReference<List<BillItem>>() {
-                };
-
         return chatClient.prompt()
                 .options(chatOptions)
                 .system("You are CodeCampus.AI")
@@ -77,7 +69,7 @@ public class ChatService {
                     );
                 })
                 .call()
-                .entity(billItemType);
+                .content();
     }
 
     public String chat(ChatRequest chatRequest) {

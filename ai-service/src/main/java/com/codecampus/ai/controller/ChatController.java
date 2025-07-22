@@ -1,6 +1,6 @@
 package com.codecampus.ai.controller;
 
-import com.codecampus.ai.dto.request.BillItem;
+import com.codecampus.ai.dto.common.ApiResponse;
 import com.codecampus.ai.dto.request.ChatRequest;
 import com.codecampus.ai.service.ChatService;
 import lombok.AccessLevel;
@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-
 @Slf4j
 @Builder
 @RestController
@@ -25,14 +23,21 @@ public class ChatController {
     ChatService chatService;
 
     @PostMapping("/chat")
-    String chat(@RequestBody ChatRequest request) {
-        return chatService.chat(request);
+    ApiResponse<String> chat(
+            @RequestBody ChatRequest request) {
+        return ApiResponse.<String>builder()
+                .message("Kết quả chat với AI!")
+                .result(chatService.chat(request))
+                .build();
     }
 
     @PostMapping("/chat-with-image")
-    List<BillItem> chatWithImage(
+    ApiResponse<String> chatWithImage(
             @RequestParam("file") MultipartFile file,
             @RequestParam("message") String message) {
-        return chatService.chatWithImage(file, message);
+        return ApiResponse.<String>builder()
+                .message("Kết quả chat với AI!")
+                .result(chatService.chatWithImage(file, message))
+                .build();
     }
 }

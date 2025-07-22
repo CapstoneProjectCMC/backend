@@ -22,7 +22,7 @@ import java.util.List;
 public class SubmissionHistoryController {
     SubmissionHistoryService submissionHistoryService;
 
-    @GetMapping("/submission/quiz/self/history")
+    @GetMapping("/quiz/self/history")
     ApiResponse<List<QuizAttemptHistoryResponse>> myQuizHistory() {
         return ApiResponse.<List<QuizAttemptHistoryResponse>>builder()
                 .result(submissionHistoryService.getQuizAttemptHistoriesForStudent())
@@ -30,7 +30,7 @@ public class SubmissionHistoryController {
                 .build();
     }
 
-    @GetMapping("/submission/self/history")
+    @GetMapping("/self/history")
     public ApiResponse<List<AllSubmissionHistoryResponse>> mySubmissions() {
         return ApiResponse.<List<AllSubmissionHistoryResponse>>builder()
                 .result(submissionHistoryService.mySubmissions())

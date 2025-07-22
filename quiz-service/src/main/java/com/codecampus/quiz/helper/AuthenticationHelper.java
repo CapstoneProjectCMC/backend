@@ -57,4 +57,21 @@ public class AuthenticationHelper {
                 .filter(role -> !role.startsWith("ROLE_"))
                 .toList();
     }
+
+    public static String getMyUsername() {
+        Authentication auth =
+                SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || !auth.isAuthenticated()) {
+            return null;
+        }
+
+        Object principal = auth.getPrincipal();
+
+        if (principal instanceof Jwt jwt) {
+            // JwtAuthenticationToken giữ nguyên đối tượng Jwt làm principal,
+            return jwt.getClaimAsString("username");
+        }
+
+        return null;
+    }
 }

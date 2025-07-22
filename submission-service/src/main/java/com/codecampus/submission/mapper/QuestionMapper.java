@@ -15,6 +15,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 
 import java.util.Comparator;
+import java.util.Optional;
 
 @Mapper(
         componentModel = "spring",
@@ -69,9 +70,11 @@ public interface QuestionMapper {
 
     default OptionDto toOptionDtoFromOption(Option option) {
         return OptionDto.newBuilder()
-                .setId(option.getId())
-                .setOptionText(option.getOptionText())
-                .setOrder(option.getOrder())
+                .setId(option.getId() == null ? "" : option.getId())
+                .setOptionText(
+                        Optional.ofNullable(option.getOptionText()).orElse(""))
+                .setOrder(
+                        Optional.ofNullable(option.getOrder()).orElse(""))
                 .setCorrect(option.isCorrect())
                 .build();
     }

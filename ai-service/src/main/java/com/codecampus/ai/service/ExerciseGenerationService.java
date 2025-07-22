@@ -1,5 +1,6 @@
 package com.codecampus.ai.service;
 
+import com.codecampus.ai.constant.exercise.ExerciseType;
 import com.codecampus.ai.dto.request.exercise.AddQuizDetailRequest;
 import com.codecampus.ai.dto.request.exercise.CreateExerciseRequest;
 import com.codecampus.ai.dto.request.exercise.ExerciseGenDto;
@@ -12,16 +13,13 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
-import org.springframework.ai.chat.memory.ChatMemory;
-import org.springframework.ai.chat.memory.MessageWindowChatMemory;
-import org.springframework.ai.chat.memory.repository.jdbc.JdbcChatMemoryRepository;
 import org.springframework.ai.chat.prompt.ChatOptions;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 
 @Service
 @Slf4j
@@ -29,27 +27,15 @@ import java.util.Set;
 public class ExerciseGenerationService {
 
     ChatClient chatClient;
-    JdbcChatMemoryRepository jdbcChatMemoryRepository;
 
-    public ExerciseGenerationService(
-            ChatClient.Builder builder,
-            JdbcChatMemoryRepository jdbcChatMemoryRepository) {
-        this.jdbcChatMemoryRepository = jdbcChatMemoryRepository;
+    public ExerciseGenerationService(ChatClient.Builder builder) {
 
-        //TODO Nếu mà đầy bộ nhớ thì throw ra lỗi cụ thể
-        ChatMemory chatMemory = MessageWindowChatMemory.builder()
-                .chatMemoryRepository(jdbcChatMemoryRepository)
-                .maxMessages(100)
-                .build();
-
-        chatClient = builder
-                .defaultAdvisors(MessageChatMemoryAdvisor.builder(chatMemory)
-                        .build())
-                .build();
+        chatClient = builder.build();
     }
 
     public CreateExerciseRequest generateExercise(
-            Set<String> topics) {
+            Set<String> topics,
+            ExerciseType exerciseType) {
 
         ParameterizedTypeReference<ExerciseGenDto> type =
                 new ParameterizedTypeReference<>() {
@@ -59,11 +45,13 @@ public class ExerciseGenerationService {
                 .prompt()
                 .system("""
                         Bạn là trợ lý tạo bài tập lập trình/quiz của CodeCampus.
+                        Bài tập là bài tập %s
                         Trả về JSON **đúng theo schema ExerciseGenDto**.
                         Chỉ sinh các trường, không thêm mô tả thừa.
-                        """)
-                .user(topics.toString()) // input tối thiểu
+                        """.formatted(exerciseType))
+                .user(STR."Chủ đề: \{String.join(", ", topics)}")
                 .options(ChatOptions.builder().temperature(0.6).build())
+                .advisors(noMemory())
                 .call()
                 .entity(type);
 
@@ -72,14 +60,17 @@ public class ExerciseGenerationService {
                 suggestion.description(),
                 suggestion.difficulty(),
                 suggestion.exerciseType(),
-                null, null, null, null, null,
+                null, suggestion.cost(), null, null, null,
                 suggestion.duration(),
                 null, null, null, null
         );
     }
 
     public AddQuizDetailRequest generateQuizDetail(
-            int numQuestions) {
+            String exerciseTitle,
+            String exerciseDescription,
+            int numQuestions,
+            Set<String> topics) {
         ParameterizedTypeReference<QuizDetailGenDto> type =
                 new ParameterizedTypeReference<>() {
                 };
@@ -89,10 +80,18 @@ public class ExerciseGenerationService {
                 .system("""
                         Bạn là trợ lý tạo bài tập lập trình/quiz của CodeCampus.
                         Sinh **đúng** JSON QuizDetailGenDto gồm %d câu hỏi.
+                        Thông tin bài: "%s" – %s.
+                        Chủ đề (gợi ý): %s.
                         Câu hỏi trắc nghiệm đơn hoặc nhiều đáp án.
                         Sử dụng tiếng Việt, tránh lặp lại.
-                        """.formatted(numQuestions))
+                        """.formatted(
+                        numQuestions,
+                        exerciseTitle,
+                        exerciseDescription == null ? "" : exerciseDescription,
+                        String.join(", ", topics)))
                 .options(ChatOptions.builder().temperature(0.7).build())
+                .advisors(noMemory())
+                .advisors(noMemory())
                 .call()
                 .entity(type);
 
@@ -114,7 +113,9 @@ public class ExerciseGenerationService {
         return new AddQuizDetailRequest(questionDtos);
     }
 
-    public QuestionDto generateQuestion(int orderInQuiz) {
+    public QuestionDto generateQuestion(
+            int orderInQuiz,
+            Set<String> topicsQuiz) {
 
         ParameterizedTypeReference<QuestionGenDto> type =
                 new ParameterizedTypeReference<>() {
@@ -125,8 +126,12 @@ public class ExerciseGenerationService {
                 .system("""
                         Bạn là trợ lý tạo bài tập lập trình/quiz của CodeCampus.
                         Sinh 1 **QuestionGenDto** (orderInQuiz=%d) kèm 4 option.
-                        """.formatted(orderInQuiz))
+                        Chủ đề quiz: %s.
+                        """.formatted(
+                        orderInQuiz,
+                        String.join(", ", topicsQuiz)))
                 .options(ChatOptions.builder().temperature(0.6).build())
+                .advisors(noMemory())
                 .call()
                 .entity(type);
 
@@ -144,9 +149,26 @@ public class ExerciseGenerationService {
     }
 
     public QuizDraft generateQuizDraft(
-            Set<String> topics, int numQuestions) {
+            Set<String> exerciseTopics,
+            ExerciseType exerciseType,
+            int numQuestions) {
+
+        CreateExerciseRequest createExerciseRequest =
+                generateExercise(exerciseTopics, exerciseType);
+
+        AddQuizDetailRequest addQuizDetailRequest = generateQuizDetail(
+                createExerciseRequest.title(),
+                createExerciseRequest.description(),
+                numQuestions,
+                exerciseTopics
+        );
+
         return new QuizDraft(
-                generateExercise(topics),
-                generateQuizDetail(numQuestions));
+                createExerciseRequest,
+                addQuizDetailRequest);
+    }
+
+    private Consumer<ChatClient.AdvisorSpec> noMemory() {
+        return adv -> adv.param("skipMemory", "true");
     }
 }

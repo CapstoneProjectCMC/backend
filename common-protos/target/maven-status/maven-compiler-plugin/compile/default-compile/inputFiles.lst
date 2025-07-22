@@ -48,6 +48,12 @@ F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\proto
 F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\quiz\grpc\QuizExerciseDto.java
 F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\quiz\grpc\QuizExerciseDtoOrBuilder.java
 F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\quiz\grpc\QuizProto.java
+F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\quiz\grpc\SoftDeleteOptionRequest.java
+F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\quiz\grpc\SoftDeleteOptionRequestOrBuilder.java
+F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\quiz\grpc\SoftDeleteQuestionRequest.java
+F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\quiz\grpc\SoftDeleteQuestionRequestOrBuilder.java
+F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\quiz\grpc\SoftDeleteRequest.java
+F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\quiz\grpc\SoftDeleteRequestOrBuilder.java
 F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\quiz\grpc\SubmitQuizRequest.java
 F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\quiz\grpc\SubmitQuizRequestOrBuilder.java
 F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\quiz\grpc\SubmitQuizResponse.java

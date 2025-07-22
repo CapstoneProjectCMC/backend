@@ -8,6 +8,7 @@ import com.codecampus.submission.dto.request.quiz.OptionDto;
 import com.codecampus.submission.dto.request.quiz.QuestionDto;
 import com.codecampus.submission.dto.request.quiz.UpdateOptionRequest;
 import com.codecampus.submission.dto.request.quiz.UpdateQuestionRequest;
+import com.codecampus.submission.dto.request.quiz.UpdateQuestionWithOptionsRequest;
 import com.codecampus.submission.entity.Option;
 import com.codecampus.submission.entity.Question;
 import com.codecampus.submission.service.ExerciseService;
@@ -19,10 +20,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -76,6 +79,22 @@ public class QuizController {
                 .build();
     }
 
+    @PutMapping("/quiz/{exerciseId}/question/{questionId}")
+    public ApiResponse<Void> updateQuestionWithOptions(
+            @PathVariable String exerciseId,
+            @PathVariable String questionId,
+            @RequestBody UpdateQuestionWithOptionsRequest body) {
+
+        quizService.updateQuestionWithOptions(
+                exerciseId,
+                questionId,
+                body
+        );
+        return ApiResponse.<Void>builder()
+                .message("Cập nhật question + options thành công!")
+                .build();
+    }
+
     @PatchMapping("/quiz/{exerciseId}/question/{questionId}")
     ApiResponse<Void> updateQuestion(
             @PathVariable String exerciseId,
@@ -89,6 +108,17 @@ public class QuizController {
                 .build();
     }
 
+    @DeleteMapping("/quiz/{exerciseId}/question/{questionId}")
+    ApiResponse<Void> softDeleteQuestion(
+            @PathVariable String exerciseId,
+            @PathVariable String questionId) {
+        quizService.softDeleteQuestion(exerciseId, questionId);
+
+        return ApiResponse.<Void>builder()
+                .message("Đã xoá câu hỏi!")
+                .build();
+    }
+
     @PatchMapping("/quiz/question/option/{optionId}")
     ApiResponse<Void> updateOption(
             @PathVariable String optionId,
@@ -98,6 +128,22 @@ public class QuizController {
 
         return ApiResponse.<Void>builder()
                 .message("Sửa option thành công!")
+                .build();
+    }
+
+    @DeleteMapping("/quiz/{exerciseId}/{questionId}/option/{optionId}")
+    ApiResponse<Void> softDeleteOption(
+            @PathVariable String exerciseId,
+            @PathVariable String questionId,
+            @PathVariable String optionId) {
+
+        quizService.softDeleteOption(
+                exerciseId,
+                questionId,
+                optionId);
+
+        return ApiResponse.<Void>builder()
+                .message("Đã xoá option thành công!")
                 .build();
     }
 

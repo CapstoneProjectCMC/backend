@@ -114,6 +114,18 @@ public class QuizService {
     }
 
     @Transactional
+    public void softDeleteExercise(String exerciseId) {
+        QuizExercise quizExercise = quizHelper.findQuizOrThrow(exerciseId);
+        String by = AuthenticationHelper.getMyUsername();
+        quizExercise.markDeleted(by);
+        quizExercise.getQuestions().forEach(question -> {
+            question.markDeleted(by);
+            question.getOptions().forEach(option -> option.markDeleted(by));
+        });
+        quizExerciseRepository.save(quizExercise);
+    }
+
+    @Transactional
     public void addQuestion(
             AddQuestionRequest addQuestionRequest) {
         QuizExercise quiz =
@@ -128,6 +140,18 @@ public class QuizService {
     }
 
     @Transactional
+    public void softDeleteQuestion(
+            String exerciseId,
+            String questionId) {
+        QuizExercise quizExercise = quizHelper.findQuizOrThrow(exerciseId);
+        quizExercise.findQuestionById(questionId).ifPresent(question -> {
+            question.markDeleted(AuthenticationHelper.getMyUsername());
+            question.getOptions()
+                    .forEach(o -> o.markDeleted(question.getDeletedBy()));
+        });
+    }
+
+    @Transactional
     public void addOption(AddOptionRequest addOptionRequest) {
         Question question =
                 quizHelper.findQuestionOrThrow(
@@ -139,9 +163,17 @@ public class QuizService {
         question.getOptions().add(option);
     }
 
-    public QuizExerciseDto getQuizExerciseDto(String quizId) {
-        QuizExercise quizExercise = quizHelper.findQuizOrThrow(quizId);
-        return quizMapper.toQuizExerciseDtoFromQuizExercise(quizExercise);
+
+    @Transactional
+    public void softDeleteOption(
+            String exerciseId,
+            String questionId,
+            String optionId) {
+        QuizExercise quizExercise = quizHelper.findQuizOrThrow(exerciseId);
+        quizExercise.findQuestionById(questionId)
+                .flatMap(question -> question.findOptionById(optionId))
+                .ifPresent(option -> option.markDeleted(
+                        AuthenticationHelper.getMyUsername()));
     }
 
     @Transactional

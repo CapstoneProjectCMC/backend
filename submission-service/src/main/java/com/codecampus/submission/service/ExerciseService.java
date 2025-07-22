@@ -5,6 +5,7 @@ import com.codecampus.submission.constant.submission.ExerciseType;
 import com.codecampus.submission.dto.common.PageResponse;
 import com.codecampus.submission.dto.request.CreateExerciseRequest;
 import com.codecampus.submission.dto.request.UpdateExerciseRequest;
+import com.codecampus.submission.dto.request.quiz.CreateQuizExerciseRequest;
 import com.codecampus.submission.dto.response.quiz.ExerciseQuizResponse;
 import com.codecampus.submission.dto.response.quiz.quiz_detail.ExerciseQuizDetailResponse;
 import com.codecampus.submission.dto.response.quiz.quiz_detail.QuizDetailSliceDetailResponse;
@@ -48,6 +49,7 @@ public class ExerciseService {
 
     ContestService contestService;
     AssignmentService assignmentService;
+    QuizService quizService;
 
     GrpcQuizClient grpcQuizClient;
     GrpcCodingClient grpcCodingClient;
@@ -58,6 +60,7 @@ public class ExerciseService {
 
     QuizHelper quizHelper;
     ExerciseHelper exerciseHelper;
+
 
     @Transactional
     public void createExercise(
@@ -72,6 +75,34 @@ public class ExerciseService {
         }
 
         exerciseEventProducer.publishCreatedExerciseEvent(exercise);
+    }
+
+    @Transactional
+    public Exercise createExerciseAndReturn(
+            CreateExerciseRequest request) {
+        Exercise exercise = exerciseRepository
+                .save(exerciseMapper.toExerciseFromCreateExerciseRequest(
+                        request, AuthenticationHelper.getMyUserId()));
+        if (exercise.getExerciseType() == ExerciseType.QUIZ) {
+            grpcQuizClient.pushExercise(exercise);
+        } else if (exercise.getExerciseType() == ExerciseType.CODING) {
+            grpcCodingClient.pushExercise(exercise);
+        }
+
+        exerciseEventProducer.publishCreatedExerciseEvent(exercise);
+        return exercise;
+    }
+
+    @Transactional
+    public void createQuizExercise(
+            CreateQuizExerciseRequest request) {
+        Exercise exercise =
+                createExerciseAndReturn(request.createExerciseRequest());
+        exerciseRepository.saveAndFlush(exercise);
+
+        quizService.addQuizDetail(
+                exercise.getId(),
+                request.addQuizDetailRequest());
     }
 
 
@@ -119,6 +150,21 @@ public class ExerciseService {
 
         grpcQuizClient.pushExercise(exercise);
         exerciseEventProducer.publishUpdatedExerciseEvent(exercise);
+    }
+
+    @Transactional
+    public void softDeleteExercise(String exerciseId) {
+        Exercise exercise = exerciseHelper
+                .getExerciseOrThrow(exerciseId);
+        String by = AuthenticationHelper.getMyUsername();
+        exerciseHelper.markExerciseDeletedRecursively(exercise, by);
+        exerciseRepository.save(exercise);
+
+        exerciseEventProducer.publishDeletedExerciseEvent(exercise);
+        if (exercise.getExerciseType() ==
+                ExerciseType.QUIZ) {   // đồng bộ quiz‑svc
+            grpcQuizClient.softDeleteExercise(exerciseId);
+        }
     }
 
     public PageResponse<ExerciseQuizResponse> getAllExercises(

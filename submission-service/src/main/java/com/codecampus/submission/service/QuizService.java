@@ -5,15 +5,18 @@ import com.codecampus.submission.constant.submission.ExerciseType;
 import com.codecampus.submission.dto.common.PageResponse;
 import com.codecampus.submission.dto.request.quiz.AddQuizDetailRequest;
 import com.codecampus.submission.dto.request.quiz.OptionDto;
+import com.codecampus.submission.dto.request.quiz.OptionPatchDto;
 import com.codecampus.submission.dto.request.quiz.QuestionDto;
 import com.codecampus.submission.dto.request.quiz.UpdateOptionRequest;
 import com.codecampus.submission.dto.request.quiz.UpdateQuestionRequest;
+import com.codecampus.submission.dto.request.quiz.UpdateQuestionWithOptionsRequest;
 import com.codecampus.submission.entity.Exercise;
 import com.codecampus.submission.entity.Option;
 import com.codecampus.submission.entity.Question;
 import com.codecampus.submission.entity.QuizDetail;
 import com.codecampus.submission.exception.AppException;
 import com.codecampus.submission.exception.ErrorCode;
+import com.codecampus.submission.helper.AuthenticationHelper;
 import com.codecampus.submission.helper.PageResponseHelper;
 import com.codecampus.submission.helper.QuizHelper;
 import com.codecampus.submission.helper.SortHelper;
@@ -37,7 +40,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -130,6 +135,63 @@ public class QuizService {
     }
 
     @Transactional
+    public void updateQuestionWithOptions(
+            String exerciseId,
+            String questionId,
+            UpdateQuestionWithOptionsRequest request) {
+
+        Exercise exercise = getExerciseOrThrow(exerciseId);
+        Question question = getQuestionOrThrow(questionId);
+
+        /* cập nhật phần thân question như cũ */
+        questionMapper.patchUpdateQuestionRequestToQuestion(
+                new UpdateQuestionRequest(
+                        request.text(), request.questionType(),
+                        request.points(), request.orderInQuiz()),
+                question);
+
+        Map<String, Option> current = question
+                .getOptions()
+                .stream()
+                .collect(Collectors.toMap(Option::getId,
+                        option -> option));
+
+        for (OptionPatchDto optionPatchDto : request.options()) {
+
+            // --- Xoá mềm ---
+            if (Boolean.TRUE.equals(optionPatchDto.delete())) {
+                Option option = current.get(optionPatchDto.id());
+                if (option != null && !option.isDeleted()) {
+                    option.markDeleted(AuthenticationHelper.getMyUserId());
+                    grpcQuizClient.softDeleteOption(
+                            exerciseId, questionId, option.getId());
+                }
+                continue;
+            }
+
+            // --- Thêm / Cập nhật ---
+            Option opt = optionPatchDto.id() == null ? null :
+                    current.get(optionPatchDto.id());
+            if (opt == null) {
+                opt = new Option();
+                opt.setQuestion(question);
+                question.getOptions().add(opt);
+            }
+            optionMapper.patchUpdateOptionRequestToOption(
+                    new UpdateOptionRequest(
+                            optionPatchDto.optionText(),
+                            optionPatchDto.correct(), optionPatchDto.order()),
+                    opt);
+        }
+
+        /* Tính lại quiz & sync */
+        quizHelper.recalcQuiz(exercise.getQuizDetail());
+        questionRepository.saveAndFlush(question);
+
+        grpcQuizClient.pushQuestion(exerciseId, question);
+    }
+
+    @Transactional
     public void updateQuestion(
             String exerciseId,
             String questionId,
@@ -165,6 +227,32 @@ public class QuizService {
         grpcQuizClient.pushQuestion(
                 option.getQuestion().getQuizDetail().getExercise().getId(),
                 option.getQuestion());
+    }
+
+    @Transactional
+    public void softDeleteQuestion(
+            String exerciseId,
+            String questionId) {
+        Question question = getQuestionOrThrow(questionId);
+        question.markDeleted(AuthenticationHelper.getMyUsername());
+        question.getOptions()
+                .forEach(option ->
+                        option.markDeleted(question.getDeletedBy()));
+        grpcQuizClient.softDeleteQuestion(exerciseId, questionId);
+    }
+
+    @Transactional
+    public void softDeleteOption(
+            String exerciseId,
+            String questionId,
+            String optionId) {
+        Option option = getOption(optionId);
+        option.markDeleted(AuthenticationHelper.getMyUsername());
+        grpcQuizClient.softDeleteOption(
+                exerciseId,
+                questionId,
+                optionId
+        );
     }
 
     public PageResponse<Question> getQuestionsOfQuiz(

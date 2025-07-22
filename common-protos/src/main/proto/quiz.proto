@@ -94,7 +94,10 @@ service QuizSyncService {
   rpc AddQuizDetail (AddQuizDetailRequest) returns (.google.protobuf.Empty);
   rpc AddQuestion (AddQuestionRequest) returns (.google.protobuf.Empty);
   rpc AddOption (AddOptionRequest) returns (google.protobuf.Empty);
-  rpc UpsertAssignment (UpsertAssignmentRequest)  returns (.google.protobuf.Empty);
+  rpc UpsertAssignment (UpsertAssignmentRequest) returns (.google.protobuf.Empty);
+  rpc SoftDeleteExercise (SoftDeleteRequest) returns (.google.protobuf.Empty);
+  rpc SoftDeleteQuestion (SoftDeleteQuestionRequest) returns (.google.protobuf.Empty);
+  rpc SoftDeleteOption (SoftDeleteOptionRequest) returns (.google.protobuf.Empty);
 }
 
 message CreateQuizExerciseRequest {
@@ -115,6 +118,19 @@ message AddOptionRequest {
   string exerciseId = 1;
   string questionId = 2;
   OptionDto option = 3;
+}
+
+message SoftDeleteRequest {
+  string id = 1;
+}
+message SoftDeleteQuestionRequest {
+  string exerciseId = 1;
+  string questionId = 2;
+}
+message SoftDeleteOptionRequest {
+  string exerciseId = 1;
+  string questionId = 2;
+  string optionId = 3;
 }
 
 message UpsertAssignmentRequest {

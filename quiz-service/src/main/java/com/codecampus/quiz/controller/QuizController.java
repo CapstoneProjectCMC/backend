@@ -2,7 +2,6 @@ package com.codecampus.quiz.controller;
 
 import com.codecampus.quiz.dto.common.ApiResponse;
 import com.codecampus.quiz.grpc.LoadQuizResponse;
-import com.codecampus.quiz.grpc.QuizExerciseDto;
 import com.codecampus.quiz.grpc.SubmitQuizRequest;
 import com.codecampus.quiz.grpc.SubmitQuizResponse;
 import com.codecampus.quiz.service.QuizService;
@@ -28,15 +27,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class QuizController {
 
     QuizService quizService;
-
-    @GetMapping("/{quizId}")
-    ApiResponse<QuizExerciseDto> getQuiz(
-            @PathVariable String quizId) {
-        return ApiResponse.<QuizExerciseDto>builder()
-                .result(quizService.getQuizExerciseDto(quizId))
-                .message("Lấy quiz thành công!")
-                .build();
-    }
 
     @GetMapping("/{quizId}/load")
     ApiResponse<LoadQuizResponse> loadQuiz(
