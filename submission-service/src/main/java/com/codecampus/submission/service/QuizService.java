@@ -141,13 +141,20 @@ public class QuizService {
             UpdateQuestionWithOptionsRequest request) {
 
         Exercise exercise = getExerciseOrThrow(exerciseId);
-        Question question = getQuestionOrThrow(questionId);
+        Question question = exercise.getQuizDetail()
+                .getQuestions()
+                .stream()
+                .filter(q -> q.getId().equals(questionId))
+                .findFirst()
+                .orElseThrow(() -> new AppException(ErrorCode.QUESTION_NOT_FOUND));
 
         /* cập nhật phần thân question như cũ */
         questionMapper.patchUpdateQuestionRequestToQuestion(
                 new UpdateQuestionRequest(
-                        request.text(), request.questionType(),
-                        request.points(), request.orderInQuiz()),
+                        request.text(),
+                        request.questionType(),
+                        request.points(),
+                        request.orderInQuiz()),
                 question);
 
         Map<String, Option> current = question
@@ -161,7 +168,12 @@ public class QuizService {
             // --- Xoá mềm ---
             if (Boolean.TRUE.equals(optionPatchDto.delete())) {
                 Option option = current.get(optionPatchDto.id());
-                if (option != null && !option.isDeleted()) {
+
+                if (option == null) {
+                    throw new AppException(ErrorCode.OPTION_NOT_FOUND);
+                }
+
+                if (!option.isDeleted()) {
                     option.markDeleted(AuthenticationHelper.getMyUserId());
                     grpcQuizClient.softDeleteOption(
                             exerciseId, questionId, option.getId());
@@ -170,17 +182,20 @@ public class QuizService {
             }
 
             // --- Thêm / Cập nhật ---
-            Option opt = optionPatchDto.id() == null ? null :
-                    current.get(optionPatchDto.id());
+            Option opt = current.get(optionPatchDto.id());
             if (opt == null) {
-                opt = new Option();
-                opt.setQuestion(question);
-                question.getOptions().add(opt);
+                throw new AppException(ErrorCode.OPTION_NOT_FOUND);
             }
+
+            if (opt.isDeleted()) {
+                throw new AppException(ErrorCode.OPTION_NOT_FOUND);
+            }
+
             optionMapper.patchUpdateOptionRequestToOption(
                     new UpdateOptionRequest(
                             optionPatchDto.optionText(),
-                            optionPatchDto.correct(), optionPatchDto.order()),
+                            optionPatchDto.correct(),
+                            optionPatchDto.order()),
                     opt);
         }
 
