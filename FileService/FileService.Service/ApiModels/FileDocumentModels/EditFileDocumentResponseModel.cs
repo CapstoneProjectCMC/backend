@@ -1,4 +1,5 @@
 ﻿using FileService.Core.Enums;
+using FileService.Service.ApiModels.TagModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,19 +38,16 @@ namespace FileService.Service.ApiModels.FileDocumentModels
 
         public List<string> AssociatedResourceIds { get; set; } = new();
 
-        public List<string> Tags { get; set; } = new(); // #java, #code
-
         // field dùng để xác định loại nội dung
         public bool IsLectureVideo { get; set; }
 
         public bool IsTextbook { get; set; }
 
+        public List<TagModel> Tags { get; set; } 
 
         // fields chỉ áp dụng với video bài giảng hoặc giáo trình 
         public int? ViewCount { get; set; }
         public double? Rating { get; set; }
-
-        public List<string> Comments { get; set; } = new();
 
         // field dùng để phân loại theo tổ chức hoặc trường học, nếu là video bài giảng hoặc giáo trình
         public string OrgId { get; set; }

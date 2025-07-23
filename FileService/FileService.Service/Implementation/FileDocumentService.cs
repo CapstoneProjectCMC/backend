@@ -5,10 +5,10 @@ using FileService.Core.Helpers;
 using FileService.DataAccess.Interfaces;
 using FileService.DataAccess.Models;
 using FileService.Service.ApiModels.FileDocumentModels;
+using FileService.Service.ApiModels.TagModels;
 using FileService.Service.Dtos.FileDocumentDtos;
 using FileService.Service.Interfaces;
-using System;
-using System.Security.AccessControl;
+using MongoDB.Driver;
 
 namespace FileService.Service.Implementation
 {
@@ -18,6 +18,8 @@ namespace FileService.Service.Implementation
         private readonly UserContext _userContext;
         private readonly IFfmpegService _ffmpegService;
         private readonly IMinioService _minioService;
+        private readonly ITagService _tagService;
+        private readonly IRepository<Tags> _tagRepository;
 
 
         public FileDocumentService(
@@ -25,13 +27,17 @@ namespace FileService.Service.Implementation
             UserContext userContext,
             IFfmpegService ffmpegService,
             IMinioService minioService,
-            IRepository<FileDocument> fileDocumentRepository)
+            ITagService tagService,
+            IRepository<FileDocument> fileDocumentRepository,
+            IRepository<Tags> tagRepository)
              : base(appSettings, userContext)
         {
             _fileDocumentRepository = fileDocumentRepository;
             _userContext = userContext;
             _ffmpegService = ffmpegService;
             _minioService = minioService;
+            _tagService = tagService;
+            _tagRepository = tagRepository;
         }
 
         private void ValidatePagingModel(FileDocumentDto fileDocumentDto)
@@ -48,36 +54,62 @@ namespace FileService.Service.Implementation
 
             var items = await _fileDocumentRepository.FilterAsync(x => !x.IsDeleted);
 
-            return items.Select(file => new FileDocumentModel
+            // Lấy tất cả TagIds từ các file
+            var allTagIds = items.SelectMany(f => f.TagIds).Distinct().ToList();
+            var tags = allTagIds.Any()
+                ? await _tagRepository.FilterAsync(Builders<Tags>.Filter.In(t => t.Id, allTagIds))
+                : new List<Tags>();
+
+            var tagDict = tags.ToDictionary(t => t.Id, t => new TagModel { Id = t.Id, Name = t.Label });
+
+            var result = new List<FileDocumentModel>();
+            foreach (var file in items)
             {
-                Id = file.Id,
-                FileName = file.FileName,
-                FileType = file.FileType,
-                Url = file.Url,
-                Size = file.Size,
-                Checksum = file.Checksum,
-                Category = file.Category,
-                IsActive = file.IsActive,
-                Tags = file.Tags,
-                ViewCount = file.ViewCount,
-                Rating = file.Rating,
-                Description = file.Description,
-                OrgId = file.OrgId,
-                ThumbnailUrl = file.ThumbnailUrl,
-                HlsUrl = file.HlsUrl,
-                Duration = file.Duration,
-                IsLectureVideo = file.IsLectureVideo,
-                IsTextbook = file.IsTextbook,
-                TranscodingStatus = file.TranscodingStatus,
-                AssociatedResourceIds = file.AssociatedResourceIds
-            });
+                var presignedUrl = await _minioService.GetFileAsync(file.Url.TrimStart('/'));
+
+                var fileModel = new FileDocumentModel
+                {
+                    Id = file.Id,
+                    FileName = file.FileName,
+                    FileType = file.FileType,
+                    Url = presignedUrl,  
+                    Size = file.Size,
+                    Checksum = file.Checksum,
+                    Category = file.Category,
+                    IsActive = file.IsActive,
+                    Tags = file.TagIds.Select(id => tagDict.ContainsKey(id) ? tagDict[id] : new TagModel { Id = id, Name = "[Unknown]" }).ToList(),
+                    ViewCount = file.ViewCount,
+                    Rating = file.Rating,
+                    Description = file.Description,
+                    OrgId = file.OrgId,
+                    ThumbnailUrl = file.ThumbnailUrl,
+                    HlsUrl = file.HlsUrl,
+                    Duration = file.Duration,
+                    IsLectureVideo = file.IsLectureVideo,
+                    IsTextbook = file.IsTextbook,
+                    TranscodingStatus = file.TranscodingStatus,
+                    AssociatedResourceIds = file.AssociatedResourceIds
+                };
+
+                result.Add(fileModel);
+            }
+
+            return result;
+
         }
 
         public async Task<FileDocumentModel> GetFileDetailById(Guid id)
         {
+
             var file = await _fileDocumentRepository.GetByIdAsync(id);
             if (file == null || file.IsRemoved)
                 throw new ErrorException(StatusCodeEnum.A02);
+
+            var tags = file.TagIds.Any()
+        ? await _tagRepository.FilterAsync(Builders<Tags>.Filter.In(t => t.Id, file.TagIds))
+        : new List<Tags>();
+
+            var tagDict = tags.ToDictionary(t => t.Id, t => new TagModel { Id = t.Id, Name = t.Label });
 
             // Tạo presigned URL từ MinIO
             var presignedUrl = await _minioService.GetFileAsync(file.Url.TrimStart('/')); // Loại bỏ '/' đầu nếu có
@@ -92,7 +124,7 @@ namespace FileService.Service.Implementation
                 Checksum = file.Checksum,
                 Category = file.Category,
                 IsActive = file.IsActive,
-                Tags = file.Tags,
+                Tags = file.TagIds.Select(id => tagDict.ContainsKey(id) ? tagDict[id] : new TagModel { Id = id, Name = "[Unknown]" }).ToList(),
                 ViewCount = file.ViewCount,
                 Rating = file.Rating,
                 Description = file.Description,
@@ -107,7 +139,7 @@ namespace FileService.Service.Implementation
             };
         }
 
-        public async Task AddFileAsync(AddFileDocumentDto dto)
+        public async Task<string> AddFileAsync(AddFileDocumentDto dto)
         {
             if (dto.File == null || dto.File.Length == 0)
                 throw new ErrorException(StatusCodeEnum.A01);
@@ -154,6 +186,7 @@ namespace FileService.Service.Implementation
                     throw;
                 }
             }
+            var tagIds = await _tagService.GetOrCreateTagIdsAsync(dto.Tags ?? Enumerable.Empty<string>());
 
             var file = new FileDocument
             {
@@ -164,7 +197,7 @@ namespace FileService.Service.Implementation
                 Url = fileName,
                 Description = dto.Description,
                 Category = dto.Category,
-                Tags = dto.Tags ?? new List<string>(),
+                TagIds = tagIds,
                 IsActive = true,
                 CreatedAt = DateTime.UtcNow,
                 CreatedBy = _userContext.UserId,
@@ -177,6 +210,8 @@ namespace FileService.Service.Implementation
             var exists = await _fileDocumentRepository.ExistsAsync(f => f.Checksum == checksum && !f.IsRemoved);
             if (exists)
                 throw new ErrorException(StatusCodeEnum.A03);
+
+            file.Checksum = checksum;
 
             if (dto.IsLectureVideo)
             {
@@ -197,6 +232,9 @@ namespace FileService.Service.Implementation
             }
 
             await _fileDocumentRepository.CreateAsync(file);
+
+            var presignedUrl = await _minioService.GetFileAsync(file.Url);
+            return presignedUrl;
         }
 
         public async Task<EditFileDocumentResponseModel> EditFileDetailAsync(Guid id, EditFileDocumentDto dto)
@@ -210,7 +248,6 @@ namespace FileService.Service.Implementation
 
             if (dto.FileName.Length > 255)
                 throw new ErrorException(StatusCodeEnum.A05);
-
 
             if (dto.Tags == null || !dto.Tags.Any())
                 throw new ErrorException(StatusCodeEnum.A06);
@@ -228,7 +265,7 @@ namespace FileService.Service.Implementation
             file.FileName = dto.FileName;
             file.Category = dto.Category;
             file.Description = dto.Description;
-            file.Tags = dto.Tags ?? new List<string>();
+            file.TagIds = await _tagService.GetOrCreateTagIdsAsync(dto.Tags ?? Enumerable.Empty<string>());
             file.IsActive = dto.IsActive;
             file.IsLectureVideo = dto.IsLectureVideo;
             file.IsTextbook = dto.IsTextbook;
@@ -328,13 +365,20 @@ namespace FileService.Service.Implementation
 
             var presignedUrl = await _minioService.GetFileAsync(file.Url.TrimStart('/'));
 
+            var tags = file.TagIds.Any()
+                ? await _tagRepository.FilterAsync(Builders<Tags>.Filter.In(t => t.Id, file.TagIds))
+                : new List<Tags>();
+
+            var tagDict = tags.ToDictionary(t => t.Id, t => new TagModel { Id = t.Id, Name = t.Label });
+
+
             return new EditFileDocumentResponseModel
             {
                 Id = file.Id,
                 FileName = file.FileName,
                 Description = file.Description,
                 Category = file.Category,
-                Tags = file.Tags,
+                Tags = file.TagIds.Select(id => tagDict.ContainsKey(id) ? tagDict[id] : new TagModel { Id = id, Name = "[Unknown]" }).ToList(),
                 IsActive = file.IsActive,
                 IsLectureVideo = file.IsLectureVideo,
                 IsTextbook = file.IsTextbook,

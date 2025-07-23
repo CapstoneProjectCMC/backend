@@ -10,7 +10,7 @@ namespace FileService.Service.Dtos.FileDocumentDtos
 {
     public class EditFileDocumentDto
     {
-        public IFormFile File { get; set; } 
+        public IFormFile? File { get; set; } 
         public string FileName { get; set; }
         public FileCategory Category { get; set; } // bài giảng, giáo trình, file thường
         public string Description { get; set; }

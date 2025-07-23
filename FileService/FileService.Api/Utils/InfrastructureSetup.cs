@@ -1,23 +1,30 @@
 ﻿using FileService.Core.Enums;
 using FileService.DataAccess.Interfaces;
 using FileService.DataAccess.Models;
+using FileService.Service.Implementation;
+using FileService.Service.Interfaces;
 
 namespace FileService.Api.Utils
 {
     public static class InfrastructureSetup
     {
-        public static IHost MigrateMongoDb(this IHost webHost)
+        public static async Task<IHost> MigrateMongoDb(this IHost webHost)
         {
             using (var scope = webHost.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
 
-                var repo = services.GetRequiredService<IRepository<FileDocument>>();
+                var fileRepo = services.GetRequiredService<IRepository<FileDocument>>();
+                var tagRepo = services.GetRequiredService<ITagService>();
 
                 // Kiểm tra nếu chưa có file nào thì seed thử
-                var hasFile = repo.AnyAsync(f => true).Result;
+                var hasFile = await fileRepo.AnyAsync(f => true);
                 if (!hasFile)
                 {
+
+                    var tagNames = new[] { "#seed", "#mongodb" };
+                    var tagIds = await tagRepo.GetOrCreateTagIdsAsync(tagNames);
+
                     var seed = new FileDocument
                     {
                         FileName = "20250413_134739.mp4",
@@ -29,7 +36,7 @@ namespace FileService.Api.Utils
                         Description = "Seed file để kiểm tra MongoDB",
                         ThumbnailUrl = "/thumbnails/e02ea408-c424-46a1-8936-06a51bd69bab.jpg",
                         TranscodingStatus = "success",
-                        Tags = new() { "#seed", "#mongodb" },
+                        TagIds = tagIds,
                         IsLectureVideo = true,
                         IsTextbook = false,
                         OrgId = null,
@@ -40,7 +47,7 @@ namespace FileService.Api.Utils
                         CreatedAt = DateTime.UtcNow
                     };
 
-                    repo.CreateAsync(seed).Wait();
+                    fileRepo.CreateAsync(seed).Wait();
                     Console.WriteLine("Seeded 1 File document vào MongoDB.");
                 }
                 else
