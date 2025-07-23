@@ -11,8 +11,8 @@ namespace FileService.Core.ApiModels
     public class PagingBaseModel
     {
         [DefaultValue(1)]
-        public int PageIndex { get; set; } = 1;
-        [DefaultValue(50)]
-        public int PageSize { get; set; } = 50;
+        public int PageIndex { get; set; } 
+        [DefaultValue(20)]
+        public int PageSize { get; set; } 
     }
 }

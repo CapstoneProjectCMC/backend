@@ -36,8 +36,8 @@ namespace FileService.Api.Controllers
         [HttpPost("add")]
         public async Task<IActionResult> AddFile([FromForm] AddFileDocumentDto dto)
         {
-            await _fileDocumentService.AddFileAsync(dto);
-            return Success();
+            var result = await _fileDocumentService.AddFileAsync(dto);
+            return Success(result);
         }
 
         [HttpPut("edit/{id}")]
@@ -51,7 +51,7 @@ namespace FileService.Api.Controllers
         public async Task<IActionResult> DeleteFile(Guid id)
         {
             await _fileDocumentService.DeleteAsync(id);
-            return Success();
+            return Success("Xóa thành công!");
         }
     }
 }

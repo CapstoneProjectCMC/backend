@@ -15,7 +15,7 @@ namespace FileService.Service.Dtos.FileDocumentDtos
     {
         [Required]
         public IFormFile File { get; set; }
-      //  public string? FileName { get; set; } 
+
         [BsonRepresentation(BsonType.String)]
         public FileCategory Category { get; set; } // bài giảng, giáo trình, file thường
         public string Description { get; set; }

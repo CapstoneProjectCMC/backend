@@ -15,16 +15,23 @@ namespace FileService.Api.Controllers
         }
 
         [NonAction]
+        public IActionResult Success<T>(T data)
+        {
+            var response = new ApiResponseModel<T>(StatusCodeEnum.Success, data);
+            return Ok(response);
+        }
+
+        [NonAction]
+        public IActionResult Fail(StatusCodeEnum errorCode)
+        {
+            var response = new ApiResponseModel(errorCode);
+            return BadRequest(response);
+        }
+
+        [NonAction]
         public IActionResult Success(object? data = null)
         {
             return Result(new ApiResponseModel(data));
-        }
-
-
-        [NonAction]
-        public IActionResult Success<T>(T? data = default)
-        {
-            return Ok(new ApiResponseModel<T>(data));
         }
 
         [NonAction]
