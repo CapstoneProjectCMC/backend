@@ -61,9 +61,10 @@ public class QuizService {
     QuizHelper quizHelper;
 
     @Transactional
-    public void addQuizDetail(
+    public QuizDetail addQuizDetail(
             String exerciseId,
-            AddQuizDetailRequest addQuizDetailRequest) {
+            AddQuizDetailRequest addQuizDetailRequest,
+            boolean returnQuizDetail) {
         Exercise exercise = getExerciseOrThrow(exerciseId);
 
         Assert.isTrue(
@@ -90,12 +91,18 @@ public class QuizService {
         quizDetailRepository.save(quizDetail);
 
         grpcQuizClient.pushQuizDetail(exerciseId, quizDetail);
+
+        if (returnQuizDetail) {
+            return quizDetail;
+        }
+        return null;
     }
 
     @Transactional
-    public void addQuestion(
+    public Question addQuestion(
             String exerciseId,
-            QuestionDto questionDto) throws BadRequestException {
+            QuestionDto questionDto,
+            boolean returnQuestion) throws BadRequestException {
 
         Exercise exercise = getExerciseOrThrow(exerciseId);
         QuizDetail quizDetail = Optional
@@ -115,12 +122,18 @@ public class QuizService {
         questionRepository.save(question);
 
         grpcQuizClient.pushQuestion(exerciseId, question);
+
+        if (returnQuestion) {
+            return question;
+        }
+        return null;
     }
 
     @Transactional
-    public void addOption(
+    public Option addOption(
             String questionId,
-            OptionDto optionDto) {
+            OptionDto optionDto,
+            boolean returnOption) {
         Question question = getQuestionOrThrow(questionId);
 
         Option option = optionMapper.toOptionFromOptionDto(optionDto);
@@ -132,6 +145,11 @@ public class QuizService {
                 question.getQuizDetail().getExercise().getId(),
                 questionId,
                 option);
+
+        if (returnOption) {
+            return option;
+        }
+        return null;
     }
 
     @Transactional
@@ -143,11 +161,13 @@ public class QuizService {
         Exercise exercise = getExerciseOrThrow(exerciseId);
         Question question = getQuestionOrThrow(questionId);
 
-        /* cập nhật phần thân question như cũ */
+        /* Cập nhật phần thân question như cũ */
         questionMapper.patchUpdateQuestionRequestToQuestion(
                 new UpdateQuestionRequest(
-                        request.text(), request.questionType(),
-                        request.points(), request.orderInQuiz()),
+                        request.text(),
+                        request.questionType(),
+                        request.points(),
+                        request.orderInQuiz()),
                 question);
 
         Map<String, Option> current = question
@@ -158,10 +178,15 @@ public class QuizService {
 
         for (OptionPatchDto optionPatchDto : request.options()) {
 
+            Option option = Optional
+                    .ofNullable(current.get(optionPatchDto.id()))
+                    .orElseThrow(
+                            () -> new AppException(ErrorCode.OPTION_NOT_FOUND)
+                    );
+
             // --- Xoá mềm ---
             if (Boolean.TRUE.equals(optionPatchDto.delete())) {
-                Option option = current.get(optionPatchDto.id());
-                if (option != null && !option.isDeleted()) {
+                if (!option.isDeleted()) {
                     option.markDeleted(AuthenticationHelper.getMyUserId());
                     grpcQuizClient.softDeleteOption(
                             exerciseId, questionId, option.getId());
@@ -169,19 +194,14 @@ public class QuizService {
                 continue;
             }
 
-            // --- Thêm / Cập nhật ---
-            Option opt = optionPatchDto.id() == null ? null :
-                    current.get(optionPatchDto.id());
-            if (opt == null) {
-                opt = new Option();
-                opt.setQuestion(question);
-                question.getOptions().add(opt);
-            }
+            // --- Cập nhật ---
             optionMapper.patchUpdateOptionRequestToOption(
                     new UpdateOptionRequest(
                             optionPatchDto.optionText(),
-                            optionPatchDto.correct(), optionPatchDto.order()),
-                    opt);
+                            optionPatchDto.correct(),
+                            optionPatchDto.order()
+                    ),
+                    option);
         }
 
         /* Tính lại quiz & sync */

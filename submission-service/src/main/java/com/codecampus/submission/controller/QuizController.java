@@ -47,7 +47,11 @@ public class QuizController {
             @PathVariable("exerciseId") String exerciseId,
             @RequestBody @Valid AddQuizDetailRequest addQuizRequest) {
 
-        quizService.addQuizDetail(exerciseId, addQuizRequest);
+        quizService.addQuizDetail(
+                exerciseId,
+                addQuizRequest,
+                false
+        );
 
         return ApiResponse.<Void>builder()
                 .message("Tạo Quiz thành công!")
@@ -60,7 +64,7 @@ public class QuizController {
             @RequestBody @Valid QuestionDto questionDto)
             throws BadRequestException {
 
-        quizService.addQuestion(exerciseId, questionDto);
+        quizService.addQuestion(exerciseId, questionDto, false);
 
         return ApiResponse.<Void>builder()
                 .message("Thêm câu hỏi cho quiz thành công!")
@@ -72,7 +76,7 @@ public class QuizController {
             @PathVariable String questionId,
             @RequestBody @Valid OptionDto request) {
 
-        quizService.addOption(questionId, request);
+        quizService.addOption(questionId, request, false);
 
         return ApiResponse.<Void>builder()
                 .message("Thêm option thành công!")

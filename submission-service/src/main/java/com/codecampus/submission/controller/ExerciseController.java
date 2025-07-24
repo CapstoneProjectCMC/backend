@@ -37,7 +37,7 @@ public class ExerciseController {
     ApiResponse<Void> createExercise(
             @RequestBody @Valid CreateExerciseRequest request) {
 
-        exerciseService.createExercise(request);
+        exerciseService.createExercise(request, false);
 
         return ApiResponse.<Void>builder()
                 .message("Tạo bài tập thành công!")
@@ -48,7 +48,7 @@ public class ExerciseController {
     ApiResponse<Void> createQuizExercise(
             @RequestBody @Valid CreateQuizExerciseRequest request) {
 
-        exerciseService.createQuizExercise(request);
+        exerciseService.createQuizExercise(request, false);
 
         return ApiResponse.<Void>builder()
                 .message("Tạo bài tập quiz thành công!")

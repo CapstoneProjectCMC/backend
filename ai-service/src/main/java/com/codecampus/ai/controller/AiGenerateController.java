@@ -4,8 +4,8 @@ import com.codecampus.ai.constant.exercise.ExerciseType;
 import com.codecampus.ai.dto.common.ApiResponse;
 import com.codecampus.ai.dto.request.exercise.AddQuizDetailRequest;
 import com.codecampus.ai.dto.request.exercise.CreateExerciseRequest;
+import com.codecampus.ai.dto.request.exercise.CreateQuizExerciseRequest;
 import com.codecampus.ai.dto.request.exercise.QuestionDto;
-import com.codecampus.ai.dto.request.exercise.QuizDraft;
 import com.codecampus.ai.service.ExerciseGenerationService;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -71,12 +71,12 @@ public class AiGenerateController {
     }
 
     @GetMapping("/generate/draft/quiz")
-    public ApiResponse<QuizDraft> generateQuizDraft(
+    public ApiResponse<CreateQuizExerciseRequest> generateQuizDraft(
             @RequestParam Set<String> exerciseTopics,
             @RequestParam ExerciseType exerciseType,
             @RequestParam(defaultValue = "5") int numQuestions) {
 
-        return ApiResponse.<QuizDraft>builder()
+        return ApiResponse.<CreateQuizExerciseRequest>builder()
                 .result(exerciseGenerationService
                         .generateQuizDraft(
                                 exerciseTopics,

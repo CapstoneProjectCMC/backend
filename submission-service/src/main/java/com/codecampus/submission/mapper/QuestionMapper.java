@@ -62,8 +62,10 @@ public interface QuestionMapper {
 
         if (question.getOptions() != null) {
             question.getOptions().stream()
+                    .filter(option -> !option.isDeleted())
                     .sorted(Comparator.comparing(Option::getOrder))
-                    .forEach(o -> builder.addOptions(toOptionDtoFromOption(o)));
+                    .forEach(option -> builder
+                            .addOptions(toOptionDtoFromOption(option)));
         }
         return builder.build();
     }

@@ -63,8 +63,9 @@ public class ExerciseService {
 
 
     @Transactional
-    public void createExercise(
-            CreateExerciseRequest request) {
+    public Exercise createExercise(
+            CreateExerciseRequest request,
+            boolean returnExercise) {
         Exercise exercise = exerciseRepository
                 .save(exerciseMapper.toExerciseFromCreateExerciseRequest(
                         request, AuthenticationHelper.getMyUserId()));
@@ -75,34 +76,33 @@ public class ExerciseService {
         }
 
         exerciseEventProducer.publishCreatedExerciseEvent(exercise);
-    }
 
-    @Transactional
-    public Exercise createExerciseAndReturn(
-            CreateExerciseRequest request) {
-        Exercise exercise = exerciseRepository
-                .save(exerciseMapper.toExerciseFromCreateExerciseRequest(
-                        request, AuthenticationHelper.getMyUserId()));
-        if (exercise.getExerciseType() == ExerciseType.QUIZ) {
-            grpcQuizClient.pushExercise(exercise);
-        } else if (exercise.getExerciseType() == ExerciseType.CODING) {
-            grpcCodingClient.pushExercise(exercise);
+        if (returnExercise) {
+            return exercise;
         }
-
-        exerciseEventProducer.publishCreatedExerciseEvent(exercise);
-        return exercise;
+        return null;
     }
 
     @Transactional
-    public void createQuizExercise(
-            CreateQuizExerciseRequest request) {
+    public Exercise createQuizExercise(
+            CreateQuizExerciseRequest request,
+            boolean returnExercise) {
         Exercise exercise =
-                createExerciseAndReturn(request.createExerciseRequest());
+                createExercise(
+                        request.createExerciseRequest(),
+                        true
+                );
         exerciseRepository.saveAndFlush(exercise);
 
         quizService.addQuizDetail(
                 exercise.getId(),
-                request.addQuizDetailRequest());
+                request.addQuizDetailRequest(),
+                false);
+
+        if (returnExercise) {
+            return exercise;
+        }
+        return null;
     }
 
 

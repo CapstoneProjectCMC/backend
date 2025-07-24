@@ -3,12 +3,12 @@ package com.codecampus.ai.service;
 import com.codecampus.ai.constant.exercise.ExerciseType;
 import com.codecampus.ai.dto.request.exercise.AddQuizDetailRequest;
 import com.codecampus.ai.dto.request.exercise.CreateExerciseRequest;
+import com.codecampus.ai.dto.request.exercise.CreateQuizExerciseRequest;
 import com.codecampus.ai.dto.request.exercise.ExerciseGenDto;
 import com.codecampus.ai.dto.request.exercise.OptionDto;
 import com.codecampus.ai.dto.request.exercise.QuestionDto;
 import com.codecampus.ai.dto.request.exercise.QuestionGenDto;
 import com.codecampus.ai.dto.request.exercise.QuizDetailGenDto;
-import com.codecampus.ai.dto.request.exercise.QuizDraft;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
@@ -148,7 +148,7 @@ public class ExerciseGenerationService {
                         .toList());
     }
 
-    public QuizDraft generateQuizDraft(
+    public CreateQuizExerciseRequest generateQuizDraft(
             Set<String> exerciseTopics,
             ExerciseType exerciseType,
             int numQuestions) {
@@ -163,7 +163,7 @@ public class ExerciseGenerationService {
                 exerciseTopics
         );
 
-        return new QuizDraft(
+        return new CreateQuizExerciseRequest(
                 createExerciseRequest,
                 addQuizDetailRequest);
     }

@@ -1,6 +1,6 @@
 package com.codecampus.ai.dto.request.exercise;
 
-public record QuizDraft(
+public record CreateQuizExerciseRequest(
         CreateExerciseRequest exerciseRequest,
         AddQuizDetailRequest quizDetailRequest
 ) {
