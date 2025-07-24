@@ -1,18 +1,22 @@
 package com.codecampus.ai.service;
 
+import com.codecampus.ai.constant.exercise.ExerciseType;
 import com.codecampus.ai.dto.request.exercise.AddQuizDetailRequest;
 import com.codecampus.ai.dto.request.exercise.CreateExerciseRequest;
 import com.codecampus.ai.dto.request.exercise.CreateQuizExerciseRequest;
 import com.codecampus.ai.dto.request.exercise.ExerciseGenDto;
 import com.codecampus.ai.dto.request.exercise.ExercisePromptIn;
+import com.codecampus.ai.dto.request.exercise.GenerateQuizPromptIn;
 import com.codecampus.ai.dto.request.exercise.OptionDto;
 import com.codecampus.ai.dto.request.exercise.QuestionDto;
 import com.codecampus.ai.dto.request.exercise.QuestionGenDto;
+import com.codecampus.ai.dto.request.exercise.QuestionPromptIn;
 import com.codecampus.ai.dto.request.exercise.QuizDetailGenDto;
 import com.codecampus.ai.dto.request.exercise.QuizDetailPromptIn;
 import com.codecampus.ai.dto.response.ExerciseResponse;
 import com.codecampus.ai.dto.response.QuestionResponse;
 import com.codecampus.ai.helper.AIGenerationHelper;
+import com.codecampus.ai.mapper.ExerciseMapper;
 import com.codecampus.ai.repository.SubmissionClient;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -23,8 +27,8 @@ import org.springframework.ai.chat.prompt.ChatOptions;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
-import java.util.Set;
 
 @Service
 @Slf4j
@@ -32,15 +36,18 @@ import java.util.Set;
 public class ExerciseGenerationService {
 
     SubmissionClient submissionClient;
-
     ChatClient chatClient;
+
+    ExerciseMapper exerciseMapper;
 
     public ExerciseGenerationService(
             ChatClient.Builder builder,
-            SubmissionClient submissionClient1) {
+            SubmissionClient submissionClient,
+            ExerciseMapper exerciseMapper) {
 
         chatClient = builder.build();
-        this.submissionClient = submissionClient1;
+        this.submissionClient = submissionClient;
+        this.exerciseMapper = exerciseMapper;
     }
 
     public CreateExerciseRequest generateExercise(
@@ -78,8 +85,8 @@ public class ExerciseGenerationService {
                 suggestion.title(),
                 suggestion.description(),
                 suggestion.difficulty(),
-                suggestion.exerciseType(),
-                null, null, null,
+                ExerciseType.QUIZ,
+                null, BigDecimal.ZERO, null,
                 null, null,
                 suggestion.duration(),
                 null, null, null, true
@@ -96,7 +103,7 @@ public class ExerciseGenerationService {
         QuizDetailGenDto suggestion = chatClient
                 .prompt()
                 .system("""
-                        Bạn là trợ lý tạo quiz detail.
+                        Bạn là trợ lý tạo quiz detail của CodeCampus.
                         Sinh QuizDetailGenDto gồm đúng %d câu hỏi.
                         title="%s"
                         description="%s"
@@ -133,9 +140,7 @@ public class ExerciseGenerationService {
     }
 
     public QuestionResponse generateQuestion(
-            String exerciseId,
-            int orderInQuiz,
-            Set<String> topicsQuiz)
+            QuestionPromptIn promptIn)
             throws BadRequestException {
 
         ParameterizedTypeReference<QuestionGenDto> type =
@@ -145,44 +150,44 @@ public class ExerciseGenerationService {
         QuestionGenDto suggestion = chatClient
                 .prompt()
                 .system("""
-                        Bạn là trợ lý tạo bài tập lập trình/quiz của CodeCampus.
-                        Sinh 1 **QuestionGenDto** (orderInQuiz=%d) kèm 4 option.
-                        Chủ đề quiz: %s.
-                        """.formatted(
-                        orderInQuiz,
-                        String.join(", ", topicsQuiz)))
+                        Bạn là trợ lý sinh câu hỏi của CodeCampus
+                        Sinh 1 QuestionGenDto (%s) %d điểm.
+                        Bối cảnh bài tập:
+                        - title: %s
+                        - desc: %s
+                        - diff: %s
+                        - duration: %d
+                        - tags: %s
+                        """.formatted(promptIn.questionType(),
+                        promptIn.points(),
+                        promptIn.title(), promptIn.description(),
+                        promptIn.difficulty(),
+                        promptIn.duration(),
+                        String.join(", ", promptIn.tags())))
                 .options(ChatOptions.builder().temperature(0.6).build())
                 .advisors(AIGenerationHelper.noMemory())
                 .call()
                 .entity(type);
 
-        QuestionDto questionDto = new QuestionDto(
-                suggestion.text(),
-                suggestion.questionType(),
-                suggestion.points(),
-                suggestion.orderInQuiz(),
-                suggestion.options().stream()
-                        .map(optionGenDto -> new OptionDto(
-                                optionGenDto.optionText(),
-                                optionGenDto.correct(),
-                                optionGenDto.order()))
-                        .toList());
+
+        QuestionDto questionDto =
+                exerciseMapper.mapQuestionGenToQuestionDto(suggestion);
 
         return submissionClient
-                .internalAddQuestion(exerciseId, questionDto)
+                .internalAddQuestion(promptIn.exerciseId(), questionDto)
                 .getResult();
     }
 
     public ExerciseResponse generateQuizExercise(
-            ExercisePromptIn exercisePromptIn,
-            int numQuestions) {
+            GenerateQuizPromptIn generateQuizPromptIn) {
 
         CreateExerciseRequest createExerciseRequest =
-                generateExercise(exercisePromptIn);
+                generateExercise(generateQuizPromptIn.exercisePromptIn());
 
         AddQuizDetailRequest addQuizDetailRequest = generateQuizDetail(
                 new QuizDetailPromptIn(
-                        createExerciseRequest, numQuestions
+                        createExerciseRequest,
+                        generateQuizPromptIn.numQuestions()
                 )
         );
 

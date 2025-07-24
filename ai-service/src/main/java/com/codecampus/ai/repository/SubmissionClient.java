@@ -1,16 +1,12 @@
 package com.codecampus.ai.repository;
 
+import com.codecampus.ai.config.AuthenticationRequestInterceptor;
+import com.codecampus.ai.config.FeignConfig;
 import com.codecampus.ai.dto.common.ApiResponse;
-import com.codecampus.ai.dto.request.exercise.AddQuizDetailRequest;
-import com.codecampus.ai.dto.request.exercise.CreateExerciseRequest;
 import com.codecampus.ai.dto.request.exercise.CreateQuizExerciseRequest;
-import com.codecampus.ai.dto.request.exercise.OptionDto;
 import com.codecampus.ai.dto.request.exercise.QuestionDto;
 import com.codecampus.ai.dto.response.ExerciseResponse;
-import com.codecampus.ai.dto.response.OptionResponse;
 import com.codecampus.ai.dto.response.QuestionResponse;
-import com.codecampus.ai.dto.response.QuizDetailResponse;
-import jakarta.validation.Valid;
 import org.apache.coyote.BadRequestException;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
@@ -21,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 @FeignClient(
         name = "submission-client",
         url = "${app.services.submission}",
-        path = "/internal"
+        path = "/internal",
+        configuration = {
+                AuthenticationRequestInterceptor.class, FeignConfig.class}
 )
 public interface SubmissionClient {
 
@@ -34,10 +32,10 @@ public interface SubmissionClient {
 
     @PostMapping(
             value = "/exercise/quiz",
-            produces = MediaType.APPLICATION_JSON_VALUE
-    )
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     ApiResponse<ExerciseResponse> internalCreateQuizExercise(
-            @RequestBody @Valid CreateQuizExerciseRequest request);
+            @RequestBody CreateQuizExerciseRequest request);
 
 //    @PostMapping(
 //            value = "/quiz/exercise/{exerciseId}/quiz-detail",
@@ -49,11 +47,11 @@ public interface SubmissionClient {
 
     @PostMapping(
             value = "/quiz/{exerciseId}/question",
-            produces = MediaType.APPLICATION_JSON_VALUE
-    )
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     ApiResponse<QuestionResponse> internalAddQuestion(
             @PathVariable("exerciseId") String exerciseId,
-            @RequestBody @Valid QuestionDto questionDto)
+            @RequestBody QuestionDto questionDto)
             throws BadRequestException;
 
 //    @PostMapping(
