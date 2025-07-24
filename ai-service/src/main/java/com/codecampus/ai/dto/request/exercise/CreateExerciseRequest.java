@@ -8,19 +8,19 @@ import java.time.Instant;
 import java.util.Set;
 
 public record CreateExerciseRequest(
-        String title,
-        String description,
-        Difficulty difficulty,
+        String title, //Cần cho input AI
+        String description, //Cần cho input AI
+        Difficulty difficulty, //Cần cho input AI
         ExerciseType exerciseType,
-        String orgId, // Có trong tổ chức hay không
+        String orgId,
         BigDecimal cost,
         Boolean freeForOrg,
         Instant startTime,
         Instant endTime,
-        int duration,
-        String allowDiscussionId, //Cho thảo luận ở forum nào không
-        Set<String> resourceIds, //Thuộc tài liệu nào
-        Set<String> tags,
+        int duration, //Cần cho input AI
+        String allowDiscussionId,
+        Set<String> resourceIds,
+        Set<String> tags, //Cần cho input AI
         Boolean allowAiQuestion
 ) {
 }

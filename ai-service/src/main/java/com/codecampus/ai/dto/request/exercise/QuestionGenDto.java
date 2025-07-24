@@ -6,8 +6,8 @@ import java.util.List;
 
 public record QuestionGenDto(
         String text,
-        QuestionType questionType,
-        int points,
+        QuestionType questionType, //Cần cho input AI
+        int points, //Cần cho input AI
         int orderInQuiz,
         List<OptionGenDto> options
 ) {

@@ -1,16 +1,18 @@
 package com.codecampus.ai.dto.request.exercise;
 
 import com.codecampus.ai.constant.exercise.Difficulty;
-import com.codecampus.ai.constant.exercise.ExerciseType;
+import com.codecampus.quiz.grpc.QuestionType;
 
 import java.util.Set;
 
-public record ExerciseGenDto(
+public record QuestionPromptIn(
+        String exerciseId,
         String title,
         String description,
         Difficulty difficulty,
-        ExerciseType exerciseType,
         int duration,
-        Set<String> tags
+        Set<String> tags,
+        QuestionType questionType,
+        int points
 ) {
 }

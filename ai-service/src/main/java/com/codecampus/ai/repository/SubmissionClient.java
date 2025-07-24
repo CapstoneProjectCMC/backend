@@ -3,6 +3,7 @@ package com.codecampus.ai.repository;
 import com.codecampus.ai.dto.common.ApiResponse;
 import com.codecampus.ai.dto.request.exercise.AddQuizDetailRequest;
 import com.codecampus.ai.dto.request.exercise.CreateExerciseRequest;
+import com.codecampus.ai.dto.request.exercise.CreateQuizExerciseRequest;
 import com.codecampus.ai.dto.request.exercise.OptionDto;
 import com.codecampus.ai.dto.request.exercise.QuestionDto;
 import com.codecampus.ai.dto.response.ExerciseResponse;
@@ -24,12 +25,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 )
 public interface SubmissionClient {
 
-    @PostMapping(
-            value = "exercise",
-            produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    ApiResponse<ExerciseResponse> createExercise(
-            @RequestBody CreateExerciseRequest request);
+//    @PostMapping(
+//            value = "exercise",
+//            produces = MediaType.APPLICATION_JSON_VALUE
+//    )
+//    ApiResponse<ExerciseResponse> internalCreateExercise(
+//            @RequestBody CreateExerciseRequest request);
 
     @PostMapping(
             value = "/exercise/quiz",
@@ -38,13 +39,13 @@ public interface SubmissionClient {
     ApiResponse<ExerciseResponse> internalCreateQuizExercise(
             @RequestBody @Valid CreateQuizExerciseRequest request);
 
-    @PostMapping(
-            value = "/quiz/exercise/{exerciseId}/quiz-detail",
-            produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    ApiResponse<QuizDetailResponse> internalAddQuizDetail(
-            @PathVariable("exerciseId") String exerciseId,
-            @RequestBody @Valid AddQuizDetailRequest addQuizRequest);
+//    @PostMapping(
+//            value = "/quiz/exercise/{exerciseId}/quiz-detail",
+//            produces = MediaType.APPLICATION_JSON_VALUE
+//    )
+//    ApiResponse<QuizDetailResponse> internalAddQuizDetail(
+//            @PathVariable("exerciseId") String exerciseId,
+//            @RequestBody @Valid AddQuizDetailRequest addQuizRequest);
 
     @PostMapping(
             value = "/quiz/{exerciseId}/question",
@@ -55,11 +56,11 @@ public interface SubmissionClient {
             @RequestBody @Valid QuestionDto questionDto)
             throws BadRequestException;
 
-    @PostMapping(
-            value = "/quiz/question/{questionId}/option",
-            produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    ApiResponse<OptionResponse> internalAddOption(
-            @PathVariable String questionId,
-            @RequestBody @Valid OptionDto request);
+//    @PostMapping(
+//            value = "/quiz/question/{questionId}/option",
+//            produces = MediaType.APPLICATION_JSON_VALUE
+//    )
+//    ApiResponse<OptionResponse> internalAddOption(
+//            @PathVariable String questionId,
+//            @RequestBody @Valid OptionDto request);
 }
