@@ -15,6 +15,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 
 import java.util.Comparator;
+import java.util.Optional;
 
 @Mapper(
         componentModel = "spring",
@@ -61,17 +62,22 @@ public interface QuestionMapper {
 
         if (question.getOptions() != null) {
             question.getOptions().stream()
+                    .filter(option -> !option.isDeleted())
                     .sorted(Comparator.comparing(Option::getOrder))
-                    .forEach(o -> builder.addOptions(toOptionDtoFromOption(o)));
+                    .forEach(option -> builder
+                            .addOptions(toOptionDtoFromOption(option)));
         }
         return builder.build();
     }
 
     default OptionDto toOptionDtoFromOption(Option option) {
         return OptionDto.newBuilder()
-                .setId(option.getId())
-                .setOptionText(option.getOptionText())
-                .setOrder(option.getOrder())
+                .setId(option.getId() == null ? "" : option.getId())
+                .setOptionText(
+                        Optional.ofNullable(option.getOptionText()).orElse(""))
+                .setOrder(
+                        Optional.ofNullable(option.getOrder()).orElse(""))
+                .setCorrect(option.isCorrect())
                 .build();
     }
 }

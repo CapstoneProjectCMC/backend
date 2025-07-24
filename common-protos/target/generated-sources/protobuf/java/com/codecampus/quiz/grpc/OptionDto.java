@@ -170,6 +170,17 @@ private static final long serialVersionUID = 0L;
     }
   }
 
+  public static final int CORRECT_FIELD_NUMBER = 4;
+  private boolean correct_ = false;
+  /**
+   * <code>bool correct = 4;</code>
+   * @return The correct.
+   */
+  @java.lang.Override
+  public boolean getCorrect() {
+    return correct_;
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -193,6 +204,9 @@ private static final long serialVersionUID = 0L;
     if (!com.google.protobuf.GeneratedMessage.isStringEmpty(order_)) {
       com.google.protobuf.GeneratedMessage.writeString(output, 3, order_);
     }
+    if (correct_ != false) {
+      output.writeBool(4, correct_);
+    }
     getUnknownFields().writeTo(output);
   }
 
@@ -210,6 +224,10 @@ private static final long serialVersionUID = 0L;
     }
     if (!com.google.protobuf.GeneratedMessage.isStringEmpty(order_)) {
       size += com.google.protobuf.GeneratedMessage.computeStringSize(3, order_);
+    }
+    if (correct_ != false) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBoolSize(4, correct_);
     }
     size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
@@ -232,6 +250,8 @@ private static final long serialVersionUID = 0L;
         .equals(other.getOptionText())) return false;
     if (!getOrder()
         .equals(other.getOrder())) return false;
+    if (getCorrect()
+        != other.getCorrect()) return false;
     if (!getUnknownFields().equals(other.getUnknownFields())) return false;
     return true;
   }
@@ -249,6 +269,9 @@ private static final long serialVersionUID = 0L;
     hash = (53 * hash) + getOptionText().hashCode();
     hash = (37 * hash) + ORDER_FIELD_NUMBER;
     hash = (53 * hash) + getOrder().hashCode();
+    hash = (37 * hash) + CORRECT_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+        getCorrect());
     hash = (29 * hash) + getUnknownFields().hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -383,6 +406,7 @@ private static final long serialVersionUID = 0L;
       id_ = "";
       optionText_ = "";
       order_ = "";
+      correct_ = false;
       return this;
     }
 
@@ -425,6 +449,9 @@ private static final long serialVersionUID = 0L;
       if (((from_bitField0_ & 0x00000004) != 0)) {
         result.order_ = order_;
       }
+      if (((from_bitField0_ & 0x00000008) != 0)) {
+        result.correct_ = correct_;
+      }
     }
 
     @java.lang.Override
@@ -453,6 +480,9 @@ private static final long serialVersionUID = 0L;
         order_ = other.order_;
         bitField0_ |= 0x00000004;
         onChanged();
+      }
+      if (other.getCorrect() != false) {
+        setCorrect(other.getCorrect());
       }
       this.mergeUnknownFields(other.getUnknownFields());
       onChanged();
@@ -495,6 +525,11 @@ private static final long serialVersionUID = 0L;
               bitField0_ |= 0x00000004;
               break;
             } // case 26
+            case 32: {
+              correct_ = input.readBool();
+              bitField0_ |= 0x00000008;
+              break;
+            } // case 32
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -744,6 +779,38 @@ private static final long serialVersionUID = 0L;
       checkByteStringIsUtf8(value);
       order_ = value;
       bitField0_ |= 0x00000004;
+      onChanged();
+      return this;
+    }
+
+    private boolean correct_ ;
+    /**
+     * <code>bool correct = 4;</code>
+     * @return The correct.
+     */
+    @java.lang.Override
+    public boolean getCorrect() {
+      return correct_;
+    }
+    /**
+     * <code>bool correct = 4;</code>
+     * @param value The correct to set.
+     * @return This builder for chaining.
+     */
+    public Builder setCorrect(boolean value) {
+
+      correct_ = value;
+      bitField0_ |= 0x00000008;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>bool correct = 4;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearCorrect() {
+      bitField0_ = (bitField0_ & ~0x00000008);
+      correct_ = false;
       onChanged();
       return this;
     }

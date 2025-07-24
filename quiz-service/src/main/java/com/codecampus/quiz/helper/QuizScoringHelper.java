@@ -31,6 +31,7 @@ public class QuizScoringHelper {
                 .studentId(request.getStudentId())
                 .submittedAt(Instant.now())
                 .totalPoints(quizExercise.getTotalPoints())
+                .timeTakenSeconds(request.getTimeTakenSeconds())
                 .build();
 
         for (AnswerDto answerDto : request.getAnswersList()) {
@@ -80,8 +81,9 @@ public class QuizScoringHelper {
                 .map(Option::getId)
                 .collect(toSet());
 
-        Set<String> selectedIds = Arrays.stream(
-                        answerDto.getSelectedOptionId().split(","))
+        Set<String> selectedIds = Arrays
+                .stream(answerDto.getSelectedOptionId().split(","))
+                .map(String::trim)
                 .collect(toSet());
 
         return correctIds.equals(selectedIds);
@@ -90,9 +92,11 @@ public class QuizScoringHelper {
     public static boolean checkFillBlank(
             Question question,
             AnswerDto answerDto) {
+        
         return question.getOptions().stream()
                 .filter(Option::isCorrect)
-                .map(Option::getOptionText)
+                .flatMap(o -> Arrays.stream(o.getOptionText().split("\\|")))
+                .map(String::trim)
                 .anyMatch(correctAnswer ->
                         correctAnswer.equalsIgnoreCase(
                                 answerDto.getAnswerText().trim()));

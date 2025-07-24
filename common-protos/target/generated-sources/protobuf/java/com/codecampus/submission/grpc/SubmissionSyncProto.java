@@ -54,18 +54,19 @@ public final class SubmissionSyncProto {
       "tobuf/empty.proto\"l\n\027QuizSubmissionAnswe" +
       "rDto\022\022\n\nquestionId\030\001 \001(\t\022\030\n\020selectedOpti" +
       "onId\030\002 \001(\t\022\022\n\nanswerText\030\003 \001(\t\022\017\n\007correc" +
-      "t\030\004 \001(\010\"\321\001\n\021QuizSubmissionDto\022\n\n\002id\030\001 \001(" +
+      "t\030\004 \001(\010\"\353\001\n\021QuizSubmissionDto\022\n\n\002id\030\001 \001(" +
       "\t\022\022\n\nexerciseId\030\002 \001(\t\022\021\n\tstudentId\030\003 \001(\t" +
       "\022\r\n\005score\030\004 \001(\005\022\023\n\013totalPoints\030\005 \001(\005\022/\n\013" +
       "submittedAt\030\006 \001(\0132\032.google.protobuf.Time" +
       "stamp\0224\n\007answers\030\007 \003(\0132#.submission.Quiz" +
-      "SubmissionAnswerDto\"P\n\033CreateQuizSubmiss" +
-      "ionRequest\0221\n\nsubmission\030\001 \001(\0132\035.submiss" +
-      "ion.QuizSubmissionDto2p\n\025SubmissionSyncS" +
-      "ervice\022W\n\024CreateQuizSubmission\022\'.submiss" +
-      "ion.CreateQuizSubmissionRequest\032\026.google" +
-      ".protobuf.EmptyB7\n\036com.codecampus.submis" +
-      "sion.grpcB\023SubmissionSyncProtoP\001b\006proto3"
+      "SubmissionAnswerDto\022\030\n\020timeTakenSeconds\030" +
+      "\010 \001(\005\"P\n\033CreateQuizSubmissionRequest\0221\n\n" +
+      "submission\030\001 \001(\0132\035.submission.QuizSubmis" +
+      "sionDto2p\n\025SubmissionSyncService\022W\n\024Crea" +
+      "teQuizSubmission\022\'.submission.CreateQuiz" +
+      "SubmissionRequest\032\026.google.protobuf.Empt" +
+      "yB7\n\036com.codecampus.submission.grpcB\023Sub" +
+      "missionSyncProtoP\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -84,7 +85,7 @@ public final class SubmissionSyncProto {
     internal_static_submission_QuizSubmissionDto_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_submission_QuizSubmissionDto_descriptor,
-        new java.lang.String[] { "Id", "ExerciseId", "StudentId", "Score", "TotalPoints", "SubmittedAt", "Answers", });
+        new java.lang.String[] { "Id", "ExerciseId", "StudentId", "Score", "TotalPoints", "SubmittedAt", "Answers", "TimeTakenSeconds", });
     internal_static_submission_CreateQuizSubmissionRequest_descriptor =
       getDescriptor().getMessageTypes().get(2);
     internal_static_submission_CreateQuizSubmissionRequest_fieldAccessorTable = new

@@ -72,16 +72,16 @@ private static final long serialVersionUID = 0L;
 
   public static final int QUESTIONS_FIELD_NUMBER = 2;
   @SuppressWarnings("serial")
-  private java.util.List<com.codecampus.quiz.grpc.QuestionDto> questions_;
+  private java.util.List<com.codecampus.quiz.grpc.QuestionDtoLoadResponse> questions_;
   /**
    * <pre>
    * OptionDto.correct bị lược bỏ
    * </pre>
    *
-   * <code>repeated .quiz.QuestionDto questions = 2;</code>
+   * <code>repeated .quiz.QuestionDtoLoadResponse questions = 2;</code>
    */
   @java.lang.Override
-  public java.util.List<com.codecampus.quiz.grpc.QuestionDto> getQuestionsList() {
+  public java.util.List<com.codecampus.quiz.grpc.QuestionDtoLoadResponse> getQuestionsList() {
     return questions_;
   }
   /**
@@ -89,10 +89,10 @@ private static final long serialVersionUID = 0L;
    * OptionDto.correct bị lược bỏ
    * </pre>
    *
-   * <code>repeated .quiz.QuestionDto questions = 2;</code>
+   * <code>repeated .quiz.QuestionDtoLoadResponse questions = 2;</code>
    */
   @java.lang.Override
-  public java.util.List<? extends com.codecampus.quiz.grpc.QuestionDtoOrBuilder> 
+  public java.util.List<? extends com.codecampus.quiz.grpc.QuestionDtoLoadResponseOrBuilder> 
       getQuestionsOrBuilderList() {
     return questions_;
   }
@@ -101,7 +101,7 @@ private static final long serialVersionUID = 0L;
    * OptionDto.correct bị lược bỏ
    * </pre>
    *
-   * <code>repeated .quiz.QuestionDto questions = 2;</code>
+   * <code>repeated .quiz.QuestionDtoLoadResponse questions = 2;</code>
    */
   @java.lang.Override
   public int getQuestionsCount() {
@@ -112,10 +112,10 @@ private static final long serialVersionUID = 0L;
    * OptionDto.correct bị lược bỏ
    * </pre>
    *
-   * <code>repeated .quiz.QuestionDto questions = 2;</code>
+   * <code>repeated .quiz.QuestionDtoLoadResponse questions = 2;</code>
    */
   @java.lang.Override
-  public com.codecampus.quiz.grpc.QuestionDto getQuestions(int index) {
+  public com.codecampus.quiz.grpc.QuestionDtoLoadResponse getQuestions(int index) {
     return questions_.get(index);
   }
   /**
@@ -123,10 +123,10 @@ private static final long serialVersionUID = 0L;
    * OptionDto.correct bị lược bỏ
    * </pre>
    *
-   * <code>repeated .quiz.QuestionDto questions = 2;</code>
+   * <code>repeated .quiz.QuestionDtoLoadResponse questions = 2;</code>
    */
   @java.lang.Override
-  public com.codecampus.quiz.grpc.QuestionDtoOrBuilder getQuestionsOrBuilder(
+  public com.codecampus.quiz.grpc.QuestionDtoLoadResponseOrBuilder getQuestionsOrBuilder(
       int index) {
     return questions_.get(index);
   }
@@ -490,9 +490,9 @@ private static final long serialVersionUID = 0L;
               break;
             } // case 10
             case 18: {
-              com.codecampus.quiz.grpc.QuestionDto m =
+              com.codecampus.quiz.grpc.QuestionDtoLoadResponse m =
                   input.readMessage(
-                      com.codecampus.quiz.grpc.QuestionDto.parser(),
+                      com.codecampus.quiz.grpc.QuestionDtoLoadResponse.parser(),
                       extensionRegistry);
               if (questionsBuilder_ == null) {
                 ensureQuestionsIsMutable();
@@ -640,26 +640,26 @@ private static final long serialVersionUID = 0L;
       return exerciseBuilder_;
     }
 
-    private java.util.List<com.codecampus.quiz.grpc.QuestionDto> questions_ =
+    private java.util.List<com.codecampus.quiz.grpc.QuestionDtoLoadResponse> questions_ =
       java.util.Collections.emptyList();
     private void ensureQuestionsIsMutable() {
       if (!((bitField0_ & 0x00000002) != 0)) {
-        questions_ = new java.util.ArrayList<com.codecampus.quiz.grpc.QuestionDto>(questions_);
+        questions_ = new java.util.ArrayList<com.codecampus.quiz.grpc.QuestionDtoLoadResponse>(questions_);
         bitField0_ |= 0x00000002;
        }
     }
 
     private com.google.protobuf.RepeatedFieldBuilder<
-        com.codecampus.quiz.grpc.QuestionDto, com.codecampus.quiz.grpc.QuestionDto.Builder, com.codecampus.quiz.grpc.QuestionDtoOrBuilder> questionsBuilder_;
+        com.codecampus.quiz.grpc.QuestionDtoLoadResponse, com.codecampus.quiz.grpc.QuestionDtoLoadResponse.Builder, com.codecampus.quiz.grpc.QuestionDtoLoadResponseOrBuilder> questionsBuilder_;
 
     /**
      * <pre>
      * OptionDto.correct bị lược bỏ
      * </pre>
      *
-     * <code>repeated .quiz.QuestionDto questions = 2;</code>
+     * <code>repeated .quiz.QuestionDtoLoadResponse questions = 2;</code>
      */
-    public java.util.List<com.codecampus.quiz.grpc.QuestionDto> getQuestionsList() {
+    public java.util.List<com.codecampus.quiz.grpc.QuestionDtoLoadResponse> getQuestionsList() {
       if (questionsBuilder_ == null) {
         return java.util.Collections.unmodifiableList(questions_);
       } else {
@@ -671,7 +671,7 @@ private static final long serialVersionUID = 0L;
      * OptionDto.correct bị lược bỏ
      * </pre>
      *
-     * <code>repeated .quiz.QuestionDto questions = 2;</code>
+     * <code>repeated .quiz.QuestionDtoLoadResponse questions = 2;</code>
      */
     public int getQuestionsCount() {
       if (questionsBuilder_ == null) {
@@ -685,9 +685,9 @@ private static final long serialVersionUID = 0L;
      * OptionDto.correct bị lược bỏ
      * </pre>
      *
-     * <code>repeated .quiz.QuestionDto questions = 2;</code>
+     * <code>repeated .quiz.QuestionDtoLoadResponse questions = 2;</code>
      */
-    public com.codecampus.quiz.grpc.QuestionDto getQuestions(int index) {
+    public com.codecampus.quiz.grpc.QuestionDtoLoadResponse getQuestions(int index) {
       if (questionsBuilder_ == null) {
         return questions_.get(index);
       } else {
@@ -699,10 +699,10 @@ private static final long serialVersionUID = 0L;
      * OptionDto.correct bị lược bỏ
      * </pre>
      *
-     * <code>repeated .quiz.QuestionDto questions = 2;</code>
+     * <code>repeated .quiz.QuestionDtoLoadResponse questions = 2;</code>
      */
     public Builder setQuestions(
-        int index, com.codecampus.quiz.grpc.QuestionDto value) {
+        int index, com.codecampus.quiz.grpc.QuestionDtoLoadResponse value) {
       if (questionsBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
@@ -720,10 +720,10 @@ private static final long serialVersionUID = 0L;
      * OptionDto.correct bị lược bỏ
      * </pre>
      *
-     * <code>repeated .quiz.QuestionDto questions = 2;</code>
+     * <code>repeated .quiz.QuestionDtoLoadResponse questions = 2;</code>
      */
     public Builder setQuestions(
-        int index, com.codecampus.quiz.grpc.QuestionDto.Builder builderForValue) {
+        int index, com.codecampus.quiz.grpc.QuestionDtoLoadResponse.Builder builderForValue) {
       if (questionsBuilder_ == null) {
         ensureQuestionsIsMutable();
         questions_.set(index, builderForValue.build());
@@ -738,9 +738,9 @@ private static final long serialVersionUID = 0L;
      * OptionDto.correct bị lược bỏ
      * </pre>
      *
-     * <code>repeated .quiz.QuestionDto questions = 2;</code>
+     * <code>repeated .quiz.QuestionDtoLoadResponse questions = 2;</code>
      */
-    public Builder addQuestions(com.codecampus.quiz.grpc.QuestionDto value) {
+    public Builder addQuestions(com.codecampus.quiz.grpc.QuestionDtoLoadResponse value) {
       if (questionsBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
@@ -758,10 +758,10 @@ private static final long serialVersionUID = 0L;
      * OptionDto.correct bị lược bỏ
      * </pre>
      *
-     * <code>repeated .quiz.QuestionDto questions = 2;</code>
+     * <code>repeated .quiz.QuestionDtoLoadResponse questions = 2;</code>
      */
     public Builder addQuestions(
-        int index, com.codecampus.quiz.grpc.QuestionDto value) {
+        int index, com.codecampus.quiz.grpc.QuestionDtoLoadResponse value) {
       if (questionsBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
@@ -779,10 +779,10 @@ private static final long serialVersionUID = 0L;
      * OptionDto.correct bị lược bỏ
      * </pre>
      *
-     * <code>repeated .quiz.QuestionDto questions = 2;</code>
+     * <code>repeated .quiz.QuestionDtoLoadResponse questions = 2;</code>
      */
     public Builder addQuestions(
-        com.codecampus.quiz.grpc.QuestionDto.Builder builderForValue) {
+        com.codecampus.quiz.grpc.QuestionDtoLoadResponse.Builder builderForValue) {
       if (questionsBuilder_ == null) {
         ensureQuestionsIsMutable();
         questions_.add(builderForValue.build());
@@ -797,10 +797,10 @@ private static final long serialVersionUID = 0L;
      * OptionDto.correct bị lược bỏ
      * </pre>
      *
-     * <code>repeated .quiz.QuestionDto questions = 2;</code>
+     * <code>repeated .quiz.QuestionDtoLoadResponse questions = 2;</code>
      */
     public Builder addQuestions(
-        int index, com.codecampus.quiz.grpc.QuestionDto.Builder builderForValue) {
+        int index, com.codecampus.quiz.grpc.QuestionDtoLoadResponse.Builder builderForValue) {
       if (questionsBuilder_ == null) {
         ensureQuestionsIsMutable();
         questions_.add(index, builderForValue.build());
@@ -815,10 +815,10 @@ private static final long serialVersionUID = 0L;
      * OptionDto.correct bị lược bỏ
      * </pre>
      *
-     * <code>repeated .quiz.QuestionDto questions = 2;</code>
+     * <code>repeated .quiz.QuestionDtoLoadResponse questions = 2;</code>
      */
     public Builder addAllQuestions(
-        java.lang.Iterable<? extends com.codecampus.quiz.grpc.QuestionDto> values) {
+        java.lang.Iterable<? extends com.codecampus.quiz.grpc.QuestionDtoLoadResponse> values) {
       if (questionsBuilder_ == null) {
         ensureQuestionsIsMutable();
         com.google.protobuf.AbstractMessageLite.Builder.addAll(
@@ -834,7 +834,7 @@ private static final long serialVersionUID = 0L;
      * OptionDto.correct bị lược bỏ
      * </pre>
      *
-     * <code>repeated .quiz.QuestionDto questions = 2;</code>
+     * <code>repeated .quiz.QuestionDtoLoadResponse questions = 2;</code>
      */
     public Builder clearQuestions() {
       if (questionsBuilder_ == null) {
@@ -851,7 +851,7 @@ private static final long serialVersionUID = 0L;
      * OptionDto.correct bị lược bỏ
      * </pre>
      *
-     * <code>repeated .quiz.QuestionDto questions = 2;</code>
+     * <code>repeated .quiz.QuestionDtoLoadResponse questions = 2;</code>
      */
     public Builder removeQuestions(int index) {
       if (questionsBuilder_ == null) {
@@ -868,9 +868,9 @@ private static final long serialVersionUID = 0L;
      * OptionDto.correct bị lược bỏ
      * </pre>
      *
-     * <code>repeated .quiz.QuestionDto questions = 2;</code>
+     * <code>repeated .quiz.QuestionDtoLoadResponse questions = 2;</code>
      */
-    public com.codecampus.quiz.grpc.QuestionDto.Builder getQuestionsBuilder(
+    public com.codecampus.quiz.grpc.QuestionDtoLoadResponse.Builder getQuestionsBuilder(
         int index) {
       return internalGetQuestionsFieldBuilder().getBuilder(index);
     }
@@ -879,9 +879,9 @@ private static final long serialVersionUID = 0L;
      * OptionDto.correct bị lược bỏ
      * </pre>
      *
-     * <code>repeated .quiz.QuestionDto questions = 2;</code>
+     * <code>repeated .quiz.QuestionDtoLoadResponse questions = 2;</code>
      */
-    public com.codecampus.quiz.grpc.QuestionDtoOrBuilder getQuestionsOrBuilder(
+    public com.codecampus.quiz.grpc.QuestionDtoLoadResponseOrBuilder getQuestionsOrBuilder(
         int index) {
       if (questionsBuilder_ == null) {
         return questions_.get(index);  } else {
@@ -893,9 +893,9 @@ private static final long serialVersionUID = 0L;
      * OptionDto.correct bị lược bỏ
      * </pre>
      *
-     * <code>repeated .quiz.QuestionDto questions = 2;</code>
+     * <code>repeated .quiz.QuestionDtoLoadResponse questions = 2;</code>
      */
-    public java.util.List<? extends com.codecampus.quiz.grpc.QuestionDtoOrBuilder> 
+    public java.util.List<? extends com.codecampus.quiz.grpc.QuestionDtoLoadResponseOrBuilder> 
          getQuestionsOrBuilderList() {
       if (questionsBuilder_ != null) {
         return questionsBuilder_.getMessageOrBuilderList();
@@ -908,41 +908,41 @@ private static final long serialVersionUID = 0L;
      * OptionDto.correct bị lược bỏ
      * </pre>
      *
-     * <code>repeated .quiz.QuestionDto questions = 2;</code>
+     * <code>repeated .quiz.QuestionDtoLoadResponse questions = 2;</code>
      */
-    public com.codecampus.quiz.grpc.QuestionDto.Builder addQuestionsBuilder() {
+    public com.codecampus.quiz.grpc.QuestionDtoLoadResponse.Builder addQuestionsBuilder() {
       return internalGetQuestionsFieldBuilder().addBuilder(
-          com.codecampus.quiz.grpc.QuestionDto.getDefaultInstance());
+          com.codecampus.quiz.grpc.QuestionDtoLoadResponse.getDefaultInstance());
     }
     /**
      * <pre>
      * OptionDto.correct bị lược bỏ
      * </pre>
      *
-     * <code>repeated .quiz.QuestionDto questions = 2;</code>
+     * <code>repeated .quiz.QuestionDtoLoadResponse questions = 2;</code>
      */
-    public com.codecampus.quiz.grpc.QuestionDto.Builder addQuestionsBuilder(
+    public com.codecampus.quiz.grpc.QuestionDtoLoadResponse.Builder addQuestionsBuilder(
         int index) {
       return internalGetQuestionsFieldBuilder().addBuilder(
-          index, com.codecampus.quiz.grpc.QuestionDto.getDefaultInstance());
+          index, com.codecampus.quiz.grpc.QuestionDtoLoadResponse.getDefaultInstance());
     }
     /**
      * <pre>
      * OptionDto.correct bị lược bỏ
      * </pre>
      *
-     * <code>repeated .quiz.QuestionDto questions = 2;</code>
+     * <code>repeated .quiz.QuestionDtoLoadResponse questions = 2;</code>
      */
-    public java.util.List<com.codecampus.quiz.grpc.QuestionDto.Builder> 
+    public java.util.List<com.codecampus.quiz.grpc.QuestionDtoLoadResponse.Builder> 
          getQuestionsBuilderList() {
       return internalGetQuestionsFieldBuilder().getBuilderList();
     }
     private com.google.protobuf.RepeatedFieldBuilder<
-        com.codecampus.quiz.grpc.QuestionDto, com.codecampus.quiz.grpc.QuestionDto.Builder, com.codecampus.quiz.grpc.QuestionDtoOrBuilder> 
+        com.codecampus.quiz.grpc.QuestionDtoLoadResponse, com.codecampus.quiz.grpc.QuestionDtoLoadResponse.Builder, com.codecampus.quiz.grpc.QuestionDtoLoadResponseOrBuilder> 
         internalGetQuestionsFieldBuilder() {
       if (questionsBuilder_ == null) {
         questionsBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
-            com.codecampus.quiz.grpc.QuestionDto, com.codecampus.quiz.grpc.QuestionDto.Builder, com.codecampus.quiz.grpc.QuestionDtoOrBuilder>(
+            com.codecampus.quiz.grpc.QuestionDtoLoadResponse, com.codecampus.quiz.grpc.QuestionDtoLoadResponse.Builder, com.codecampus.quiz.grpc.QuestionDtoLoadResponseOrBuilder>(
                 questions_,
                 ((bitField0_ & 0x00000002) != 0),
                 getParentForChildren(),

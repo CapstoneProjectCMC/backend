@@ -1,43 +1,47 @@
 package com.codecampus.submission.configuration.audit;
 
 import com.codecampus.submission.entity.audit.SoftDeletable;
-import java.time.Instant;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.EmptyInterceptor;
 import org.hibernate.type.Type;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-@Slf4j
-public class SoftDeleteInterceptor extends EmptyInterceptor
-{
-  @Override
-  public void onDelete(
-      Object entity,
-      Object id,
-      Object[] state,
-      String[] propertyNames,
-      Type[] types)
-  {
-    if (entity instanceof SoftDeletable soft)
-    {
-      // Chặn DELETE -> UPDATE
-      soft.markDeleted(SecurityContextHolder
-          .getContext()
-          .getAuthentication()
-          .getName());
+import java.time.Instant;
+import java.util.Optional;
 
-      // Đẩy giá trị vào state[] để Hibernate cập nhật DB
-      for (int i = 0; i < propertyNames.length; i++)
-      {
-        switch (propertyNames[i])
-        {
-          case "deletedBy" -> state[i] = soft.getDeletedBy();
-          case "deletedAt" -> state[i] = Instant.now();
+@Slf4j
+public class SoftDeleteInterceptor extends EmptyInterceptor {
+    @Override
+    public void onDelete(
+            Object entity,
+            Object id,
+            Object[] state,
+            String[] propertyNames,
+            Type[] types) {
+
+        if (!(entity instanceof SoftDeletable soft)) {
+            super.onDelete(entity, id, state, propertyNames, types);
+            return;
         }
-      }
-    } else
-    {
-      super.onDelete(entity, id, state, propertyNames, types);
+
+        // Chặn DELETE -> UPDATE
+        String by = Optional.ofNullable(SecurityContextHolder
+                        .getContext()
+                        .getAuthentication())
+                .map(Authentication::getName)
+                .orElse("system");
+
+        soft.markDeleted(by);
+
+        // Đẩy giá trị vào state[] để Hibernate cập nhật DB
+        Instant now = Instant.now();
+        for (int i = 0; i < propertyNames.length; i++) {
+            switch (propertyNames[i]) {
+                case "deletedBy" -> state[i] = by;
+                case "deletedAt" -> state[i] = now;
+            }
+        }
+
     }
-  }
 }

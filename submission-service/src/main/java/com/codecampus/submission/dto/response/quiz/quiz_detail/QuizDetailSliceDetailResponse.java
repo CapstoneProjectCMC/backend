@@ -1,4 +1,4 @@
-package com.codecampus.submission.dto.response.quiz.detail;
+package com.codecampus.submission.dto.response.quiz.quiz_detail;
 
 import lombok.Builder;
 
@@ -18,7 +18,7 @@ public record QuizDetailSliceDetailResponse(
         long totalElements,
 
         List<QuestionDetailResponse> questions,
-        
+
         String createdBy,
         Instant createdAt,
         String updatedBy,

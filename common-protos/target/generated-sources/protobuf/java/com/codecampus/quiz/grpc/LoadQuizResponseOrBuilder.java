@@ -29,24 +29,24 @@ public interface LoadQuizResponseOrBuilder extends
    * OptionDto.correct bị lược bỏ
    * </pre>
    *
-   * <code>repeated .quiz.QuestionDto questions = 2;</code>
+   * <code>repeated .quiz.QuestionDtoLoadResponse questions = 2;</code>
    */
-  java.util.List<com.codecampus.quiz.grpc.QuestionDto> 
+  java.util.List<com.codecampus.quiz.grpc.QuestionDtoLoadResponse> 
       getQuestionsList();
   /**
    * <pre>
    * OptionDto.correct bị lược bỏ
    * </pre>
    *
-   * <code>repeated .quiz.QuestionDto questions = 2;</code>
+   * <code>repeated .quiz.QuestionDtoLoadResponse questions = 2;</code>
    */
-  com.codecampus.quiz.grpc.QuestionDto getQuestions(int index);
+  com.codecampus.quiz.grpc.QuestionDtoLoadResponse getQuestions(int index);
   /**
    * <pre>
    * OptionDto.correct bị lược bỏ
    * </pre>
    *
-   * <code>repeated .quiz.QuestionDto questions = 2;</code>
+   * <code>repeated .quiz.QuestionDtoLoadResponse questions = 2;</code>
    */
   int getQuestionsCount();
   /**
@@ -54,17 +54,17 @@ public interface LoadQuizResponseOrBuilder extends
    * OptionDto.correct bị lược bỏ
    * </pre>
    *
-   * <code>repeated .quiz.QuestionDto questions = 2;</code>
+   * <code>repeated .quiz.QuestionDtoLoadResponse questions = 2;</code>
    */
-  java.util.List<? extends com.codecampus.quiz.grpc.QuestionDtoOrBuilder> 
+  java.util.List<? extends com.codecampus.quiz.grpc.QuestionDtoLoadResponseOrBuilder> 
       getQuestionsOrBuilderList();
   /**
    * <pre>
    * OptionDto.correct bị lược bỏ
    * </pre>
    *
-   * <code>repeated .quiz.QuestionDto questions = 2;</code>
+   * <code>repeated .quiz.QuestionDtoLoadResponse questions = 2;</code>
    */
-  com.codecampus.quiz.grpc.QuestionDtoOrBuilder getQuestionsOrBuilder(
+  com.codecampus.quiz.grpc.QuestionDtoLoadResponseOrBuilder getQuestionsOrBuilder(
       int index);
 }

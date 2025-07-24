@@ -46,6 +46,8 @@ public class QuizSubmission extends AuditMetadata {
     int score;
     int totalPoints;
 
+    int timeTakenSeconds;
+
     @Builder.Default
     @JsonManagedReference
     @OneToMany(

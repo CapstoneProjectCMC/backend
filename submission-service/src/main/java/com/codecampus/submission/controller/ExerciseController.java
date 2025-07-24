@@ -5,8 +5,9 @@ import com.codecampus.submission.dto.common.ApiResponse;
 import com.codecampus.submission.dto.common.PageResponse;
 import com.codecampus.submission.dto.request.CreateExerciseRequest;
 import com.codecampus.submission.dto.request.UpdateExerciseRequest;
+import com.codecampus.submission.dto.request.quiz.CreateQuizExerciseRequest;
 import com.codecampus.submission.dto.response.quiz.ExerciseQuizResponse;
-import com.codecampus.submission.dto.response.quiz.detail.ExerciseQuizDetailResponse;
+import com.codecampus.submission.dto.response.quiz.quiz_detail.ExerciseQuizDetailResponse;
 import com.codecampus.submission.service.ExerciseService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -14,6 +15,7 @@ import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,10 +37,21 @@ public class ExerciseController {
     ApiResponse<Void> createExercise(
             @RequestBody @Valid CreateExerciseRequest request) {
 
-        exerciseService.createExercise(request);
+        exerciseService.createExercise(request, false);
 
         return ApiResponse.<Void>builder()
                 .message("Tạo bài tập thành công!")
+                .build();
+    }
+
+    @PostMapping("/exercise/quiz")
+    ApiResponse<Void> createQuizExercise(
+            @RequestBody @Valid CreateQuizExerciseRequest request) {
+
+        exerciseService.createQuizExercise(request, false);
+
+        return ApiResponse.<Void>builder()
+                .message("Tạo bài tập quiz thành công!")
                 .build();
     }
 
@@ -52,6 +65,15 @@ public class ExerciseController {
 
         return ApiResponse.<Void>builder()
                 .message("Sửa exercise thành công!")
+                .build();
+    }
+
+    @DeleteMapping("/exercise/{id}")
+    ApiResponse<Void> softDeleteExercise(
+            @PathVariable String id) {
+        exerciseService.softDeleteExercise(id);
+        return ApiResponse.<Void>builder()
+                .message("Đã xoá bài tập!")
                 .build();
     }
 

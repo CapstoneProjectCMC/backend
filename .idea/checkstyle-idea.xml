@@ -3,7 +3,7 @@
   <component name="CheckStyle-IDEA" serialisationVersion="2">
     <checkstyleVersion>10.21.3</checkstyleVersion>
     <scanScope>Everything</scanScope>
-    <copyLibs>true</copyLibs>
+    <suppressErrors>true</suppressErrors>
     <option name="thirdPartyClasspath" />
     <option name="activeLocationIds" />
     <option name="locations">

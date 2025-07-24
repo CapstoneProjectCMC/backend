@@ -61,6 +61,7 @@ public class Question extends AuditMetadata {
             orphanRemoval = true
     )
     @OrderBy("order ASC")
+    @Builder.Default
     List<Option> options = new ArrayList<>();
 
     public Optional<Option> findOptionById(String optionId) {

@@ -84,6 +84,27 @@ spring:
             - name: RateLimiter
               args:
                 routeId: quiz_service
+        - id: ai_service
+          #          uri: https://localhost:8086
+          uri: http://localhost:8086
+          predicates:
+            - Path=${app.api-prefix}/ai/**
+          filters:
+            - StripPrefix=2
+            - name: RateLimiter
+              args:
+                routeId: ai_service
+        - id: search_service
+          #          uri: https://localhost:8087
+          uri: http://localhost:8087
+          predicates:
+            - Path=${app.api-prefix}/search/**
+          filters:
+            - StripPrefix=2
+            - name: RateLimiter
+              args:
+                routeId: search_service
+
 # Cấu hình rate limiter
 rate-limiter:
   default:

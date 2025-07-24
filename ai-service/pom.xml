@@ -62,7 +62,11 @@
             <groupId>org.springframework.ai</groupId>
             <artifactId>spring-ai-starter-model-openai</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-starter-model-chat-memory-repository-jdbc</artifactId>
+        </dependency>
+        
         <!-- ===== Spring Boot starters ===== -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -71,6 +75,10 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -101,6 +109,12 @@
         <dependency>
             <groupId>org.springframework.kafka</groupId>
             <artifactId>spring-kafka</artifactId>
+        </dependency>
+
+        <!-- ===== Jackson ===== -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
         </dependency>
 
         <!-- ===== gRPC & Protobuf ===== -->
@@ -154,6 +168,12 @@
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
             <version>${jackson.version}</version>
+        </dependency>
+
+        <!-- ===== Database ===== -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
         </dependency>
 
         <!-- ===== Security / JWT extras ===== -->
@@ -279,12 +299,16 @@
                 <version>${jacoco.version}</version>
                 <executions>
                     <execution>
-                        <goals><goal>prepare-agent</goal></goals>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
                     </execution>
                     <execution>
                         <id>report</id>
                         <phase>prepare-package</phase>
-                        <goals><goal>report</goal></goals>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
                     </execution>
                 </executions>
                 <configuration>
@@ -306,7 +330,9 @@
                     <execution>
                         <id>detect</id>
                         <phase>initialize</phase>
-                        <goals><goal>detect</goal></goals>
+                        <goals>
+                            <goal>detect</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>
@@ -328,7 +354,10 @@
                 <executions>
                     <execution>
                         <id>proto-compile</id>
-                        <goals><goal>compile</goal><goal>compile-custom</goal></goals>
+                        <goals>
+                            <goal>compile</goal>
+                            <goal>compile-custom</goal>
+                        </goals>
                         <configuration>
                             <pluginParameter>jakarta_omit,@generated=omit</pluginParameter>
                         </configuration>

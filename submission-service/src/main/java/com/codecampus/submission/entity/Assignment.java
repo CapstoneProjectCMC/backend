@@ -1,6 +1,7 @@
 package com.codecampus.submission.entity;
 
 import com.codecampus.submission.entity.audit.AuditMetadata;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -10,7 +11,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import java.time.Instant;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,6 +22,8 @@ import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
+import java.time.Instant;
+
 @Getter
 @Setter
 @Builder
@@ -31,25 +33,25 @@ import org.hibernate.annotations.Where;
 @Entity
 @Table(name = "exercise_assignment")
 @SQLDelete(sql = "UPDATE exercise_assignment " +
-    "SET deleted_by = ? , deleted_at = now() " +
-    "WHERE id = ?")
+        "SET deleted_by = ? , deleted_at = now() " +
+        "WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
 @EqualsAndHashCode(callSuper = false)
-public class Assignment extends AuditMetadata
-{
-  @Id
-  @GeneratedValue(strategy = GenerationType.UUID)
-  String id;
+public class Assignment extends AuditMetadata {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    String id;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "exercise_id")
-  Exercise exercise;
+    @JsonManagedReference
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "exercise_id")
+    Exercise exercise;
 
-  @Column(name = "student_id", nullable = false)
-  String studentId;          // userId (sub của HS)
+    @Column(name = "student_id", nullable = false)
+    String studentId;          // userId (sub của HS)
 
-  @Column(name = "due_at")
-  Instant dueAt;
+    @Column(name = "due_at")
+    Instant dueAt;
 
-  boolean completed;         // cập nhật khi pass
+    boolean completed;         // cập nhật khi pass
 }

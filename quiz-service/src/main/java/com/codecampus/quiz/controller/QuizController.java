@@ -2,7 +2,6 @@ package com.codecampus.quiz.controller;
 
 import com.codecampus.quiz.dto.common.ApiResponse;
 import com.codecampus.quiz.grpc.LoadQuizResponse;
-import com.codecampus.quiz.grpc.QuizExerciseDto;
 import com.codecampus.quiz.grpc.SubmitQuizRequest;
 import com.codecampus.quiz.grpc.SubmitQuizResponse;
 import com.codecampus.quiz.service.QuizService;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -26,26 +24,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-class QuizController {
+public class QuizController {
 
     QuizService quizService;
 
-    @GetMapping("/{quizId}")
-    ApiResponse<QuizExerciseDto> getQuiz(
-            @PathVariable String quizId) {
-        return ApiResponse.<QuizExerciseDto>builder()
-                .result(quizService.getQuizExerciseDto(quizId))
-                .message("Lấy quiz thành công!")
-                .build();
-    }
-
     @GetMapping("/{quizId}/load")
     ApiResponse<LoadQuizResponse> loadQuiz(
-            @PathVariable String quizId,
-            @RequestParam("student") String studentId) {
+            @PathVariable String quizId) {
 
         return ApiResponse.<LoadQuizResponse>builder()
-                .result(quizService.loadQuiz(quizId, studentId))
+                .result(quizService.loadQuiz(quizId))
                 .message("Load quiz thành công!")
                 .build();
     }

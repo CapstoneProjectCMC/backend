@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-07-17T14:58:46+0700",
+    date = "2025-07-24T15:47:48+0700",
     comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.7 (Oracle Corporation)"
 )
 @Component
@@ -39,6 +39,24 @@ public class QuizMapperImpl implements QuizMapper {
     }
 
     @Override
+    public void patchOptionDtoToOption(OptionDto optionDto, Option option) {
+        if ( optionDto == null ) {
+            return;
+        }
+
+        if ( optionDto.getId() != null ) {
+            option.setId( optionDto.getId() );
+        }
+        if ( optionDto.getOptionText() != null ) {
+            option.setOptionText( optionDto.getOptionText() );
+        }
+        option.setCorrect( optionDto.getCorrect() );
+        if ( optionDto.getOrder() != null ) {
+            option.setOrder( optionDto.getOrder() );
+        }
+    }
+
+    @Override
     public void patchQuizExerciseDtoToQuizExercise(QuizExerciseDto quizExerciseDto, QuizExercise quizExercise) {
         if ( quizExerciseDto == null ) {
             return;
@@ -55,6 +73,7 @@ public class QuizMapperImpl implements QuizMapper {
         }
         quizExercise.setTotalPoints( quizExerciseDto.getTotalPoints() );
         quizExercise.setNumQuestions( quizExerciseDto.getNumQuestions() );
+        quizExercise.setDuration( quizExerciseDto.getDuration() );
     }
 
     @Override
@@ -70,6 +89,7 @@ public class QuizMapperImpl implements QuizMapper {
         quizExercise.description( quizExerciseDto.getDescription() );
         quizExercise.totalPoints( quizExerciseDto.getTotalPoints() );
         quizExercise.numQuestions( quizExerciseDto.getNumQuestions() );
+        quizExercise.duration( quizExerciseDto.getDuration() );
 
         return quizExercise.build();
     }
@@ -106,6 +126,7 @@ public class QuizMapperImpl implements QuizMapper {
 
         option.id( optionDto.getId() );
         option.optionText( optionDto.getOptionText() );
+        option.correct( optionDto.getCorrect() );
         option.order( optionDto.getOrder() );
 
         return option.build();
