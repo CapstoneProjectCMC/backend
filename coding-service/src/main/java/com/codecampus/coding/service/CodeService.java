@@ -19,68 +19,70 @@ public class CodeService {
   private CodingExerciseRepository codingExerciseRepository;
 
   public SubmissionResponseDto compileCode(SubmissionRequestDto submission) throws IOException, InterruptedException {
-    //folder chứa code để mount vào docker
     String folder = "/tmp/12345";
-    String fileName = submission.getUserId() + ".py";
-    String filePath = folder + "/" + fileName;
+    String containerName = "judge_" + submission.getSubmissionId();
 
-    // Kiểm tra xem exercise có tồn tại không và lấy thông tin test cases
     Optional<CodingExercise> codingExercise = codingExerciseRepository.findById(submission.getExerciseId());
     if (codingExercise.isEmpty()) {
       return new SubmissionResponseDto(
               submission.getSubmissionId(),
-              "Error",
-              "",
-              "",
-              "Exercise not found",
-              0,
-              0
+              "Error", "", "", "Exercise not found", 0, 0
       );
     }
 
     try {
-      // Lưu code vào folder đã chọn để mount vào Docker
-      Files.createDirectories(Paths.get(folder));
-      Files.write(Paths.get(filePath), submission.getSubmitedCode().getBytes());
+      // Khởi chạy container
+      ProcessBuilder startContainer = new ProcessBuilder(
+              "docker", "run", "-dit",
+              "--memory=" + submission.getMemory() + "m",
+              "--cpus=" + submission.getCpus(),
+              "--name", containerName,
+              "-v", folder + ":/app",
+              "--network", "none", // bảo mật hơn
+              "capstoneproject",
+              "bash"
+      );
+      Process containerStart = startContainer.start();
+      containerStart.waitFor();
 
-      //so sánh tc
+      // Kiểm tra test case
       for (TestCase testCase : codingExercise.get().getTestCases()) {
         String input = testCase.getInput();
         String expected = testCase.getExpectedOutput();
 
         long startTime = System.nanoTime();
 
-        ProcessBuilder pb = new ProcessBuilder(
-                "docker", "run", "--rm",
-                "--memory=" + submission.getMemory() + "m",
-                "--cpus=" + submission.getCpus(),
-                "-v", folder + ":/app",
-                "capstoneproject",
-                "python3", "/app/" + fileName
+        // Gọi python3 trong container
+        ProcessBuilder execPython = new ProcessBuilder(
+                "docker", "exec", "-i",
+                containerName,
+                "python3", "/app/test.py"
         );
 
-        pb.redirectErrorStream(true);
-        Process process = pb.start();
+        execPython.redirectErrorStream(true);
+        Process execProcess = execPython.start();
 
-        // Ghi input vào process
-        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()))) {
+        // Gửi input vào container
+        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(execProcess.getOutputStream()))) {
           writer.write(input);
           writer.flush();
         }
 
-        // Đọc output từ process
+        // Đọc output từ container
         String actualOutput;
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(execProcess.getInputStream()))) {
           actualOutput = reader.lines().reduce("", (acc, line) -> acc + line + "\n");
         }
 
-        int exitCode = process.waitFor();
+        int exitCode = execProcess.waitFor();
         long endTime = System.nanoTime();
         long execTimeMs = (endTime - startTime) / 1_000_000;
 
-        // Kiểm tra output
         boolean correct = isCorrectOutput(actualOutput, expected);
         if (!correct || exitCode != 0) {
+          // Xoá container
+          destroyContainer(containerName);
+
           return new SubmissionResponseDto(
                   submission.getSubmissionId(),
                   "Wrong Answer",
@@ -93,26 +95,31 @@ public class CodeService {
         }
       }
 
+      // Xoá container nếu Accepted
+      destroyContainer(containerName);
+
       return new SubmissionResponseDto(
               submission.getSubmissionId(),
               "Accepted",
               "All test cases passed.",
-              "",
-              "",
-              0,
-              0
+              "", "", 0, 0
       );
+
     } catch (Exception e) {
+      destroyContainer(containerName);
       return new SubmissionResponseDto(
               submission.getSubmissionId(),
               "Error",
-              "",
-              "",
+              "", "",
               e.getMessage(),
               0,
               0
       );
     }
+  }
+
+  private void destroyContainer(String containerName) throws IOException, InterruptedException {
+    new ProcessBuilder("docker", "rm", "-f", containerName).start().waitFor();
   }
 
   public boolean isCorrectOutput(String actualOutput, String expectedOutput) {
@@ -124,13 +131,6 @@ public class CodeService {
     return normActual.equals(normExpected);
   }
 
-    /**
-     * Hàm normalize để chuẩn hóa chuỗi đầu vào.
-     * Loại bỏ khoảng trắng thừa, chuyển đổi xuống dòng và loại bỏ các ký tự không cần thiết.
-     *
-     * @param s Chuỗi đầu vào cần chuẩn hóa
-     * @return Chuỗi đã được chuẩn hóa
-     */
   private String normalize(String s) {
     return s.trim()
             .replace("\r\n", "\n")
@@ -138,3 +138,4 @@ public class CodeService {
             .replaceAll("[ \t]*\n[ \t]*", "\n");
   }
 }
+
