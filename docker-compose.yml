@@ -102,6 +102,26 @@ services:
       retries: 5
     networks: [ backend ]
 
+  chat-db:
+    image: bitnami/postgresql:latest
+    container_name: chat-db
+    restart: unless-stopped
+    environment:
+      - POSTGRESQL_USERNAME=${CHAT_USERNAME}
+      - POSTGRESQL_PASSWORD=${CHAT_DB_PASSWORD}
+      - POSTGRESQL_DATABASE=${CHAT_DATABASE}
+      - POSTGRESQL_POSTGRES_PASSWORD=${CHAT_DB_PASSWORD}
+    ports:
+      - "5437:5432"
+    volumes:
+      - chat_pg_data:/bitnami/postgresql
+    healthcheck:
+      test: [ "CMD-SHELL","pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: [ backend ]
+
   # ----------  Kafka  ----------
   kafka:
     image: bitnami/kafka:latest
@@ -232,26 +252,51 @@ services:
     networks: [ backend ]
 
   # ---------- MongoDB ----------
-  mongodb:
+  file-db:
     image: bitnami/mongodb:latest
-    container_name: mongodb
+    container_name: file-db
     restart: unless-stopped
     ports:
       - "27017:27017"
     environment:
       # Tài khoản quản trị
-      - MONGODB_ROOT_PASSWORD=${MONGODB_ROOT_PASSWORD}
+      - MONGODB_ROOT_PASSWORD=${FILE_ROOT_PASSWORD}
       # Tài khoản ứng dụng (tuỳ chọn – dùng khi bạn không muốn chạy bằng root)
-      - MONGODB_USERNAME=${MONGODB_USERNAME}
-      - MONGODB_PASSWORD=${MONGODB_PASSWORD}
-      - MONGODB_DATABASE=${MONGODB_DATABASE}
+      - MONGODB_USERNAME=${FILE_USERNAME}
+      - MONGODB_PASSWORD=${FILE_PASSWORD}
+      - MONGODB_DATABASE=${FILE_DATABASE}
       # Nếu chỉ chạy single‑node, KHÔNG khai báo replica‑set
       # Muốn bật replica set: thêm MONGODB_REPLICA_SET_MODE=primary,...
     volumes:
-      - mongo_data:/bitnami/mongodb
+      - file_mongo_data:/bitnami/mongodb
     healthcheck:
       test: [ "CMD-SHELL",
-              "mongo admin -u root -p $$MONGODB_ROOT_PASSWORD --eval 'db.adminCommand(\"ping\")' || exit 1" ]
+              "mongo admin -u root -p $$FILE_ROOT_PASSWORD --eval 'db.adminCommand(\"ping\")' || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: [ backend ]
+
+  notification-db:
+    image: bitnami/mongodb:latest
+    container_name: notification-db
+    restart: unless-stopped
+    ports:
+      - "27018:27017"
+    environment:
+      # Tài khoản quản trị
+      - MONGODB_ROOT_PASSWORD=${NOTIFICATION_ROOT_PASSWORD}
+      # Tài khoản ứng dụng (tuỳ chọn – dùng khi bạn không muốn chạy bằng root)
+      - MONGODB_USERNAME=${NOTIFICATION_USERNAME}
+      - MONGODB_PASSWORD=${NOTIFICATION_PASSWORD}
+      - MONGODB_DATABASE=${NOTIFICATION_DATABASE}
+      # Nếu chỉ chạy single‑node, KHÔNG khai báo replica‑set
+      # Muốn bật replica set: thêm MONGODB_REPLICA_SET_MODE=primary,...
+    volumes:
+      - notification_mongo_data:/bitnami/mongodb
+    healthcheck:
+      test: [ "CMD-SHELL",
+              "mongo admin -u root -p $$NOTIFICATION_ROOT_PASSWORD --eval 'db.adminCommand(\"ping\")' || exit 1" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -266,9 +311,11 @@ volumes:
   quiz_pg_data:
   coding_pg_data:
   ai_pg_data:
+  chat_pg_data:
   kafka_data:
   neo4j_data:
   redis_data:
   minio_data:
   elasticsearch_data:
-  mongo_data:
+  file_mongo_data:
+  notification_mongo_data:
