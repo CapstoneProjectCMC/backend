@@ -12,15 +12,13 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class StatisticsService
-{
-  PostRepository postRepository;
+public class StatisticsService {
+    PostRepository postRepository;
 
-  public UserPostStats getPostStats(String userId)
-  {
-    return UserPostStats.builder()
-        .totalPosts(postRepository.countPostsOfUser(userId))
-        .goodReactions(postRepository.countGoodReactions(userId))
-        .build();
-  }
+    public UserPostStats getPostStats(String userId) {
+        return UserPostStats.builder()
+                .totalPosts(postRepository.countPostsOfUser(userId))
+                .goodReactions(postRepository.countGoodReactions(userId))
+                .build();
+    }
 }

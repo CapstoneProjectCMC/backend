@@ -7,15 +7,14 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
-public interface UserProfileMapper
-{
-  @Mapping(target = "userId", ignore = true)
-  @BeanMapping(ignoreUnmappedSourceProperties = {
-      "username",
-      "email",
-      "password"
-  })
-  UserProfileCreationRequest toUserProfileCreationRequest(
-      UserCreationRequest userCreationRequest);
+public interface UserProfileMapper {
+    @Mapping(target = "userId", ignore = true)
+    @BeanMapping(ignoreUnmappedSourceProperties = {
+            "username",
+            "email",
+            "password"
+    })
+    UserProfileCreationRequest toUserProfileCreationRequest(
+            UserCreationRequest userCreationRequest);
 }
 

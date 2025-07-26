@@ -1,0 +1,249 @@
+{
+  "info": {
+    "_postman_id": "454ffd0b-2124-4387-ac95-ead53a5ff34f",
+    "name": "Quiz Service",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "33137665",
+    "_collection_link": "https://animeh-team.postman.co/workspace/Code-Campus-Workspace~833332bb-de6b-4a20-bdef-16542d164f4e/collection/33137665-454ffd0b-2124-4387-ac95-ead53a5ff34f?action=share&source=collection_link&creator=33137665"
+  },
+  "item": [
+    {
+      "name": "loadQuiz",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiMDVkNTc0ZTItOTYyNy00MTg2LWE3NWEtYTM0Y2VhMzMzNzhkIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTI5NDA4NDUsImlhdCI6MTc1MjkzNzI0NSwianRpIjoiZWVjMmFiZTktYTlkYy00NDI2LTk3ZWMtYjhiNjhiNzliMmUyIiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.VH8-gf5Qpgf51odPYzXQvZtE8ldNO1313CCPSGE1bEDMFASIvxX7ptGZf9XHbbyVlNx2iIi8tZAeVYSYkNH50A",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8085/quiz/e72cd10e-c5a7-4d6c-bc89-27afa1b9a443/load",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8085",
+          "path": [
+            "quiz",
+            "e72cd10e-c5a7-4d6c-bc89-27afa1b9a443",
+            "load"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "loadQuiz",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8085/quiz/33a295ad-b5c8-4ca2-b0c9-7c59d2ba30ea/load",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8085",
+              "path": [
+                "quiz",
+                "33a295ad-b5c8-4ca2-b0c9-7c59d2ba30ea",
+                "load"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "X-XSS-Protection",
+              "value": "0"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, no-store, max-age=0, must-revalidate"
+            },
+            {
+              "key": "Pragma",
+              "value": "no-cache"
+            },
+            {
+              "key": "Expires",
+              "value": "0"
+            },
+            {
+              "key": "X-Frame-Options",
+              "value": "DENY"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Date",
+              "value": "Sat, 19 Jul 2025 16:03:29 GMT"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=60"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"code\": 20000,\n    \"message\": \"Load quiz thành công!\",\n    \"status\": \"Thành công!\",\n    \"result\": {\n        \"exercise\": {\n            \"id\": \"33a295ad-b5c8-4ca2-b0c9-7c59d2ba30ea\",\n            \"title\": \"Java Basics Quiz\",\n            \"description\": \"Test your Java knowledge\",\n            \"totalpoints\": 30,\n            \"numquestions\": 3,\n            \"duration\": 0\n        },\n        \"questions\": [\n            {\n                \"id\": \"22c128bd-5dd5-4d14-9656-1b96387dabb9\",\n                \"text\": \"Which of the following are primitive types in Java?\",\n                \"questiontype\": \"MULTI_CHOICE\",\n                \"points\": 10,\n                \"orderinquiz\": 2,\n                \"options\": [\n                    {\n                        \"id\": \"5c0ff001-601b-4287-b23b-65b541cf90ec\",\n                        \"optiontext\": \"int\",\n                        \"order\": \"A\"\n                    },\n                    {\n                        \"id\": \"dc5cb714-3584-4616-9106-7ae5e4c0d756\",\n                        \"optiontext\": \"String\",\n                        \"order\": \"B\"\n                    },\n                    {\n                        \"id\": \"b366ae77-2f98-42f4-93dc-f944e2ea5bf1\",\n                        \"optiontext\": \"boolean\",\n                        \"order\": \"C\"\n                    }\n                ]\n            },\n            {\n                \"id\": \"14419198-ff06-4034-ab37-505d2adcb36c\",\n                \"text\": \"What is the size of int in Java?\",\n                \"questiontype\": \"SINGLE_CHOICE\",\n                \"points\": 10,\n                \"orderinquiz\": 1,\n                \"options\": [\n                    {\n                        \"id\": \"ee8e2bd0-9520-48db-b70f-6a182af2db67\",\n                        \"optiontext\": \"4 bytes\",\n                        \"order\": \"A\"\n                    },\n                    {\n                        \"id\": \"26b574ab-7b20-453b-a1fd-c31cd4673c31\",\n                        \"optiontext\": \"2 bytes\",\n                        \"order\": \"B\"\n                    },\n                    {\n                        \"id\": \"d3ca1a37-b56c-4654-9448-5d2ec68e4f80\",\n                        \"optiontext\": \"8 bytes\",\n                        \"order\": \"C\"\n                    }\n                ]\n            },\n            {\n                \"id\": \"d6f46126-8bab-4aba-bfac-4b49b73967fa\",\n                \"text\": \"Fill in the blank: The keyword used to inherit a class is _____ .\",\n                \"questiontype\": \"FILL_BLANK\",\n                \"points\": 10,\n                \"orderinquiz\": 3,\n                \"options\": []\n            }\n        ]\n    }\n}"
+        }
+      ]
+    },
+    {
+      "name": "submitQuiz",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiMDVkNTc0ZTItOTYyNy00MTg2LWE3NWEtYTM0Y2VhMzMzNzhkIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTI5NDA4NDUsImlhdCI6MTc1MjkzNzI0NSwianRpIjoiZWVjMmFiZTktYTlkYy00NDI2LTk3ZWMtYjhiNjhiNzliMmUyIiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.VH8-gf5Qpgf51odPYzXQvZtE8ldNO1313CCPSGE1bEDMFASIvxX7ptGZf9XHbbyVlNx2iIi8tZAeVYSYkNH50A",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"exerciseId\": \"33a295ad-b5c8-4ca2-b0c9-7c59d2ba30ea\",\r\n    \"studentId\": \"05d574e2-9627-4186-a75a-a34cea33378d\",\r\n    \"answers\": [\r\n        {\r\n            \"questionId\": \"22c128bd-5dd5-4d14-9656-1b96387dabb9\",\r\n            \"selectedOptionId\": \"5c0ff001-601b-4287-b23b-65b541cf90ec, b366ae77-2f98-42f4-93dc-f944e2ea5bf1\"\r\n        },\r\n        {\r\n            \"questionId\": \"14419198-ff06-4034-ab37-505d2adcb36c\",\r\n            \"selectedOptionId\": \"ee8e2bd0-9520-48db-b70f-6a182af2db67\"\r\n        }\r\n    ]\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8085/quiz/33a295ad-b5c8-4ca2-b0c9-7c59d2ba30ea/submit",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8085",
+          "path": [
+            "quiz",
+            "33a295ad-b5c8-4ca2-b0c9-7c59d2ba30ea",
+            "submit"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "submitQuiz",
+          "originalRequest": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"exerciseId\": \"33a295ad-b5c8-4ca2-b0c9-7c59d2ba30ea\",\r\n    \"studentId\": \"05d574e2-9627-4186-a75a-a34cea33378d\",\r\n    \"answers\": [\r\n        {\r\n            \"questionId\": \"22c128bd-5dd5-4d14-9656-1b96387dabb9\",\r\n            \"selectedOptionId\": \"5c0ff001-601b-4287-b23b-65b541cf90ec, b366ae77-2f98-42f4-93dc-f944e2ea5bf1\"\r\n        },\r\n        {\r\n            \"questionId\": \"14419198-ff06-4034-ab37-505d2adcb36c\",\r\n            \"selectedOptionId\": \"ee8e2bd0-9520-48db-b70f-6a182af2db67\"\r\n        }\r\n    ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8085/quiz/33a295ad-b5c8-4ca2-b0c9-7c59d2ba30ea/submit",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8085",
+              "path": [
+                "quiz",
+                "33a295ad-b5c8-4ca2-b0c9-7c59d2ba30ea",
+                "submit"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "X-XSS-Protection",
+              "value": "0"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, no-store, max-age=0, must-revalidate"
+            },
+            {
+              "key": "Pragma",
+              "value": "no-cache"
+            },
+            {
+              "key": "Expires",
+              "value": "0"
+            },
+            {
+              "key": "X-Frame-Options",
+              "value": "DENY"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Date",
+              "value": "Sat, 19 Jul 2025 15:50:18 GMT"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=60"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"code\": 20000,\n    \"message\": \"Nộp bài thành công!\",\n    \"status\": \"Thành công!\",\n    \"result\": {\n        \"score\": 20,\n        \"totalpoints\": 30,\n        \"passed\": false,\n        \"timetakenseconds\": 0\n    }\n}"
+        }
+      ]
+    },
+    {
+      "name": "New Request",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    }
+  ]
+}

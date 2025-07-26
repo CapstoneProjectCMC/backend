@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CodingDetailRepository
-    extends JpaRepository<CodingDetail, String>
-{
+        extends JpaRepository<CodingDetail, String> {
 }
 

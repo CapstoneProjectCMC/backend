@@ -9,12 +9,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
  */
 @Slf4j
 public class SecurityUtils {
-  /**
-   * Lấy ID của người dùng đã đăng nhập.
-   *
-   * @return chuỗi tên đăng nhập hoặc null nếu chưa xác thực
-   */
-  public static String getMyUserId() {
-    return SecurityContextHolder.getContext().getAuthentication().getName();
-  }
+    /**
+     * Lấy ID của người dùng đã đăng nhập.
+     *
+     * @return chuỗi tên đăng nhập hoặc null nếu chưa xác thực
+     */
+    public static String getMyUserId() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
+    }
 }

@@ -10,17 +10,16 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface OrgRepository
-    extends Neo4jRepository<Org, String>
-{
+        extends Neo4jRepository<Org, String> {
 
-  @Query(value = """
-      MATCH (o:Organization {orgId:$orgId})-[a:ASSIGNED_ORG_EXERCISE]->(e:Exercise)
-      RETURN a, e ORDER BY e.title
-      """,
-      countQuery = """
-          MATCH (o:Organization {orgId:$orgId})-[a:ASSIGNED_ORG_EXERCISE]->(:Exercise)
-          RETURN count(a)
-          """)
-  Page<AssignedOrgExercise> findAssignedExercises(
-      String orgId, Pageable pageable);
+    @Query(value = """
+            MATCH (o:Organization {orgId:$orgId})-[a:ASSIGNED_ORG_EXERCISE]->(e:Exercise)
+            RETURN a, e ORDER BY e.title
+            """,
+            countQuery = """
+                    MATCH (o:Organization {orgId:$orgId})-[a:ASSIGNED_ORG_EXERCISE]->(:Exercise)
+                    RETURN count(a)
+                    """)
+    Page<AssignedOrgExercise> findAssignedExercises(
+            String orgId, Pageable pageable);
 }

@@ -34,13 +34,15 @@
         <module name="coding-service" />
         <module name="search-service" />
         <module name="quiz-service" />
+        <module name="chat-service" />
         <module name="profile-service" />
         <module name="identity-service" />
         <module name="ai-service" />
+        <module name="common-events" />
+        <module name="notification-service" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="common-events" target="21" />
       <module name="common-modules" target="21" />
       <module name="proto-contracts" target="1.8" />
     </bytecodeTargetLevel>
@@ -48,12 +50,14 @@
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="ai-service" options="-parameters --enable-preview -Amapstruct.defaultComponentModel=spring -Amapstruct.verbose=true" />
+      <module name="chat-service" options="-parameters --enable-preview -Amapstruct.defaultComponentModel=spring -Amapstruct.verbose=true" />
       <module name="coding-service" options="-parameters --enable-preview -Amapstruct.defaultComponentModel=spring -Amapstruct.verbose=true" />
-      <module name="common-events" options="-parameters" />
+      <module name="common-events" options="-parameters --enable-preview -Amapstruct.defaultComponentModel=spring -Amapstruct.verbose=true" />
       <module name="common-modules" options="-parameters" />
       <module name="common-protos" options="-parameters" />
       <module name="gateway-service" options="-parameters" />
       <module name="identity-service" options="-parameters --enable-preview -Amapstruct.defaultComponentModel=spring -Amapstruct.verbose=true" />
+      <module name="notification-service" options="-parameters --enable-preview -Amapstruct.defaultComponentModel=spring -Amapstruct.verbose=true" />
       <module name="profile-service" options="-parameters --enable-preview -Amapstruct.defaultComponentModel=spring -Amapstruct.verbose=true" />
       <module name="quiz-service" options="-parameters --enable-preview -Amapstruct.defaultComponentModel=spring -Amapstruct.verbose=true" />
       <module name="search-service" options="-parameters --enable-preview -Amapstruct.defaultComponentModel=spring -Amapstruct.verbose=true" />

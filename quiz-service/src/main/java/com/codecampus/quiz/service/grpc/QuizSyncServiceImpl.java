@@ -108,7 +108,7 @@ public class QuizSyncServiceImpl
     public void softDeleteOption(
             SoftDeleteOptionRequest softDeleteOptionRequest,
             StreamObserver<Empty> responseObserver) {
-        
+
         quizService.softDeleteOption(
                 softDeleteOptionRequest.getExerciseId(),
                 softDeleteOptionRequest.getQuestionId(),

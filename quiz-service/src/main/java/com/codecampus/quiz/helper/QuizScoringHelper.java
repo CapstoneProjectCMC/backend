@@ -92,7 +92,7 @@ public class QuizScoringHelper {
     public static boolean checkFillBlank(
             Question question,
             AnswerDto answerDto) {
-        
+
         return question.getOptions().stream()
                 .filter(Option::isCorrect)
                 .flatMap(o -> Arrays.stream(o.getOptionText().split("\\|")))

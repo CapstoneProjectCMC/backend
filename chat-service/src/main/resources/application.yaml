@@ -1,0 +1,10 @@
+server:
+  port: 8089
+  #  http:
+  #    port: 8009
+  servlet:
+    context-path: /chat
+
+spring:
+  application:
+    name: chat-service

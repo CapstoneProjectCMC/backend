@@ -4,7 +4,7 @@ import com.codecampus.submission.entity.Exercise;
 import com.codecampus.submission.mapper.ExercisePayloadMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import event.ExerciseEvent;
+import events.exercise.ExerciseEvent;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;

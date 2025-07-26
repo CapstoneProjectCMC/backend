@@ -8,8 +8,7 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public enum ExerciseType
-{
-  CODING,
-  QUIZ
+public enum ExerciseType {
+    CODING,
+    QUIZ
 }

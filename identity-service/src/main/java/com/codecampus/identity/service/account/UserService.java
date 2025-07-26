@@ -1,8 +1,5 @@
 package com.codecampus.identity.service.account;
 
-import static com.codecampus.identity.constant.authentication.AuthenticationConstant.USER_ROLE;
-import static com.codecampus.identity.helper.PageResponseHelper.toPageResponse;
-
 import com.codecampus.identity.dto.common.PageResponse;
 import com.codecampus.identity.dto.request.authentication.PasswordCreationRequest;
 import com.codecampus.identity.dto.request.authentication.UserCreationRequest;
@@ -20,7 +17,6 @@ import com.codecampus.identity.repository.account.RoleRepository;
 import com.codecampus.identity.repository.account.UserRepository;
 import com.codecampus.identity.repository.httpclient.profile.ProfileClient;
 import com.codecampus.identity.service.authentication.OtpService;
-import java.util.HashSet;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +31,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+
+import java.util.HashSet;
+
+import static com.codecampus.identity.constant.authentication.AuthenticationConstant.USER_ROLE;
+import static com.codecampus.identity.helper.PageResponseHelper.toPageResponse;
 
 /**
  * Dịch vụ quản lý người dùng (User) trong hệ thống.
@@ -54,214 +55,200 @@ import org.springframework.util.StringUtils;
 @Slf4j
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class UserService
-{
-  OtpService otpService;
-  UserRepository userRepository;
-  RoleRepository roleRepository;
+public class UserService {
+    OtpService otpService;
+    UserRepository userRepository;
+    RoleRepository roleRepository;
 
-  UserMapper userMapper;
-  UserProfileMapper userProfileMapper;
+    UserMapper userMapper;
+    UserProfileMapper userProfileMapper;
 
-  PasswordEncoder passwordEncoder;
-  ProfileClient profileClient;
-  AuthenticationHelper authenticationHelper;
-  ProfileSyncHelper profileSyncHelper;
+    PasswordEncoder passwordEncoder;
+    ProfileClient profileClient;
+    AuthenticationHelper authenticationHelper;
+    ProfileSyncHelper profileSyncHelper;
 
-  /**
-   * Tạo mới người dùng, gán vai trò USER và khởi tạo profile.
-   *
-   * <p>Chỉ ADMIN được phép gọi.
-   * - Kiểm tra tồn tại username và email.
-   * - Mã hóa mật khẩu.
-   * - Gán vai trò mặc định.
-   * - Lưu User và tạo profile qua ProfileClient.
-   * </p>
-   *
-   * @param request thông tin tạo người dùng mới
-   * @return thông tin người dùng vừa tạo (UserResponse)
-   * @throws AppException nếu user đã tồn tại
-   */
-  @PreAuthorize("hasRole('ADMIN')")
-  @Transactional
-  public UserResponse createUser(UserCreationRequest request)
-  {
-    authenticationHelper.checkExistsUsernameEmail(
-        request.getUsername(),
-        request.getEmail()
-    );
+    /**
+     * Tạo mới người dùng, gán vai trò USER và khởi tạo profile.
+     *
+     * <p>Chỉ ADMIN được phép gọi.
+     * - Kiểm tra tồn tại username và email.
+     * - Mã hóa mật khẩu.
+     * - Gán vai trò mặc định.
+     * - Lưu User và tạo profile qua ProfileClient.
+     * </p>
+     *
+     * @param request thông tin tạo người dùng mới
+     * @return thông tin người dùng vừa tạo (UserResponse)
+     * @throws AppException nếu user đã tồn tại
+     */
+    @PreAuthorize("hasRole('ADMIN')")
+    @Transactional
+    public UserResponse createUser(UserCreationRequest request) {
+        authenticationHelper.checkExistsUsernameEmail(
+                request.getUsername(),
+                request.getEmail()
+        );
 
-    User user = userMapper.toUser(request);
-    user.setPassword(passwordEncoder.encode(user.getPassword()));
+        User user = userMapper.toUser(request);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-    HashSet<Role> roles = new HashSet<>();
-    roleRepository.findById(USER_ROLE)
-        .ifPresent(roles::add);
-    user.setRoles(roles);
-    user.setEnabled(true);
+        HashSet<Role> roles = new HashSet<>();
+        roleRepository.findById(USER_ROLE)
+                .ifPresent(roles::add);
+        user.setRoles(roles);
+        user.setEnabled(true);
 
-    try
-    {
-      user = userRepository.save(user);
-      profileSyncHelper.createProfile(user, request);
-    } catch (DataIntegrityViolationException e)
-    {
-      throw new AppException(ErrorCode.USER_ALREADY_EXISTS);
+        try {
+            user = userRepository.save(user);
+            profileSyncHelper.createProfile(user, request);
+        } catch (DataIntegrityViolationException e) {
+            throw new AppException(ErrorCode.USER_ALREADY_EXISTS);
+        }
+
+        return userMapper.toUserResponse(user);
     }
 
-    return userMapper.toUserResponse(user);
-  }
+    /**
+     * Tạo hoặc cập nhật mật khẩu cho người dùng hiện tại.
+     * <p>
+     * - Ném lỗi nếu đã tồn tại mật khẩu.
+     *
+     * @param request chứa mật khẩu mới
+     * @throws AppException nếu mật khẩu đã tồn tại
+     */
+    public void createPassword(PasswordCreationRequest request) {
+        User user = findUser(AuthenticationHelper.getMyUserId());
 
-  /**
-   * Tạo hoặc cập nhật mật khẩu cho người dùng hiện tại.
-   * <p>
-   * - Ném lỗi nếu đã tồn tại mật khẩu.
-   *
-   * @param request chứa mật khẩu mới
-   * @throws AppException nếu mật khẩu đã tồn tại
-   */
-  public void createPassword(PasswordCreationRequest request)
-  {
-    User user = findUser(AuthenticationHelper.getMyUserId());
+        if (StringUtils.hasText(request.getPassword())) {
+            throw new AppException(ErrorCode.PASSWORD_ALREADY_EXISTS);
+        }
 
-    if (StringUtils.hasText(request.getPassword()))
-    {
-      throw new AppException(ErrorCode.PASSWORD_ALREADY_EXISTS);
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        userRepository.save(user);
     }
 
-    user.setPassword(passwordEncoder.encode(request.getPassword()));
-    userRepository.save(user);
-  }
+    /**
+     * Lấy thông tin của chính người dùng đang đăng nhập.
+     *
+     * @return UserResponse chứa thông tin người dùng
+     */
+    public UserResponse getMyInfo() {
+        return getUser(AuthenticationHelper.getMyUserId());
+    }
 
-  /**
-   * Lấy thông tin của chính người dùng đang đăng nhập.
-   *
-   * @return UserResponse chứa thông tin người dùng
-   */
-  public UserResponse getMyInfo()
-  {
-    return getUser(AuthenticationHelper.getMyUserId());
-  }
+    /**
+     * Cập nhật thông tin người dùng theo ID.
+     *
+     * <p>Chỉ ADMIN được phép gọi.
+     * Mã hóa lại mật khẩu và cập nhật vai trò.
+     * </p>
+     *
+     * @param userId  ID người dùng cần cập nhật
+     * @param request thông tin cập nhật
+     * @return UserResponse chứa thông tin sau khi cập nhật
+     */
+    @PreAuthorize("hasRole('ADMIN')")
+    public UserResponse updateUser(
+            String userId,
+            UserUpdateRequest request) {
+        User user = findUser(userId);
+        return updateUserAndReturnUserResponse(request, user);
+    }
 
-  /**
-   * Cập nhật thông tin người dùng theo ID.
-   *
-   * <p>Chỉ ADMIN được phép gọi.
-   * Mã hóa lại mật khẩu và cập nhật vai trò.
-   * </p>
-   *
-   * @param userId  ID người dùng cần cập nhật
-   * @param request thông tin cập nhật
-   * @return UserResponse chứa thông tin sau khi cập nhật
-   */
-  @PreAuthorize("hasRole('ADMIN')")
-  public UserResponse updateUser(
-      String userId,
-      UserUpdateRequest request)
-  {
-    User user = findUser(userId);
-    return updateUserAndReturnUserResponse(request, user);
-  }
+    /**
+     * Cập nhật thông tin của chính người dùng đang đăng nhập.
+     *
+     * <p>Chỉ cho phép khi username trả về khớp tên trong authentication.</p>
+     *
+     * @param request thông tin cập nhật
+     * @return UserResponse sau khi cập nhật
+     */
+    public UserResponse updateMyInfo(
+            UserUpdateRequest request) {
+        User user = findUser(AuthenticationHelper.getMyUserId());
+        return updateUserAndReturnUserResponse(request, user);
+    }
 
-  /**
-   * Cập nhật thông tin của chính người dùng đang đăng nhập.
-   *
-   * <p>Chỉ cho phép khi username trả về khớp tên trong authentication.</p>
-   *
-   * @param request thông tin cập nhật
-   * @return UserResponse sau khi cập nhật
-   */
-  public UserResponse updateMyInfo(
-      UserUpdateRequest request)
-  {
-    User user = findUser(AuthenticationHelper.getMyUserId());
-    return updateUserAndReturnUserResponse(request, user);
-  }
-
-  private UserResponse updateUserAndReturnUserResponse(
-      UserUpdateRequest request,
-      User user)
-  {
-    userMapper.updateUser(user, request);
-    user.setPassword(passwordEncoder.encode(user.getPassword()));
+    private UserResponse updateUserAndReturnUserResponse(
+            UserUpdateRequest request,
+            User user) {
+        userMapper.updateUser(user, request);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
 
 //    List<Role> roles = roleRepository.findAllById(request.getRoles());
 //    user.setRoles(new HashSet<>(roles));
 
-    return userMapper.toUserResponse(userRepository.save(user));
-  }
+        return userMapper.toUserResponse(userRepository.save(user));
+    }
 
-  /**
-   * Xóa người dùng theo ID.
-   *
-   * <p>Chỉ ADMIN được phép gọi.</p>
-   *
-   * @param userId ID người dùng cần xóa
-   */
-  @PreAuthorize("hasRole('ADMIN')")
-  @Transactional
-  public void deleteUser(String userId)
-  {
-    User user = findUser(userId);
-    user.markDeleted(AuthenticationHelper.getMyEmail());
-    userRepository.save(user);
-  }
+    /**
+     * Xóa người dùng theo ID.
+     *
+     * <p>Chỉ ADMIN được phép gọi.</p>
+     *
+     * @param userId ID người dùng cần xóa
+     */
+    @PreAuthorize("hasRole('ADMIN')")
+    @Transactional
+    public void deleteUser(String userId) {
+        User user = findUser(userId);
+        user.markDeleted(AuthenticationHelper.getMyEmail());
+        userRepository.save(user);
+    }
 
-  /**
-   * Lấy danh sách người dùng với phân trang.
-   *
-   * <p>Chỉ ADMIN được phép gọi.</p>
-   *
-   * @param page số trang (bắt đầu từ 1)
-   * @param size kích thước trang
-   * @return PageResponse chứa danh sách UserResponse và thông tin phân trang
-   */
-  @PreAuthorize("hasRole('ADMIN')")
-  public PageResponse<UserResponse> getUsers(
-      int page, int size)
-  {
-    Pageable pageable = PageRequest.of(page - 1, size);
-    Page<UserResponse> pageData = userRepository
-        .findAll(pageable)
-        .map(userMapper::toUserResponse);
+    /**
+     * Lấy danh sách người dùng với phân trang.
+     *
+     * <p>Chỉ ADMIN được phép gọi.</p>
+     *
+     * @param page số trang (bắt đầu từ 1)
+     * @param size kích thước trang
+     * @return PageResponse chứa danh sách UserResponse và thông tin phân trang
+     */
+    @PreAuthorize("hasRole('ADMIN')")
+    public PageResponse<UserResponse> getUsers(
+            int page, int size) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<UserResponse> pageData = userRepository
+                .findAll(pageable)
+                .map(userMapper::toUserResponse);
 
-    return toPageResponse(pageData, page);
-  }
+        return toPageResponse(pageData, page);
+    }
 
-  /**
-   * Lấy thông tin người dùng theo ID.
-   *
-   * @param userId ID người dùng
-   * @return UserResponse chứa thông tin người dùng
-   * @throws AppException nếu không tìm thấy
-   */
-  public UserResponse getUser(String userId)
-  {
-    return userMapper.toUserResponse(
-        userRepository.findById(userId)
-            .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND))
-    );
-  }
+    /**
+     * Lấy thông tin người dùng theo ID.
+     *
+     * @param userId ID người dùng
+     * @return UserResponse chứa thông tin người dùng
+     * @throws AppException nếu không tìm thấy
+     */
+    public UserResponse getUser(String userId) {
+        return userMapper.toUserResponse(
+                userRepository.findById(userId)
+                        .orElseThrow(() -> new AppException(
+                                ErrorCode.USER_NOT_FOUND))
+        );
+    }
 
-  /**
-   * Tìm entity User theo ID.
-   *
-   * @param id ID người dùng
-   * @return User entity
-   * @throws AppException nếu không tìm thấy
-   */
-  public User findUser(String id)
-  {
-    return userRepository.findById(id)
-        .orElseThrow(
-            () -> new AppException(ErrorCode.USER_NOT_FOUND));
-  }
+    /**
+     * Tìm entity User theo ID.
+     *
+     * @param id ID người dùng
+     * @return User entity
+     * @throws AppException nếu không tìm thấy
+     */
+    public User findUser(String id) {
+        return userRepository.findById(id)
+                .orElseThrow(
+                        () -> new AppException(ErrorCode.USER_NOT_FOUND));
+    }
 
-  public String getRoleName(User user)
-  {
-    return user.getRoles().stream()
-        .findFirst()
-        .map(Role::getName)
-        .orElse(null);
-  }
+    public String getRoleName(User user) {
+        return user.getRoles().stream()
+                .findFirst()
+                .map(Role::getName)
+                .orElse(null);
+    }
 }

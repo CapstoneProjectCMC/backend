@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface SubmissionAnswerRepository
-    extends JpaRepository<SubmissionAnswer, SubmissionAnswerId>
-{
+        extends JpaRepository<SubmissionAnswer, SubmissionAnswerId> {
 }
 

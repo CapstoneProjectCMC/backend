@@ -29,22 +29,21 @@ import org.hibernate.annotations.Where;
 @Entity
 @Table(name = "contest_ranking")
 @SQLDelete(sql = "UPDATE contest_ranking " +
-    "SET deleted_by = ? , deleted_at = now() " +
-    "WHERE id = ?")
+        "SET deleted_by = ? , deleted_at = now() " +
+        "WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
-public class ContestRanking extends AuditMetadata
-{
-  @EmbeddedId
-  ContestRankId id;
+public class ContestRanking extends AuditMetadata {
+    @EmbeddedId
+    ContestRankId id;
 
-  @MapsId("contestId")
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "contest_id")
-  Contest contest;
+    @MapsId("contestId")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "contest_id")
+    Contest contest;
 
-  @Column(nullable = false, columnDefinition = "smallint")
-  Integer score;
+    @Column(nullable = false, columnDefinition = "smallint")
+    Integer score;
 
-  @Column(nullable = false, columnDefinition = "smallint")
-  Integer rank;
+    @Column(nullable = false, columnDefinition = "smallint")
+    Integer rank;
 }

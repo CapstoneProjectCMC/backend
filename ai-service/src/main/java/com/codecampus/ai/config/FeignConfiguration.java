@@ -14,17 +14,15 @@ import org.springframework.context.annotation.Configuration;
  * </p>
  */
 @Configuration
-public class FeignConfiguration
-{
-  /**
-   * Đăng ký {@link Encoder} tùy chỉnh cho Feign,
-   * sử dụng {@link SpringFormEncoder} để mã hóa multipart/form-data.
-   *
-   * @return đối tượng Encoder hỗ trợ form encoding
-   */
-  @Bean
-  public Encoder multipartFormEncoder()
-  {
-    return new SpringFormEncoder();
-  }
+public class FeignConfiguration {
+    /**
+     * Đăng ký {@link Encoder} tùy chỉnh cho Feign,
+     * sử dụng {@link SpringFormEncoder} để mã hóa multipart/form-data.
+     *
+     * @return đối tượng Encoder hỗ trợ form encoding
+     */
+    @Bean
+    public Encoder multipartFormEncoder() {
+        return new SpringFormEncoder();
+    }
 }

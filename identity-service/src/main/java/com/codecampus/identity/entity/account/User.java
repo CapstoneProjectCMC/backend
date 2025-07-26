@@ -13,9 +13,6 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.PreRemove;
 import jakarta.persistence.Table;
-import java.time.Instant;
-import java.util.HashSet;
-import java.util.Set;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,6 +23,10 @@ import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
+import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
+
 @Getter
 @Setter
 @Builder
@@ -35,36 +36,34 @@ import org.hibernate.annotations.Where;
 @Entity
 @Table(name = "users")
 @SQLDelete(sql = "UPDATE users " +
-    "SET deleted_by = ? , deleted_at = now() " +
-    "WHERE id = ?")
+        "SET deleted_by = ? , deleted_at = now() " +
+        "WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
-public class User extends AuditMetadata
-{
-  @Id
-  @GeneratedValue(strategy = GenerationType.UUID)
-  String id;
+public class User extends AuditMetadata {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    String id;
 
-  @Column(unique = true)
-  String username;
+    @Column(unique = true)
+    String username;
 
-  @Column(unique = true)
-  String email;
+    @Column(unique = true)
+    String email;
 
-  String password;
+    String password;
 
-  @ManyToMany(fetch = FetchType.EAGER)
-  @JoinTable(name = "user_roles",
-      joinColumns = @JoinColumn(name = "user_id"),
-      inverseJoinColumns = @JoinColumn(name = "role_name"))
-  Set<Role> roles = new HashSet<>();
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_name"))
+    Set<Role> roles = new HashSet<>();
 
-  @Builder.Default
-  boolean enabled = false;
+    @Builder.Default
+    boolean enabled = false;
 
-  @PreRemove
-  private void doSoftDelete()
-  {
-    this.setDeletedBy(AuthenticationHelper.getMyEmail());
-    this.setDeletedAt(Instant.now());
-  }
+    @PreRemove
+    private void doSoftDelete() {
+        this.setDeletedBy(AuthenticationHelper.getMyEmail());
+        this.setDeletedAt(Instant.now());
+    }
 }

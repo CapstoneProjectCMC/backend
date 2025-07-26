@@ -12,32 +12,32 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
 @Mapper(
-    componentModel = "spring",
-    uses = {ConvertUtils.class}
+        componentModel = "spring",
+        uses = {ConvertUtils.class}
 )
 public interface UserProfileMapper {
-  @Mapping(
-      source = "dob",
-      target = "dob",
-      qualifiedByName = "DdMmYyyyToInstant"
-  )
-  UserProfile toUserProfile(UserProfileCreationRequest request);
+    @Mapping(
+            source = "dob",
+            target = "dob",
+            qualifiedByName = "DdMmYyyyToInstant"
+    )
+    UserProfile toUserProfile(UserProfileCreationRequest request);
 
-  @Mapping(
-      source = "dob",
-      target = "dob",
-      qualifiedByName = "instantToDdMmYyyyUTC"
-  )
-  UserProfileResponse toUserProfileResponse(UserProfile userProfile);
+    @Mapping(
+            source = "dob",
+            target = "dob",
+            qualifiedByName = "instantToDdMmYyyyUTC"
+    )
+    UserProfileResponse toUserProfileResponse(UserProfile userProfile);
 
-  @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-  @Mapping(
-      source = "dob",
-      target = "dob",
-      qualifiedByName = "DdMmYyyyToInstant"
-  )
-  void updateUserProfile(
-      @MappingTarget UserProfile userProfile,
-      UserProfileUpdateRequest request
-  );
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(
+            source = "dob",
+            target = "dob",
+            qualifiedByName = "DdMmYyyyToInstant"
+    )
+    void updateUserProfile(
+            @MappingTarget UserProfile userProfile,
+            UserProfileUpdateRequest request
+    );
 }

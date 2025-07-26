@@ -160,6 +160,11 @@
             <artifactId>common-protos</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.codecampus</groupId>
+            <artifactId>common-events</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
         <!-- ========= Mapping & Utility ========= -->
         <dependency>

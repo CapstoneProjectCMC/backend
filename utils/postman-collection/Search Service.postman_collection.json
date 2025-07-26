@@ -1,0 +1,111 @@
+{
+  "info": {
+    "_postman_id": "1ada85aa-431f-4768-bf0e-c0a8beb4935c",
+    "name": "Search Service",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "33137665",
+    "_collection_link": "https://animeh-team.postman.co/workspace/Code-Campus-Workspace~833332bb-de6b-4a20-bdef-16542d164f4e/collection/33137665-1ada85aa-431f-4768-bf0e-c0a8beb4935c?action=share&source=collection_link&creator=33137665"
+  },
+  "item": [
+    {
+      "name": "searchExercise",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNDM0MjQyNTItZDJjZi00Y2NkLWFjYWEtNzgxOGQ2ZTE3YzdhIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTIxMzI4NDQsImlhdCI6MTc1MjEyOTI0NCwianRpIjoiNzVkZDIyZDItNTE4MS00YzQ3LWE1MjgtYTIxYjNhZWNlY2UxIiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.UKClDlrPTtbmE9HcexQ4t4CjAWMbtP1UzL2mVuuVW4uPDwhSwSyU9ahEeoakb7ve0yM_RDkBy_XFdeAzGrDIoA",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8087/search?q=Java",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8087",
+          "path": [
+            "search"
+          ],
+          "query": [
+            {
+              "key": "tags",
+              "value": null,
+              "disabled": true
+            },
+            {
+              "key": "difficulty",
+              "value": null,
+              "disabled": true
+            },
+            {
+              "key": "createdBy",
+              "value": null,
+              "disabled": true
+            },
+            {
+              "key": "exerciseType",
+              "value": null,
+              "disabled": true
+            },
+            {
+              "key": "orgId",
+              "value": null,
+              "disabled": true
+            },
+            {
+              "key": "freeForOrg",
+              "value": null,
+              "disabled": true
+            },
+            {
+              "key": "minCost",
+              "value": null,
+              "disabled": true
+            },
+            {
+              "key": "maxCost",
+              "value": null,
+              "disabled": true
+            },
+            {
+              "key": "startAfter",
+              "value": null,
+              "disabled": true
+            },
+            {
+              "key": "endBefore",
+              "value": null,
+              "disabled": true
+            },
+            {
+              "key": "allowAiQuestion",
+              "value": null,
+              "disabled": true
+            },
+            {
+              "key": "page",
+              "value": null,
+              "disabled": true
+            },
+            {
+              "key": "size",
+              "value": null,
+              "disabled": true
+            },
+            {
+              "key": "q",
+              "value": "Java"
+            }
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

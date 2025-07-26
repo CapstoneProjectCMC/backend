@@ -1,0 +1,10 @@
+server:
+  port: 8088
+  #  http:
+  #    port: 8008
+  servlet:
+    context-path: /notification
+
+spring:
+  application:
+    name: notification-service

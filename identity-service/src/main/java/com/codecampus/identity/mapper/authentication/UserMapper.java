@@ -11,20 +11,19 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
 @Mapper(componentModel = "spring",
-    nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-public interface UserMapper
-{
-  User toUser(UserCreationRequest userCreationRequest);
+        nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+public interface UserMapper {
+    User toUser(UserCreationRequest userCreationRequest);
 
-  @Mapping(target = "userId", ignore = true)
-  UserProfileCreationRequest toUserProfileCreationRequest(
-      UserCreationRequest req);
+    @Mapping(target = "userId", ignore = true)
+    UserProfileCreationRequest toUserProfileCreationRequest(
+            UserCreationRequest req);
 
-  UserResponse toUserResponse(User user);
+    UserResponse toUserResponse(User user);
 
-  @Mapping(target = "roles", ignore = true)
-  void updateUser(
-      @MappingTarget User user,
-      UserUpdateRequest userUpdateRequest
-  );
+    @Mapping(target = "roles", ignore = true)
+    void updateUser(
+            @MappingTarget User user,
+            UserUpdateRequest userUpdateRequest
+    );
 }

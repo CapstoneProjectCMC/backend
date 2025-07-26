@@ -1,0 +1,115 @@
+{
+  "info": {
+    "_postman_id": "66f61f10-882a-40e2-ad54-7939e9ce0203",
+    "name": "Coding Service",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "33137665",
+    "_collection_link": "https://animeh-team.postman.co/workspace/Code-Campus-Workspace~833332bb-de6b-4a20-bdef-16542d164f4e/collection/33137665-66f61f10-882a-40e2-ad54-7939e9ce0203?action=share&source=collection_link&creator=33137665"
+  },
+  "item": [
+    {
+      "name": "getHello",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8084/coding/hello",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8084",
+          "path": [
+            "coding",
+            "hello"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "(TEACHER) createExercise",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNDM0MjQyNTItZDJjZi00Y2NkLWFjYWEtNzgxOGQ2ZTE3YzdhIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTIxMzI4NDQsImlhdCI6MTc1MjEyOTI0NCwianRpIjoiNzVkZDIyZDItNTE4MS00YzQ3LWE1MjgtYTIxYjNhZWNlY2UxIiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.UKClDlrPTtbmE9HcexQ4t4CjAWMbtP1UzL2mVuuVW4uPDwhSwSyU9ahEeoakb7ve0yM_RDkBy_XFdeAzGrDIoA",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"title\": \"Bài lập trình FizzBuzz\",\r\n    \"description\": \"In ra Fizz/Buzz/FizzBuzz…\",\r\n    \"difficulty\": \"EASY\",\r\n    \"exerciseType\": \"CODING\",\r\n    \"orgId\": null,\r\n    \"cost\": 0,\r\n    \"freeForOrg\": true,\r\n    \"startTime\": null,\r\n    \"endTime\": null,\r\n    \"duration\": 0,\r\n    \"allowDiscussionId\": null,\r\n    \"resourceIds\": null,\r\n    \"tags\": [\r\n        \"string\",\r\n        \"loop\"\r\n    ],\r\n    \"allowAiQuestion\": false\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8083/submission/exercise",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8083",
+          "path": [
+            "submission",
+            "exercise"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "(TEACHER) addCodingDetail",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNDM0MjQyNTItZDJjZi00Y2NkLWFjYWEtNzgxOGQ2ZTE3YzdhIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTIxMzI4NDQsImlhdCI6MTc1MjEyOTI0NCwianRpIjoiNzVkZDIyZDItNTE4MS00YzQ3LWE1MjgtYTIxYjNhZWNlY2UxIiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.UKClDlrPTtbmE9HcexQ4t4CjAWMbtP1UzL2mVuuVW4uPDwhSwSyU9ahEeoakb7ve0yM_RDkBy_XFdeAzGrDIoA",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"topic\": \"Loop – string\",\r\n    \"allowedLanguages\": [\r\n        \"java\",\r\n        \"python\"\r\n    ],\r\n    \"input\": \"Số nguyên n\",\r\n    \"output\": \"Dòng kết quả\",\r\n    \"constraintText\": \"1 ≤ n ≤ 10^5\",\r\n    \"timeLimit\": 2000,\r\n    \"memoryLimit\": 256,\r\n    \"maxSubmissions\": 20,\r\n    \"codeTemplate\": \"// write here\",\r\n    \"testCases\": [\r\n        {\r\n            \"input\": \"15\",\r\n            \"expectedOutput\": \"1 2 Fizz 4 Buzz Fizz 7 8 Fizz Buzz 11 Fizz 13 14 FizzBuzz\",\r\n            \"sample\": true,\r\n            \"note\": \"Trường hợp ví dụ\"\r\n        }\r\n    ],\r\n    \"solution\": \"\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8083/submission/coding/exercise/60f64e91-e14c-4bf6-9c30-6caaa76e63d5/coding-detail",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8083",
+          "path": [
+            "submission",
+            "coding",
+            "exercise",
+            "60f64e91-e14c-4bf6-9c30-6caaa76e63d5",
+            "coding-detail"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

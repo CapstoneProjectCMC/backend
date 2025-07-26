@@ -3,7 +3,7 @@ package com.codecampus.search.service;
 import com.codecampus.search.mapper.ExerciseMapper;
 import com.codecampus.search.repository.ExerciseDocumentRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import event.ExerciseEvent;
+import events.exercise.ExerciseEvent;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;

@@ -8,8 +8,6 @@ import com.codecampus.identity.entity.account.Role;
 import com.codecampus.identity.mapper.authentication.RoleMapper;
 import com.codecampus.identity.repository.account.PermissionRepository;
 import com.codecampus.identity.repository.account.RoleRepository;
-import java.util.HashSet;
-import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +15,9 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+
+import java.util.HashSet;
+import java.util.List;
 
 /**
  * Dịch vụ quản lý vai trò (Role) trong hệ thống.
@@ -35,54 +36,50 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class RoleService
-{
-  RoleRepository roleRepository;
-  PermissionRepository permissionRepository;
-  RoleMapper roleMapper;
+public class RoleService {
+    RoleRepository roleRepository;
+    PermissionRepository permissionRepository;
+    RoleMapper roleMapper;
 
-  /**
-   * Tạo mới một vai trò trong hệ thống, đồng thời gán các quyền tương ứng.
-   *
-   * @param roleRequest đối tượng RoleRequest chứa tên vai trò và danh sách quyền
-   * @return RoleResponse chứa thông tin vai trò vừa được lưu
-   */
-  @PreAuthorize("hasRole('ADMIN')")
-  public RoleResponse createRole(RoleRequest roleRequest)
-  {
-    Role role = roleMapper.toRole(roleRequest);
+    /**
+     * Tạo mới một vai trò trong hệ thống, đồng thời gán các quyền tương ứng.
+     *
+     * @param roleRequest đối tượng RoleRequest chứa tên vai trò và danh sách quyền
+     * @return RoleResponse chứa thông tin vai trò vừa được lưu
+     */
+    @PreAuthorize("hasRole('ADMIN')")
+    public RoleResponse createRole(RoleRequest roleRequest) {
+        Role role = roleMapper.toRole(roleRequest);
 
-    List<Permission> permissions = permissionRepository
-        .findAllById(roleRequest.getPermissions().stream()
-            .map(PermissionResponse::getName).toList());
-    role.setPermissions(new HashSet<>(permissions));
+        List<Permission> permissions = permissionRepository
+                .findAllById(roleRequest.getPermissions().stream()
+                        .map(PermissionResponse::getName).toList());
+        role.setPermissions(new HashSet<>(permissions));
 
-    role = roleRepository.save(role);
-    return roleMapper.toRoleResponse(role);
-  }
+        role = roleRepository.save(role);
+        return roleMapper.toRoleResponse(role);
+    }
 
-  /**
-   * Lấy danh sách tất cả các vai trò hiện có trong hệ thống.
-   *
-   * @return danh sách RoleResponse tương ứng với mỗi vai trò
-   */
-  @PreAuthorize("hasRole('ADMIN')")
-  public List<RoleResponse> getAllRoles()
-  {
-    return roleRepository.findAll()
-        .stream()
-        .map(roleMapper::toRoleResponse)
-        .toList();
-  }
+    /**
+     * Lấy danh sách tất cả các vai trò hiện có trong hệ thống.
+     *
+     * @return danh sách RoleResponse tương ứng với mỗi vai trò
+     */
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<RoleResponse> getAllRoles() {
+        return roleRepository.findAll()
+                .stream()
+                .map(roleMapper::toRoleResponse)
+                .toList();
+    }
 
-  /**
-   * Xóa một vai trò dựa trên tên vai trò.
-   *
-   * @param roleName tên vai trò cần xóa
-   */
-  @PreAuthorize("hasRole('ADMIN')")
-  public void delete(String roleName)
-  {
-    roleRepository.deleteById(roleName);
-  }
+    /**
+     * Xóa một vai trò dựa trên tên vai trò.
+     *
+     * @param roleName tên vai trò cần xóa
+     */
+    @PreAuthorize("hasRole('ADMIN')")
+    public void delete(String roleName) {
+        roleRepository.deleteById(roleName);
+    }
 }

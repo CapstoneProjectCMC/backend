@@ -1,7 +1,7 @@
 package com.codecampus.search.mapper;
 
 import com.codecampus.search.entity.ExerciseDocument;
-import event.data.ExercisePayload;
+import events.exercise.data.ExercisePayload;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")

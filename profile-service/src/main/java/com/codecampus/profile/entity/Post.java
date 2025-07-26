@@ -20,10 +20,10 @@ import org.springframework.data.neo4j.core.support.UUIDStringGenerator;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Node("Post")
 public class Post {
-  @Id
-  @GeneratedValue(generatorClass = UUIDStringGenerator.class)
-  String id;
+    @Id
+    @GeneratedValue(generatorClass = UUIDStringGenerator.class)
+    String id;
 
-  String postId;
-  String title;
+    String postId;
+    String title;
 }
