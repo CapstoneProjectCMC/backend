@@ -17,7 +17,7 @@ import com.codecampus.ai.dto.response.ExerciseResponse;
 import com.codecampus.ai.dto.response.QuestionResponse;
 import com.codecampus.ai.helper.AIGenerationHelper;
 import com.codecampus.ai.mapper.ExerciseMapper;
-import com.codecampus.ai.repository.SubmissionClient;
+import com.codecampus.ai.repository.httpClient.SubmissionClient;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;

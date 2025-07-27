@@ -8,3 +8,12 @@ server:
 spring:
   application:
     name: chat-service
+  data:
+    mongodb:
+      uri: mongodb://mongodb_chat:dinhanst2832004@localhost:27019/chat_db?authSource=admin
+      auto-index-creation: true
+
+app:
+  services:
+    profile: http://localhost:8081/profile
+    identity: http://localhost:8080/identity

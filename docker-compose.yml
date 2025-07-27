@@ -102,26 +102,6 @@ services:
       retries: 5
     networks: [ backend ]
 
-  chat-db:
-    image: bitnami/postgresql:latest
-    container_name: chat-db
-    restart: unless-stopped
-    environment:
-      - POSTGRESQL_USERNAME=${CHAT_USERNAME}
-      - POSTGRESQL_PASSWORD=${CHAT_DB_PASSWORD}
-      - POSTGRESQL_DATABASE=${CHAT_DATABASE}
-      - POSTGRESQL_POSTGRES_PASSWORD=${CHAT_DB_PASSWORD}
-    ports:
-      - "5437:5432"
-    volumes:
-      - chat_pg_data:/bitnami/postgresql
-    healthcheck:
-      test: [ "CMD-SHELL","pg_isready -U postgres" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    networks: [ backend ]
-
   # ----------  Kafka  ----------
   kafka:
     image: bitnami/kafka:latest
@@ -302,6 +282,31 @@ services:
       retries: 5
     networks: [ backend ]
 
+  chat-db:
+    image: bitnami/mongodb:latest
+    container_name: chat-db
+    restart: unless-stopped
+    ports:
+      - "27019:27017"
+    environment:
+      # Tài khoản quản trị
+      - MONGODB_ROOT_PASSWORD=${CHAT_ROOT_PASSWORD}
+      # Tài khoản ứng dụng (tuỳ chọn – dùng khi bạn không muốn chạy bằng root)
+      - MONGODB_USERNAME=${CHAT_USERNAME}
+      - MONGODB_PASSWORD=${CHAT_PASSWORD}
+      - MONGODB_DATABASE=${CHAT_DATABASE}
+      # Nếu chỉ chạy single‑node, KHÔNG khai báo replica‑set
+      # Muốn bật replica set: thêm MONGODB_REPLICA_SET_MODE=primary,...
+    volumes:
+      - chat_mongo_data:/bitnami/mongodb
+    healthcheck:
+      test: [ "CMD-SHELL",
+              "mongo admin -u root -p $$CHAT_ROOT_PASSWORD --eval 'db.adminCommand(\"ping\")' || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: [ backend ]
+
 networks:
   backend:
 
@@ -311,7 +316,6 @@ volumes:
   quiz_pg_data:
   coding_pg_data:
   ai_pg_data:
-  chat_pg_data:
   kafka_data:
   neo4j_data:
   redis_data:
@@ -319,3 +323,5 @@ volumes:
   elasticsearch_data:
   file_mongo_data:
   notification_mongo_data:
+  chat_mongo_data:
+

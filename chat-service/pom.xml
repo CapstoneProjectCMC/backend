@@ -40,6 +40,7 @@
         <projectlombok-lombok.version>1.18.38</projectlombok-lombok.version>
         <security-oauth2-jose.version>6.5.0</security-oauth2-jose.version>
         <jacoco.version>0.8.13</jacoco.version>
+        <socketio.version>2.0.13</socketio.version>
 
         <!-- Build-plugin -->
         <maven.compiler.plugin.version>3.12.1</maven.compiler.plugin.version>
@@ -118,6 +119,20 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-oauth2-jose</artifactId>
             <version>${security-oauth2-jose.version}</version>
+        </dependency>
+
+        <!-- ===== Database ===== -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-mongodb</artifactId>
+        </dependency>
+
+        <!-- ========= WebSocket / SocketIO ========= -->
+        <!-- https://mvnrepository.com/artifact/com.corundumstudio.socketio/netty-socketio -->
+        <dependency>
+            <groupId>com.corundumstudio.socketio</groupId>
+            <artifactId>netty-socketio</artifactId>
+            <version>${socketio.version}</version>
         </dependency>
 
         <!-- ========= Dev & Runtime ========= -->
