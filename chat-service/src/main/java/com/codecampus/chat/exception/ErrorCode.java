@@ -29,8 +29,8 @@ public enum ErrorCode {
             BAD_REQUEST),
     ACCOUNT_NOT_ACTIVATED(4008904, BAD_REQUEST_STATUS,
             "Tài khoản chưa được kích hoạt!", BAD_REQUEST),
-    EXERCISE_TYPE(4008905, BAD_REQUEST_STATUS,
-            "Loại bài tập không hợp lệ!", BAD_REQUEST),
+    USER_PROFILE_NULL(4008905, BAD_REQUEST_STATUS,
+            "Tài khoản người dùng null!", BAD_REQUEST),
 
 
     // 401 - Unauthorized
@@ -56,22 +56,8 @@ public enum ErrorCode {
     OTP_NOT_FOUND(4048903, NOT_FOUND_STATUS, "Không tìm thấy OTP!", NOT_FOUND),
     EMAIL_NOT_FOUND(4048904, NOT_FOUND_STATUS, "Không tìm thấy email!",
             NOT_FOUND),
-    EXERCISE_NOT_FOUND(4048905, NOT_FOUND_STATUS, "Không tìm thấy bài tập!",
-            NOT_FOUND),
-    CODING_NOT_FOUND(4048906, NOT_FOUND_STATUS, "Không tìm thấy bài tập code!",
-            NOT_FOUND),
-    QUIZ_NOT_FOUND(4048907, NOT_FOUND_STATUS, "Không tìm thấy bài tập quiz!",
-            NOT_FOUND),
-    QUESTION_NOT_FOUND(4048908, NOT_FOUND_STATUS, "Không tìm thấy câu hỏi!",
-            NOT_FOUND),
-    OPTION_NOT_FOUND(4048909, NOT_FOUND_STATUS, "Không tìm thấy lựa chọn!",
-            NOT_FOUND),
-    CODING_DETAIL_NOT_FOUND(4048910, NOT_FOUND_STATUS,
-            "Không tìm thấy bài tập coding!",
-            NOT_FOUND),
-    TESTCASE_NOT_FOUND(4048911, NOT_FOUND_STATUS,
-            "Không tìm thấy testcaseg!",
-            NOT_FOUND),
+    CONVERSATION_NOT_FOUND(4048905, NOT_FOUND_STATUS,
+            "Không tìm thấy cuộc hội thoại!", NOT_FOUND),
 
 
     // 409 - Conflict
@@ -80,10 +66,6 @@ public enum ErrorCode {
     EMAIL_ALREADY_EXISTS(4098902, CONFLICT_STATUS, "Email đã tồn tại!",
             CONFLICT),
     PASSWORD_ALREADY_EXISTS(4098903, CONFLICT_STATUS, "Mật khẩu đã tồn tại!",
-            CONFLICT),
-    CODING_ALREADY_EXISTS(4098904, CONFLICT_STATUS, "Bài tập Code đã tồn tại!",
-            CONFLICT),
-    QUIZ_ALREADY_EXISTS(4098905, CONFLICT_STATUS, "Bài tập Quiz đã tồn tại!",
             CONFLICT),
 
     // 500 - Internal Server Error

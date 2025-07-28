@@ -1,4 +1,4 @@
-package com.codecampus.ai.repository;
+package com.codecampus.ai.repository.httpClient;
 
 import com.codecampus.ai.config.AuthenticationRequestInterceptor;
 import com.codecampus.ai.config.FeignConfig;
