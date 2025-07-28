@@ -24,6 +24,6 @@ namespace FileService.Service.Dtos.FileDocumentDtos
         // field dùng để xác định loại nội dung
         public bool IsLectureVideo { get; set; } = false;
         public bool IsTextbook { get; set; } = false;
-        public string? OrgId { get; set; }
+        public Guid? OrgId { get; set; }
     }
 }
