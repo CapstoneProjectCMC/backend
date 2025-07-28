@@ -201,7 +201,7 @@ namespace FileService.Service.Implementation
                 IsActive = true,
                 CreatedAt = DateTime.UtcNow,
                 CreatedBy = _userContext.UserId,
-                OrgId = string.IsNullOrEmpty(dto.OrgId) ? null : dto.OrgId,
+                OrgId = dto.OrgId,
                 IsLectureVideo = dto.IsLectureVideo,
                 IsTextbook = dto.IsTextbook
             };

@@ -37,7 +37,7 @@ namespace FileService.DataAccess.Models
         public double? Rating { get; set; }
 
         // field dùng để phân loại theo tổ chức hoặc trường học, nếu là video bài giảng hoặc giáo trình
-        public string? OrgId { get; set; }
+        public Guid? OrgId { get; set; }
 
         // đường dẫn .m3u8 cho video HLS
         public string? HlsUrl { get; set; }

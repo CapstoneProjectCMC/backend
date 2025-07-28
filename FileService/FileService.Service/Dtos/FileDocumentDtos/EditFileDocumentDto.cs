@@ -21,6 +21,6 @@ namespace FileService.Service.Dtos.FileDocumentDtos
         public bool IsTextbook { get; set; }
         public bool IsActive { get; set; } 
         // field dùng để phân loại theo tổ chức hoặc trường học, nếu là video bài giảng hoặc giáo trình
-        public string? OrgId { get; set; }
+        public Guid? OrgId { get; set; }
     }
 }

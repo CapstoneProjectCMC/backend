@@ -49,7 +49,7 @@ namespace FileService.Service.ApiModels.FileDocumentModels
         public double? Rating { get; set; }
 
         // field dùng để phân loại theo tổ chức hoặc trường học, nếu là video bài giảng hoặc giáo trình
-        public string OrgId { get; set; }
+        public Guid? OrgId { get; set; }
 
         //for video files
         public TimeSpan? Duration { get; set; }
