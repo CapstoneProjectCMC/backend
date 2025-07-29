@@ -1,0 +1,20 @@
+.vs
+.vscode
+bin
+obj
+*.csproj.user
+*.user
+PublishProfiles
+ServiceDependencies
+appsettings.Local.json
+# appsettings.Development.json
+.sonarqube
+
+TestResults/
+coverageresults/
+run_coverage.bat
+
+docker-compose.dcproj
+docker-compose.override.yml
+docker-compose.yml
+/src/OrganizationService.Api/appsettings.Development.json
