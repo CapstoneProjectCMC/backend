@@ -2,6 +2,7 @@ package com.codecampus.coding.service;
 
 import com.codecampus.coding.dto.request.SubmissionRequestDto;
 import com.codecampus.coding.dto.response.SubmissionResponseDto;
+import com.codecampus.coding.dto.response.SubmissionTestCaseResultDto;
 import com.codecampus.coding.entity.CodingExercise;
 import com.codecampus.coding.entity.TestCase;
 import com.codecampus.coding.repository.CodingExerciseRepository;
@@ -11,6 +12,8 @@ import org.springframework.stereotype.Service;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -19,104 +22,109 @@ public class CodeService {
   private CodingExerciseRepository codingExerciseRepository;
 
   public SubmissionResponseDto compileCode(SubmissionRequestDto submission) throws IOException, InterruptedException {
-    String folder = "/tmp/12345";
-    String containerName = "judge_" + submission.getSubmissionId();
+    String folder = "C:/tmp/12345";
+//    String fileName = STR."\{submission.getUserId()}_\{submission.getExerciseId()}.py";
+    String fileName = "test.py";
+    String filePath = STR."\{folder}/\{fileName}";
+    String containerName = STR."judge_\{submission.getSubmissionId()}";
 
-    Optional<CodingExercise> codingExercise = codingExerciseRepository.findById(submission.getExerciseId());
-    if (codingExercise.isEmpty()) {
-      return new SubmissionResponseDto(
-              submission.getSubmissionId(),
-              "Error", "", "", "Exercise not found", 0, 0
-      );
+    Optional<CodingExercise> codingExerciseOpt = codingExerciseRepository.findById(submission.getExerciseId());
+    if (codingExerciseOpt.isEmpty()) {
+      return SubmissionResponseDto.builder()
+              .submissionId(submission.getSubmissionId())
+              .status("Error")
+              .message("Coding exercise not found")
+              .testCases(new ArrayList<>())
+              .build();
     }
 
-    try {
-      // Khởi chạy container
-      ProcessBuilder startContainer = new ProcessBuilder(
-              "docker", "run", "-dit",
-              "--memory=" + submission.getMemory() + "m",
-              "--cpus=" + submission.getCpus(),
-              "--name", containerName,
-              "-v", folder + ":/app",
-              "--network", "none", // bảo mật hơn
-              "capstoneproject",
-              "bash"
-      );
-      Process containerStart = startContainer.start();
-      containerStart.waitFor();
+    CodingExercise codingExercise = codingExerciseOpt.get();
 
-      // Kiểm tra test case
-      for (TestCase testCase : codingExercise.get().getTestCases()) {
+//    // Tạo thư mục và ghi file Python
+//    Files.createDirectories(Paths.get(folder));
+//    Files.writeString(Paths.get(filePath), submission.getSubmittedCode());
+
+    // Tạo container
+    ProcessBuilder startContainer = new ProcessBuilder(
+            "docker", "run", "-dit",
+            "--memory=" + submission.getMemory() + "m",
+            "--cpus=" + submission.getCpus(),
+            "--name", containerName,
+            "-v", folder + ":/app",
+            "--network", "none",
+            "capstoneproject",
+            "bash"
+    );
+    Process containerStart = startContainer.start();
+    containerStart.waitFor();
+
+    List<SubmissionTestCaseResultDto> results = new ArrayList<>();
+    boolean hasWrongAnswer = false;
+
+    try {
+      for (TestCase testCase : codingExercise.getTestCases()) {
         String input = testCase.getInput();
         String expected = testCase.getExpectedOutput();
 
         long startTime = System.nanoTime();
 
-        // Gọi python3 trong container
         ProcessBuilder execPython = new ProcessBuilder(
                 "docker", "exec", "-i",
                 containerName,
-                "python3", "/app/test.py"
+                "python3", "/app/" + fileName
         );
-
         execPython.redirectErrorStream(true);
         Process execProcess = execPython.start();
 
-        // Gửi input vào container
+        // Gửi input vào stdin
         try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(execProcess.getOutputStream()))) {
           writer.write(input);
           writer.flush();
         }
 
-        // Đọc output từ container
-        String actualOutput;
+        // Đọc output
+        StringBuilder outputBuilder = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(execProcess.getInputStream()))) {
-          actualOutput = reader.lines().reduce("", (acc, line) -> acc + line + "\n");
+          String line;
+          while ((line = reader.readLine()) != null) {
+            outputBuilder.append(line).append("\n");
+          }
         }
 
         int exitCode = execProcess.waitFor();
         long endTime = System.nanoTime();
         long execTimeMs = (endTime - startTime) / 1_000_000;
 
-        boolean correct = isCorrectOutput(actualOutput, expected);
-        if (!correct || exitCode != 0) {
-          // Xoá container
-          destroyContainer(containerName);
+        String actualOutput = outputBuilder.toString().trim();
 
-          return new SubmissionResponseDto(
-                  submission.getSubmissionId(),
-                  "Wrong Answer",
-                  actualOutput,
-                  expected,
-                  "Mismatch in test case with input: " + input,
-                  execTimeMs,
-                  0
-          );
-        }
+        boolean correct = isCorrectOutput(actualOutput, expected) && exitCode == 0;
+        if (!correct) hasWrongAnswer = true;
+
+        results.add(new SubmissionTestCaseResultDto(
+                input,
+                expected,
+                actualOutput,
+                correct,
+                execTimeMs
+        ));
       }
 
-      // Xoá container nếu Accepted
-      destroyContainer(containerName);
+      String overallStatus = hasWrongAnswer ? "Wrong Answer" : "Accepted";
+      String overallMessage = hasWrongAnswer ? "Some test cases failed." : "All test cases passed.";
 
       return new SubmissionResponseDto(
               submission.getSubmissionId(),
-              "Accepted",
-              "All test cases passed.",
-              "", "", 0, 0
+              overallStatus,
+              overallMessage,
+              results
       );
 
-    } catch (Exception e) {
+    } finally {
+      // Cleanup container dù có lỗi
       destroyContainer(containerName);
-      return new SubmissionResponseDto(
-              submission.getSubmissionId(),
-              "Error",
-              "", "",
-              e.getMessage(),
-              0,
-              0
-      );
     }
   }
+
 
   private void destroyContainer(String containerName) throws IOException, InterruptedException {
     new ProcessBuilder("docker", "rm", "-f", containerName).start().waitFor();

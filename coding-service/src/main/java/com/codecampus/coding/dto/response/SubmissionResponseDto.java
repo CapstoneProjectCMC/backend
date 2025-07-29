@@ -1,18 +1,20 @@
-package com.codecampus.coding.dto.response,
+// SubmissionResponseDto.java
+package com.codecampus.coding.dto.response;
 
-import lombok.*,
-import lombok.experimental.FieldDefaults,
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.util.List;
+
+@Data
 @Builder
-@FieldDefaults(level = AccessLevel.PUBLIC)
-public record SubmissionResponseDto(
-   String submissionId,   // ID bài nộp
-   String status,         // Kết quả: Accepted, Wrong Answer, Error, Time Limit Exceeded, Compilation Error...
-   String actualOutput,   // Kết quả thực tế từ chương trình của thí sinh
-   String expectedOutput, // Kết quả mong đợi
-   String message,        // Thông điệp phụ: exit code, lỗi biên dịch, lỗi runtime, ...
-   long timeUsedMs,       // (tuỳ chọn) thời gian chạy
-   long memoryUsedKb      // (tuỳ chọn) bộ nhớ sử dụng
-){
+@AllArgsConstructor
+@NoArgsConstructor
+public class SubmissionResponseDto {
+    String submissionId;
+    String status; // Accepted, Wrong Answer, Error
+    String message;
+    List<SubmissionTestCaseResultDto> testCases;
 }
-
