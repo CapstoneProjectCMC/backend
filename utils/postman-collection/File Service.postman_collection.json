@@ -1,0 +1,31 @@
+{
+  "info": {
+    "_postman_id": "0b8d5cae-65ec-472c-8af4-a406356d0555",
+    "name": "File Service",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "33137665",
+    "_collection_link": "https://animeh-team.postman.co/workspace/Code-Campus-Workspace~833332bb-de6b-4a20-bdef-16542d164f4e/collection/33137665-0b8d5cae-65ec-472c-8af4-a406356d0555?action=share&source=collection_link&creator=33137665"
+  },
+  "item": [
+    {
+      "name": "getHello",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{FileBase}}/hello",
+          "host": [
+            "{{FileBase}}"
+          ],
+          "path": [
+            "hello"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

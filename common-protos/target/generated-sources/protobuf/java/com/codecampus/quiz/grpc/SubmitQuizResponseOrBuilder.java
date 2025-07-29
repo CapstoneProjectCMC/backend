@@ -26,4 +26,10 @@ public interface SubmitQuizResponseOrBuilder extends
    * @return The passed.
    */
   boolean getPassed();
+
+  /**
+   * <code>int32 timeTakenSeconds = 4;</code>
+   * @return The timeTakenSeconds.
+   */
+  int getTimeTakenSeconds();
 }

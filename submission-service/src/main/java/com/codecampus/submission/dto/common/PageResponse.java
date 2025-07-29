@@ -1,11 +1,12 @@
 package com.codecampus.submission.dto.common;
 
-import java.util.Collections;
-import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
+
+import java.util.Collections;
+import java.util.List;
 
 @Data
 @Builder
@@ -14,11 +15,11 @@ import lombok.experimental.FieldDefaults;
 // Khi build thì KHÔNG response null
 //@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PageResponse<T> {
-  int currentPage;
-  int totalPages;
-  int pageSize;
-  long totalElements;
+    int currentPage;
+    int totalPages;
+    int pageSize;
+    long totalElements;
 
-  @Builder.Default
-  private List<T> data = Collections.emptyList();
+    @Builder.Default
+    private List<T> data = Collections.emptyList();
 }

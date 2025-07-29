@@ -23,5 +23,5 @@ public record ExerciseQuizResponse(
         BigDecimal cost,
         boolean freeForOrg,
         Set<String> tags,
-        Instant createAt) {
+        Instant createdAt) {
 }

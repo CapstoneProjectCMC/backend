@@ -8,24 +8,23 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class DualPortConfig
-{
-  @Value("${server.http.port}")
-  private int httpPort;
+public class DualPortConfig {
+    @Value("${server.http.port}")
+    private int httpPort;
 
-  @Bean
-  public ServletWebServerFactory servletContainer()
-  {
-    // Tomcat là default container của Spring Boot Starter Web
-    TomcatServletWebServerFactory factory = new TomcatServletWebServerFactory();
+    @Bean
+    public ServletWebServerFactory servletContainer() {
+        // Tomcat là default container của Spring Boot Starter Web
+        TomcatServletWebServerFactory factory =
+                new TomcatServletWebServerFactory();
 
-    Connector httpConnector =
-        new Connector(TomcatServletWebServerFactory.DEFAULT_PROTOCOL);
-    httpConnector.setScheme("http");
-    httpConnector.setPort(httpPort);
-    httpConnector.setSecure(false);
+        Connector httpConnector =
+                new Connector(TomcatServletWebServerFactory.DEFAULT_PROTOCOL);
+        httpConnector.setScheme("http");
+        httpConnector.setPort(httpPort);
+        httpConnector.setSecure(false);
 
-    factory.addAdditionalTomcatConnectors(httpConnector);
-    return factory;
-  }
+        factory.addAdditionalTomcatConnectors(httpConnector);
+        return factory;
+    }
 }

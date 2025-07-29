@@ -9,6 +9,6 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ExerciseRequest {
-  String exerciseId;
-  String title;
+    String exerciseId;
+    String title;
 }

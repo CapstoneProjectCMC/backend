@@ -21,10 +21,10 @@ import org.springframework.data.neo4j.core.schema.TargetNode;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @RelationshipProperties
 public class AssignedOrgExercise {
-  @Id
-  @GeneratedValue
-  String id;
+    @Id
+    @GeneratedValue
+    String id;
 
-  @TargetNode
-  Exercise exercise;
+    @TargetNode
+    Exercise exercise;
 }

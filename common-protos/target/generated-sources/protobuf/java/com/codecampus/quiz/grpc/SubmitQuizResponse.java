@@ -75,6 +75,17 @@ private static final long serialVersionUID = 0L;
     return passed_;
   }
 
+  public static final int TIMETAKENSECONDS_FIELD_NUMBER = 4;
+  private int timeTakenSeconds_ = 0;
+  /**
+   * <code>int32 timeTakenSeconds = 4;</code>
+   * @return The timeTakenSeconds.
+   */
+  @java.lang.Override
+  public int getTimeTakenSeconds() {
+    return timeTakenSeconds_;
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -98,6 +109,9 @@ private static final long serialVersionUID = 0L;
     if (passed_ != false) {
       output.writeBool(3, passed_);
     }
+    if (timeTakenSeconds_ != 0) {
+      output.writeInt32(4, timeTakenSeconds_);
+    }
     getUnknownFields().writeTo(output);
   }
 
@@ -118,6 +132,10 @@ private static final long serialVersionUID = 0L;
     if (passed_ != false) {
       size += com.google.protobuf.CodedOutputStream
         .computeBoolSize(3, passed_);
+    }
+    if (timeTakenSeconds_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt32Size(4, timeTakenSeconds_);
     }
     size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
@@ -140,6 +158,8 @@ private static final long serialVersionUID = 0L;
         != other.getTotalPoints()) return false;
     if (getPassed()
         != other.getPassed()) return false;
+    if (getTimeTakenSeconds()
+        != other.getTimeTakenSeconds()) return false;
     if (!getUnknownFields().equals(other.getUnknownFields())) return false;
     return true;
   }
@@ -158,6 +178,8 @@ private static final long serialVersionUID = 0L;
     hash = (37 * hash) + PASSED_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
         getPassed());
+    hash = (37 * hash) + TIMETAKENSECONDS_FIELD_NUMBER;
+    hash = (53 * hash) + getTimeTakenSeconds();
     hash = (29 * hash) + getUnknownFields().hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -292,6 +314,7 @@ private static final long serialVersionUID = 0L;
       score_ = 0;
       totalPoints_ = 0;
       passed_ = false;
+      timeTakenSeconds_ = 0;
       return this;
     }
 
@@ -334,6 +357,9 @@ private static final long serialVersionUID = 0L;
       if (((from_bitField0_ & 0x00000004) != 0)) {
         result.passed_ = passed_;
       }
+      if (((from_bitField0_ & 0x00000008) != 0)) {
+        result.timeTakenSeconds_ = timeTakenSeconds_;
+      }
     }
 
     @java.lang.Override
@@ -356,6 +382,9 @@ private static final long serialVersionUID = 0L;
       }
       if (other.getPassed() != false) {
         setPassed(other.getPassed());
+      }
+      if (other.getTimeTakenSeconds() != 0) {
+        setTimeTakenSeconds(other.getTimeTakenSeconds());
       }
       this.mergeUnknownFields(other.getUnknownFields());
       onChanged();
@@ -398,6 +427,11 @@ private static final long serialVersionUID = 0L;
               bitField0_ |= 0x00000004;
               break;
             } // case 24
+            case 32: {
+              timeTakenSeconds_ = input.readInt32();
+              bitField0_ |= 0x00000008;
+              break;
+            } // case 32
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -507,6 +541,38 @@ private static final long serialVersionUID = 0L;
     public Builder clearPassed() {
       bitField0_ = (bitField0_ & ~0x00000004);
       passed_ = false;
+      onChanged();
+      return this;
+    }
+
+    private int timeTakenSeconds_ ;
+    /**
+     * <code>int32 timeTakenSeconds = 4;</code>
+     * @return The timeTakenSeconds.
+     */
+    @java.lang.Override
+    public int getTimeTakenSeconds() {
+      return timeTakenSeconds_;
+    }
+    /**
+     * <code>int32 timeTakenSeconds = 4;</code>
+     * @param value The timeTakenSeconds to set.
+     * @return This builder for chaining.
+     */
+    public Builder setTimeTakenSeconds(int value) {
+
+      timeTakenSeconds_ = value;
+      bitField0_ |= 0x00000008;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>int32 timeTakenSeconds = 4;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearTimeTakenSeconds() {
+      bitField0_ = (bitField0_ & ~0x00000008);
+      timeTakenSeconds_ = 0;
       onChanged();
       return this;
     }

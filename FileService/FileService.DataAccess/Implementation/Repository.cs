@@ -26,6 +26,11 @@ namespace FileService.DataAccess.Implementation
             _collection = database.GetCollection<T>(collectionName);
             _userContext = userContext;
         }
+
+        public async Task<List<T>> FilterAsync(FilterDefinition<T> filter)
+        {
+            return await _collection.Find(filter).ToListAsync();
+        }
         public async Task<IEnumerable<T>> GetAllAsync()
         {
             return await _collection.Find(d => !d.IsDeleted).ToListAsync();

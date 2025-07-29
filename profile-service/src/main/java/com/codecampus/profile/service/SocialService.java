@@ -1,14 +1,11 @@
 package com.codecampus.profile.service;
 
-import static com.codecampus.profile.helper.PageResponseHelper.toPageResponse;
-
 import com.codecampus.profile.dto.common.PageResponse;
 import com.codecampus.profile.entity.UserProfile;
 import com.codecampus.profile.entity.properties.social.Blocks;
 import com.codecampus.profile.entity.properties.social.Follows;
 import com.codecampus.profile.helper.SecurityHelper;
 import com.codecampus.profile.repository.UserProfileRepository;
-import java.time.Instant;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -16,6 +13,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.time.Instant;
+
+import static com.codecampus.profile.helper.PageResponseHelper.toPageResponse;
 
 /**
  * Service xử lý các nghiệp vụ “xã hội” (social) của người dùng:
@@ -26,163 +27,157 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class SocialService
-{
-  UserProfileRepository userProfileRepository;
+public class SocialService {
+    UserProfileRepository userProfileRepository;
 
-  UserProfileService userProfileService;
+    UserProfileService userProfileService;
 
-  /**
-   * Theo dõi (follow) một người dùng khác.
-   * <p>
-   * Lấy profile người dùng hiện tại và profile của target theo {@code targetUserId},
-   * kiểm tra tránh duplicate, rồi thêm vào danh sách {@link Follows} của người dùng hiện tại.
-   *
-   * @param targetUserId ID của người dùng cần follow
-   * @throws com.codecampus.profile.exception.AppException nếu không tìm thấy profile của người dùng hiện tại hoặc của targetUserId
-   */
-  public void follow(String targetUserId)
-  {
-    UserProfile myProfile = userProfileService.getUserProfile();
+    /**
+     * Theo dõi (follow) một người dùng khác.
+     * <p>
+     * Lấy profile người dùng hiện tại và profile của target theo {@code targetUserId},
+     * kiểm tra tránh duplicate, rồi thêm vào danh sách {@link Follows} của người dùng hiện tại.
+     *
+     * @param targetUserId ID của người dùng cần follow
+     * @throws com.codecampus.profile.exception.AppException nếu không tìm thấy profile của người dùng hiện tại hoặc của targetUserId
+     */
+    public void follow(String targetUserId) {
+        UserProfile myProfile = userProfileService.getUserProfile();
 
-    UserProfile targetProfile = userProfileService.getUserProfile(targetUserId);
+        UserProfile targetProfile =
+                userProfileService.getUserProfile(targetUserId);
 
-    // Tránh follow trùng
-    boolean exists = myProfile.getFollows().stream()
-        .anyMatch(
-            follows -> targetUserId.equals(follows.getTarget().getUserId())
+        // Tránh follow trùng
+        boolean exists = myProfile.getFollows().stream()
+                .anyMatch(
+                        follows -> targetUserId.equals(
+                                follows.getTarget().getUserId())
+                );
+
+        if (!exists) {
+            Follows follows = Follows.builder()
+                    .since(Instant.now())
+                    .target(targetProfile)
+                    .build();
+            myProfile.getFollows().add(follows);
+            userProfileRepository.save(myProfile);
+        }
+    }
+
+    /**
+     * Bỏ theo dõi (unfollow) một người dùng đã follow trước đó.
+     * <p>
+     * Lấy profile người dùng hiện tại, loại bỏ mọi entry trong danh sách {@link Follows}
+     * có target trùng với {@code targetUserId}, sau đó lưu lại profile.
+     *
+     * @param targetUserId ID của người dùng cần unfollow
+     * @throws com.codecampus.profile.exception.AppException nếu không tìm thấy profile của người dùng hiện tại
+     */
+    public void unfollow(String targetUserId) {
+        UserProfile myProfile = userProfileService.getUserProfile();
+
+        myProfile.getFollows().removeIf(
+                follows -> targetUserId.equals(follows.getTarget().getUserId())
         );
 
-    if (!exists)
-    {
-      Follows follows = Follows.builder()
-          .since(Instant.now())
-          .target(targetProfile)
-          .build();
-      myProfile.getFollows().add(follows);
-      userProfileRepository.save(myProfile);
+        userProfileRepository.save(myProfile);
     }
-  }
 
-  /**
-   * Bỏ theo dõi (unfollow) một người dùng đã follow trước đó.
-   * <p>
-   * Lấy profile người dùng hiện tại, loại bỏ mọi entry trong danh sách {@link Follows}
-   * có target trùng với {@code targetUserId}, sau đó lưu lại profile.
-   *
-   * @param targetUserId ID của người dùng cần unfollow
-   * @throws com.codecampus.profile.exception.AppException nếu không tìm thấy profile của người dùng hiện tại
-   */
-  public void unfollow(String targetUserId)
-  {
-    UserProfile myProfile = userProfileService.getUserProfile();
+    /**
+     * Chặn (block) một người dùng.
+     * <p>
+     * Lấy profile người dùng hiện tại và target, kiểm tra tránh block trùng,
+     * rồi thêm mới entry {@link Blocks} và lưu lại profile.
+     *
+     * @param targetUserId ID của người dùng cần block
+     * @throws com.codecampus.profile.exception.AppException nếu không tìm thấy profile của người dùng hiện tại hoặc của targetUserId
+     */
+    public void block(String targetUserId) {
+        UserProfile myProfile = userProfileService.getUserProfile();
 
-    myProfile.getFollows().removeIf(
-        follows -> targetUserId.equals(follows.getTarget().getUserId())
-    );
+        UserProfile targetProfile =
+                userProfileService.getUserProfile(targetUserId);
 
-    userProfileRepository.save(myProfile);
-  }
+        boolean exists = myProfile.getBlocks().stream()
+                .anyMatch(
+                        blocks -> targetUserId.equals(
+                                blocks.getTarget().getUserId())
+                );
 
-  /**
-   * Chặn (block) một người dùng.
-   * <p>
-   * Lấy profile người dùng hiện tại và target, kiểm tra tránh block trùng,
-   * rồi thêm mới entry {@link Blocks} và lưu lại profile.
-   *
-   * @param targetUserId ID của người dùng cần block
-   * @throws com.codecampus.profile.exception.AppException nếu không tìm thấy profile của người dùng hiện tại hoặc của targetUserId
-   */
-  public void block(String targetUserId)
-  {
-    UserProfile myProfile = userProfileService.getUserProfile();
+        if (!exists) {
+            Blocks blocks = Blocks.builder()
+                    .since(Instant.now())
+                    .target(targetProfile)
+                    .build();
+            myProfile.getBlocks().add(blocks);
+            userProfileRepository.save(myProfile);
+        }
+    }
 
-    UserProfile targetProfile = userProfileService.getUserProfile(targetUserId);
+    /**
+     * Bỏ chặn (unblock) một người dùng đã block trước đó.
+     * <p>
+     * Lấy profile người dùng hiện tại, loại bỏ mọi entry trong danh sách {@link Blocks}
+     * có target trùng với {@code targetUserId}, sau đó lưu lại profile.
+     *
+     * @param targetUserId ID của người dùng cần unblock
+     * @throws com.codecampus.profile.exception.AppException nếu không tìm thấy profile của người dùng hiện tại
+     */
+    public void unblock(String targetUserId) {
+        UserProfile myProfile = userProfileService.getUserProfile();
 
-    boolean exists = myProfile.getBlocks().stream()
-        .anyMatch(
-            blocks -> targetUserId.equals(blocks.getTarget().getUserId())
+        myProfile.getBlocks().removeIf(
+                blocks -> targetUserId.equals(blocks.getTarget().getUserId())
         );
 
-    if (!exists)
-    {
-      Blocks blocks = Blocks.builder()
-          .since(Instant.now())
-          .target(targetProfile)
-          .build();
-      myProfile.getBlocks().add(blocks);
-      userProfileRepository.save(myProfile);
+        userProfileRepository.save(myProfile);
     }
-  }
 
-  /**
-   * Bỏ chặn (unblock) một người dùng đã block trước đó.
-   * <p>
-   * Lấy profile người dùng hiện tại, loại bỏ mọi entry trong danh sách {@link Blocks}
-   * có target trùng với {@code targetUserId}, sau đó lưu lại profile.
-   *
-   * @param targetUserId ID của người dùng cần unblock
-   * @throws com.codecampus.profile.exception.AppException nếu không tìm thấy profile của người dùng hiện tại
-   */
-  public void unblock(String targetUserId)
-  {
-    UserProfile myProfile = userProfileService.getUserProfile();
+    /**
+     * Lấy danh sách phân trang những người đang theo dõi (followers) người dùng hiện tại.
+     *
+     * @param page số trang hiện tại (bắt đầu từ 1)
+     * @param size số phần tử trên mỗi trang
+     * @return {@link PageResponse} chứa các đối tượng {@link Follows}
+     */
+    public PageResponse<Follows> getFollowers(
+            int page, int size) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        var pageData = userProfileRepository
+                .findFollowers(SecurityHelper.getMyUserId(), pageable);
 
-    myProfile.getBlocks().removeIf(
-        blocks -> targetUserId.equals(blocks.getTarget().getUserId())
-    );
+        return toPageResponse(pageData, page);
+    }
 
-    userProfileRepository.save(myProfile);
-  }
+    /**
+     * Lấy danh sách phân trang những người mà người dùng hiện tại đang follow.
+     *
+     * @param page số trang hiện tại (bắt đầu từ 1)
+     * @param size số phần tử trên mỗi trang
+     * @return {@link PageResponse} chứa các đối tượng {@link Follows}
+     */
+    public PageResponse<Follows> getFollowings(
+            int page, int size) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        var pageData = userProfileRepository
+                .findFollowings(SecurityHelper.getMyUserId(), pageable);
 
-  /**
-   * Lấy danh sách phân trang những người đang theo dõi (followers) người dùng hiện tại.
-   *
-   * @param page số trang hiện tại (bắt đầu từ 1)
-   * @param size số phần tử trên mỗi trang
-   * @return {@link PageResponse} chứa các đối tượng {@link Follows}
-   */
-  public PageResponse<Follows> getFollowers(
-      int page, int size)
-  {
-    Pageable pageable = PageRequest.of(page - 1, size);
-    var pageData = userProfileRepository
-        .findFollowers(SecurityHelper.getMyUserId(), pageable);
+        return toPageResponse(pageData, page);
+    }
 
-    return toPageResponse(pageData, page);
-  }
+    /**
+     * Lấy danh sách phân trang những người dùng bị chặn (blocked) bởi người dùng hiện tại.
+     *
+     * @param page số trang hiện tại (bắt đầu từ 1)
+     * @param size số phần tử trên mỗi trang
+     * @return {@link PageResponse} chứa các đối tượng {@link Blocks}
+     */
+    public PageResponse<Blocks> findBlocked(
+            int page, int size) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        var pageData = userProfileRepository
+                .findBlocked(SecurityHelper.getMyUserId(), pageable);
 
-  /**
-   * Lấy danh sách phân trang những người mà người dùng hiện tại đang follow.
-   *
-   * @param page số trang hiện tại (bắt đầu từ 1)
-   * @param size số phần tử trên mỗi trang
-   * @return {@link PageResponse} chứa các đối tượng {@link Follows}
-   */
-  public PageResponse<Follows> getFollowings(
-      int page, int size)
-  {
-    Pageable pageable = PageRequest.of(page - 1, size);
-    var pageData = userProfileRepository
-        .findFollowings(SecurityHelper.getMyUserId(), pageable);
-
-    return toPageResponse(pageData, page);
-  }
-
-  /**
-   * Lấy danh sách phân trang những người dùng bị chặn (blocked) bởi người dùng hiện tại.
-   *
-   * @param page số trang hiện tại (bắt đầu từ 1)
-   * @param size số phần tử trên mỗi trang
-   * @return {@link PageResponse} chứa các đối tượng {@link Blocks}
-   */
-  public PageResponse<Blocks> findBlocked(
-      int page, int size)
-  {
-    Pageable pageable = PageRequest.of(page - 1, size);
-    var pageData = userProfileRepository
-        .findBlocked(SecurityHelper.getMyUserId(), pageable);
-
-    return toPageResponse(pageData, page);
-  }
+        return toPageResponse(pageData, page);
+    }
 }

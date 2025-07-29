@@ -184,6 +184,17 @@ private static final long serialVersionUID = 0L;
     return numQuestions_;
   }
 
+  public static final int DURATION_FIELD_NUMBER = 6;
+  private int duration_ = 0;
+  /**
+   * <code>int32 duration = 6;</code>
+   * @return The duration.
+   */
+  @java.lang.Override
+  public int getDuration() {
+    return duration_;
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -213,6 +224,9 @@ private static final long serialVersionUID = 0L;
     if (numQuestions_ != 0) {
       output.writeInt32(5, numQuestions_);
     }
+    if (duration_ != 0) {
+      output.writeInt32(6, duration_);
+    }
     getUnknownFields().writeTo(output);
   }
 
@@ -239,6 +253,10 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeInt32Size(5, numQuestions_);
     }
+    if (duration_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt32Size(6, duration_);
+    }
     size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
     return size;
@@ -264,6 +282,8 @@ private static final long serialVersionUID = 0L;
         != other.getTotalPoints()) return false;
     if (getNumQuestions()
         != other.getNumQuestions()) return false;
+    if (getDuration()
+        != other.getDuration()) return false;
     if (!getUnknownFields().equals(other.getUnknownFields())) return false;
     return true;
   }
@@ -285,6 +305,8 @@ private static final long serialVersionUID = 0L;
     hash = (53 * hash) + getTotalPoints();
     hash = (37 * hash) + NUMQUESTIONS_FIELD_NUMBER;
     hash = (53 * hash) + getNumQuestions();
+    hash = (37 * hash) + DURATION_FIELD_NUMBER;
+    hash = (53 * hash) + getDuration();
     hash = (29 * hash) + getUnknownFields().hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -421,6 +443,7 @@ private static final long serialVersionUID = 0L;
       description_ = "";
       totalPoints_ = 0;
       numQuestions_ = 0;
+      duration_ = 0;
       return this;
     }
 
@@ -469,6 +492,9 @@ private static final long serialVersionUID = 0L;
       if (((from_bitField0_ & 0x00000010) != 0)) {
         result.numQuestions_ = numQuestions_;
       }
+      if (((from_bitField0_ & 0x00000020) != 0)) {
+        result.duration_ = duration_;
+      }
     }
 
     @java.lang.Override
@@ -503,6 +529,9 @@ private static final long serialVersionUID = 0L;
       }
       if (other.getNumQuestions() != 0) {
         setNumQuestions(other.getNumQuestions());
+      }
+      if (other.getDuration() != 0) {
+        setDuration(other.getDuration());
       }
       this.mergeUnknownFields(other.getUnknownFields());
       onChanged();
@@ -555,6 +584,11 @@ private static final long serialVersionUID = 0L;
               bitField0_ |= 0x00000010;
               break;
             } // case 40
+            case 48: {
+              duration_ = input.readInt32();
+              bitField0_ |= 0x00000020;
+              break;
+            } // case 48
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -848,6 +882,38 @@ private static final long serialVersionUID = 0L;
     public Builder clearNumQuestions() {
       bitField0_ = (bitField0_ & ~0x00000010);
       numQuestions_ = 0;
+      onChanged();
+      return this;
+    }
+
+    private int duration_ ;
+    /**
+     * <code>int32 duration = 6;</code>
+     * @return The duration.
+     */
+    @java.lang.Override
+    public int getDuration() {
+      return duration_;
+    }
+    /**
+     * <code>int32 duration = 6;</code>
+     * @param value The duration to set.
+     * @return This builder for chaining.
+     */
+    public Builder setDuration(int value) {
+
+      duration_ = value;
+      bitField0_ |= 0x00000020;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>int32 duration = 6;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearDuration() {
+      bitField0_ = (bitField0_ & ~0x00000020);
+      duration_ = 0;
       onChanged();
       return this;
     }

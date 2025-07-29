@@ -20,7 +20,7 @@ namespace FileService.DataAccess.Models
         public string ThumbnailUrl { get; set; } // cho video, hình ảnh
         public string TranscodingStatus { get; set; } // running, finished, failed
         public List<string> AssociatedResourceIds { get; set; } = new();
-        public List<string> Tags { get; set; } = new(); // #java, #code
+        public List<Guid> TagIds { get; set; } = new(); // references to Tags class
 
         // field dùng để xác định loại nội dung
         public bool IsLectureVideo { get; set; }
@@ -36,10 +36,8 @@ namespace FileService.DataAccess.Models
         [BsonIgnoreIfDefault]
         public double? Rating { get; set; }
 
-        public List<string> Comments { get; set; } = new(); 
-
         // field dùng để phân loại theo tổ chức hoặc trường học, nếu là video bài giảng hoặc giáo trình
-        public string? OrgId { get; set; }
+        public Guid? OrgId { get; set; }
 
         // đường dẫn .m3u8 cho video HLS
         public string? HlsUrl { get; set; }

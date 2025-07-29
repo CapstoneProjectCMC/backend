@@ -22,72 +22,65 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class SecurityHelper
-{
-  UserProfileRepository userProfileRepository;
+public class SecurityHelper {
+    UserProfileRepository userProfileRepository;
 
-  /**
-   * Lấy ID của người dùng đã đăng nhập.
-   *
-   * @return chuỗi tên đăng nhập hoặc null nếu chưa xác thực
-   */
-  public static String getMyUserId()
-  {
-    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-    if (auth == null || !auth.isAuthenticated())
-    {
-      return null;
+    /**
+     * Lấy ID của người dùng đã đăng nhập.
+     *
+     * @return chuỗi tên đăng nhập hoặc null nếu chưa xác thực
+     */
+    public static String getMyUserId() {
+        Authentication auth =
+                SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || !auth.isAuthenticated()) {
+            return null;
+        }
+
+        Object principal = auth.getPrincipal();
+
+        if (principal instanceof Jwt jwt) {
+            // JwtAuthenticationToken giữ nguyên đối tượng Jwt làm principal,
+            return jwt.getClaimAsString("userId");
+        }
+
+        return null;
     }
 
-    Object principal = auth.getPrincipal();
+    public static String getMyUsername() {
+        Authentication auth =
+                SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || !auth.isAuthenticated()) {
+            return null;
+        }
 
-    if (principal instanceof Jwt jwt)
-    {
-      // JwtAuthenticationToken giữ nguyên đối tượng Jwt làm principal,
-      return jwt.getClaimAsString("userId");
+        Object principal = auth.getPrincipal();
+
+        if (principal instanceof Jwt jwt) {
+            // JwtAuthenticationToken giữ nguyên đối tượng Jwt làm principal,
+            return jwt.getClaimAsString("username");
+        }
+
+        return null;
     }
 
-    return null;
-  }
-
-  public static String getMyUsername()
-  {
-    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-    if (auth == null || !auth.isAuthenticated())
-    {
-      return null;
+    public static String getMyEmail() {
+        Authentication auth =
+                SecurityContextHolder.getContext().getAuthentication();
+        return (auth == null) ? null : auth.getName();
     }
 
-    Object principal = auth.getPrincipal();
-
-    if (principal instanceof Jwt jwt)
-    {
-      // JwtAuthenticationToken giữ nguyên đối tượng Jwt làm principal,
-      return jwt.getClaimAsString("username");
+    /**
+     * Kiểm tra xem userId đã tồn tại trong hệ thống hay chưa.
+     *
+     * @param userId mã định danh của người dùng cần kiểm tra
+     * @throws AppException nếu userId đã tồn tại (ErrorCode.USER_ALREADY_EXISTS)
+     */
+    public void checkExistsUserid(String userId) {
+        if (userProfileRepository.existsByUserId(userId)) {
+            throw new AppException(ErrorCode.USER_ALREADY_EXISTS);
+        }
     }
-
-    return null;
-  }
-
-  public static String getMyEmail()
-  {
-    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-    return (auth == null) ? null : auth.getName();
-  }
-
-  /**
-   * Kiểm tra xem userId đã tồn tại trong hệ thống hay chưa.
-   *
-   * @param userId mã định danh của người dùng cần kiểm tra
-   * @throws AppException nếu userId đã tồn tại (ErrorCode.USER_ALREADY_EXISTS)
-   */
-  public void checkExistsUserid(String userId)
-  {
-    if (userProfileRepository.existsByUserId(userId))
-    {
-      throw new AppException(ErrorCode.USER_ALREADY_EXISTS);
-    }
-  }
 
 
 }

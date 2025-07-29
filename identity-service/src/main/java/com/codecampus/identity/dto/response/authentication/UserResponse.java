@@ -1,10 +1,11 @@
 package com.codecampus.identity.dto.response.authentication;
 
-import java.util.Set;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
+
+import java.util.Set;
 
 @Data
 @Builder
@@ -13,9 +14,9 @@ import lombok.experimental.FieldDefaults;
 // Khi build thì KHÔNG response null
 //@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserResponse {
-  String id;
-  String username;
-  String email;
-  Set<RoleResponse> roles;
-  boolean enabled;
+    String id;
+    String username;
+    String email;
+    Set<RoleResponse> roles;
+    boolean enabled;
 }

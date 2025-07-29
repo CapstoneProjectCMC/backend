@@ -8,13 +8,9 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public enum SubmissionStatus
-{
-  PENDING(1),
-  GRADED(2),
-  ERROR(3),
-  ACCEPTED(4),
-  WRONG_ANSWER(5),
-  EVALUATED(6);
-  int code;
+public enum SubmissionStatus {
+    SUBMITTED,   // 0 – vừa nộp
+    PASSED,      // 1 – đạt tối đa điểm
+    PARTIAL,     // 2 – có điểm nhưng chưa max
+    FAILED       // 3 – 0 điểm
 }

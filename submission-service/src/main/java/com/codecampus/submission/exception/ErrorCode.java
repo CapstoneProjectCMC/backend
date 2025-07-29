@@ -70,7 +70,7 @@ public enum ErrorCode {
             "Không tìm thấy bài tập coding!",
             NOT_FOUND),
     TESTCASE_NOT_FOUND(4048311, NOT_FOUND_STATUS,
-            "Không tìm thấy testcaseg!",
+            "Không tìm thấy testcase!",
             NOT_FOUND),
 
 

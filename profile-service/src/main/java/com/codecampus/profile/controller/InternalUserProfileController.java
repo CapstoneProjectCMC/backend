@@ -21,21 +21,21 @@ import org.springframework.web.bind.annotation.RestController;
 @Builder
 @Slf4j
 public class InternalUserProfileController {
-  UserProfileService userProfileService;
+    UserProfileService userProfileService;
 
-  @PostMapping("/internal/user")
-  ApiResponse<UserProfileResponse> createUserProfile(
-      @RequestBody UserProfileCreationRequest request) {
-    return ApiResponse.<UserProfileResponse>builder()
-        .result(userProfileService.createUserProfile(request))
-        .build();
-  }
+    @PostMapping("/internal/user")
+    ApiResponse<UserProfileResponse> createUserProfile(
+            @RequestBody UserProfileCreationRequest request) {
+        return ApiResponse.<UserProfileResponse>builder()
+                .result(userProfileService.createUserProfile(request))
+                .build();
+    }
 
-  @GetMapping("/internal/user/{userId}")
-  ApiResponse<UserProfileResponse> getUserProfileByUserId(
-      @PathVariable("userId") String userId) {
-    return ApiResponse.<UserProfileResponse>builder()
-        .result(userProfileService.getUserProfileByUserId(userId))
-        .build();
-  }
+    @GetMapping("/internal/user/{userId}")
+    ApiResponse<UserProfileResponse> getUserProfileByUserId(
+            @PathVariable("userId") String userId) {
+        return ApiResponse.<UserProfileResponse>builder()
+                .result(userProfileService.getUserProfileByUserId(userId))
+                .build();
+    }
 }

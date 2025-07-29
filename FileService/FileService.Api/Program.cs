@@ -39,16 +39,11 @@ builder.Services.AddHttpContextAccessor();
 
 var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 Console.WriteLine($"ASPNETCORE_ENVIRONMENT: {env}");
-
-var minioConfig = builder.Configuration.GetSection("MinioConfig").Get<MinioConfig>();
-Console.WriteLine($"Minio Endpoint: {minioConfig?.Endpoint}");
-Console.WriteLine($"Full MinioConfig: {Newtonsoft.Json.JsonConvert.SerializeObject(minioConfig)}");
+builder.Services.Configure<MinioConfig>(builder.Configuration.GetSection("MinioConfig"));
 
 builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection("MongoDbSettings"));
 builder.Services.Configure<FfmpegSettings>(builder.Configuration.GetSection("FfmpegSettings"));
 builder.Services.Configure<MinioConfig>(builder.Configuration.GetSection("AppSettings:MinioConfig"));
-
-
 
 
 // Đăng ký MongoClient và Database
@@ -75,6 +70,7 @@ builder.Services.AddScoped<UserContext>();
 builder.Services.AddScoped<IFileDocumentService, FileDocumentService>();
 builder.Services.AddScoped<IFfmpegService, FfmpegService>();
 builder.Services.AddScoped<IMinioService, MinioService>();
+builder.Services.AddScoped<ITagService, TagService>();
 
 
 builder.Services.Configure<IdentityOptions>(options =>
@@ -177,14 +173,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseStaticFiles(new StaticFileOptions
-{
-    FileProvider = new PhysicalFileProvider(
-        Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")),
-    RequestPath = ""
-});
-
-
+//kích hoạt CORS policy
 app.UseCors(MyAllowSpecificOrigins);
 
 app.UseHttpsRedirection();

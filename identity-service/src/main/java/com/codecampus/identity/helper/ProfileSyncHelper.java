@@ -14,27 +14,24 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class ProfileSyncHelper
-{
-  ProfileClient profileClient;
-  UserProfileMapper userProfileMapper;
+public class ProfileSyncHelper {
+    ProfileClient profileClient;
+    UserProfileMapper userProfileMapper;
 
-  /**
-   * Gửi request tạo profile. Nếu đã tồn tại profile → bỏ qua, không ném lỗi.
-   */
-  public void createProfile(
-      User user,
-      UserCreationRequest src)
-  {
-    UserProfileCreationRequest req = userProfileMapper.toUserProfileCreationRequest(src);
-    req.setUserId(user.getId());
+    /**
+     * Gửi request tạo profile. Nếu đã tồn tại profile → bỏ qua, không ném lỗi.
+     */
+    public void createProfile(
+            User user,
+            UserCreationRequest src) {
+        UserProfileCreationRequest req =
+                userProfileMapper.toUserProfileCreationRequest(src);
+        req.setUserId(user.getId());
 
-    try
-    {
-      profileClient.createUserProfile(req);
-    } catch (FeignException.Conflict ignored)
-    {
-      // profile đã tồn tại ⇒ idempotent
+        try {
+            profileClient.createUserProfile(req);
+        } catch (FeignException.Conflict ignored) {
+            // profile đã tồn tại ⇒ idempotent
+        }
     }
-  }
 }

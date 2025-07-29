@@ -9,57 +9,58 @@ namespace FileService.Core.Enums
 {
     public enum StatusCodeEnum
     {
-        Success = 0,
+        [Description("Thành công.")]
+        Success = 2008200,
 
-        [Description("System Error.")]
-        Error = 1,
+        [Description("Lỗi hệ thống.")]
+        Error = 5008201,
 
-        [Description("Concurrency Conflict")]
-        ConcurrencyConflict = 2,
+        [Description("Xung đột đồng thời")]
+        ConcurrencyConflict = 4098202,
 
         [Description("Không tìm thấy")]
-        PageIndexInvalid = 3,
+        PageIndexInvalid = 4048203,
 
-        [Description("Page Size Invalid")]
-        PageSizeInvalid = 4,
+        [Description("Kích thước trang không hợp lệ")]
+        PageSizeInvalid = 4008204,
 
         [Description("{Required Field} được yêu cầu.")]
-        A01,
+        A01 = 4008205,
 
         [Description("{{Object}} không được tìm thấy")]
-        A02,
+        A02 = 4048206,
 
         [Description("File với checksum giống nhau đã tồn tại.")]
-        A03,
+        A03 = 4098207,
 
         [Description("Tên file không được để trống.")]
-        A04,
+        A04 = 4008208,
 
         [Description("Tên file không được quá 255 ký tự.")]
-        A05,
+        A05 = 4008209,
 
         [Description("Cần ít nhất một thẻ (tag).")]
-        A06,
+        A06 = 4008210,
 
         [Description("Thể loại không được để trống")]
-        A07,
+        A07 = 4008211,
 
         [Description("Tên file đã được dùng cho tài liệu khác.")]
-        A08,
+        A08 = 4098212,
 
         [Description("Incorrect username or password. Please try again.")]
-        B01,
+        B01 = 4018213,
 
         [Description("Download Interrupted. Please check your internet connection and try again.")]
-        C05,
+        C05 = 5038214,
 
         [Description("Bad request.")]
-        BadRequest,
+        BadRequest = 4008215,
 
         [Description("Invalid filter option.")]
-        InvalidOption,
+        InvalidOption = 4008216,
 
         [Description("Unmatched columns found.")]
-        UnmatchedColumns,
+        UnmatchedColumns = 4008217,
     }
 }

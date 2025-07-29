@@ -11,8 +11,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-07-25T14:29:16+0700",
-    comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.5 (Oracle Corporation)"
+    date = "2025-07-26T16:39:02+0700",
+    comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.7 (Oracle Corporation)"
 )
 @Component
 public class QuizMapperImpl implements QuizMapper {
@@ -39,6 +39,24 @@ public class QuizMapperImpl implements QuizMapper {
     }
 
     @Override
+    public void patchOptionDtoToOption(OptionDto optionDto, Option option) {
+        if ( optionDto == null ) {
+            return;
+        }
+
+        if ( optionDto.getId() != null ) {
+            option.setId( optionDto.getId() );
+        }
+        if ( optionDto.getOptionText() != null ) {
+            option.setOptionText( optionDto.getOptionText() );
+        }
+        option.setCorrect( optionDto.getCorrect() );
+        if ( optionDto.getOrder() != null ) {
+            option.setOrder( optionDto.getOrder() );
+        }
+    }
+
+    @Override
     public void patchQuizExerciseDtoToQuizExercise(QuizExerciseDto quizExerciseDto, QuizExercise quizExercise) {
         if ( quizExerciseDto == null ) {
             return;
@@ -55,6 +73,7 @@ public class QuizMapperImpl implements QuizMapper {
         }
         quizExercise.setTotalPoints( quizExerciseDto.getTotalPoints() );
         quizExercise.setNumQuestions( quizExerciseDto.getNumQuestions() );
+        quizExercise.setDuration( quizExerciseDto.getDuration() );
     }
 
     @Override
@@ -70,6 +89,7 @@ public class QuizMapperImpl implements QuizMapper {
         quizExercise.description( quizExerciseDto.getDescription() );
         quizExercise.totalPoints( quizExerciseDto.getTotalPoints() );
         quizExercise.numQuestions( quizExerciseDto.getNumQuestions() );
+        quizExercise.duration( quizExerciseDto.getDuration() );
 
         return quizExercise.build();
     }
@@ -106,6 +126,7 @@ public class QuizMapperImpl implements QuizMapper {
 
         option.id( optionDto.getId() );
         option.optionText( optionDto.getOptionText() );
+        option.correct( optionDto.getCorrect() );
         option.order( optionDto.getOrder() );
 
         return option.build();

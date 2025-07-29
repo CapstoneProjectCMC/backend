@@ -10,15 +10,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @FeignClient(
-    name = "profile-service",
-    url = "${app.services.profile}",
-    configuration = {AuthenticationRequestInterceptor.class}
+        name = "profile-service",
+        url = "${app.services.profile}",
+        configuration = {AuthenticationRequestInterceptor.class}
 )
 public interface ProfileClient {
-  @PostMapping(
-      value = "/internal/user",
-      produces = MediaType.APPLICATION_JSON_VALUE
-  )
-  ApiResponse<UserProfileResponse> createUserProfile(
-      @RequestBody UserProfileCreationRequest request);
+    @PostMapping(
+            value = "/internal/user",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    ApiResponse<UserProfileResponse> createUserProfile(
+            @RequestBody UserProfileCreationRequest request);
 }

@@ -1,7 +1,7 @@
 package com.codecampus.submission.mapper;
 
 import com.codecampus.submission.entity.Exercise;
-import event.data.ExercisePayload;
+import events.exercise.data.ExercisePayload;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

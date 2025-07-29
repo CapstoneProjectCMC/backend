@@ -20,14 +20,17 @@
 
     <modules>
         <module>common-protos</module>
+        <module>common-events</module>
         <module>gateway-service</module>
         <module>identity-service</module>
         <module>profile-service</module>
+        <module>notification-service</module>
         <module>submission-service</module>
         <module>quiz-service</module>
         <module>coding-service</module>
         <module>search-service</module>
         <module>ai-service</module>
+        <module>chat-service</module>
     </modules>
 
     <properties>

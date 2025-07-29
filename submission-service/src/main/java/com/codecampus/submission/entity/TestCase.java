@@ -30,29 +30,28 @@ import org.hibernate.annotations.Where;
 @Entity
 @Table(name = "test_case")
 @SQLDelete(sql = "UPDATE test_case " +
-    "SET deleted_by = ? , deleted_at = now() " +
-    "WHERE id = ?")
+        "SET deleted_by = ? , deleted_at = now() " +
+        "WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
-public class TestCase extends AuditMetadata
-{
-  @Id
-  @GeneratedValue(strategy = GenerationType.UUID)
-  String id;
+public class TestCase extends AuditMetadata {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    String id;
 
-  @JsonBackReference
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "coding_detail_id", nullable = false)
-  CodingDetail codingDetail;
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "coding_detail_id", nullable = false)
+    CodingDetail codingDetail;
 
-  @Column(nullable = false, columnDefinition = "text")
-  String input;
+    @Column(nullable = false, columnDefinition = "text")
+    String input;
 
-  @Column(name = "expected_output", nullable = false, columnDefinition = "text")
-  String expectedOutput;
+    @Column(name = "expected_output", nullable = false, columnDefinition = "text")
+    String expectedOutput;
 
-  @Column(name = "is_sample", nullable = false)
-  boolean sample;
+    @Column(name = "is_sample", nullable = false)
+    boolean sample;
 
-  @Column(columnDefinition = "text")
-  String note;
+    @Column(columnDefinition = "text")
+    String note;
 }

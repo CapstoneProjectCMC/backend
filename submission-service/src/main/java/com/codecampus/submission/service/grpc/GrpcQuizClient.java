@@ -5,6 +5,9 @@ import com.codecampus.quiz.grpc.AddQuestionRequest;
 import com.codecampus.quiz.grpc.AddQuizDetailRequest;
 import com.codecampus.quiz.grpc.CreateQuizExerciseRequest;
 import com.codecampus.quiz.grpc.QuizSyncServiceGrpc;
+import com.codecampus.quiz.grpc.SoftDeleteOptionRequest;
+import com.codecampus.quiz.grpc.SoftDeleteQuestionRequest;
+import com.codecampus.quiz.grpc.SoftDeleteRequest;
 import com.codecampus.quiz.grpc.UpsertAssignmentRequest;
 import com.codecampus.submission.constant.submission.ExerciseType;
 import com.codecampus.submission.entity.Assignment;
@@ -71,6 +74,15 @@ public class GrpcQuizClient {
     }
 
     @Transactional
+    public void softDeleteExercise(String exerciseId) {
+        stub.softDeleteExercise(SoftDeleteRequest
+                .newBuilder()
+                .setId(exerciseId)
+                .build()
+        );
+    }
+
+    @Transactional
     public void pushQuestion(
             String exerciseId,
             Question question) {
@@ -81,6 +93,18 @@ public class GrpcQuizClient {
                                 question))
                         .build();
         stub.addQuestion(addQuestionRequest);
+    }
+
+    @Transactional
+    public void softDeleteQuestion(
+            String exerciseId,
+            String questionId) {
+        stub.softDeleteQuestion(SoftDeleteQuestionRequest
+                .newBuilder()
+                .setExerciseId(exerciseId)
+                .setQuestionId(questionId)
+                .build()
+        );
     }
 
     @Transactional
@@ -95,6 +119,20 @@ public class GrpcQuizClient {
                 .build();
 
         stub.addOption(addOptionRequest);
+    }
+
+    @Transactional
+    public void softDeleteOption(
+            String exerciseId,
+            String questionId,
+            String optionId) {
+        stub.softDeleteOption(SoftDeleteOptionRequest
+                .newBuilder()
+                .setExerciseId(exerciseId)
+                .setQuestionId(questionId)
+                .setOptionId(optionId)
+                .build()
+        );
     }
 
     @Transactional

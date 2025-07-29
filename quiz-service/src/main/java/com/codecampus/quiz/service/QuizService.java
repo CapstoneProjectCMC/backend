@@ -13,10 +13,13 @@ import com.codecampus.quiz.grpc.AddQuizDetailRequest;
 import com.codecampus.quiz.grpc.AssignmentDto;
 import com.codecampus.quiz.grpc.CreateQuizExerciseRequest;
 import com.codecampus.quiz.grpc.LoadQuizResponse;
+import com.codecampus.quiz.grpc.OptionDto;
+import com.codecampus.quiz.grpc.QuestionDto;
 import com.codecampus.quiz.grpc.QuizExerciseDto;
 import com.codecampus.quiz.grpc.SubmitQuizRequest;
 import com.codecampus.quiz.grpc.SubmitQuizResponse;
 import com.codecampus.quiz.grpc.UpsertAssignmentRequest;
+import com.codecampus.quiz.helper.AuthenticationHelper;
 import com.codecampus.quiz.helper.QuizHelper;
 import com.codecampus.quiz.helper.QuizScoringHelper;
 import com.codecampus.quiz.mapper.AssignmentMapper;
@@ -84,14 +87,44 @@ public class QuizService {
                         Question newQuestion =
                                 quizMapper.toQuestionFromQuestionDto(
                                         questionDto);
+
+
                         newQuestion.setQuiz(quiz);
                         quiz.getQuestions().add(newQuestion);
                         return newQuestion;
                     });
             quizMapper.patchQuestionDtoToQuestion(questionDto, question);
+
+            questionDto.getOptionsList().forEach(optionDto -> {
+                Option option = question.getOptions()
+                        .stream()
+                        .filter(o -> o.getId().equals(optionDto.getId()))
+                        .findFirst()
+                        .orElseGet(() -> {
+                            Option newOption =
+                                    quizMapper.toOptionFromOptionDto(optionDto);
+                            newOption.setQuestion(question);
+                            question.getOptions().add(newOption);
+                            return newOption;
+                        });
+                quizMapper.patchOptionDtoToOption(optionDto, option);
+            });
+
         });
         QuizScoringHelper.recalc(quiz);
         quizExerciseRepository.save(quiz);
+    }
+
+    @Transactional
+    public void softDeleteExercise(String exerciseId) {
+        QuizExercise quizExercise = quizHelper.findQuizOrThrow(exerciseId);
+        String by = AuthenticationHelper.getMyUsername();
+        quizExercise.markDeleted(by);
+        quizExercise.getQuestions().forEach(question -> {
+            question.markDeleted(by);
+            question.getOptions().forEach(option -> option.markDeleted(by));
+        });
+        quizExerciseRepository.save(quizExercise);
     }
 
     @Transactional
@@ -99,39 +132,92 @@ public class QuizService {
             AddQuestionRequest addQuestionRequest) {
         QuizExercise quiz =
                 quizHelper.findQuizOrThrow(addQuestionRequest.getExerciseId());
+        QuestionDto questionDto = addQuestionRequest.getQuestion();
 
-        Question question =
-                quizMapper.toQuestionFromQuestionDto(
-                        addQuestionRequest.getQuestion());
-        question.setQuiz(quiz);
+        Question question = quiz.findQuestionById(questionDto.getId())
+                .orElseGet(() -> {
+                    Question newQuestion = new Question();
+                    newQuestion.setId(questionDto.getId());
+                    newQuestion.setQuiz(quiz);
+                    quiz.getQuestions().add(newQuestion);
+                    return newQuestion;
+                });
+
+        quizMapper.patchQuestionDtoToQuestion(questionDto, question);
+
+        questionDto.getOptionsList().forEach(optionDto -> {
+            Option option = question.findOptionById(optionDto.getId())
+                    .orElseGet(() -> {
+                        Option newOption = new Option();
+                        newOption.setId(optionDto.getId());
+                        newOption.setQuestion(question);
+                        question.getOptions().add(newOption);
+                        return newOption;
+                    });
+
+            quizMapper.patchOptionDtoToOption(optionDto, option);
+        });
+
         QuizScoringHelper.recalc(quiz);
         questionRepository.save(question);
     }
 
     @Transactional
+    public void softDeleteQuestion(
+            String exerciseId,
+            String questionId) {
+
+        QuizExercise quizExercise = quizHelper.findQuizOrThrow(exerciseId);
+        quizExercise.findQuestionById(questionId).ifPresent(question -> {
+            question.markDeleted(AuthenticationHelper.getMyUsername());
+            question.getOptions()
+                    .forEach(o -> o.markDeleted(question.getDeletedBy()));
+        });
+    }
+
+    @Transactional
     public void addOption(AddOptionRequest addOptionRequest) {
+
         Question question =
                 quizHelper.findQuestionOrThrow(
                         addOptionRequest.getQuestionId());
+        OptionDto optionDto = addOptionRequest.getOption();
 
-        Option option =
-                quizMapper.toOptionFromOptionDto(addOptionRequest.getOption());
-        option.setQuestion(question);
-        question.getOptions().add(option);
+        Option option = question.findOptionById(optionDto.getId())
+                .orElseGet(() -> {
+                    Option newOption = new Option();
+                    newOption.setId(optionDto.getId());
+                    newOption.setQuestion(question);
+                    question.getOptions().add(newOption);
+                    return newOption;
+                });
+        quizMapper.patchOptionDtoToOption(optionDto, option);
+
+        questionRepository.save(question);
     }
 
-    public QuizExerciseDto getQuizExerciseDto(String quizId) {
-        QuizExercise quizExercise = quizHelper.findQuizOrThrow(quizId);
-        return quizMapper.toQuizExerciseDtoFromQuizExercise(quizExercise);
+
+    @Transactional
+    public void softDeleteOption(
+            String exerciseId,
+            String questionId,
+            String optionId) {
+        QuizExercise quizExercise = quizHelper.findQuizOrThrow(exerciseId);
+        quizExercise.findQuestionById(questionId)
+                .flatMap(question -> question.findOptionById(optionId))
+                .ifPresent(option -> option.markDeleted(
+                        AuthenticationHelper.getMyUsername()));
     }
 
     @Transactional
     public LoadQuizResponse loadQuiz(
-            String exerciseId, String studentId) {
+            String exerciseId) {
 
-        if (studentId != null &&
-                !assignmentRepository.existsByExerciseIdAndStudentId(exerciseId,
-                        studentId)) {
+        String studentId = AuthenticationHelper.getMyUserId();
+
+        if (!assignmentRepository
+                .existsByExerciseIdAndStudentId(
+                        exerciseId, studentId)) {
             throw new AppException(ErrorCode.UNAUTHORIZED);
         }
 
@@ -166,6 +252,7 @@ public class QuizService {
                 .setTotalPoints(quizSubmission.getTotalPoints())
                 .setPassed(quizSubmission.getScore() ==
                         quizSubmission.getTotalPoints())
+                .setTimeTakenSeconds(quizSubmission.getTimeTakenSeconds())
                 .build();
     }
 

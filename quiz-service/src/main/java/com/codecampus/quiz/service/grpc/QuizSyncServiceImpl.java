@@ -5,6 +5,9 @@ import com.codecampus.quiz.grpc.AddQuestionRequest;
 import com.codecampus.quiz.grpc.AddQuizDetailRequest;
 import com.codecampus.quiz.grpc.CreateQuizExerciseRequest;
 import com.codecampus.quiz.grpc.QuizSyncServiceGrpc;
+import com.codecampus.quiz.grpc.SoftDeleteOptionRequest;
+import com.codecampus.quiz.grpc.SoftDeleteQuestionRequest;
+import com.codecampus.quiz.grpc.SoftDeleteRequest;
 import com.codecampus.quiz.grpc.UpsertAssignmentRequest;
 import com.codecampus.quiz.service.QuizService;
 import com.google.protobuf.Empty;
@@ -51,6 +54,18 @@ public class QuizSyncServiceImpl
 
     @Override
     @Transactional
+    public void softDeleteExercise(
+            SoftDeleteRequest softDeleteRequest,
+            StreamObserver<Empty> responseObserver) {
+
+        quizService.softDeleteExercise(softDeleteRequest.getId());
+
+        responseObserver.onNext(Empty.getDefaultInstance());
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    @Transactional
     public void addQuestion(
             AddQuestionRequest addQuestionRequest,
             StreamObserver<Empty> responseObserver) {
@@ -63,11 +78,41 @@ public class QuizSyncServiceImpl
 
     @Override
     @Transactional
+    public void softDeleteQuestion(
+            SoftDeleteQuestionRequest softDeleteQuestionRequest,
+            StreamObserver<Empty> responseObserver) {
+
+        quizService.softDeleteQuestion(
+                softDeleteQuestionRequest.getExerciseId(),
+                softDeleteQuestionRequest.getQuestionId());
+
+        responseObserver.onNext(Empty.getDefaultInstance());
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    @Transactional
     public void addOption(
             AddOptionRequest addOptionRequest,
             StreamObserver<Empty> responseObserver) {
 
         quizService.addOption(addOptionRequest);
+
+        responseObserver.onNext(Empty.getDefaultInstance());
+        responseObserver.onCompleted();
+    }
+
+
+    @Override
+    @Transactional
+    public void softDeleteOption(
+            SoftDeleteOptionRequest softDeleteOptionRequest,
+            StreamObserver<Empty> responseObserver) {
+
+        quizService.softDeleteOption(
+                softDeleteOptionRequest.getExerciseId(),
+                softDeleteOptionRequest.getQuestionId(),
+                softDeleteOptionRequest.getOptionId());
 
         responseObserver.onNext(Empty.getDefaultInstance());
         responseObserver.onCompleted();

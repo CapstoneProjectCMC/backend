@@ -1,6 +1,5 @@
 package com.codecampus.profile.entity;
 
-import java.time.Instant;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,6 +12,8 @@ import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.support.UUIDStringGenerator;
 
+import java.time.Instant;
+
 @Getter
 @Setter
 @Builder
@@ -21,10 +22,10 @@ import org.springframework.data.neo4j.core.support.UUIDStringGenerator;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Node("ActivityWeek")
 public class ActivityWeek {
-  @Id
-  @GeneratedValue(generatorClass = UUIDStringGenerator.class)
-  String id;
+    @Id
+    @GeneratedValue(generatorClass = UUIDStringGenerator.class)
+    String id;
 
-  Instant weekStart;
-  long minutesActive;
+    Instant weekStart;
+    long minutesActive;
 }

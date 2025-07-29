@@ -1,10 +1,11 @@
 package com.codecampus.profile.dto.response;
 
-import java.time.Instant;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
+
+import java.time.Instant;
 
 @Data
 @Builder
@@ -13,18 +14,18 @@ import lombok.experimental.FieldDefaults;
 // Khi build thì KHÔNG response null
 //@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserProfileResponse {
-  String id;
-  String userId;
-  String firstName;
-  String lastName;
-  String dob;
-  String bio;
-  boolean gender;
-  String displayName;
-  int education;
-  String[] links;
-  String city;
-  String avatarUrl;
-  String backgroundUrl;
-  Instant createdAt;
+    String id;
+    String userId;
+    String firstName;
+    String lastName;
+    String dob;
+    String bio;
+    boolean gender;
+    String displayName;
+    int education;
+    String[] links;
+    String city;
+    String avatarUrl;
+    String backgroundUrl;
+    Instant createdAt;
 }

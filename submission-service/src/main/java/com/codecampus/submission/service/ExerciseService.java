@@ -5,9 +5,10 @@ import com.codecampus.submission.constant.submission.ExerciseType;
 import com.codecampus.submission.dto.common.PageResponse;
 import com.codecampus.submission.dto.request.CreateExerciseRequest;
 import com.codecampus.submission.dto.request.UpdateExerciseRequest;
+import com.codecampus.submission.dto.request.quiz.CreateQuizExerciseRequest;
 import com.codecampus.submission.dto.response.quiz.ExerciseQuizResponse;
-import com.codecampus.submission.dto.response.quiz.detail.ExerciseQuizDetailResponse;
-import com.codecampus.submission.dto.response.quiz.detail.QuizDetailSliceDetailResponse;
+import com.codecampus.submission.dto.response.quiz.quiz_detail.ExerciseQuizDetailResponse;
+import com.codecampus.submission.dto.response.quiz.quiz_detail.QuizDetailSliceDetailResponse;
 import com.codecampus.submission.entity.Exercise;
 import com.codecampus.submission.entity.Submission;
 import com.codecampus.submission.grpc.CreateQuizSubmissionRequest;
@@ -19,6 +20,7 @@ import com.codecampus.submission.helper.QuizHelper;
 import com.codecampus.submission.helper.SortHelper;
 import com.codecampus.submission.mapper.ExerciseMapper;
 import com.codecampus.submission.mapper.SubmissionMapper;
+import com.codecampus.submission.repository.AssignmentRepository;
 import com.codecampus.submission.repository.ExerciseRepository;
 import com.codecampus.submission.repository.QuestionRepository;
 import com.codecampus.submission.repository.SubmissionRepository;
@@ -43,6 +45,11 @@ public class ExerciseService {
     ExerciseRepository exerciseRepository;
     QuestionRepository questionRepository;
     SubmissionRepository submissionRepository;
+    AssignmentRepository assignmentRepository;
+
+    ContestService contestService;
+    AssignmentService assignmentService;
+    QuizService quizService;
 
     GrpcQuizClient grpcQuizClient;
     GrpcCodingClient grpcCodingClient;
@@ -54,9 +61,11 @@ public class ExerciseService {
     QuizHelper quizHelper;
     ExerciseHelper exerciseHelper;
 
+
     @Transactional
-    public void createExercise(
-            CreateExerciseRequest request) {
+    public Exercise createExercise(
+            CreateExerciseRequest request,
+            boolean returnExercise) {
         Exercise exercise = exerciseRepository
                 .save(exerciseMapper.toExerciseFromCreateExerciseRequest(
                         request, AuthenticationHelper.getMyUserId()));
@@ -67,21 +76,69 @@ public class ExerciseService {
         }
 
         exerciseEventProducer.publishCreatedExerciseEvent(exercise);
+
+        if (returnExercise) {
+            return exercise;
+        }
+        return null;
+    }
+
+    @Transactional
+    public Exercise createQuizExercise(
+            CreateQuizExerciseRequest request,
+            boolean returnExercise) {
+        Exercise exercise =
+                createExercise(
+                        request.createExerciseRequest(),
+                        true
+                );
+        exerciseRepository.saveAndFlush(exercise);
+
+        quizService.addQuizDetail(
+                exercise.getId(),
+                request.addQuizDetailRequest(),
+                false);
+
+        if (returnExercise) {
+            return exercise;
+        }
+        return null;
     }
 
 
     @Transactional
     public void createQuizSubmission(
             CreateQuizSubmissionRequest request) {
-        QuizSubmissionDto dto = request.getSubmission();
+        QuizSubmissionDto quizSubmissionDto = request.getSubmission();
 
         Exercise exercise = exerciseHelper
-                .getExerciseOrThrow(dto.getExerciseId());
+                .getExerciseOrThrow(quizSubmissionDto.getExerciseId());
 
-        Submission submission =
-                submissionMapper.toSubmissionFromQuizSubmissionDto(
-                        dto, exercise, questionRepository);
+        Submission submission = submissionMapper
+                .toSubmissionFromQuizSubmissionDto(
+                        quizSubmissionDto,
+                        exercise,
+                        questionRepository
+                );
         submissionRepository.save(submission);
+
+        // Set Complete
+        if (quizSubmissionDto.getScore() >=
+                quizSubmissionDto.getTotalPoints()) {
+            assignmentRepository
+                    .findByExerciseIdAndStudentId(
+                            quizSubmissionDto.getExerciseId(),
+                            quizSubmissionDto.getStudentId())
+                    .ifPresent(a -> a.setCompleted(true));
+
+            assignmentService.markCompleted(
+                    quizSubmissionDto.getExerciseId(),
+                    quizSubmissionDto.getStudentId()
+            );
+        }
+
+        // Cập nhật xếp hạng contest
+        contestService.updateRankingOnSubmission(submission);
     }
 
     @Transactional
@@ -93,6 +150,21 @@ public class ExerciseService {
 
         grpcQuizClient.pushExercise(exercise);
         exerciseEventProducer.publishUpdatedExerciseEvent(exercise);
+    }
+
+    @Transactional
+    public void softDeleteExercise(String exerciseId) {
+        Exercise exercise = exerciseHelper
+                .getExerciseOrThrow(exerciseId);
+        String by = AuthenticationHelper.getMyUsername();
+        exerciseHelper.markExerciseDeletedRecursively(exercise, by);
+        exerciseRepository.save(exercise);
+
+        exerciseEventProducer.publishDeletedExerciseEvent(exercise);
+        if (exercise.getExerciseType() ==
+                ExerciseType.QUIZ) {   // đồng bộ quiz‑svc
+            grpcQuizClient.softDeleteExercise(exerciseId);
+        }
     }
 
     public PageResponse<ExerciseQuizResponse> getAllExercises(

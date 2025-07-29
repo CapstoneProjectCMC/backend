@@ -14,11 +14,10 @@ import lombok.experimental.FieldDefaults;
 // Khi build thì KHÔNG response null
 //@JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class ExchangeTokenResponse
-{
-  String accessToken;
-  Long expiresIn;
-  String refreshToken;
-  String scope;
-  String tokenType;
+public class ExchangeTokenResponse {
+    String accessToken;
+    Long expiresIn;
+    String refreshToken;
+    String scope;
+    String tokenType;
 }

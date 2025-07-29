@@ -1,0 +1,187 @@
+{
+  "info": {
+    "_postman_id": "20151aa0-d6df-42b9-a8d2-ff86e79b6f33",
+    "name": "AI Service",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "33137665",
+    "_collection_link": "https://animeh-team.postman.co/workspace/Code-Campus-Workspace~833332bb-de6b-4a20-bdef-16542d164f4e/collection/33137665-20151aa0-d6df-42b9-a8d2-ff86e79b6f33?action=share&source=collection_link&creator=33137665"
+  },
+  "item": [
+    {
+      "name": "chat",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyYjU5NDM2Yi03YmMwLTQ5NWYtYmRhZS0zZDEyYWEzMDAwZGYiLCJwZXJtaXNzaW9ucyI6W10sInNjb3BlIjoiUk9MRV9BRE1JTiIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiZXhwIjoxNzUwOTM4MzgwLCJpYXQiOjE3NTA5MzQ3ODAsImp0aSI6IjgwYmNkOWNmLWZmOGMtNDM5Ni04ZTY1LTI2NjFlNTEyZjc1YSIsImVtYWlsIjoiYWRtaW4xMjMxMjMxMjNAbWFpbC5jb20iLCJ1c2VybmFtZSI6ImFkbWluIn0.k9lcHIuukbInOrinhWml6XaWq7RH4RnbChxx1-Sv074HmT6fP-oUFYIhLyfc_EKFcj9p1SexmP-txXEpE2ob1w",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "",
+            "value": "",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"message\": \"Bạn tên là gì ?\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8086/ai/chat",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8086",
+          "path": [
+            "ai",
+            "chat"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "chatWithImage",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyYjU5NDM2Yi03YmMwLTQ5NWYtYmRhZS0zZDEyYWEzMDAwZGYiLCJwZXJtaXNzaW9ucyI6W10sInNjb3BlIjoiUk9MRV9BRE1JTiIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiZXhwIjoxNzUwOTM4MzgwLCJpYXQiOjE3NTA5MzQ3ODAsImp0aSI6IjgwYmNkOWNmLWZmOGMtNDM5Ni04ZTY1LTI2NjFlNTEyZjc1YSIsImVtYWlsIjoiYWRtaW4xMjMxMjMxMjNAbWFpbC5jb20iLCJ1c2VybmFtZSI6ImFkbWluIn0.k9lcHIuukbInOrinhWml6XaWq7RH4RnbChxx1-Sv074HmT6fP-oUFYIhLyfc_EKFcj9p1SexmP-txXEpE2ob1w",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "",
+            "value": "",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "file",
+              "type": "file",
+              "src": []
+            },
+            {
+              "key": "message",
+              "value": "Hãy nhận diện ảnh này",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://localhost:8086/ai/chat-with-image",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8086",
+          "path": [
+            "ai",
+            "chat-with-image"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "generateQuizExercise",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNDM0MjQyNTItZDJjZi00Y2NkLWFjYWEtNzgxOGQ2ZTE3YzdhIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTIxMzI4NDQsImlhdCI6MTc1MjEyOTI0NCwianRpIjoiNzVkZDIyZDItNTE4MS00YzQ3LWE1MjgtYTIxYjNhZWNlY2UxIiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.UKClDlrPTtbmE9HcexQ4t4CjAWMbtP1UzL2mVuuVW4uPDwhSwSyU9ahEeoakb7ve0yM_RDkBy_XFdeAzGrDIoA",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"exercisePromptIn\": {\r\n        \"title\": \"Lập trình Java căn bản – vòng lặp\",\r\n        \"description\": \"Ôn tập kiến thức for‑while‑do while, vòng lặp lồng.\",\r\n        \"difficulty\": \"EASY\",\r\n        \"duration\": 15,\r\n        \"tags\": [\r\n            \"java\",\r\n            \"loop\",\r\n            \"basic\"\r\n        ]\r\n    },\r\n    \"numQuestions\": 5\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8086/ai/generate/quiz",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8086",
+          "path": [
+            "ai",
+            "generate",
+            "quiz"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "generateQuestion",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyYjU5NDM2Yi03YmMwLTQ5NWYtYmRhZS0zZDEyYWEzMDAwZGYiLCJwZXJtaXNzaW9ucyI6W10sInNjb3BlIjoiUk9MRV9BRE1JTiIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiZXhwIjoxNzUwOTM4MzgwLCJpYXQiOjE3NTA5MzQ3ODAsImp0aSI6IjgwYmNkOWNmLWZmOGMtNDM5Ni04ZTY1LTI2NjFlNTEyZjc1YSIsImVtYWlsIjoiYWRtaW4xMjMxMjMxMjNAbWFpbC5jb20iLCJ1c2VybmFtZSI6ImFkbWluIn0.k9lcHIuukbInOrinhWml6XaWq7RH4RnbChxx1-Sv074HmT6fP-oUFYIhLyfc_EKFcj9p1SexmP-txXEpE2ob1w",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"exerciseId\": \"771e3cdb-537f-4b0f-9e1d-3f5d4f365cec\",\r\n    \"title\": \"Lập trình Java căn bản – vòng lặp\",\r\n    \"description\": \"Ôn tập kiến thức for‑while‑do while...\",\r\n    \"difficulty\": \"EASY\",\r\n    \"duration\": 15,\r\n    \"tags\": [\r\n        \"java\",\r\n        \"loop\"\r\n    ],\r\n    \"questionType\": \"SINGLE_CHOICE\",\r\n    \"points\": 2\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8086/ai/generate/question",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8086",
+          "path": [
+            "ai",
+            "generate",
+            "question"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

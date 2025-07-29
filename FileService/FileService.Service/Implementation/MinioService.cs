@@ -25,17 +25,17 @@ namespace FileService.Service.Implementation
 
         public MinioService(
             AppSettings appSettings,
-            UserContext userContext,
-            IOptions<MinioConfig> config
+            UserContext userContext
             )
              : base(appSettings, userContext)
         {
+
             _userContext = userContext;
 
-            _config = config.Value;
-            Console.WriteLine($"MinIO Config: Endpoint={_config.Endpoint}, Bucket={_config.BucketName}");
+            _config = appSettings.MinioConfig ?? throw new ArgumentNullException(nameof(appSettings.MinioConfig)); 
+
             _minioClient = new MinioClient()
-                .WithEndpoint(_config.Endpoint)
+                .WithEndpoint(_config.Endpoint, _config.Port)
                 .WithCredentials(_config.AccessKey, _config.SecretKey)
                 .WithSSL(_config.Secure)
                 .Build();
@@ -69,7 +69,7 @@ namespace FileService.Service.Implementation
             var presignedGetArgs = new PresignedGetObjectArgs()
                 .WithBucket(_config.BucketName)
                 .WithObject(objectName)
-                .WithExpiry(3600); // Hết hạn sau 1 giờ
+                .WithExpiry(7200); // Hết hạn sau 2 giờ
             return await _minioClient.PresignedGetObjectAsync(presignedGetArgs);
         }
 

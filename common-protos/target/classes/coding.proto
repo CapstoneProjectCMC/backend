@@ -1,0 +1,70 @@
+syntax = "proto3";
+
+package coding;
+option java_multiple_files = true;
+option java_package = "com.codecampus.coding.grpc";
+option java_outer_classname = "CodingProto";
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+message CodingExerciseDto {
+  string id = 1;
+  string title = 2;
+  string description = 3;
+}
+
+message CodingDetailDto {
+  string exerciseId = 1; // = id của exercise
+  repeated string allowedLanguages = 2;
+  string input = 3;
+  string output = 4;
+  int32  timeLimit = 5;
+  int32  memoryLimit = 6;
+  int32  maxSubmissions = 7;
+  string topic = 8;
+  string constraintText = 9;
+  string codeTemplate = 10;
+  string solution = 11;
+}
+
+message TestCaseDto {
+  string id = 1;
+  string exerciseId = 2;
+  string input = 3;
+  string expectedOutput = 4;
+  bool sample = 5;
+  string note = 6;
+}
+
+service CodingSyncService {
+  rpc CreateCodingExercise(CreateCodingExerciseRequest)
+      returns (google.protobuf.Empty);
+  rpc AddCodingDetail(AddCodingDetailRequest)
+      returns (google.protobuf.Empty);
+  rpc UpsertCodingDetail (UpsertCodingDetailRequest)
+      returns (google.protobuf.Empty);
+  rpc AddTestCase(AddTestCaseRequest)
+      returns (google.protobuf.Empty);
+  rpc UpsertTestCase (UpsertTestCaseRequest)
+      returns (google.protobuf.Empty);
+}
+
+message CreateCodingExerciseRequest {
+  CodingExerciseDto exercise = 1;
+}
+
+message AddCodingDetailRequest {
+  CodingDetailDto detail = 1;
+}
+message UpsertCodingDetailRequest {
+  CodingDetailDto detail = 1;
+}
+
+
+message AddTestCaseRequest {
+  TestCaseDto testCase = 1;
+}
+message UpsertTestCaseRequest {
+  TestCaseDto testCase = 1;
+}

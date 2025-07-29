@@ -56,4 +56,10 @@ public interface QuizExerciseDtoOrBuilder extends
    * @return The numQuestions.
    */
   int getNumQuestions();
+
+  /**
+   * <code>int32 duration = 6;</code>
+   * @return The duration.
+   */
+  int getDuration();
 }

@@ -1,0 +1,241 @@
+{
+  "info": {
+    "_postman_id": "585aca11-9c2b-44bb-a4f7-f1e45b4298d8",
+    "name": "Profile Service",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "33137665",
+    "_collection_link": "https://animeh-team.postman.co/workspace/Code-Campus-Workspace~833332bb-de6b-4a20-bdef-16542d164f4e/collection/33137665-585aca11-9c2b-44bb-a4f7-f1e45b4298d8?action=share&source=collection_link&creator=33137665"
+  },
+  "item": [
+    {
+      "name": "User",
+      "item": [
+        {
+          "name": "(ADMIN) getAllUserProfiles",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb2RlIENhbXB1cyIsInN1YiI6IjRmYmJmZjYyLThmN2MtNGVkNC1hMjJiLWIyMmI4ZmM5NzM4MCIsImV4cCI6MTc0OTY0MDg0MywiaWF0IjoxNzQ5NjM3MjQzLCJqdGkiOiI2MDBmMjllZi03ZGFiLTQ2YzgtODJmZS01NjY5NTU2ZTcyNzEiLCJzY29wZSI6IlJPTEVfQURNSU4ifQ.RRvaVn_sR3Ii_0tBudUuqbhqhEpjDtEAOGwV2b3ZzZ0NHX78RZd52ddvaOuXPPTVJdE3Qq_lu-vmSpiBOZI6Gg",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{ProfileBase}}/users?page=1&size=10",
+              "host": [
+                "{{ProfileBase}}"
+              ],
+              "path": [
+                "users"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "size",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "(ADMIN) getUserProfileById",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb2RlIENhbXB1cyIsInN1YiI6IjZlODhkMmU1LWY3ODgtNDMzOS05MjYxLWM0MDA2YzBkZGMzOSIsImV4cCI6MTc0OTYzNzM5MywiaWF0IjoxNzQ5NjMzNzkzLCJqdGkiOiJmZmVkZjFmOS1kNDVjLTQwYTUtOGI0OS1mNDAwNmU4NzQwMWMiLCJzY29wZSI6IlJPTEVfQURNSU4ifQ.lkrdMMk8P25FntmgoNKnorkTZSFOPO-ER8Y2fOfS_lRnhsjxQmo41f_GdHt3-xu5MtXxBKisjwBU8HU2D1A-ag",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{ProfileBase}}/user/c663ff6a-ae42-43e2-907b-15638139903a",
+              "host": [
+                "{{ProfileBase}}"
+              ],
+              "path": [
+                "user",
+                "c663ff6a-ae42-43e2-907b-15638139903a"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "getMyUserProfile",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb2RlIENhbXB1cyIsInN1YiI6IjRmYmJmZjYyLThmN2MtNGVkNC1hMjJiLWIyMmI4ZmM5NzM4MCIsImV4cCI6MTc0OTY0MDg0MywiaWF0IjoxNzQ5NjM3MjQzLCJqdGkiOiI2MDBmMjllZi03ZGFiLTQ2YzgtODJmZS01NjY5NTU2ZTcyNzEiLCJzY29wZSI6IlJPTEVfQURNSU4ifQ.RRvaVn_sR3Ii_0tBudUuqbhqhEpjDtEAOGwV2b3ZzZ0NHX78RZd52ddvaOuXPPTVJdE3Qq_lu-vmSpiBOZI6Gg",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{ProfileBase}}/user/my-profile",
+              "host": [
+                "{{ProfileBase}}"
+              ],
+              "path": [
+                "user",
+                "my-profile"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "updateMyUserProfile",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb2RlIENhbXB1cyIsInN1YiI6IjRmYmJmZjYyLThmN2MtNGVkNC1hMjJiLWIyMmI4ZmM5NzM4MCIsImV4cCI6MTc0OTY0MDg0MywiaWF0IjoxNzQ5NjM3MjQzLCJqdGkiOiI2MDBmMjllZi03ZGFiLTQ2YzgtODJmZS01NjY5NTU2ZTcyNzEiLCJzY29wZSI6IlJPTEVfQURNSU4ifQ.RRvaVn_sR3Ii_0tBudUuqbhqhEpjDtEAOGwV2b3ZzZ0NHX78RZd52ddvaOuXPPTVJdE3Qq_lu-vmSpiBOZI6Gg",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"firstName\": \"\",\r\n  \"lastName\": \"\",\r\n  \"dob\": \"\",\r\n  \"bio\": \"\",\r\n  \"gender\": \"\",\r\n  \"displayName\": \"\",\r\n  \"education\": \"\",\r\n  \"links\": [],\r\n  \"city\": \"\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{ProfileBase}}/users/my-profile",
+              "host": [
+                "{{ProfileBase}}"
+              ],
+              "path": [
+                "users",
+                "my-profile"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "(internal) createUserProfile",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb2RlIENhbXB1cyIsInN1YiI6IjRmYmJmZjYyLThmN2MtNGVkNC1hMjJiLWIyMmI4ZmM5NzM4MCIsImV4cCI6MTc0OTY0MDg0MywiaWF0IjoxNzQ5NjM3MjQzLCJqdGkiOiI2MDBmMjllZi03ZGFiLTQ2YzgtODJmZS01NjY5NTU2ZTcyNzEiLCJzY29wZSI6IlJPTEVfQURNSU4ifQ.RRvaVn_sR3Ii_0tBudUuqbhqhEpjDtEAOGwV2b3ZzZ0NHX78RZd52ddvaOuXPPTVJdE3Qq_lu-vmSpiBOZI6Gg",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"userId\": \"\",\r\n  \"firstName\": \"\",\r\n  \"lastName\": \"\",\r\n  \"dob\": \"\",\r\n  \"bio\": \"\",\r\n  \"gender\": \"\",\r\n  \"displayName\": \"\",\r\n  \"education\": \"\",\r\n  \"links\": [],\r\n  \"city\": \"\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{ProfileBase}}/internal/user",
+              "host": [
+                "{{ProfileBase}}"
+              ],
+              "path": [
+                "internal",
+                "user"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "(internal) getUserProfileByUserId",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb2RlIENhbXB1cyIsInN1YiI6IjRmYmJmZjYyLThmN2MtNGVkNC1hMjJiLWIyMmI4ZmM5NzM4MCIsImV4cCI6MTc0OTY0MDg0MywiaWF0IjoxNzQ5NjM3MjQzLCJqdGkiOiI2MDBmMjllZi03ZGFiLTQ2YzgtODJmZS01NjY5NTU2ZTcyNzEiLCJzY29wZSI6IlJPTEVfQURNSU4ifQ.RRvaVn_sR3Ii_0tBudUuqbhqhEpjDtEAOGwV2b3ZzZ0NHX78RZd52ddvaOuXPPTVJdE3Qq_lu-vmSpiBOZI6Gg",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"userId\": \"\",\r\n  \"firstName\": \"\",\r\n  \"lastName\": \"\",\r\n  \"dob\": \"\",\r\n  \"bio\": \"\",\r\n  \"gender\": \"\",\r\n  \"displayName\": \"\",\r\n  \"education\": \"\",\r\n  \"links\": [],\r\n  \"city\": \"\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{ProfileBase}}/internal/user/4fbbff62-8f7c-4ed4-a22b-b22b8fc97380",
+              "host": [
+                "{{ProfileBase}}"
+              ],
+              "path": [
+                "internal",
+                "user",
+                "4fbbff62-8f7c-4ed4-a22b-b22b8fc97380"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "getHello",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{ProfileBase}}/hello",
+          "host": [
+            "{{ProfileBase}}"
+          ],
+          "path": [
+            "hello"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

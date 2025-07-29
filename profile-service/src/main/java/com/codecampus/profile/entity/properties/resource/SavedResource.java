@@ -1,7 +1,6 @@
 package com.codecampus.profile.entity.properties.resource;
 
 import com.codecampus.profile.entity.FileResource;
-import java.time.Instant;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,6 +13,8 @@ import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.RelationshipProperties;
 import org.springframework.data.neo4j.core.schema.TargetNode;
 
+import java.time.Instant;
+
 @Getter
 @Setter
 @Builder
@@ -21,14 +22,13 @@ import org.springframework.data.neo4j.core.schema.TargetNode;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @RelationshipProperties
-public class SavedResource
-{
-  @Id
-  @GeneratedValue
-  String id;
+public class SavedResource {
+    @Id
+    @GeneratedValue
+    String id;
 
-  Instant saveAt;
+    Instant saveAt;
 
-  @TargetNode
-  FileResource resource;
+    @TargetNode
+    FileResource resource;
 }

@@ -9,13 +9,13 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserProfileUpdateRequest {
-  String firstName;
-  String lastName;
-  String dob;
-  String bio;
-  boolean gender;
-  String displayName;
-  int education;
-  String[] links;
-  String city;
+    String firstName;
+    String lastName;
+    String dob;
+    String bio;
+    boolean gender;
+    String displayName;
+    int education;
+    String[] links;
+    String city;
 }

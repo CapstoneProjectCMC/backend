@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 @Builder
 @Slf4j
 public class HelloController {
-  @GetMapping("/hello")
-  ApiResponse<String> getHello() {
-    return ApiResponse.<String>builder()
-        .result("Hello World From PROFILE SERVICE")
-        .message("Hello World From PROFILE SERVICE")
-        .build();
-  }
+    @GetMapping("/hello")
+    ApiResponse<String> getHello() {
+        return ApiResponse.<String>builder()
+                .result("Hello World From PROFILE SERVICE")
+                .message("Hello World From PROFILE SERVICE")
+                .build();
+    }
 }

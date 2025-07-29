@@ -24,39 +24,39 @@ import org.springframework.web.bind.annotation.RestController;
 @Builder
 @Slf4j
 public class UserProfileController {
-  UserProfileService userProfileService;
+    UserProfileService userProfileService;
 
-  @PreAuthorize("hasRole('ADMIN')")
-  @GetMapping("/user/{profileId}")
-  ApiResponse<UserProfileResponse> getUserProfileById(
-      @PathVariable("profileId") String profileId) {
-    return ApiResponse.<UserProfileResponse>builder()
-        .result(userProfileService.getUserProfileById(profileId))
-        .build();
-  }
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/user/{profileId}")
+    ApiResponse<UserProfileResponse> getUserProfileById(
+            @PathVariable("profileId") String profileId) {
+        return ApiResponse.<UserProfileResponse>builder()
+                .result(userProfileService.getUserProfileById(profileId))
+                .build();
+    }
 
-  @PreAuthorize("hasRole('ADMIN')")
-  @GetMapping("/users")
-  ApiResponse<PageResponse<UserProfileResponse>> getAllUserProfiles(
-      @RequestParam(value = "page", defaultValue = "1") int page,
-      @RequestParam(value = "size", defaultValue = "10") int size) {
-    return ApiResponse.<PageResponse<UserProfileResponse>>builder()
-        .result(userProfileService.getAllUserProfiles(page, size))
-        .build();
-  }
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/users")
+    ApiResponse<PageResponse<UserProfileResponse>> getAllUserProfiles(
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size) {
+        return ApiResponse.<PageResponse<UserProfileResponse>>builder()
+                .result(userProfileService.getAllUserProfiles(page, size))
+                .build();
+    }
 
-  @GetMapping("/user/my-profile")
-  ApiResponse<UserProfileResponse> getMyUserProfile() {
-    return ApiResponse.<UserProfileResponse>builder()
-        .result(userProfileService.getMyUserProfile())
-        .build();
-  }
+    @GetMapping("/user/my-profile")
+    ApiResponse<UserProfileResponse> getMyUserProfile() {
+        return ApiResponse.<UserProfileResponse>builder()
+                .result(userProfileService.getMyUserProfile())
+                .build();
+    }
 
-  @PatchMapping("/user/my-profile")
-  ApiResponse<UserProfileResponse> updateMyUserProfile(
-      @RequestBody UserProfileUpdateRequest request) {
-    return ApiResponse.<UserProfileResponse>builder()
-        .result(userProfileService.updateMyUserProfile(request))
-        .build();
-  }
+    @PatchMapping("/user/my-profile")
+    ApiResponse<UserProfileResponse> updateMyUserProfile(
+            @RequestBody UserProfileUpdateRequest request) {
+        return ApiResponse.<UserProfileResponse>builder()
+                .result(userProfileService.updateMyUserProfile(request))
+                .build();
+    }
 }

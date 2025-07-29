@@ -52,4 +52,10 @@ public interface OptionDtoOrBuilder extends
    */
   com.google.protobuf.ByteString
       getOrderBytes();
+
+  /**
+   * <code>bool correct = 4;</code>
+   * @return The correct.
+   */
+  boolean getCorrect();
 }
