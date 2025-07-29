@@ -18,6 +18,9 @@ namespace FileService.Api.Middlewares
             var sessionId = httpContext.User.Claims.FirstOrDefault(c => c.Type == "sessionId")?.Value;
             var role = httpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
             var userType = httpContext.User.Claims.FirstOrDefault(c => c.Type == "userType")?.Value;
+            var username = httpContext.User.Claims.FirstOrDefault(c => c.Type == "username")?.Value;
+            var permissions = httpContext.User.Claims.Where(c => c.Type == "permissions").Select(c => c.Value).ToList();
+
 
             if (userContext == null)
             {
@@ -42,6 +45,16 @@ namespace FileService.Api.Middlewares
             if (!string.IsNullOrEmpty(role))
             {
                 userContext.Role = role;
+            }
+
+            if (!string.IsNullOrEmpty(username))
+            {
+                userContext.Username = username;
+            }
+
+            if (permissions != null && permissions.Any())
+            {
+                userContext.Permissions = permissions;
             }
 
             await _next(httpContext);
