@@ -12,12 +12,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b5542390-86ea-4e7c-8261-890d4e9fdf28" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/FileService.Api/appsettings.Staging.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../docker/file-service.Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.FileService/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.FileService/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../docker-compose.services.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../docker-compose.services.yml" afterDir="false" />
-    </list>
+    <list default="true" id="b5542390-86ea-4e7c-8261-890d4e9fdf28" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -160,7 +155,7 @@
       <workItem from="1752649823016" duration="2931000" />
       <workItem from="1752653945531" duration="1146000" />
       <workItem from="1753709012228" duration="1636000" />
-      <workItem from="1753860247609" duration="4041000" />
+      <workItem from="1753860247609" duration="4469000" />
     </task>
     <servers />
   </component>

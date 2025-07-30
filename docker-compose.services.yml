@@ -1,9 +1,10 @@
-name: codecampus
+name: codecampus-services
 services:
   identity-service:
+    image: ${DOCKERHUB_USER}/codecampus-identity-service:${IMAGE_TAG:-latest}
     build:
-      context: .
-      dockerfile: docker/java-service.Dockerfile
+      context: ..
+      dockerfile: java-service.Dockerfile
       args:
         MODULE: identity-service
     environment:
@@ -16,9 +17,10 @@ services:
     networks: [ backend ]
 
   profile-service:
+    image: ${DOCKERHUB_USER}/codecampus-profile-service:${IMAGE_TAG:-latest}
     build:
-      context: .
-      dockerfile: docker/java-service.Dockerfile
+      context: ..
+      dockerfile: java-service.Dockerfile
       args:
         MODULE: profile-service
     environment:
@@ -30,9 +32,10 @@ services:
     networks: [ backend ]
 
   submission-service:
+    image: ${DOCKERHUB_USER}/codecampus-submission-service:${IMAGE_TAG:-latest}
     build:
-      context: .
-      dockerfile: docker/java-service.Dockerfile
+      context: ..
+      dockerfile: java-service.Dockerfile
       args:
         MODULE: submission-service
     environment:
@@ -46,9 +49,10 @@ services:
     networks: [ backend ]
 
   coding-service:
+    image: ${DOCKERHUB_USER}/codecampus-coding-service:${IMAGE_TAG:-latest}
     build:
-      context: .
-      dockerfile: docker/java-service.Dockerfile
+      context: ..
+      dockerfile: java-service.Dockerfile
       args:
         MODULE: coding-service
     environment:
@@ -62,9 +66,10 @@ services:
     networks: [ backend ]
 
   quiz-service:
+    image: ${DOCKERHUB_USER}/codecampus-quiz-service:${IMAGE_TAG:-latest}
     build:
-      context: .
-      dockerfile: docker/java-service.Dockerfile
+      context: ..
+      dockerfile: java-service.Dockerfile
       args:
         MODULE: quiz-service
     environment:
@@ -78,9 +83,10 @@ services:
     networks: [ backend ]
 
   ai-service:
+    image: ${DOCKERHUB_USER}/codecampus-ai-service:${IMAGE_TAG:-latest}
     build:
-      context: .
-      dockerfile: docker/java-service.Dockerfile
+      context: ..
+      dockerfile: java-service.Dockerfile
       args:
         MODULE: ai-service
     environment:
@@ -94,9 +100,10 @@ services:
     networks: [ backend ]
 
   search-service:
+    image: ${DOCKERHUB_USER}/codecampus-search-service:${IMAGE_TAG:-latest}
     build:
-      context: .
-      dockerfile: docker/java-service.Dockerfile
+      context: ..
+      dockerfile: java-service.Dockerfile
       args:
         MODULE: search-service
     environment:
@@ -108,9 +115,10 @@ services:
     networks: [ backend ]
 
   notification-service:
+    image: ${DOCKERHUB_USER}/codecampus-notification-service:${IMAGE_TAG:-latest}
     build:
-      context: .
-      dockerfile: docker/java-service.Dockerfile
+      context: ..
+      dockerfile: java-service.Dockerfile
       args:
         MODULE: notification-service
     environment:
@@ -120,9 +128,10 @@ services:
     networks: [ backend ]
 
   chat-service:
+    image: ${DOCKERHUB_USER}/codecampus-chat-service:${IMAGE_TAG:-latest}
     build:
-      context: .
-      dockerfile: docker/java-service.Dockerfile
+      context: ..
+      dockerfile: java-service.Dockerfile
       args:
         MODULE: chat-service
     environment:
@@ -135,9 +144,10 @@ services:
     networks: [ backend ]
 
   file-service:
+    image: ${DOCKERHUB_USER}/codecampus-file-service:${IMAGE_TAG:-latest}
     build:
-      context: .
-      dockerfile: docker/file-service.Dockerfile
+      context: ..
+      dockerfile: file-service.Dockerfile
     environment:
       # cấu hình môi trường ASP.NET
       - ASPNETCORE_ENVIRONMENT=staging
@@ -156,9 +166,10 @@ services:
     networks: [ backend ]
   
   gateway-service:
+    image: ${DOCKERHUB_USER}/codecampus-gateway-service:${IMAGE_TAG:-latest}
     build:
-      context: .
-      dockerfile: docker/java-service.Dockerfile
+      context: ..
+      dockerfile: java-service.Dockerfile
       args:
         MODULE: gateway-service
     environment:

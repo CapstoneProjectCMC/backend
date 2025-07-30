@@ -1,4 +1,4 @@
-name: codecampus
+name: codecampus-infrastructures
 
 services:
   # ---------- PostgreSQL ----------
