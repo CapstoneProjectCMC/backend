@@ -13,8 +13,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b5542390-86ea-4e7c-8261-890d4e9fdf28" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/FileService.Api/appsettings.Staging.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../docker/file-service.Dockerfile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.FileService/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.FileService/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FileService.Api/Controllers/HelloController.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../docker-compose.services.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../docker-compose.services.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,6 +25,13 @@
   </component>
   <component name="DpaMonitoringSettings">
     <option name="firstShow" value="false" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JSON File" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -151,6 +160,7 @@
       <workItem from="1752649823016" duration="2931000" />
       <workItem from="1752653945531" duration="1146000" />
       <workItem from="1753709012228" duration="1636000" />
+      <workItem from="1753860247609" duration="4041000" />
     </task>
     <servers />
   </component>
