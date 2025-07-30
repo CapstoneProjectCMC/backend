@@ -1,0 +1,17 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /identity
+
+spring:
+  datasource:
+    url: jdbc:postgresql://identity-db:5432/${IDENTITY_DATABASE}
+    username: ${IDENTITY_USERNAME}
+    password: ${IDENTITY_DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  kafka:
+    bootstrap-servers: kafka:9092
+
+app:
+  services:
+    profile: http://profile-service:8081/profile

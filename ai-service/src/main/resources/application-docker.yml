@@ -1,0 +1,15 @@
+server:
+  port: 8086
+  servlet:
+    context-path: /ai
+
+spring:
+  datasource:
+    url: jdbc:postgresql://ai-db:5432/${AI_DATABASE}
+    username: ${AI_USERNAME}
+    password: ${AI_DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+app:
+  services:
+    submission: http://submission-service:8083/submission

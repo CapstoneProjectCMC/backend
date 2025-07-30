@@ -284,35 +284,6 @@
                 </executions>
             </plugin>
 
-            <!-- ==== Protobuf / gRPC code-gen ==== -->
-            <plugin>
-                <groupId>io.github.ascopes</groupId>
-                <artifactId>protobuf-maven-plugin</artifactId>
-                <version>${protobuf.plugin.version}</version>
-                <configuration>
-                    <sourceDirectories>
-                        <sourceDirectory>src/main/proto</sourceDirectory>
-                    </sourceDirectories>
-                    <protocVersion>${protobuf.version}</protocVersion>
-                    <binaryMavenPlugins>
-                        <binaryMavenPlugin>
-                            <groupId>io.grpc</groupId>
-                            <artifactId>protoc-gen-grpc-java</artifactId>
-                            <version>${grpc.version}</version>
-                            <options>jakarta_omit,@generated=omit</options>
-                        </binaryMavenPlugin>
-                    </binaryMavenPlugins>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>generate</id>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
             <!-- ==== Spring Boot repackage ==== -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>

@@ -52,8 +52,8 @@ app:
     expiry-minutes: 5
   jwt:
     signerKey: "1TjXchw5FloESb63Kc+DFhTARvpWL4jUGCwfGWxuG5SIf/1y/LgJxHnMqaF6A/ij"
-    valid-duration: 3600 # in second
-    refreshable-duration: 36000 # in seconds
+    valid-duration: 604800 # in second ~~ 1 tuần
+    refreshable-duration: 1209600 # in seconds ~~ 2 tuần
   google:
     client-id: "989048331981-ftq9jst7r5os4fc0u64ongvsp08fvka1.apps.googleusercontent.com"
     client-secret: "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"

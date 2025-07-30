@@ -304,7 +304,7 @@ public class AuthenticationService {
         invalidateToken(signedJWT);
 
         User user = userRepository
-                .findById(signedJWT.getJWTClaimsSet().getSubject())
+                .findByEmail(signedJWT.getJWTClaimsSet().getSubject())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
         return generateTokenAndReturnAuthenticationResponse(user);

@@ -1,7 +1,7 @@
 server:
   port: 8086
-  http:
-    port: 8006
+  #  http:
+  #    port: 8006
   servlet:
     context-path: /ai
 #  ssl:

@@ -10,7 +10,7 @@ spring:
     name: chat-service
   data:
     mongodb:
-      uri: mongodb://mongodb_chat:dinhanst2832004@localhost:27019/chat_db?authSource=admin
+      uri: mongodb://mongodb_chat:dinhanst2832004@localhost:27019/chat_db?authSource=chat_db
       auto-index-creation: true
 
 app:

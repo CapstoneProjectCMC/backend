@@ -73,7 +73,7 @@ public class RateLimiterGatewayFilterFactory
             // Gán RouteId cho IP người dùng -> key
             String key = routeId + ":" + clientIp;
 
-            // Lấy cấu hình từ application.yaml
+            // Lấy cấu hình từ application.yml
             RateLimiterConfigProperties.RouteConfig routeConfig =
                     configProperties.getRoutes().get(routeId);
 

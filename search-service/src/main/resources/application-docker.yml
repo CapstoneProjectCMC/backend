@@ -1,0 +1,22 @@
+server:
+  port: 8087
+  servlet:
+    context-path: /search
+
+spring:
+  elasticsearch:
+    uris: http://elasticsearch:9200
+    username: ${ELASTIC_USERNAME}
+    password: ${ELASTIC_PASSWORD}
+    socket-timeout: 30s
+    connection-timeout: 10s
+  lifecycle:
+    timeout-per-shutdown-phase: 20s
+
+  kafka:
+    bootstrap-servers: http://kafka:9092
+
+logging:
+  level:
+    org.springframework.data.elasticsearch: DEBUG
+    org.elasticsearch.client: TRACE

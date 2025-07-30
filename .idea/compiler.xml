@@ -34,12 +34,29 @@
         <module name="coding-service" />
         <module name="search-service" />
         <module name="quiz-service" />
-        <module name="chat-service" />
         <module name="profile-service" />
         <module name="identity-service" />
         <module name="ai-service" />
         <module name="common-events" />
         <module name="notification-service" />
+      </profile>
+      <profile name="Annotation profile for chat-service" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <option name="mapstruct.defaultComponentModel" value="spring" />
+        <option name="mapstruct.verbose" value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.38/lombok-1.18.38.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok-mapstruct-binding/0.2.0/lombok-mapstruct-binding-0.2.0.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct-processor/1.6.3/mapstruct-processor-1.6.3.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct/1.6.3/mapstruct-1.6.3.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.38/lombok-1.18.38.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok-mapstruct-binding/0.2.0/lombok-mapstruct-binding-0.2.0.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct-processor/1.6.3/mapstruct-processor-1.6.3.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct/1.6.3/mapstruct-1.6.3.jar" />
+        </processorPath>
+        <module name="chat-service" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>

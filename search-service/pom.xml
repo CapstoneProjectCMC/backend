@@ -117,6 +117,11 @@
             <artifactId>common-protos</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.codecampus</groupId>
+            <artifactId>common-events</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
         <!-- ========== Kafka ========= -->
         <!-- https://mvnrepository.com/artifact/org.springframework.kafka/spring-kafka -->
@@ -165,12 +170,6 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.codecampus</groupId>
-            <artifactId>common-events</artifactId>
-            <version>${project.version}</version>
         </dependency>
     </dependencies>
 
@@ -261,34 +260,6 @@
                         <goals>
                             <goal>detect</goal>
                         </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <!-- ==== Protobuf / gRPC code-gen ==== -->
-            <plugin>
-                <groupId>org.xolstice.maven.plugins</groupId>
-                <artifactId>protobuf-maven-plugin</artifactId>
-                <version>${protobuf.plugin.version}</version>
-                <configuration>
-                    <protocArtifact>
-                        com.google.protobuf:protoc:${protobuf.version}:exe:${os.detected.classifier}
-                    </protocArtifact>
-                    <pluginId>grpc-java</pluginId>
-                    <pluginArtifact>
-                        io.grpc:protoc-gen-grpc-java:${grpc.version}:exe:${os.detected.classifier}
-                    </pluginArtifact>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>proto-compile</id>
-                        <goals>
-                            <goal>compile</goal>
-                            <goal>compile-custom</goal>
-                        </goals>
-                        <configuration>
-                            <pluginParameter>jakarta_omit,@generated=omit</pluginParameter>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
