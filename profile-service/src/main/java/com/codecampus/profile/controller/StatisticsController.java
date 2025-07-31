@@ -24,9 +24,9 @@ public class StatisticsController {
     StatisticsService statisticsService;
 
     @GetMapping("/post/{userId}")
-    ApiResponse<UserPostStats> postStats(
+    ApiResponse<UserPostStats> getPostStats(
             @PathVariable String userId) {
-        return ApiResponse.<com.codecampus.profile.dto.response.UserPostStats>builder()
+        return ApiResponse.<UserPostStats>builder()
                 .message("Thống kê bài viết")
                 .result(statisticsService.getPostStats(userId))
                 .build();

@@ -50,7 +50,7 @@ public class FamilyController {
     }
 
     @GetMapping("/{parentId}/children")
-    ApiResponse<List<UserProfile>> children(
+    ApiResponse<List<UserProfile>> getChildren(
             @PathVariable String parentId) {
         return ApiResponse.<List<UserProfile>>builder()
                 .message("Danh sách con")

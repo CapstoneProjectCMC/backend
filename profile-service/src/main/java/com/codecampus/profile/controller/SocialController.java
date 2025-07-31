@@ -74,7 +74,7 @@ public class SocialController {
     }
 
     @GetMapping("/followings")
-    ApiResponse<PageResponse<Follows>> followings(
+    ApiResponse<PageResponse<Follows>> getFollowings(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size) {
         return ApiResponse.<PageResponse<Follows>>builder()
@@ -84,7 +84,7 @@ public class SocialController {
     }
 
     @GetMapping("/blocked")
-    ApiResponse<PageResponse<Blocks>> blocked(
+    ApiResponse<PageResponse<Blocks>> findBlocked(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size) {
         return ApiResponse.<PageResponse<Blocks>>builder()

@@ -96,7 +96,6 @@ public class UserProfileService {
      * @return UserProfileResponse
      * @throws AppException nếu không tìm thấy
      */
-    @PreAuthorize("hasRole('ADMIN')")
     public UserProfileResponse getUserProfileById(String id) {
         return userProfileRepository
                 .findById(id)

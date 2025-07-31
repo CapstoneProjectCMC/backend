@@ -77,7 +77,7 @@ public class PostService {
         return toPageResponse(pageData, page);
     }
 
-    public PageResponse<Reaction> myReactions(
+    public PageResponse<Reaction> getMyReactions(
             int page, int size) {
         Pageable pageable = PageRequest.of(page - 1, size);
         var pageData = userProfileRepository

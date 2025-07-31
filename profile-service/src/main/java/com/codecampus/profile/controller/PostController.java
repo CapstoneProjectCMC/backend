@@ -29,7 +29,8 @@ public class PostController {
     PostService postService;
 
     @PostMapping("/post/{postId}/save")
-    ApiResponse<Void> savePost(@PathVariable String postId) {
+    ApiResponse<Void> savePost(
+            @PathVariable String postId) {
         postService.savePost(postId);
         return ApiResponse.<Void>builder()
                 .message("Đã lưu bài viết")
@@ -37,7 +38,8 @@ public class PostController {
     }
 
     @DeleteMapping("/post/{postId}/save")
-    ApiResponse<Void> unsavePost(@PathVariable String postId) {
+    ApiResponse<Void> unsavePost(
+            @PathVariable String postId) {
         postService.unsavePost(postId);
         return ApiResponse.<Void>builder()
                 .message("Đã bỏ lưu bài viết")
@@ -63,13 +65,13 @@ public class PostController {
                 .build();
     }
 
-    @GetMapping("/posts/reactions")
-    ApiResponse<PageResponse<Reaction>> myReactions(
+    @GetMapping("/post/reactions")
+    ApiResponse<PageResponse<Reaction>> getMyReactions(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size) {
         return ApiResponse.<PageResponse<Reaction>>builder()
                 .message("Phản ứng của tôi")
-                .result(postService.myReactions(page, size))
+                .result(postService.getMyReactions(page, size))
                 .build();
     }
 

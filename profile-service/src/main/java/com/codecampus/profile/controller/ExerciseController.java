@@ -29,7 +29,8 @@ public class ExerciseController {
     /* ---- SAVE / UNSAVE ------------------------------------------------- */
 
     @PostMapping("/exercise/{exerciseId}/save")
-    ApiResponse<Void> saveExercise(@PathVariable String exerciseId) {
+    ApiResponse<Void> saveExercise(
+            @PathVariable String exerciseId) {
         exerciseService.saveExercise(exerciseId);
         return ApiResponse.<Void>builder()
                 .message("Đã lưu bài tập")
@@ -37,7 +38,8 @@ public class ExerciseController {
     }
 
     @DeleteMapping("/exercise/{exerciseId}/save")
-    ApiResponse<Void> unsave(@PathVariable String exerciseId) {
+    ApiResponse<Void> unsaveExercise(
+            @PathVariable String exerciseId) {
         exerciseService.unsaveExercise(exerciseId);
         return ApiResponse.<Void>builder()
                 .message("Đã hủy lưu bài tập")
