@@ -18,7 +18,7 @@ spring:
               args:
                 routeId: identity_service
         - id: profile_service
-          uri: http://profil-service:8081
+          uri: http://profile-service:8081
           predicates:
             - Path=${app.api-prefix}/profile/**
           filters:
@@ -26,15 +26,15 @@ spring:
             - name: RateLimiter
               args:
                 routeId: profile_service
-        #        - id: file_service
-        #          uri: http://file-service:8082
-        #          predicates:
-        #            - Path=${app.api-prefix}/file/**
-        #          filters:
-        #            - StripPrefix=2
-        #            - name: RateLimiter
-        #              args:
-        #                routeId: file_service
+        - id: file_service
+          uri: http://file-service:8082
+          predicates:
+            - Path=${app.api-prefix}/file/**
+          filters:
+            - StripPrefix=2
+            - name: RateLimiter
+              args:
+                routeId: file_service
         - id: submission_service
           uri: http://submission-service:8083
           predicates:

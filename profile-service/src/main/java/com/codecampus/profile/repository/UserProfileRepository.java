@@ -32,11 +32,12 @@ public interface UserProfileRepository
 
     // Exercise
     @Query(value = """
-            MATCH (u:User {userid:$userId})-[:COMPLETED_EXERCISE]->(completed:CompletedExercise)-[:TARGET_NODE]->(e)
-            RETURN completed ORDER BY completed.completedAt DESC
+            MATCH (u:User {userId:$userId})-[completed:COMPLETED_EXERCISE]->(e:Exercise)
+            RETURN completed, e
+            ORDER BY completed.completedAt DESC
             """,
             countQuery = """
-                    MATCH (u:User {userId:$userId})-[:COMPLETED_EXERCISE]->(completed:CompletedExercise)
+                    MATCH (u:User {userId:$userId})-[completed:COMPLETED_EXERCISE]->(:Exercise)
                     RETURN count(completed)
                     """)
     Page<CompletedExercise> findCompletedExercises(
@@ -44,35 +45,38 @@ public interface UserProfileRepository
 
 
     @Query(value = """
-            MATCH (u:User {userId:$userId})-[:SAVED_EXERCISE]->(saved:SavedExercise)-[:TARGET_NODE]->(e)
-            RETURN saved ORDER BY saved.saveAt DESC
+            MATCH (u:User {userId:$userId})-[saved:SAVED_EXERCISE]->(e:Exercise)
+            RETURN saved, e
+            ORDER BY saved.saveAt DESC
             """,
             countQuery = """
-                      MATCH (u:User {userId:$userId})-[:SAVED_EXERCISE]->(saved:SavedExercise)
-                      RETURN count(saved)
-                    """)
+                        MATCH (u:User {userId:$userId})-[saved:SAVED_EXERCISE]->(:Exercise)
+                        RETURN count(saved)
+                    """
+    )
     Page<SavedExercise> findSavedExercises(
             String userId, Pageable pageable);
 
     @Query(value = """
-            MATCH (u:User {userId:$userId})-[:CREATED_EXERCISE]->(created:CreatedExercise)-[:TARGET_NODE]->(e)
-            RETURN created
+            MATCH (u:User {userId:$userId})-[created:CREATED_EXERCISE]->(e:Exercise)
+            RETURN created, e
+            ORDER BY created.id DESC
             """,
             countQuery = """
-                      MATCH (u:User {userId:$userId})-[:CREATED_EXERCISE]->(created:CreatedExercise)
-                      RETURN count(created)
+                        MATCH (u:User {userId:$userId})-[created:CREATED_EXERCISE]->(:Exercise)
+                        RETURN count(created)
                     """)
     Page<CreatedExercise> findCreatedExercises(
             String userId, Pageable pageable);
 
-    @Query(
-            value = """
-                      MATCH (u:User {userId:$userId})-[:CONTEST_STATUS]->(cs)
-                      RETURN cs
-                    """,
+    @Query(value = """
+            MATCH (u:User {userId:$userId})-[cs:CONTEST_STATUS]->(c:Contest)
+            RETURN cs, c
+            ORDER BY cs.updatedAt DESC
+            """,
             countQuery = """
-                      MATCH (u:User {userId:$userId})-[:CONTEST_STATUS]->(cs)
-                      RETURN count(cs)
+                        MATCH (u:User {userId:$userId})-[cs:CONTEST_STATUS]->(:Contest)
+                        RETURN count(cs)
                     """
     )
     Page<ContestStatus> findContestStatuses(
@@ -80,143 +84,159 @@ public interface UserProfileRepository
 
     // Post
     @Query(value = """
-            MATCH (u:User {userId:$userId})-[:SAVED_POST]->(saved:SavedPost)-[:TARGET_NODE]->(e)
-            RETURN saved ORDER BY saved.saveAt DESC
+            MATCH (u:User {userId:$userId})-[sp:SAVED_POST]->(p:Post)
+            RETURN sp, p
+            ORDER BY sp.saveAt DESC
             """,
             countQuery = """
-                      MATCH (u:User {userId:$userId})-[:SAVED_POST]->(saved:SavedPost)
-                      RETURN count(saved)
+                        MATCH (u:User {userId:$userId})-[sp:SAVED_POST]->(:Post)
+                        RETURN count(sp)
                     """)
     Page<SavedPost> findSavedPosts(
             String userId, Pageable pageable);
 
     @Query(value = """
             MATCH (u:User {userId:$userId})-[r:REACTION]->(p:Post)
-            RETURN r, p ORDER BY r.at DESC
+            RETURN r, p
+            ORDER BY r.at DESC
             """,
             countQuery = """
-                    MATCH (u:User {userId:$userId})-[r:REACTION]->(:Post)
-                    RETURN count(r)
-                    """)
+                        MATCH (u:User {userId:$userId})-[r:REACTION]->(:Post)
+                        RETURN count(r)
+                    """
+    )
     Page<Reaction> findReactions(String userId, Pageable pageable);
 
     @Query(value = """
-            MATCH (u:User {userId:$userId})-[r:REPORTED_POST]->(p:Post)
-            RETURN r, p ORDER BY r.at DESC
+            MATCH (u:User {userId:$userId})-[rp:REPORTED_POST]->(p:Post)
+            RETURN rp, p
+            ORDER BY rp.reportedAt DESC
             """,
             countQuery = """
-                    MATCH (u:User {userId:$userId})-[r:REPORTED_POST]->(:Post)
-                    RETURN count(r)
-                    """)
+                        MATCH (u:User {userId:$userId})-[rp:REPORTED_POST]->(:Post)
+                        RETURN count(rp)
+                    """
+    )
     Page<ReportedPost> findReportedPosts(String userId, Pageable pageable);
 
     // Activity Time
     @Query(value = """
-            MATCH (u:User {userId:$userId})-[:HAS_ACTIVITY]->(activity:ActivityWeek)-[:TARGET_NODE]->(e)
-            RETURN activity ORDER BY activity.weekStart DESC
+            MATCH (u:User {userId:$userId})-[:HAS_ACTIVITY]->(a:ActivityWeek)
+            RETURN a
+            ORDER BY a.weekStart DESC
             """,
             countQuery = """
-                      MATCH (u:User {userId:$userId})-[:HAS_ACTIVITY]->(activity:ActivityWeek)
-                      RETURN count(activity)
-                    """)
+                        MATCH (u:User {userId:$userId})-[:HAS_ACTIVITY]->(a:ActivityWeek)
+                        RETURN count(a)
+                    """
+    )
     Page<ActivityWeek> findActivityWeek(
             String userId, Pageable pageable);
 
     // Follow / Block
     @Query(value = """
             MATCH (me:User {userId:$userId})-[f:FOLLOWS]->(target:User)
-            WITH f, target
-            ORDER BY f.since DESC
             RETURN f, target
+            ORDER BY f.since DESC
             """,
             countQuery = """
-                    MATCH (me:User {userId:$userId})-[f:FOLLOWS]->(:User)
-                    RETURN count(f)
-                    """)
+                        MATCH (me:User {userId:$userId})-[f:FOLLOWS]->(:User)
+                        RETURN count(f)
+                    """
+    )
     Page<Follows> findFollowings(String userId, Pageable pageable);
 
     @Query(value = """
             MATCH (src:User)-[f:FOLLOWS]->(me:User {userId:$userId})
-            WITH f, src, me
+            RETURN f, src
             ORDER BY f.since DESC
-            RETURN f, me
             """,
             countQuery = """
-                    MATCH (:User)-[f:FOLLOWS]->(me:User {userId:$userId})
-                    RETURN count(f)
-                    """)
+                        MATCH (:User)-[f:FOLLOWS]->(me:User {userId:$userId})
+                        RETURN count(f)
+                    """
+    )
     Page<Follows> findFollowers(String userId, Pageable pageable);
 
     @Query(value = """
             MATCH (me:User {userId:$userId})-[b:BLOCKS]->(target:User)
-            WITH b, target
-            ORDER BY b.since DESC
             RETURN b, target
+            ORDER BY b.since DESC
             """,
             countQuery = """
-                    MATCH (me:User {userId:$userId})-[b:BLOCKS]->(:User)
-                    RETURN count(b)
-                    """)
+                        MATCH (me:User {userId:$userId})-[b:BLOCKS]->(:User)
+                        RETURN count(b)
+                    """
+    )
     Page<Blocks> findBlocked(String userId, Pageable pageable);
 
     // Org
     @Query(value = """
             MATCH (u:User {userId:$userId})-[m:MEMBER_ORG]->(o:Organization)
-            RETURN m, o ORDER BY m.joinAt DESC
+            RETURN m, o
+            ORDER BY m.joinAt DESC
             """,
             countQuery = """
-                    MATCH (u:User {userId:$userId})-[m:MEMBER_ORG]->(:Organization)
-                    RETURN count(m)
-                    """)
+                        MATCH (u:User {userId:$userId})-[m:MEMBER_ORG]->(:Organization)
+                        RETURN count(m)
+                    """
+    )
     Page<MemberOrg> findMemberOrgs(String userId, Pageable pageable);
 
     @Query(value = """
             MATCH (u:User {userId:$userId})-[m:MEMBER_ORG]->(o:Organization)
             WHERE m.memberRole = $role
-            RETURN m,o ORDER BY m.joinAt DESC
+            RETURN m, o
+            ORDER BY m.joinAt DESC
             """,
             countQuery = """
-                    MATCH (u:User {userId:$userId})-[m:MEMBER_ORG]->(:Organization)
-                    WHERE m.memberRole = $role
-                    RETURN count(m)
-                    """)
+                        MATCH (u:User {userId:$userId})-[m:MEMBER_ORG]->(:Organization)
+                        WHERE m.memberRole = $role
+                        RETURN count(m)
+                    """
+    )
     Page<MemberOrg> findMemberOrgsByRole(String userId, String role,
                                          Pageable p);
 
     @Query(value = """
             MATCH (u:User {userId:$userId})-[c:CREATED_ORG]->(o:Organization)
-            RETURN c, o ORDER BY c.createdAt DESC
+            RETURN c, o
+            ORDER BY c.createdAt DESC
             """,
             countQuery = """
-                    MATCH (u:User {userId:$userId})-[c:CREATED_ORG]->(:Organization)
-                    RETURN count(c)
-                    """)
+                        MATCH (u:User {userId:$userId})-[c:CREATED_ORG]->(:Organization)
+                        RETURN count(c)
+                    """
+    )
     Page<CreatedOrg> findCreatedOrgs(
             String userId, Pageable pageable);
 
     // Package
     @Query(value = """
             MATCH (u:User {userId:$userId})-[s:SUBSCRIBED_TO]->(p:Package)
-            RETURN s, p ORDER BY s.start DESC
+            RETURN s, p
+            ORDER BY s.start DESC
             """,
             countQuery = """
-                    MATCH (u:User {userId:$userId})-[s:SUBSCRIBED_TO]->(:Package)
-                    RETURN count(s)
-                    """)
+                        MATCH (u:User {userId:$userId})-[s:SUBSCRIBED_TO]->(:Package)
+                        RETURN count(s)
+                    """
+    )
     Page<SubscribedTo> findSubscriptions(
             String userId, Pageable pageable);
 
     // Resource
     @Query(
             value = """
-                      MATCH (u:User {userId:$userId})-[:SAVED_RESOURCE]->(sr)-[:RESOURCE]->(f)
-                      WHERE f.type = $type
-                      RETURN sr
+                    MATCH (u:User {userId:$userId})-[sr:SAVED_RESOURCE]->(f:FileResource)
+                    WHERE f.type = $type
+                    RETURN sr, f
+                    ORDER BY sr.saveAt DESC
                     """,
             countQuery = """
-                      MATCH (u:User {userId:$userId})-[:SAVED_RESOURCE]->(sr)-[:RESOURCE]->(f)
-                      WHERE f.type = $type
-                      RETURN count(sr)
+                        MATCH (u:User {userId:$userId})-[sr:SAVED_RESOURCE]->(f:FileResource)
+                        WHERE f.type = $type
+                        RETURN count(sr)
                     """
     )
     Page<SavedResource> findSavedResourcesByType(

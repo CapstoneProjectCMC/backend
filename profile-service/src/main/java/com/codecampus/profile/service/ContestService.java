@@ -2,7 +2,7 @@ package com.codecampus.profile.service;
 
 import com.codecampus.profile.dto.common.PageResponse;
 import com.codecampus.profile.entity.properties.contest.ContestStatus;
-import com.codecampus.profile.helper.SecurityHelper;
+import com.codecampus.profile.helper.AuthenticationHelper;
 import com.codecampus.profile.repository.UserProfileRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -21,10 +21,13 @@ import static com.codecampus.profile.helper.PageResponseHelper.toPageResponse;
 public class ContestService {
     UserProfileRepository userProfileRepository;
 
-    public PageResponse<ContestStatus> myContestStatuses(int page, int size) {
+
+    // TODO Khi nào thêm đồng bộ từ submission service qua, khi có các contest assign cho student
+    public PageResponse<ContestStatus> getMyContestStatuses(int page,
+                                                            int size) {
         Pageable pageable = PageRequest.of(page - 1, size);
         var data = userProfileRepository.findContestStatuses(
-                SecurityHelper.getMyUserId(), pageable);
+                AuthenticationHelper.getMyUserId(), pageable);
         return toPageResponse(data, page);
     }
 }
