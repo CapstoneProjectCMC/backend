@@ -4,7 +4,7 @@ import com.codecampus.profile.dto.common.PageResponse;
 import com.codecampus.profile.entity.UserProfile;
 import com.codecampus.profile.entity.properties.social.Blocks;
 import com.codecampus.profile.entity.properties.social.Follows;
-import com.codecampus.profile.helper.SecurityHelper;
+import com.codecampus.profile.helper.AuthenticationHelper;
 import com.codecampus.profile.repository.UserProfileRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -144,7 +144,7 @@ public class SocialService {
             int page, int size) {
         Pageable pageable = PageRequest.of(page - 1, size);
         var pageData = userProfileRepository
-                .findFollowers(SecurityHelper.getMyUserId(), pageable);
+                .findFollowers(AuthenticationHelper.getMyUserId(), pageable);
 
         return toPageResponse(pageData, page);
     }
@@ -160,7 +160,7 @@ public class SocialService {
             int page, int size) {
         Pageable pageable = PageRequest.of(page - 1, size);
         var pageData = userProfileRepository
-                .findFollowings(SecurityHelper.getMyUserId(), pageable);
+                .findFollowings(AuthenticationHelper.getMyUserId(), pageable);
 
         return toPageResponse(pageData, page);
     }
@@ -176,7 +176,7 @@ public class SocialService {
             int page, int size) {
         Pageable pageable = PageRequest.of(page - 1, size);
         var pageData = userProfileRepository
-                .findBlocked(SecurityHelper.getMyUserId(), pageable);
+                .findBlocked(AuthenticationHelper.getMyUserId(), pageable);
 
         return toPageResponse(pageData, page);
     }

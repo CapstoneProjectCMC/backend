@@ -2,7 +2,7 @@ package com.codecampus.profile.service;
 
 import com.codecampus.profile.dto.common.PageResponse;
 import com.codecampus.profile.entity.properties.subcribe.SubscribedTo;
-import com.codecampus.profile.helper.SecurityHelper;
+import com.codecampus.profile.helper.AuthenticationHelper;
 import com.codecampus.profile.repository.UserProfileRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,8 @@ public class PackageService {
             int page, int size) {
         Pageable pageable = PageRequest.of(page - 1, size);
         var pageData = userProfileRepository
-                .findSubscriptions(SecurityHelper.getMyUserId(), pageable);
+                .findSubscriptions(AuthenticationHelper.getMyUserId(),
+                        pageable);
 
         return toPageResponse(pageData, page);
     }

@@ -4,7 +4,7 @@ import com.codecampus.profile.dto.common.PageResponse;
 import com.codecampus.profile.entity.properties.exercise.AssignedOrgExercise;
 import com.codecampus.profile.entity.properties.organization.CreatedOrg;
 import com.codecampus.profile.entity.properties.organization.MemberOrg;
-import com.codecampus.profile.helper.SecurityHelper;
+import com.codecampus.profile.helper.AuthenticationHelper;
 import com.codecampus.profile.repository.OrgRepository;
 import com.codecampus.profile.repository.UserProfileRepository;
 import lombok.AccessLevel;
@@ -30,7 +30,7 @@ public class OrganizationService {
             int page, int size) {
         Pageable pageable = PageRequest.of(page - 1, size);
         var pageData = userProfileRepository
-                .findCreatedOrgs(SecurityHelper.getMyUserId(), pageable);
+                .findCreatedOrgs(AuthenticationHelper.getMyUserId(), pageable);
 
         return toPageResponse(pageData, page);
     }
@@ -39,7 +39,7 @@ public class OrganizationService {
             int page, int size) {
         Pageable pageable = PageRequest.of(page - 1, size);
         var pageData = userProfileRepository
-                .findMemberOrgs(SecurityHelper.getMyUserId(), pageable);
+                .findMemberOrgs(AuthenticationHelper.getMyUserId(), pageable);
 
         return toPageResponse(pageData, page);
     }
@@ -49,7 +49,7 @@ public class OrganizationService {
         Pageable p = PageRequest.of(page - 1, size);
         return toPageResponse(
                 userProfileRepository.findMemberOrgsByRole(
-                        SecurityHelper.getMyUserId(), "TEACHER", p),
+                        AuthenticationHelper.getMyUserId(), "TEACHER", p),
                 page);
     }
 
@@ -58,11 +58,12 @@ public class OrganizationService {
         Pageable p = PageRequest.of(page - 1, size);
         return toPageResponse(
                 userProfileRepository.findMemberOrgsByRole(
-                        SecurityHelper.getMyUserId(), "ADMIN", p),
+                        AuthenticationHelper.getMyUserId(), "ADMIN", p),
                 page);
     }
 
     // Class
+    // TODO đồng bộ với phần bài tập được giao ở submission service
     public PageResponse<AssignedOrgExercise> assignedExercisesOfOrg(
             String orgId, int page, int size) {
         Pageable pageable = PageRequest.of(page - 1, size);

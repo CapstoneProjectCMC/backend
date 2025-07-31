@@ -9,9 +9,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
+
+import java.util.Collection;
 
 /**
  * Tiện ích hỗ trợ lấy thông tin người dùng hiện đang đăng nhập
@@ -22,7 +25,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class SecurityHelper {
+public class AuthenticationHelper {
     UserProfileRepository userProfileRepository;
 
     /**
@@ -45,6 +48,28 @@ public class SecurityHelper {
         }
 
         return null;
+    }
+
+    public static Collection<String> getMyAuthorities() {
+        Authentication auth =
+                SecurityContextHolder.getContext().getAuthentication();
+        return auth.getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .toList();
+    }
+
+    public static Collection<String> getMyRoles() {
+        return getMyAuthorities().stream()
+                .filter(role -> role.startsWith("ROLE_"))
+                .map(role -> role.substring("ROLE_".length()))
+                .toList();
+    }
+
+    public static Collection<String> getPermissions() {
+        return getMyAuthorities().stream()
+                .filter(role -> !role.startsWith("ROLE_"))
+                .toList();
     }
 
     public static String getMyUsername() {

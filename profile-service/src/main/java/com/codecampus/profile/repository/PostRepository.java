@@ -14,9 +14,10 @@ public interface PostRepository
     Optional<Post> findByPostId(String postId);
 
     @Query("""
-              MATCH (p:Post)<-[:CREATED_EXERCISE|:SAVED_POST]-(:User {userId:$userId})
-              RETURN count(p)
-            """)
+              MATCH (u:User {userId:$userId})-[:REACTION|:SAVED_POST]->(p:Post)
+              RETURN count(DISTINCT p)
+            """
+    )
     long countPostsOfUser(String userId);
 
     @Query("""
