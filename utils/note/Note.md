@@ -132,3 +132,7 @@ trusted-x509-certificates:
 - classpath:ssl/identity.pem
 - classpath:ssl/profile.pem
 
+DOCKER COMPOSE
+docker compose down
+docker compose -p codecampus -f docker-compose.infra.yml up -d
+docker compose -p codecampus -f docker-compose.services.yml up -d --build

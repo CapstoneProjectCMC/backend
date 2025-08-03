@@ -8,7 +8,7 @@ import com.codecampus.profile.entity.properties.resource.ReportedResource;
 import com.codecampus.profile.entity.properties.resource.SavedResource;
 import com.codecampus.profile.exception.AppException;
 import com.codecampus.profile.exception.ErrorCode;
-import com.codecampus.profile.helper.SecurityHelper;
+import com.codecampus.profile.helper.AuthenticationHelper;
 import com.codecampus.profile.repository.FileResourceRepository;
 import com.codecampus.profile.repository.UserProfileRepository;
 import lombok.AccessLevel;
@@ -71,7 +71,7 @@ public class ResourceService {
             ResourceType type, int page, int size) {
         Pageable pageable = PageRequest.of(page - 1, size);
         var data = userProfileRepository.findSavedResourcesByType(
-                SecurityHelper.getMyUserId(), type.name(), pageable);
+                AuthenticationHelper.getMyUserId(), type.name(), pageable);
         return toPageResponse(data, page);
     }
 

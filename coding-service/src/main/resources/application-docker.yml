@@ -1,0 +1,20 @@
+server:
+  port: 8084
+  servlet:
+    context-path: /coding
+
+grpc:
+  server:
+    port: 9592
+
+submission:
+  grpc:
+    host: submission-service
+    port: 9590
+
+spring:
+  datasource:
+    url: jdbc:postgresql://coding-db:5432/${CODING_DATABASE}
+    username: ${CODING_USERNAME}
+    password: ${CODING_DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver

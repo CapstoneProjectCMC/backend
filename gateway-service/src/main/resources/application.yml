@@ -1,0 +1,142 @@
+server:
+  port: 8888
+#  ssl:
+#    enabled: true
+#    key-alias: gateway-https
+#    key-store: classpath:ssl/gateway.jks
+#    key-store-password: dinhanst2832004
+#    key-store-type: JKS
+
+app:
+  api-prefix: /api/v1
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      httpclient:
+      #        ssl:
+      #          trusted-x509-certificates:
+      #            - classpath:ssl/identity.pem
+      #            - classpath:ssl/profile.pem
+      #            - classpath:ssl/submission.pem
+      #            - classpath:ssl/coding.pem
+
+      routes:
+        - id: identity_service
+          #          uri: https://localhost:8080
+          uri: http://localhost:8080
+          predicates:
+            - Path=${app.api-prefix}/identity/**
+          filters:
+            - StripPrefix=2
+            - name: RateLimiter
+              args:
+                routeId: identity_service
+        - id: profile_service
+          #          uri: https://localhost:8081
+          uri: http://localhost:8081
+          predicates:
+            - Path=${app.api-prefix}/profile/**
+          filters:
+            - StripPrefix=2
+            - name: RateLimiter
+              args:
+                routeId: profile_service
+        - id: file_service
+          # uri: https://localhost:80820
+          uri: http://localhost:8082
+          predicates:
+            - Path=${app.api-prefix}/file/**
+          filters:
+            - StripPrefix=2
+            - name: RateLimiter
+              args:
+                routeId: file_service
+        - id: submission_service
+          #          uri: https://localhost:8083
+          uri: http://localhost:8083
+          predicates:
+            - Path=${app.api-prefix}/submission/**
+          filters:
+            - StripPrefix=2
+            - name: RateLimiter
+              args:
+                routeId: submission_service
+        - id: coding_service
+          #          uri: https://localhost:8084
+          uri: http://localhost:8084
+          predicates:
+            - Path=${app.api-prefix}/coding/**
+          filters:
+            - StripPrefix=2
+            - name: RateLimiter
+              args:
+                routeId: coding_service
+        - id: quiz_service
+          #          uri: https://localhost:8085
+          uri: http://localhost:8085
+          predicates:
+            - Path=${app.api-prefix}/quiz/**
+          filters:
+            - StripPrefix=2
+            - name: RateLimiter
+              args:
+                routeId: quiz_service
+        - id: ai_service
+          #          uri: https://localhost:8086
+          uri: http://localhost:8086
+          predicates:
+            - Path=${app.api-prefix}/ai/**
+          filters:
+            - StripPrefix=2
+            - name: RateLimiter
+              args:
+                routeId: ai_service
+        - id: search_service
+          #          uri: https://localhost:8087
+          uri: http://localhost:8087
+          predicates:
+            - Path=${app.api-prefix}/search/**
+          filters:
+            - StripPrefix=2
+            - name: RateLimiter
+              args:
+                routeId: search_service
+        - id: notification_service
+          #          uri: https://localhost:8088
+          uri: http://localhost:8088
+          predicates:
+            - Path=${app.api-prefix}/notification/**
+          filters:
+            - StripPrefix=2
+            - name: RateLimiter
+              args:
+                routeId: notification_service
+        - id: chat_service
+          #          uri: https://localhost:8089
+          uri: http://localhost:8089
+          predicates:
+            - Path=${app.api-prefix}/chat/**
+          filters:
+            - StripPrefix=2
+            - name: RateLimiter
+              args:
+                routeId: chat_service
+
+# Cấu hình rate limiter
+rate-limiter:
+  default:
+    capacity: 10
+    refillTokens: 10
+    refillDuration: 60
+  routes:
+    identity_service: # Khớp với routeId
+      capacity: 20
+      refillTokens: 20
+      refillDuration: 60
+    profile_service: # Khớp với routeId
+      capacity: 20
+      refillTokens: 20
+      refillDuration: 60

@@ -1,0 +1,100 @@
+server:
+  port: 8888
+
+app:
+  api-prefix: /api/v1
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: identity_service
+          uri: http://identity-service:8080
+          predicates:
+            - Path=${app.api-prefix}/identity/**
+          filters:
+            - StripPrefix=2
+            - name: RateLimiter
+              args:
+                routeId: identity_service
+        - id: profile_service
+          uri: http://profile-service:8081
+          predicates:
+            - Path=${app.api-prefix}/profile/**
+          filters:
+            - StripPrefix=2
+            - name: RateLimiter
+              args:
+                routeId: profile_service
+        - id: file_service
+          uri: http://file-service:8082
+          predicates:
+            - Path=${app.api-prefix}/file/**
+          filters:
+            - StripPrefix=2
+            - name: RateLimiter
+              args:
+                routeId: file_service
+        - id: submission_service
+          uri: http://submission-service:8083
+          predicates:
+            - Path=${app.api-prefix}/submission/**
+          filters:
+            - StripPrefix=2
+            - name: RateLimiter
+              args:
+                routeId: submission_service
+        - id: coding_service
+          uri: http://coding-service:8084
+          predicates:
+            - Path=${app.api-prefix}/coding/**
+          filters:
+            - StripPrefix=2
+            - name: RateLimiter
+              args:
+                routeId: coding_service
+        - id: quiz_service
+          uri: http://quiz-service:8085
+          predicates:
+            - Path=${app.api-prefix}/quiz/**
+          filters:
+            - StripPrefix=2
+            - name: RateLimiter
+              args:
+                routeId: quiz_service
+        - id: ai_service
+          uri: http://ai-service:8086
+          predicates:
+            - Path=${app.api-prefix}/ai/**
+          filters:
+            - StripPrefix=2
+            - name: RateLimiter
+              args:
+                routeId: ai_service
+        - id: search_service
+          uri: http://search-service:8087
+          predicates:
+            - Path=${app.api-prefix}/search/**
+          filters:
+            - StripPrefix=2
+            - name: RateLimiter
+              args:
+                routeId: search_service
+        - id: notification_service
+          uri: http://notification-service:8088
+          predicates:
+            - Path=${app.api-prefix}/notification/**
+          filters:
+            - StripPrefix=2
+            - name: RateLimiter
+              args:
+                routeId: notification_service
+        - id: chat_service
+          uri: http://chat-service:8089
+          predicates:
+            - Path=${app.api-prefix}/chat/**
+          filters:
+            - StripPrefix=2
+            - name: RateLimiter
+              args:
+                routeId: chat_service

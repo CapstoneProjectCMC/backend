@@ -1,0 +1,329 @@
+name: codecampus-infrastructures
+
+services:
+  # ---------- PostgreSQL ----------
+  identity-db:
+    image: bitnami/postgresql:latest
+    container_name: identity-db
+    restart: unless-stopped
+    environment:
+      - POSTGRESQL_USERNAME=${IDENTITY_USERNAME}
+      - POSTGRESQL_PASSWORD=${IDENTITY_DB_PASSWORD}
+      - POSTGRESQL_DATABASE=${IDENTITY_DATABASE}
+      - POSTGRESQL_POSTGRES_PASSWORD=${IDENTITY_DB_PASSWORD}
+    ports:
+      - "5431:5432"
+    volumes:
+      - identity_pg_data:/bitnami/postgresql
+    healthcheck:
+      test: [ "CMD-SHELL","pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: [ backend ]
+
+  quiz-db:
+    image: bitnami/postgresql:latest
+    container_name: quiz-db
+    restart: unless-stopped
+    environment:
+      - POSTGRESQL_USERNAME=${QUIZ_USERNAME}
+      - POSTGRESQL_PASSWORD=${QUIZ_DB_PASSWORD}
+      - POSTGRESQL_DATABASE=${QUIZ_DATABASE}
+      - POSTGRESQL_POSTGRES_PASSWORD=${QUIZ_DB_PASSWORD}
+    ports:
+      - "5433:5432"
+    volumes:
+      - quiz_pg_data:/bitnami/postgresql
+    healthcheck:
+      test: [ "CMD-SHELL","pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: [ backend ]
+
+  submission-db:
+    image: bitnami/postgresql:latest
+    container_name: submission-db
+    restart: unless-stopped
+    environment:
+      - POSTGRESQL_USERNAME=${SUBMISSION_USERNAME}
+      - POSTGRESQL_PASSWORD=${SUBMISSION_DB_PASSWORD}
+      - POSTGRESQL_DATABASE=${SUBMISSION_DATABASE}
+      - POSTGRESQL_POSTGRES_PASSWORD=${SUBMISSION_DB_PASSWORD}
+    ports:
+      - "5434:5432"
+    volumes:
+      - submission_pg_data:/bitnami/postgresql
+    healthcheck:
+      test: [ "CMD-SHELL","pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: [ backend ]
+
+  coding-db:
+    image: bitnami/postgresql:latest
+    container_name: coding-db
+    restart: unless-stopped
+    environment:
+      - POSTGRESQL_USERNAME=${CODING_USERNAME}
+      - POSTGRESQL_PASSWORD=${CODING_DB_PASSWORD}
+      - POSTGRESQL_DATABASE=${CODING_DATABASE}
+      - POSTGRESQL_POSTGRES_PASSWORD=${CODING_DB_PASSWORD}
+    ports:
+      - "5435:5432"
+    volumes:
+      - coding_pg_data:/bitnami/postgresql
+    healthcheck:
+      test: [ "CMD-SHELL","pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: [ backend ]
+
+  ai-db:
+    image: bitnami/postgresql:latest
+    container_name: ai-db
+    restart: unless-stopped
+    environment:
+      - POSTGRESQL_USERNAME=${AI_USERNAME}
+      - POSTGRESQL_PASSWORD=${AI_DB_PASSWORD}
+      - POSTGRESQL_DATABASE=${AI_DATABASE}
+      - POSTGRESQL_POSTGRES_PASSWORD=${AI_DB_PASSWORD}
+    ports:
+      - "5436:5432"
+    volumes:
+      - ai_pg_data:/bitnami/postgresql
+    healthcheck:
+      test: [ "CMD-SHELL","pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: [ backend ]
+
+  # ----------  Kafka  ----------
+  kafka:
+    image: bitnami/kafka:latest
+    container_name: kafka
+    restart: unless-stopped
+    environment:
+      - KAFKA_ENABLE_KRAFT=yes
+      - KAFKA_CFG_NODE_ID=0
+      - KAFKA_CFG_PROCESS_ROLES=controller,broker
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka:9093
+      # ------ Listeners ------
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093,EXTERNAL://:9094
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092,EXTERNAL://localhost:9094
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+    ports:
+      - "9092:9092"
+      - "9093:9093"
+      - "9094:9094"
+    volumes:
+      - kafka_data:/bitnami/kafka
+    networks: [ backend ]
+  
+  # ---------- Neo4j ----------
+  neo4j:
+    image: bitnami/neo4j:latest
+    container_name: neo4j
+    restart: unless-stopped
+    environment:
+      - NEO4J_DAEMON_USER=${NEO4J_USERNAME}
+      - NEO4J_PASSWORD=${NEO4J_PASSWORD}
+      - INIT_NEO4J_PASSWORD=${NEO4J_PASSWORD}
+      # Mở cổng Bolt & HTTP
+      - NEO4J_BOLT_PORT_NUMBER=7687
+      - NEO4J_HTTP_PORT_NUMBER=7474
+      # Lắng nghe trên mọi IP
+      - NEO4J_dbms_connector_bolt_listen__address=0.0.0.0:7687
+      - NEO4J_dbms_connector_http_listen__address=0.0.0.0:7474
+    ports:
+      - "7687:7687"
+      - "7474:7474"
+    volumes:
+      - neo4j_data:/bitnami/neo4j
+    healthcheck:
+      test: [ "CMD-SHELL", "cypher-shell -u neo4j -p $${NEO4J_PASSWORD} 'RETURN 1' || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: [ backend ]
+
+  # ---------- Redis ----------
+  redis:
+    image: bitnami/redis:latest
+    container_name: redis
+    restart: unless-stopped
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_AOF_ENABLED=yes          # bật AOF để an toàn dữ liệu
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/bitnami/redis/data
+    healthcheck:
+      test: [ "CMD", "redis-cli", "-a", "${REDIS_PASSWORD}", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: [ backend ]
+
+  # ---------- MinIO ----------
+  minio:
+    image: bitnami/minio:latest
+    container_name: minio
+    restart: unless-stopped
+    environment:
+      - MINIO_ROOT_USER=${MINIO_ROOT_USER}
+      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
+    command: server /bitnami/minio/data --console-address ":9001"
+    ports:
+      - "9000:9000"   # S3 API
+      - "9001:9001"   # Console UI
+    volumes:
+      - minio_data:/bitnami/minio/data
+    healthcheck:
+      test: [ "CMD", "bash", "-c", "mc alias set minio http://localhost:9000 ${MINIO_ROOT_USER} ${MINIO_ROOT_PASSWORD} && mc ls minio" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks: [ backend ]
+
+  # ---------- Elasticsearch ----------
+  elasticsearch:
+    image: bitnami/elasticsearch:8.7.0
+    container_name: elasticsearch
+    restart: unless-stopped
+    environment:
+      - ELASTICSEARCH_NODE_NAME=elastic-node-1
+      - ELASTICSEARCH_USERNAME=${ELASTIC_USERNAME}
+      - ELASTICSEARCH_PASSWORD=${ELASTIC_PASSWORD}
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g                   # điều chỉnh RAM tùy máy
+      # Cấu hình single‑node để chạy dễ dàng
+      - discovery.type=single-node
+      - ELASTICSEARCH_PLUGINS=analysis-icu
+      - BITNAMI_DEBUG=true
+    ports:
+      - "9200:9200"
+    volumes:
+      - elasticsearch_data:/bitnami/elasticsearch/data
+    healthcheck:
+      test: [ "CMD", "bash", "-c", "curl -s -u $${ELASTIC_USERNAME}:$${ELASTIC_PASSWORD} http://localhost:9200/_cluster/health | grep -q '\"status\":\"green\"\\|\"status\":\"yellow\"'" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks: [ backend ]
+
+  # ---------- Kibana ----------
+  kibana:
+    image: bitnami/kibana:8.7.0
+    container_name: kibana
+    restart: unless-stopped
+    environment:
+      - KIBANA_ELASTICSEARCH_URL=http://elasticsearch:9200
+      - ELASTICSEARCH_PASSWORD=${ELASTIC_PASSWORD}
+    ports:
+      - "5601:5601"
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    networks: [ backend ]
+
+  # ---------- MongoDB ----------
+  file-db:
+    image: bitnami/mongodb:latest
+    container_name: file-db
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      # Tài khoản quản trị
+      - MONGODB_ROOT_PASSWORD=${FILE_ROOT_PASSWORD}
+      # Tài khoản ứng dụng (tuỳ chọn – dùng khi bạn không muốn chạy bằng root)
+      - MONGODB_USERNAME=${FILE_USERNAME}
+      - MONGODB_PASSWORD=${FILE_PASSWORD}
+      - MONGODB_DATABASE=${FILE_DATABASE}
+      # Nếu chỉ chạy single‑node, KHÔNG khai báo replica‑set
+      # Muốn bật replica set: thêm MONGODB_REPLICA_SET_MODE=primary,...
+    volumes:
+      - file_mongo_data:/bitnami/mongodb
+    healthcheck:
+      test: [ "CMD-SHELL",
+              "mongo admin -u root -p $$FILE_ROOT_PASSWORD --eval 'db.adminCommand(\"ping\")' || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: [ backend ]
+
+  notification-db:
+    image: bitnami/mongodb:latest
+    container_name: notification-db
+    restart: unless-stopped
+    ports:
+      - "27018:27017"
+    environment:
+      # Tài khoản quản trị
+      - MONGODB_ROOT_PASSWORD=${NOTIFICATION_ROOT_PASSWORD}
+      # Tài khoản ứng dụng (tuỳ chọn – dùng khi bạn không muốn chạy bằng root)
+      - MONGODB_USERNAME=${NOTIFICATION_USERNAME}
+      - MONGODB_PASSWORD=${NOTIFICATION_PASSWORD}
+      - MONGODB_DATABASE=${NOTIFICATION_DATABASE}
+      # Nếu chỉ chạy single‑node, KHÔNG khai báo replica‑set
+      # Muốn bật replica set: thêm MONGODB_REPLICA_SET_MODE=primary,...
+    volumes:
+      - notification_mongo_data:/bitnami/mongodb
+    healthcheck:
+      test: [ "CMD-SHELL",
+              "mongo admin -u root -p $$NOTIFICATION_ROOT_PASSWORD --eval 'db.adminCommand(\"ping\")' || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: [ backend ]
+
+  chat-db:
+    image: bitnami/mongodb:latest
+    container_name: chat-db
+    restart: unless-stopped
+    ports:
+      - "27019:27017"
+    environment:
+      # Tài khoản quản trị
+      - MONGODB_ROOT_PASSWORD=${CHAT_ROOT_PASSWORD}
+      # Tài khoản ứng dụng (tuỳ chọn – dùng khi bạn không muốn chạy bằng root)
+      - MONGODB_USERNAME=${CHAT_USERNAME}
+      - MONGODB_PASSWORD=${CHAT_PASSWORD}
+      - MONGODB_DATABASE=${CHAT_DATABASE}
+      # Nếu chỉ chạy single‑node, KHÔNG khai báo replica‑set
+      # Muốn bật replica set: thêm MONGODB_REPLICA_SET_MODE=primary,...
+    volumes:
+      - chat_mongo_data:/bitnami/mongodb
+    healthcheck:
+      test: [ "CMD-SHELL",
+              "mongo admin -u root -p $$CHAT_ROOT_PASSWORD --eval 'db.adminCommand(\"ping\")' || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: [ backend ]
+
+networks:
+  backend:
+    name: codecampus_backend
+
+volumes:
+  identity_pg_data:
+  submission_pg_data:
+  quiz_pg_data:
+  coding_pg_data:
+  ai_pg_data:
+  kafka_data:
+  neo4j_data:
+  redis_data:
+  minio_data:
+  elasticsearch_data:
+  file_mongo_data:
+  notification_mongo_data:
+  chat_mongo_data:
+

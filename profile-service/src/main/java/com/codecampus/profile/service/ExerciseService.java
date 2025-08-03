@@ -8,7 +8,7 @@ import com.codecampus.profile.entity.properties.exercise.CreatedExercise;
 import com.codecampus.profile.entity.properties.exercise.SavedExercise;
 import com.codecampus.profile.exception.AppException;
 import com.codecampus.profile.exception.ErrorCode;
-import com.codecampus.profile.helper.SecurityHelper;
+import com.codecampus.profile.helper.AuthenticationHelper;
 import com.codecampus.profile.repository.ExerciseRepository;
 import com.codecampus.profile.repository.UserProfileRepository;
 import lombok.AccessLevel;
@@ -91,7 +91,8 @@ public class ExerciseService {
             int page, int size) {
         Pageable pageable = PageRequest.of(page - 1, size);
         var pageData = userProfileRepository
-                .findSavedExercises(SecurityHelper.getMyUserId(), pageable);
+                .findSavedExercises(AuthenticationHelper.getMyUserId(),
+                        pageable);
 
         return toPageResponse(pageData, page);
     }
@@ -108,7 +109,8 @@ public class ExerciseService {
             int page, int size) {
         Pageable pageable = PageRequest.of(page - 1, size);
         var pageData = userProfileRepository
-                .findCompletedExercises(SecurityHelper.getMyUserId(), pageable);
+                .findCompletedExercises(AuthenticationHelper.getMyUserId(),
+                        pageable);
 
         return toPageResponse(pageData, page);
     }
@@ -128,7 +130,8 @@ public class ExerciseService {
             int page, int size) {
         Pageable pageable = PageRequest.of(page - 1, size);
         var pageData = userProfileRepository
-                .findCreatedExercises(SecurityHelper.getMyUserId(), pageable);
+                .findCreatedExercises(AuthenticationHelper.getMyUserId(),
+                        pageable);
 
         return toPageResponse(pageData, page);
     }

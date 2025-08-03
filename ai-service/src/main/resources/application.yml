@@ -1,0 +1,54 @@
+server:
+  port: 8086
+  #  http:
+  #    port: 8006
+  servlet:
+    context-path: /ai
+#  ssl:
+#    enabled: true
+#    key-alias: ai-https
+#    key-store: classpath:ssl/ai.jks
+#    key-store-type: JKS
+#    key-store-password: dinhanst2832004
+#    key-password: dinhanst2832004
+
+spring:
+  application:
+    name: ai-service
+  datasource:
+    url: jdbc:postgresql://localhost:5436/ai_db
+    username: postgres_ai
+    password: dinhanst2832004
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+  ai:
+    openai:
+      # Hard code để test
+      api-key: AIzaSyDeZ3rEpzrleMCvvwLK3xHnqXYyTdxVhFs
+      chat:
+        base-url: https://generativelanguage.googleapis.com
+        completions-path: /v1beta/openai/chat/completions
+        options:
+          model: gemini-2.0-flash
+    chat:
+      memory:
+        repository:
+          jdbc:
+            initialize-schema: always
+  cloud:
+    openfeign:
+      client:
+        config:
+          default:
+            connectTimeout: 3000
+            readTimeout: 10000
+
+app:
+  services:
+    submission: http://localhost:8083/submission

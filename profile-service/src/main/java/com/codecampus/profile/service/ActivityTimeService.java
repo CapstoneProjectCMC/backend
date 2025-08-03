@@ -2,7 +2,7 @@ package com.codecampus.profile.service;
 
 import com.codecampus.profile.dto.common.PageResponse;
 import com.codecampus.profile.entity.ActivityWeek;
-import com.codecampus.profile.helper.SecurityHelper;
+import com.codecampus.profile.helper.AuthenticationHelper;
 import com.codecampus.profile.repository.UserProfileRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +29,7 @@ public class ActivityTimeService {
     /**
      * Lấy danh sách phân trang các {@link ActivityWeek} của người dùng hiện tại.
      * <p>
-     * Phương thức sẽ sử dụng {@link SecurityHelper#getMyUserId()} để xác định
+     * Phương thức sẽ sử dụng {@link AuthenticationHelper#getMyUserId()} để xác định
      * ID người dùng, sau đó gọi repository tương ứng để truy vấn dữ liệu
      * theo tuần. Kết quả trả về được bao gói trong DTO {@link PageResponse}.
      *
@@ -45,11 +45,11 @@ public class ActivityTimeService {
      *   <li>data: danh sách {@link ActivityWeek} ở trang này</li>
      * </ul>
      */
-    public PageResponse<ActivityWeek> getActivityWeeks(
+    public PageResponse<ActivityWeek> getMyActivityWeeks(
             int page, int size) {
         Pageable pageable = PageRequest.of(page - 1, size);
         var pageData = userProfileRepository
-                .findActivityWeek(SecurityHelper.getMyUserId(), pageable);
+                .findActivityWeek(AuthenticationHelper.getMyUserId(), pageable);
 
         return toPageResponse(pageData, page);
     }

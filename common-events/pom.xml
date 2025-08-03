@@ -11,6 +11,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
+    <packaging>jar</packaging>
 
     <name>events</name>
     <description>Event Repository</description>
@@ -56,7 +57,6 @@
 
     <build>
         <plugins>
-
             <!-- ====== Compiler (annotation processors) ====== -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -87,21 +87,6 @@
                         <arg>-Amapstruct.defaultComponentModel=spring</arg>
                         <arg>-Amapstruct.verbose=true</arg>
                     </compilerArgs>
-                </configuration>
-            </plugin>
-
-            <!-- ====== Spring Boot repackage ====== -->
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <!-- version kế thừa từ spring-boot-starter-parent -->
-                <configuration>
-                    <excludes>
-                        <exclude>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </exclude>
-                    </excludes>
                 </configuration>
             </plugin>
         </plugins>

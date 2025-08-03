@@ -52,7 +52,7 @@ public class CodeService {
             "--name", containerName,
             "-v", folder + ":/app",
             "--network", "none",
-            "capstoneproject",
+            "capstoneprojectpythondocker",
             "bash"
     );
     Process containerStart = startContainer.start();

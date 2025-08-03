@@ -1,0 +1,27 @@
+server:
+  port: 8083
+  servlet:
+    context-path: /submission
+
+grpc:
+  server:
+    port: 9590
+
+quiz:
+  grpc:
+    host: quiz-service
+    port: 9591
+
+coding:
+  grpc:
+    host: coding-service
+    port: 9592
+
+spring:
+  datasource:
+    url: jdbc:postgresql://submission-db:5432/${SUBMISSION_DATABASE}
+    username: ${SUBMISSION_USERNAME}
+    password: ${SUBMISSION_DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  kafka:
+    bootstrap-servers: http://kafka:9092

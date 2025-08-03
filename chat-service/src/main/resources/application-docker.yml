@@ -1,0 +1,15 @@
+server:
+  port: 8089
+  servlet:
+    context-path: /chat
+
+spring:
+  data:
+    mongodb:
+      uri: mongodb://${CHAT_USERNAME}:${CHAT_PASSWORD}@chat-db:27017/${CHAT_DATABASE}?authSource=${CHAT_DATABASE}
+      auto-index-creation: true
+
+app:
+  services:
+    profile: http://profile-service:8081/profile
+    identity: http://identity-service:8080/identity

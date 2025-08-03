@@ -1,0 +1,63 @@
+server:
+  port: 8083
+  #  http:
+  #    port: 8003
+  servlet:
+    context-path: /submission
+#  ssl:
+#    enabled: true
+#    key-alias: submission-https
+#    key-store: classpath:ssl/submission.jks
+#    key-store-type: JKS
+#    key-store-password: dinhanst2832004
+#    key-password: dinhanst2832004
+
+grpc:
+  server:
+    port: 9590
+
+quiz:
+  grpc:
+    host: localhost
+    port: 9591
+
+coding:
+  grpc:
+    host: localhost
+    port: 9592
+
+spring:
+  application:
+    name: submission-service
+  datasource:
+    url: jdbc:postgresql://localhost:5434/submission_db
+    username: postgres_submission
+    password: dinhanst2832004
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+  kafka:
+    bootstrap-servers: localhost:9094
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+#      acks: all
+#      retries: 3
+#      # optional: giảm latency
+#      linger-ms: 5            # gộp record <= 5 MS rồi mới gửi
+#      batch-size: 16384       # 16 KB
+#      compression-type: lz4   # nén nhẹ – giảm băng thông
+#  data:
+#    redis:
+#      host: redis-master     # dịch vụ trong compose
+#      port: 6379
+#      password: dinhanst2832004
+
+app:
+  event:
+    exercise-events: "exercise-events"

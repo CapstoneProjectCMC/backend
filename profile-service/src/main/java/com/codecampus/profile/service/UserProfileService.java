@@ -7,7 +7,7 @@ import com.codecampus.profile.dto.response.UserProfileResponse;
 import com.codecampus.profile.entity.UserProfile;
 import com.codecampus.profile.exception.AppException;
 import com.codecampus.profile.exception.ErrorCode;
-import com.codecampus.profile.helper.SecurityHelper;
+import com.codecampus.profile.helper.AuthenticationHelper;
 import com.codecampus.profile.mapper.UserProfileMapper;
 import com.codecampus.profile.repository.UserProfileRepository;
 import lombok.AccessLevel;
@@ -45,7 +45,7 @@ public class UserProfileService {
     UserProfileRepository userProfileRepository;
 
     UserProfileMapper userProfileMapper;
-    SecurityHelper securityHelper;
+    AuthenticationHelper authenticationHelper;
 
     /**
      * Tạo hồ sơ người dùng mới.
@@ -64,7 +64,7 @@ public class UserProfileService {
      */
     public UserProfileResponse createUserProfile(
             UserProfileCreationRequest request) {
-        securityHelper.checkExistsUserid(request.getUserId());
+        authenticationHelper.checkExistsUserid(request.getUserId());
 
         UserProfile userProfile = userProfileMapper.toUserProfile(request);
         userProfile.setCreatedAt(Instant.now());
@@ -96,7 +96,6 @@ public class UserProfileService {
      * @return UserProfileResponse
      * @throws AppException nếu không tìm thấy
      */
-    @PreAuthorize("hasRole('ADMIN')")
     public UserProfileResponse getUserProfileById(String id) {
         return userProfileRepository
                 .findById(id)
@@ -130,7 +129,7 @@ public class UserProfileService {
      * @return UserProfileResponse của người dùng hiện tại
      */
     public UserProfileResponse getMyUserProfile() {
-        return getUserProfileByUserId(SecurityHelper.getMyUserId());
+        return getUserProfileByUserId(AuthenticationHelper.getMyUserId());
     }
 
     /**
@@ -153,7 +152,7 @@ public class UserProfileService {
      */
     public UserProfile getUserProfile() {
         return userProfileRepository
-                .findByUserId(SecurityHelper.getMyUserId())
+                .findByUserId(AuthenticationHelper.getMyUserId())
                 .orElseThrow(
                         () -> new AppException(ErrorCode.USER_NOT_FOUND)
                 );
