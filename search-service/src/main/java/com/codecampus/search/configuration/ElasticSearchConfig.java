@@ -12,7 +12,7 @@ public class ElasticSearchConfig
     public ClientConfiguration clientConfiguration() {
         return ClientConfiguration.builder()
                 .connectedTo(System.getenv().getOrDefault(
-                        "ELASTICSEARCH_HOST", "elasticsearch:9200"
+                        "ELASTICSEARCH_HOST", "localhost:9200"
                 ))
                 .build();
     }

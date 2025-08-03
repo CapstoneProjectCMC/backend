@@ -46,17 +46,18 @@ spring:
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
-#      acks: all
-#      retries: 3
-#      # optional: giảm latency
-#      linger-ms: 5            # gộp record <= 5 MS rồi mới gửi
-#      batch-size: 16384       # 16 KB
-#      compression-type: lz4   # nén nhẹ – giảm băng thông
-#  data:
-#    redis:
-#      host: redis-master     # dịch vụ trong compose
-#      port: 6379
-#      password: dinhanst2832004
+  #      acks: all
+  #      retries: 3
+  #      # optional: giảm latency
+  #      linger-ms: 5            # gộp record <= 5 MS rồi mới gửi
+  #      batch-size: 16384       # 16 KB
+  #      compression-type: lz4   # nén nhẹ – giảm băng thông
+  data:
+    redis:
+      host: localhost # dịch vụ trong compose
+      port: 6379
+      password: dinhanst2832004
+      timeout: 3000ms
 
 app:
   event:

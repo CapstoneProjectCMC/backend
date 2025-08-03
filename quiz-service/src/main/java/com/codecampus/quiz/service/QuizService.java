@@ -29,14 +29,19 @@ import com.codecampus.quiz.repository.AssignmentRepository;
 import com.codecampus.quiz.repository.QuestionRepository;
 import com.codecampus.quiz.repository.QuizExerciseRepository;
 import com.codecampus.quiz.repository.QuizSubmissionRepository;
+import com.codecampus.quiz.service.cache.LoadQuizCacheService;
 import com.codecampus.submission.grpc.CreateQuizSubmissionRequest;
 import com.codecampus.submission.grpc.SubmissionSyncServiceGrpc;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -48,6 +53,10 @@ public class QuizService {
     QuizSubmissionRepository quizSubmissionRepository;
     QuestionRepository questionRepository;
     AssignmentRepository assignmentRepository;
+
+    RedissonClient redisson;
+
+    LoadQuizCacheService loadQuizCacheService;
 
     AssignmentMapper assignmentMapper;
     QuizMapper quizMapper;
@@ -113,6 +122,8 @@ public class QuizService {
         });
         QuizScoringHelper.recalc(quiz);
         quizExerciseRepository.save(quiz);
+        loadQuizCacheService.refresh(
+                addQuizRequest.getExerciseId());
     }
 
     @Transactional
@@ -125,6 +136,7 @@ public class QuizService {
             question.getOptions().forEach(option -> option.markDeleted(by));
         });
         quizExerciseRepository.save(quizExercise);
+        loadQuizCacheService.refresh(exerciseId);
     }
 
     @Transactional
@@ -160,6 +172,7 @@ public class QuizService {
 
         QuizScoringHelper.recalc(quiz);
         questionRepository.save(question);
+        loadQuizCacheService.refresh(addQuestionRequest.getExerciseId());
     }
 
     @Transactional
@@ -194,6 +207,7 @@ public class QuizService {
         quizMapper.patchOptionDtoToOption(optionDto, option);
 
         questionRepository.save(question);
+        loadQuizCacheService.refresh(addOptionRequest.getExerciseId());
     }
 
 
@@ -207,6 +221,7 @@ public class QuizService {
                 .flatMap(question -> question.findOptionById(optionId))
                 .ifPresent(option -> option.markDeleted(
                         AuthenticationHelper.getMyUsername()));
+        loadQuizCacheService.refresh(exerciseId);
     }
 
     @Transactional
@@ -221,6 +236,46 @@ public class QuizService {
             throw new AppException(ErrorCode.UNAUTHORIZED);
         }
 
+        // Đọc cache
+        LoadQuizResponse loadQuizCached = loadQuizCacheService
+                .get(exerciseId);
+        if (loadQuizCached != null) {
+            return loadQuizCached;
+        }
+
+        String lockName = "lock:quiz" + exerciseId;
+        RLock lock = redisson.getLock(lockName);
+
+        try {
+            // Chặn stampede: chỉ 1 thread/node truy DB
+            if (lock.tryLock(2, 10, TimeUnit.SECONDS)) {
+                // Re-check sau khi có lock
+                loadQuizCached =
+                        loadQuizCacheService.get(exerciseId);
+                if (loadQuizCached != null) {
+                    return loadQuizCached;
+                }
+
+                // Truy DB -> build response
+                QuizExercise quizExercise = quizHelper
+                        .findQuizOrThrow(exerciseId);
+                LoadQuizResponse loadQuizResponse =
+                        quizMapper.toLoadQuizResponseFromQuizExercise(
+                                quizExercise); // Đã ẩn correct
+
+                // Ghi cache
+                loadQuizCacheService.put(exerciseId, loadQuizResponse);
+                return loadQuizResponse;
+            }
+        } catch (InterruptedException exception) {
+            Thread.currentThread().interrupt();
+        } finally {
+            if (lock.isHeldByCurrentThread()) {
+                lock.unlock();
+            }
+        }
+
+        // Fallback (không lấy được lock)
         QuizExercise quizExercise =
                 quizHelper.findQuizOrThrow(exerciseId);
 

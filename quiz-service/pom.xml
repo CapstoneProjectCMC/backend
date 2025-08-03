@@ -47,6 +47,8 @@
         <modelmapper.version>3.2.4</modelmapper.version>
         <projectlombok-lombok.version>1.18.38</projectlombok-lombok.version>
         <jackson-datatype-protobuf>0.9.18</jackson-datatype-protobuf>
+        <redisson.version>3.50.0</redisson.version>
+
 
         <!-- Build-plugin versions -->
         <protobuf.plugin.version>0.6.1</protobuf.plugin.version>
@@ -118,6 +120,14 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>${projectlombok-lombok.version}</version>
+        </dependency>
+
+        <!-- ===== Redisson ===== -->
+        <!-- https://mvnrepository.com/artifact/org.redisson/redisson -->
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson</artifactId>
+            <version>${redisson.version}</version>
         </dependency>
 
         <!-- ===== gRPC & Protobuf ===== -->
