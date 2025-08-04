@@ -1,0 +1,23 @@
+server:
+    port: 8090
+
+    servlet:
+        context-path: /post
+
+
+spring:
+    application:
+        name: post-service
+    datasource:
+        url: jdbc:postgresql://localhost:5439/post_db
+        username: postgres_post
+        password: dinhanst2832004
+        driver-class-name: org.postgresql.Driver
+
+    jpa:
+        hibernate:
+            ddl-auto: update
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.PostgreSQLDialect
+        show-sql: true
