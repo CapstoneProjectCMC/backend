@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-08-03T19:12:40+0700",
+    date = "2025-08-04T03:06:19+0700",
     comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.7 (Oracle Corporation)"
 )
 @Component
@@ -62,6 +62,9 @@ public class QuizMapperImpl implements QuizMapper {
             return;
         }
 
+        if ( quizExerciseDto.getCreatedBy() != null ) {
+            quizExercise.setCreatedBy( quizExerciseDto.getCreatedBy() );
+        }
         if ( quizExerciseDto.getId() != null ) {
             quizExercise.setId( quizExerciseDto.getId() );
         }
@@ -74,6 +77,7 @@ public class QuizMapperImpl implements QuizMapper {
         quizExercise.setTotalPoints( quizExerciseDto.getTotalPoints() );
         quizExercise.setNumQuestions( quizExerciseDto.getNumQuestions() );
         quizExercise.setDuration( quizExerciseDto.getDuration() );
+        quizExercise.setPublicAccessible( quizExerciseDto.getPublicAccessible() );
     }
 
     @Override
@@ -90,6 +94,7 @@ public class QuizMapperImpl implements QuizMapper {
         quizExercise.totalPoints( quizExerciseDto.getTotalPoints() );
         quizExercise.numQuestions( quizExerciseDto.getNumQuestions() );
         quizExercise.duration( quizExerciseDto.getDuration() );
+        quizExercise.publicAccessible( quizExerciseDto.getPublicAccessible() );
 
         return quizExercise.build();
     }

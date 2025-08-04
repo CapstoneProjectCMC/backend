@@ -41,6 +41,7 @@ import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -148,11 +149,11 @@ public class QuizService {
 
         Question question = quiz.findQuestionById(questionDto.getId())
                 .orElseGet(() -> {
-                    Question newQuestion = new Question();
-                    newQuestion.setId(questionDto.getId());
-                    newQuestion.setQuiz(quiz);
-                    quiz.getQuestions().add(newQuestion);
-                    return newQuestion;
+                    Question q = quizMapper.toQuestionFromQuestionDto(
+                            questionDto);
+                    q.setQuiz(quiz);
+                    quiz.getQuestions().add(q);
+                    return q;
                 });
 
         quizMapper.patchQuestionDtoToQuestion(questionDto, question);
@@ -228,21 +229,21 @@ public class QuizService {
     public LoadQuizResponse loadQuiz(
             String exerciseId) {
 
-        String studentId = AuthenticationHelper.getMyUserId();
+        String userId = AuthenticationHelper.getMyUserId();
+        String username = AuthenticationHelper.getMyUsername();
+        Set<String> roles = Set.copyOf(AuthenticationHelper.getMyRoles());
+        boolean teacher = roles.contains("TEACHER");
 
-        if (!assignmentRepository
-                .existsByExerciseIdAndStudentId(
-                        exerciseId, studentId)) {
-            throw new AppException(ErrorCode.UNAUTHORIZED);
-        }
-
-        // Đọc cache
+        /* ---------- Thử lấy từ cache ---------- */
         LoadQuizResponse loadQuizCached = loadQuizCacheService
                 .get(exerciseId);
-        if (loadQuizCached != null) {
+        if (loadQuizCached != null
+                && quizHelper.hasAccessOnLoadQuizResponse(
+                loadQuizCached, userId, username, teacher)) {
             return loadQuizCached;
         }
 
+        /* ---------- Stampede-lock ---------- */
         String lockName = "lock:quiz" + exerciseId;
         RLock lock = redisson.getLock(lockName);
 
@@ -259,6 +260,12 @@ public class QuizService {
                 // Truy DB -> build response
                 QuizExercise quizExercise = quizHelper
                         .findQuizOrThrow(exerciseId);
+
+                if (!quizHelper.hasAccessOnQuizExercise(
+                        quizExercise, userId, username, teacher)) {
+                    throw new AppException(ErrorCode.UNAUTHORIZED);
+                }
+
                 LoadQuizResponse loadQuizResponse =
                         quizMapper.toLoadQuizResponseFromQuizExercise(
                                 quizExercise); // Đã ẩn correct
@@ -278,6 +285,11 @@ public class QuizService {
         // Fallback (không lấy được lock)
         QuizExercise quizExercise =
                 quizHelper.findQuizOrThrow(exerciseId);
+
+        if (!quizHelper.hasAccessOnQuizExercise(
+                quizExercise, userId, username, teacher)) {
+            throw new AppException(ErrorCode.UNAUTHORIZED);
+        }
 
         return quizMapper.toLoadQuizResponseFromQuizExercise(
                 quizExercise); // Đã ẩn correct

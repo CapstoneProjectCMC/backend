@@ -62,4 +62,22 @@ public interface QuizExerciseDtoOrBuilder extends
    * @return The duration.
    */
   int getDuration();
+
+  /**
+   * <code>bool publicAccessible = 7;</code>
+   * @return The publicAccessible.
+   */
+  boolean getPublicAccessible();
+
+  /**
+   * <code>string createdBy = 8;</code>
+   * @return The createdBy.
+   */
+  java.lang.String getCreatedBy();
+  /**
+   * <code>string createdBy = 8;</code>
+   * @return The bytes for createdBy.
+   */
+  com.google.protobuf.ByteString
+      getCreatedByBytes();
 }

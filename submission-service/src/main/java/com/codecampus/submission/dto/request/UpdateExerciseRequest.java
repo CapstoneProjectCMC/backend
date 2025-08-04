@@ -18,5 +18,6 @@ public record UpdateExerciseRequest(
         String allowDiscussionId,
         Set<String> resourceIds,
         Set<String> tags,
-        Boolean allowAiQuestion) {
+        Boolean allowAiQuestion,
+        Boolean visibility) {
 }
