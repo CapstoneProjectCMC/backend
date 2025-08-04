@@ -44,6 +44,8 @@ public class QuizExercise extends AuditMetadata {
 
     int duration;
 
+    boolean publicAccessible;
+
     @JsonManagedReference
     @OneToMany(
             mappedBy = "quiz",

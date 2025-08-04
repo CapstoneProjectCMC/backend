@@ -19,8 +19,13 @@ import org.mapstruct.ReportingPolicy;
 public interface ExerciseMapper {
 
     @Mapping(target = "userId", expression = "java(userId)")
-    @Mapping(target = "visibility", expression =
-            "java(request.orgId()==null || request.orgId().isBlank())")
+    @Mapping(target = "visibility",
+            expression =
+                    "java(request.visibility() != null ?"
+                            +
+                            "request.visibility(): "
+                            +
+                            "(request.orgId()==null || request.orgId().isBlank()))")
     Exercise toExerciseFromCreateExerciseRequest(
             CreateExerciseRequest request,
             @Context String userId);

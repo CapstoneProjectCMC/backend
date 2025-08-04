@@ -30,6 +30,7 @@ private static final long serialVersionUID = 0L;
     id_ = "";
     title_ = "";
     description_ = "";
+    createdBy_ = "";
   }
 
   public static final com.google.protobuf.Descriptors.Descriptor
@@ -195,6 +196,56 @@ private static final long serialVersionUID = 0L;
     return duration_;
   }
 
+  public static final int PUBLICACCESSIBLE_FIELD_NUMBER = 7;
+  private boolean publicAccessible_ = false;
+  /**
+   * <code>bool publicAccessible = 7;</code>
+   * @return The publicAccessible.
+   */
+  @java.lang.Override
+  public boolean getPublicAccessible() {
+    return publicAccessible_;
+  }
+
+  public static final int CREATEDBY_FIELD_NUMBER = 8;
+  @SuppressWarnings("serial")
+  private volatile java.lang.Object createdBy_ = "";
+  /**
+   * <code>string createdBy = 8;</code>
+   * @return The createdBy.
+   */
+  @java.lang.Override
+  public java.lang.String getCreatedBy() {
+    java.lang.Object ref = createdBy_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      createdBy_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string createdBy = 8;</code>
+   * @return The bytes for createdBy.
+   */
+  @java.lang.Override
+  public com.google.protobuf.ByteString
+      getCreatedByBytes() {
+    java.lang.Object ref = createdBy_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      createdBy_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -227,6 +278,12 @@ private static final long serialVersionUID = 0L;
     if (duration_ != 0) {
       output.writeInt32(6, duration_);
     }
+    if (publicAccessible_ != false) {
+      output.writeBool(7, publicAccessible_);
+    }
+    if (!com.google.protobuf.GeneratedMessage.isStringEmpty(createdBy_)) {
+      com.google.protobuf.GeneratedMessage.writeString(output, 8, createdBy_);
+    }
     getUnknownFields().writeTo(output);
   }
 
@@ -257,6 +314,13 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeInt32Size(6, duration_);
     }
+    if (publicAccessible_ != false) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBoolSize(7, publicAccessible_);
+    }
+    if (!com.google.protobuf.GeneratedMessage.isStringEmpty(createdBy_)) {
+      size += com.google.protobuf.GeneratedMessage.computeStringSize(8, createdBy_);
+    }
     size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
     return size;
@@ -284,6 +348,10 @@ private static final long serialVersionUID = 0L;
         != other.getNumQuestions()) return false;
     if (getDuration()
         != other.getDuration()) return false;
+    if (getPublicAccessible()
+        != other.getPublicAccessible()) return false;
+    if (!getCreatedBy()
+        .equals(other.getCreatedBy())) return false;
     if (!getUnknownFields().equals(other.getUnknownFields())) return false;
     return true;
   }
@@ -307,6 +375,11 @@ private static final long serialVersionUID = 0L;
     hash = (53 * hash) + getNumQuestions();
     hash = (37 * hash) + DURATION_FIELD_NUMBER;
     hash = (53 * hash) + getDuration();
+    hash = (37 * hash) + PUBLICACCESSIBLE_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+        getPublicAccessible());
+    hash = (37 * hash) + CREATEDBY_FIELD_NUMBER;
+    hash = (53 * hash) + getCreatedBy().hashCode();
     hash = (29 * hash) + getUnknownFields().hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -444,6 +517,8 @@ private static final long serialVersionUID = 0L;
       totalPoints_ = 0;
       numQuestions_ = 0;
       duration_ = 0;
+      publicAccessible_ = false;
+      createdBy_ = "";
       return this;
     }
 
@@ -495,6 +570,12 @@ private static final long serialVersionUID = 0L;
       if (((from_bitField0_ & 0x00000020) != 0)) {
         result.duration_ = duration_;
       }
+      if (((from_bitField0_ & 0x00000040) != 0)) {
+        result.publicAccessible_ = publicAccessible_;
+      }
+      if (((from_bitField0_ & 0x00000080) != 0)) {
+        result.createdBy_ = createdBy_;
+      }
     }
 
     @java.lang.Override
@@ -532,6 +613,14 @@ private static final long serialVersionUID = 0L;
       }
       if (other.getDuration() != 0) {
         setDuration(other.getDuration());
+      }
+      if (other.getPublicAccessible() != false) {
+        setPublicAccessible(other.getPublicAccessible());
+      }
+      if (!other.getCreatedBy().isEmpty()) {
+        createdBy_ = other.createdBy_;
+        bitField0_ |= 0x00000080;
+        onChanged();
       }
       this.mergeUnknownFields(other.getUnknownFields());
       onChanged();
@@ -589,6 +678,16 @@ private static final long serialVersionUID = 0L;
               bitField0_ |= 0x00000020;
               break;
             } // case 48
+            case 56: {
+              publicAccessible_ = input.readBool();
+              bitField0_ |= 0x00000040;
+              break;
+            } // case 56
+            case 66: {
+              createdBy_ = input.readStringRequireUtf8();
+              bitField0_ |= 0x00000080;
+              break;
+            } // case 66
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -914,6 +1013,110 @@ private static final long serialVersionUID = 0L;
     public Builder clearDuration() {
       bitField0_ = (bitField0_ & ~0x00000020);
       duration_ = 0;
+      onChanged();
+      return this;
+    }
+
+    private boolean publicAccessible_ ;
+    /**
+     * <code>bool publicAccessible = 7;</code>
+     * @return The publicAccessible.
+     */
+    @java.lang.Override
+    public boolean getPublicAccessible() {
+      return publicAccessible_;
+    }
+    /**
+     * <code>bool publicAccessible = 7;</code>
+     * @param value The publicAccessible to set.
+     * @return This builder for chaining.
+     */
+    public Builder setPublicAccessible(boolean value) {
+
+      publicAccessible_ = value;
+      bitField0_ |= 0x00000040;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>bool publicAccessible = 7;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearPublicAccessible() {
+      bitField0_ = (bitField0_ & ~0x00000040);
+      publicAccessible_ = false;
+      onChanged();
+      return this;
+    }
+
+    private java.lang.Object createdBy_ = "";
+    /**
+     * <code>string createdBy = 8;</code>
+     * @return The createdBy.
+     */
+    public java.lang.String getCreatedBy() {
+      java.lang.Object ref = createdBy_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        createdBy_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <code>string createdBy = 8;</code>
+     * @return The bytes for createdBy.
+     */
+    public com.google.protobuf.ByteString
+        getCreatedByBytes() {
+      java.lang.Object ref = createdBy_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        createdBy_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string createdBy = 8;</code>
+     * @param value The createdBy to set.
+     * @return This builder for chaining.
+     */
+    public Builder setCreatedBy(
+        java.lang.String value) {
+      if (value == null) { throw new NullPointerException(); }
+      createdBy_ = value;
+      bitField0_ |= 0x00000080;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string createdBy = 8;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearCreatedBy() {
+      createdBy_ = getDefaultInstance().getCreatedBy();
+      bitField0_ = (bitField0_ & ~0x00000080);
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string createdBy = 8;</code>
+     * @param value The bytes for createdBy to set.
+     * @return This builder for chaining.
+     */
+    public Builder setCreatedByBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) { throw new NullPointerException(); }
+      checkByteStringIsUtf8(value);
+      createdBy_ = value;
+      bitField0_ |= 0x00000080;
       onChanged();
       return this;
     }

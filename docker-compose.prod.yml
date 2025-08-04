@@ -337,6 +337,7 @@ services:
       - QUIZ_DATABASE=${QUIZ_DATABASE}
       - QUIZ_USERNAME=${QUIZ_USERNAME}
       - QUIZ_DB_PASSWORD=${QUIZ_DB_PASSWORD}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
     ports: [ "8085:8085", "9591:9591" ]
     depends_on:
       - quiz-db

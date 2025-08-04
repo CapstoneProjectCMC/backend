@@ -151,6 +151,10 @@ public interface QuizMapper {
                 .setTotalPoints(e.getTotalPoints())
                 .setNumQuestions(e.getNumQuestions())
                 .setDuration(e.getDuration())
+                .setPublicAccessible(e.isPublicAccessible())
+                .setCreatedBy(Optional
+                        .ofNullable(e.getCreatedBy())
+                        .orElse(""))
                 .build();
     }
 }

@@ -76,7 +76,8 @@ public class Exercise extends AuditMetadata {
     String orgId;
 
     @Column(nullable = false)
-    boolean visibility;
+    @Builder.Default
+    boolean visibility = false;
 
     @Column(name = "is_active", nullable = false)
     boolean active = true;

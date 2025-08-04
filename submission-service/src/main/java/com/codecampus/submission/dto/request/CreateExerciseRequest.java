@@ -23,6 +23,7 @@ public record CreateExerciseRequest(
         String allowDiscussionId, //Cho thảo luận ở forum nào không
         Set<String> resourceIds, //Thuộc tài liệu nào
         Set<String> tags,
-        boolean allowAiQuestion
+        boolean allowAiQuestion,
+        Boolean visibility
 ) {
 }

@@ -4,7 +4,7 @@ services:
     image: ${DOCKERHUB_USER}/codecampus-identity-service:${IMAGE_TAG:-latest}
     build:
       context: ..
-      dockerfile: java-service.Dockerfile
+      dockerfile: ./docker/java-service.Dockerfile
       args:
         MODULE: identity-service
     environment:
@@ -20,7 +20,7 @@ services:
     image: ${DOCKERHUB_USER}/codecampus-profile-service:${IMAGE_TAG:-latest}
     build:
       context: ..
-      dockerfile: java-service.Dockerfile
+      dockerfile: ./docker/java-service.Dockerfile
       args:
         MODULE: profile-service
     environment:
@@ -35,7 +35,7 @@ services:
     image: ${DOCKERHUB_USER}/codecampus-submission-service:${IMAGE_TAG:-latest}
     build:
       context: ..
-      dockerfile: java-service.Dockerfile
+      dockerfile: ./docker/java-service.Dockerfile
       args:
         MODULE: submission-service
     environment:
@@ -52,7 +52,7 @@ services:
     image: ${DOCKERHUB_USER}/codecampus-coding-service:${IMAGE_TAG:-latest}
     build:
       context: ..
-      dockerfile: java-service.Dockerfile
+      dockerfile: ./docker/java-service.Dockerfile
       args:
         MODULE: coding-service
     environment:
@@ -69,7 +69,7 @@ services:
     image: ${DOCKERHUB_USER}/codecampus-quiz-service:${IMAGE_TAG:-latest}
     build:
       context: ..
-      dockerfile: java-service.Dockerfile
+      dockerfile: ./docker/java-service.Dockerfile
       args:
         MODULE: quiz-service
     environment:
@@ -77,6 +77,7 @@ services:
       - QUIZ_DATABASE=${QUIZ_DATABASE}
       - QUIZ_USERNAME=${QUIZ_USERNAME}
       - QUIZ_DB_PASSWORD=${QUIZ_DB_PASSWORD}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
     ports:
       - "8085:8085"
       - "9591:9591"
@@ -86,7 +87,7 @@ services:
     image: ${DOCKERHUB_USER}/codecampus-ai-service:${IMAGE_TAG:-latest}
     build:
       context: ..
-      dockerfile: java-service.Dockerfile
+      dockerfile: ./docker/java-service.Dockerfile
       args:
         MODULE: ai-service
     environment:
@@ -103,7 +104,7 @@ services:
     image: ${DOCKERHUB_USER}/codecampus-search-service:${IMAGE_TAG:-latest}
     build:
       context: ..
-      dockerfile: java-service.Dockerfile
+      dockerfile: ./docker/java-service.Dockerfile
       args:
         MODULE: search-service
     environment:
@@ -118,7 +119,7 @@ services:
     image: ${DOCKERHUB_USER}/codecampus-notification-service:${IMAGE_TAG:-latest}
     build:
       context: ..
-      dockerfile: java-service.Dockerfile
+      dockerfile: ./docker/java-service.Dockerfile
       args:
         MODULE: notification-service
     environment:
@@ -131,7 +132,7 @@ services:
     image: ${DOCKERHUB_USER}/codecampus-chat-service:${IMAGE_TAG:-latest}
     build:
       context: ..
-      dockerfile: java-service.Dockerfile
+      dockerfile: ./docker/java-service.Dockerfile
       args:
         MODULE: chat-service
     environment:
@@ -169,7 +170,7 @@ services:
     image: ${DOCKERHUB_USER}/codecampus-gateway-service:${IMAGE_TAG:-latest}
     build:
       context: ..
-      dockerfile: java-service.Dockerfile
+      dockerfile: ./docker/java-service.Dockerfile
       args:
         MODULE: gateway-service
     environment:
