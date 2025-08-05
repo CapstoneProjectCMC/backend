@@ -3,6 +3,7 @@ package com.codecampus.submission.mapper;
 import com.codecampus.coding.grpc.CodingDetailDto;
 import com.codecampus.coding.grpc.CodingExerciseDto;
 import com.codecampus.coding.grpc.TestCaseDto;
+import com.codecampus.submission.dto.request.coding.AddCodingDetailRequest;
 import com.codecampus.submission.dto.request.coding.UpdateCodingDetailRequest;
 import com.codecampus.submission.dto.request.coding.UpdateTestCaseRequest;
 import com.codecampus.submission.entity.CodingDetail;
@@ -18,9 +19,11 @@ import java.util.Optional;
 
 @Mapper(componentModel = "spring")
 public interface CodingMapper {
-    @Mapping(target = "exerciseId", source = "exercise.id")
-    CodingDetailDto toCodingDetailDtoFromCodingDetail(
-            CodingDetail codingDetail);
+
+    @Mapping(target = "exercise", ignore = true)
+    @Mapping(target = "testCases", ignore = true)
+    CodingDetail toCodingDetailFromAddCodingRequest(
+            AddCodingDetailRequest addCodingDetailRequest);
 
     @Mapping(target = "exerciseId", source = "codingDetail.exercise.id")
     TestCaseDto toTestCaseDtoFromTestCase(
@@ -45,6 +48,29 @@ public interface CodingMapper {
     void patchUpdateTestCaseRequestToTestCase(
             UpdateTestCaseRequest request,
             @MappingTarget TestCase testCase);
+
+    @Mapping(target = "exerciseId", source = "exercise.id")
+    default CodingDetailDto toCodingDetailDtoFromCodingDetail(
+            CodingDetail codingDetail) {
+        return CodingDetailDto.newBuilder()
+                .setExerciseId(codingDetail.getExercise().getId())
+                .addAllAllowedLanguages(codingDetail.getAllowedLanguages())
+                .setInput(codingDetail.getInput())
+                .setOutput(codingDetail.getOutput())
+                .setTimeLimit(codingDetail.getTimeLimit())
+                .setTopic(codingDetail.getTopic())
+                .setConstraintText(codingDetail.getConstraintText())
+                .setMemoryLimit(codingDetail.getMemoryLimit())
+                .setMaxSubmissions(codingDetail.getMaxSubmissions())
+                .setCodeTemplate(codingDetail.getCodeTemplate())
+                .setSolution(codingDetail.getSolution())
+                .addAllTestcases(codingDetail.getTestCases()
+                        .stream()
+                        .map(this::toTestCaseDtoFromTestCase)
+                        .toList()
+                )
+                .build();
+    }
 
     default CodingExerciseDto toCodingExerciseDtoFromExercise(Exercise e) {
         return CodingExerciseDto.newBuilder()

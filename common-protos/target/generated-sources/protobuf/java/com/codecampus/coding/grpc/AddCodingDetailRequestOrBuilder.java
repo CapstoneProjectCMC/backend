@@ -10,17 +10,29 @@ public interface AddCodingDetailRequestOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>.coding.CodingDetailDto detail = 1;</code>
-   * @return Whether the detail field is set.
+   * <code>string exerciseId = 1;</code>
+   * @return The exerciseId.
    */
-  boolean hasDetail();
+  java.lang.String getExerciseId();
   /**
-   * <code>.coding.CodingDetailDto detail = 1;</code>
-   * @return The detail.
+   * <code>string exerciseId = 1;</code>
+   * @return The bytes for exerciseId.
    */
-  com.codecampus.coding.grpc.CodingDetailDto getDetail();
+  com.google.protobuf.ByteString
+      getExerciseIdBytes();
+
   /**
-   * <code>.coding.CodingDetailDto detail = 1;</code>
+   * <code>.coding.CodingDetailDto codingDetail = 2;</code>
+   * @return Whether the codingDetail field is set.
    */
-  com.codecampus.coding.grpc.CodingDetailDtoOrBuilder getDetailOrBuilder();
+  boolean hasCodingDetail();
+  /**
+   * <code>.coding.CodingDetailDto codingDetail = 2;</code>
+   * @return The codingDetail.
+   */
+  com.codecampus.coding.grpc.CodingDetailDto getCodingDetail();
+  /**
+   * <code>.coding.CodingDetailDto codingDetail = 2;</code>
+   */
+  com.codecampus.coding.grpc.CodingDetailDtoOrBuilder getCodingDetailOrBuilder();
 }

@@ -71,6 +71,7 @@ public class QuizService {
                 exercise.getExerciseType() == ExerciseType.QUIZ,
                 "Exercise không phải QUIZ"
         );
+
         if (exercise.getQuizDetail() != null) {
             throw new AppException(ErrorCode.EXERCISE_TYPE);
         }
@@ -253,6 +254,7 @@ public class QuizService {
     public void softDeleteQuestion(
             String exerciseId,
             String questionId) {
+        getExerciseOrThrow(exerciseId);
         Question question = getQuestionOrThrow(questionId);
         question.markDeleted(AuthenticationHelper.getMyUsername());
         question.getOptions()
@@ -266,6 +268,8 @@ public class QuizService {
             String exerciseId,
             String questionId,
             String optionId) {
+        getExerciseOrThrow(exerciseId);
+        getQuestionOrThrow(questionId);
         Option option = getOption(optionId);
         option.markDeleted(AuthenticationHelper.getMyUsername());
         grpcQuizClient.softDeleteOption(

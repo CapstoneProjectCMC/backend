@@ -4,6 +4,8 @@ import com.codecampus.coding.grpc.AddCodingDetailRequest;
 import com.codecampus.coding.grpc.AddTestCaseRequest;
 import com.codecampus.coding.grpc.CodingSyncServiceGrpc;
 import com.codecampus.coding.grpc.CreateCodingExerciseRequest;
+import com.codecampus.coding.grpc.SoftDeleteRequest;
+import com.codecampus.coding.grpc.SoftDeleteTestCaseRequest;
 import com.codecampus.coding.service.CodingService;
 import com.google.protobuf.Empty;
 import io.grpc.stub.StreamObserver;
@@ -24,30 +26,57 @@ public class CodingSyncServiceImpl
 
     @Override
     public void createCodingExercise(
-            CreateCodingExerciseRequest request,
+            CreateCodingExerciseRequest createCodingExerciseRequest,
             StreamObserver<Empty> responseObserver) {
 
-        codingService.createCodingExercise(request);
+        codingService.createCodingExercise(createCodingExerciseRequest);
 
         responseObserver.onNext(Empty.getDefaultInstance());
         responseObserver.onCompleted();
     }
 
     @Override
-    public void addCodingDetail(AddCodingDetailRequest request,
-                                StreamObserver<Empty> responseObserver) {
+    public void addCodingDetail(
+            AddCodingDetailRequest addCodingDetailRequest,
+            StreamObserver<Empty> responseObserver) {
 
-        codingService.addCodingDetail(request);
+        codingService.addCodingDetail(addCodingDetailRequest);
 
         responseObserver.onNext(Empty.getDefaultInstance());
         responseObserver.onCompleted();
     }
 
     @Override
-    public void addTestCase(AddTestCaseRequest request,
-                            StreamObserver<Empty> responseObserver) {
+    public void addTestCase(
+            AddTestCaseRequest addTestCaseRequest,
+            StreamObserver<Empty> responseObserver) {
 
-        codingService.addTestCase(request);
+        codingService.addTestCase(addTestCaseRequest);
+
+        responseObserver.onNext(Empty.getDefaultInstance());
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void softDeleteExercise(
+            SoftDeleteRequest softDeleteRequest,
+            StreamObserver<Empty> responseObserver) {
+
+        codingService.softDeleteExercise(softDeleteRequest.getId());
+
+        responseObserver.onNext(Empty.getDefaultInstance());
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void softDeleteTestCase(
+            SoftDeleteTestCaseRequest softDeleteTestCaseRequest,
+            StreamObserver<Empty> responseObserver) {
+
+        codingService.softDeleteTestCase(
+                softDeleteTestCaseRequest.getTestCaseId(),
+                softDeleteTestCaseRequest.getTestCaseId()
+        );
 
         responseObserver.onNext(Empty.getDefaultInstance());
         responseObserver.onCompleted();

@@ -14,12 +14,12 @@ F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\proto
 F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\coding\grpc\CodingProto.java
 F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\coding\grpc\CreateCodingExerciseRequest.java
 F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\coding\grpc\CreateCodingExerciseRequestOrBuilder.java
+F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\coding\grpc\SoftDeleteRequest.java
+F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\coding\grpc\SoftDeleteRequestOrBuilder.java
+F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\coding\grpc\SoftDeleteTestCaseRequest.java
+F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\coding\grpc\SoftDeleteTestCaseRequestOrBuilder.java
 F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\coding\grpc\TestCaseDto.java
 F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\coding\grpc\TestCaseDtoOrBuilder.java
-F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\coding\grpc\UpsertCodingDetailRequest.java
-F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\coding\grpc\UpsertCodingDetailRequestOrBuilder.java
-F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\coding\grpc\UpsertTestCaseRequest.java
-F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\coding\grpc\UpsertTestCaseRequestOrBuilder.java
 F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\quiz\grpc\AddOptionRequest.java
 F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\quiz\grpc\AddOptionRequestOrBuilder.java
 F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\quiz\grpc\AddQuestionRequest.java

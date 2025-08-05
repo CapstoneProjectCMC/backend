@@ -6,12 +6,12 @@
 package com.codecampus.coding.grpc;
 
 /**
- * Protobuf type {@code coding.AddCodingDetailRequest}
+ * Protobuf type {@code coding.SoftDeleteTestCaseRequest}
  */
-public final class AddCodingDetailRequest extends
+public final class SoftDeleteTestCaseRequest extends
     com.google.protobuf.GeneratedMessage implements
-    // @@protoc_insertion_point(message_implements:coding.AddCodingDetailRequest)
-    AddCodingDetailRequestOrBuilder {
+    // @@protoc_insertion_point(message_implements:coding.SoftDeleteTestCaseRequest)
+    SoftDeleteTestCaseRequestOrBuilder {
 private static final long serialVersionUID = 0L;
   static {
     com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
@@ -20,30 +20,30 @@ private static final long serialVersionUID = 0L;
       /* minor= */ 30,
       /* patch= */ 2,
       /* suffix= */ "",
-      AddCodingDetailRequest.class.getName());
+      SoftDeleteTestCaseRequest.class.getName());
   }
-  // Use AddCodingDetailRequest.newBuilder() to construct.
-  private AddCodingDetailRequest(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+  // Use SoftDeleteTestCaseRequest.newBuilder() to construct.
+  private SoftDeleteTestCaseRequest(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
     super(builder);
   }
-  private AddCodingDetailRequest() {
+  private SoftDeleteTestCaseRequest() {
     exerciseId_ = "";
+    testCaseId_ = "";
   }
 
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return com.codecampus.coding.grpc.CodingProto.internal_static_coding_AddCodingDetailRequest_descriptor;
+    return com.codecampus.coding.grpc.CodingProto.internal_static_coding_SoftDeleteTestCaseRequest_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return com.codecampus.coding.grpc.CodingProto.internal_static_coding_AddCodingDetailRequest_fieldAccessorTable
+    return com.codecampus.coding.grpc.CodingProto.internal_static_coding_SoftDeleteTestCaseRequest_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            com.codecampus.coding.grpc.AddCodingDetailRequest.class, com.codecampus.coding.grpc.AddCodingDetailRequest.Builder.class);
+            com.codecampus.coding.grpc.SoftDeleteTestCaseRequest.class, com.codecampus.coding.grpc.SoftDeleteTestCaseRequest.Builder.class);
   }
 
-  private int bitField0_;
   public static final int EXERCISEID_FIELD_NUMBER = 1;
   @SuppressWarnings("serial")
   private volatile java.lang.Object exerciseId_ = "";
@@ -83,30 +83,43 @@ private static final long serialVersionUID = 0L;
     }
   }
 
-  public static final int CODINGDETAIL_FIELD_NUMBER = 2;
-  private com.codecampus.coding.grpc.CodingDetailDto codingDetail_;
+  public static final int TESTCASEID_FIELD_NUMBER = 2;
+  @SuppressWarnings("serial")
+  private volatile java.lang.Object testCaseId_ = "";
   /**
-   * <code>.coding.CodingDetailDto codingDetail = 2;</code>
-   * @return Whether the codingDetail field is set.
+   * <code>string testCaseId = 2;</code>
+   * @return The testCaseId.
    */
   @java.lang.Override
-  public boolean hasCodingDetail() {
-    return ((bitField0_ & 0x00000001) != 0);
+  public java.lang.String getTestCaseId() {
+    java.lang.Object ref = testCaseId_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      testCaseId_ = s;
+      return s;
+    }
   }
   /**
-   * <code>.coding.CodingDetailDto codingDetail = 2;</code>
-   * @return The codingDetail.
+   * <code>string testCaseId = 2;</code>
+   * @return The bytes for testCaseId.
    */
   @java.lang.Override
-  public com.codecampus.coding.grpc.CodingDetailDto getCodingDetail() {
-    return codingDetail_ == null ? com.codecampus.coding.grpc.CodingDetailDto.getDefaultInstance() : codingDetail_;
-  }
-  /**
-   * <code>.coding.CodingDetailDto codingDetail = 2;</code>
-   */
-  @java.lang.Override
-  public com.codecampus.coding.grpc.CodingDetailDtoOrBuilder getCodingDetailOrBuilder() {
-    return codingDetail_ == null ? com.codecampus.coding.grpc.CodingDetailDto.getDefaultInstance() : codingDetail_;
+  public com.google.protobuf.ByteString
+      getTestCaseIdBytes() {
+    java.lang.Object ref = testCaseId_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      testCaseId_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
   }
 
   private byte memoizedIsInitialized = -1;
@@ -126,8 +139,8 @@ private static final long serialVersionUID = 0L;
     if (!com.google.protobuf.GeneratedMessage.isStringEmpty(exerciseId_)) {
       com.google.protobuf.GeneratedMessage.writeString(output, 1, exerciseId_);
     }
-    if (((bitField0_ & 0x00000001) != 0)) {
-      output.writeMessage(2, getCodingDetail());
+    if (!com.google.protobuf.GeneratedMessage.isStringEmpty(testCaseId_)) {
+      com.google.protobuf.GeneratedMessage.writeString(output, 2, testCaseId_);
     }
     getUnknownFields().writeTo(output);
   }
@@ -141,9 +154,8 @@ private static final long serialVersionUID = 0L;
     if (!com.google.protobuf.GeneratedMessage.isStringEmpty(exerciseId_)) {
       size += com.google.protobuf.GeneratedMessage.computeStringSize(1, exerciseId_);
     }
-    if (((bitField0_ & 0x00000001) != 0)) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(2, getCodingDetail());
+    if (!com.google.protobuf.GeneratedMessage.isStringEmpty(testCaseId_)) {
+      size += com.google.protobuf.GeneratedMessage.computeStringSize(2, testCaseId_);
     }
     size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
@@ -155,18 +167,15 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof com.codecampus.coding.grpc.AddCodingDetailRequest)) {
+    if (!(obj instanceof com.codecampus.coding.grpc.SoftDeleteTestCaseRequest)) {
       return super.equals(obj);
     }
-    com.codecampus.coding.grpc.AddCodingDetailRequest other = (com.codecampus.coding.grpc.AddCodingDetailRequest) obj;
+    com.codecampus.coding.grpc.SoftDeleteTestCaseRequest other = (com.codecampus.coding.grpc.SoftDeleteTestCaseRequest) obj;
 
     if (!getExerciseId()
         .equals(other.getExerciseId())) return false;
-    if (hasCodingDetail() != other.hasCodingDetail()) return false;
-    if (hasCodingDetail()) {
-      if (!getCodingDetail()
-          .equals(other.getCodingDetail())) return false;
-    }
+    if (!getTestCaseId()
+        .equals(other.getTestCaseId())) return false;
     if (!getUnknownFields().equals(other.getUnknownFields())) return false;
     return true;
   }
@@ -180,53 +189,51 @@ private static final long serialVersionUID = 0L;
     hash = (19 * hash) + getDescriptor().hashCode();
     hash = (37 * hash) + EXERCISEID_FIELD_NUMBER;
     hash = (53 * hash) + getExerciseId().hashCode();
-    if (hasCodingDetail()) {
-      hash = (37 * hash) + CODINGDETAIL_FIELD_NUMBER;
-      hash = (53 * hash) + getCodingDetail().hashCode();
-    }
+    hash = (37 * hash) + TESTCASEID_FIELD_NUMBER;
+    hash = (53 * hash) + getTestCaseId().hashCode();
     hash = (29 * hash) + getUnknownFields().hashCode();
     memoizedHashCode = hash;
     return hash;
   }
 
-  public static com.codecampus.coding.grpc.AddCodingDetailRequest parseFrom(
+  public static com.codecampus.coding.grpc.SoftDeleteTestCaseRequest parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static com.codecampus.coding.grpc.AddCodingDetailRequest parseFrom(
+  public static com.codecampus.coding.grpc.SoftDeleteTestCaseRequest parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static com.codecampus.coding.grpc.AddCodingDetailRequest parseFrom(
+  public static com.codecampus.coding.grpc.SoftDeleteTestCaseRequest parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static com.codecampus.coding.grpc.AddCodingDetailRequest parseFrom(
+  public static com.codecampus.coding.grpc.SoftDeleteTestCaseRequest parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static com.codecampus.coding.grpc.AddCodingDetailRequest parseFrom(byte[] data)
+  public static com.codecampus.coding.grpc.SoftDeleteTestCaseRequest parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static com.codecampus.coding.grpc.AddCodingDetailRequest parseFrom(
+  public static com.codecampus.coding.grpc.SoftDeleteTestCaseRequest parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static com.codecampus.coding.grpc.AddCodingDetailRequest parseFrom(java.io.InputStream input)
+  public static com.codecampus.coding.grpc.SoftDeleteTestCaseRequest parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessage
         .parseWithIOException(PARSER, input);
   }
-  public static com.codecampus.coding.grpc.AddCodingDetailRequest parseFrom(
+  public static com.codecampus.coding.grpc.SoftDeleteTestCaseRequest parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -234,26 +241,26 @@ private static final long serialVersionUID = 0L;
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
 
-  public static com.codecampus.coding.grpc.AddCodingDetailRequest parseDelimitedFrom(java.io.InputStream input)
+  public static com.codecampus.coding.grpc.SoftDeleteTestCaseRequest parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessage
         .parseDelimitedWithIOException(PARSER, input);
   }
 
-  public static com.codecampus.coding.grpc.AddCodingDetailRequest parseDelimitedFrom(
+  public static com.codecampus.coding.grpc.SoftDeleteTestCaseRequest parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessage
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static com.codecampus.coding.grpc.AddCodingDetailRequest parseFrom(
+  public static com.codecampus.coding.grpc.SoftDeleteTestCaseRequest parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessage
         .parseWithIOException(PARSER, input);
   }
-  public static com.codecampus.coding.grpc.AddCodingDetailRequest parseFrom(
+  public static com.codecampus.coding.grpc.SoftDeleteTestCaseRequest parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -266,7 +273,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(com.codecampus.coding.grpc.AddCodingDetailRequest prototype) {
+  public static Builder newBuilder(com.codecampus.coding.grpc.SoftDeleteTestCaseRequest prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -282,68 +289,58 @@ private static final long serialVersionUID = 0L;
     return builder;
   }
   /**
-   * Protobuf type {@code coding.AddCodingDetailRequest}
+   * Protobuf type {@code coding.SoftDeleteTestCaseRequest}
    */
   public static final class Builder extends
       com.google.protobuf.GeneratedMessage.Builder<Builder> implements
-      // @@protoc_insertion_point(builder_implements:coding.AddCodingDetailRequest)
-      com.codecampus.coding.grpc.AddCodingDetailRequestOrBuilder {
+      // @@protoc_insertion_point(builder_implements:coding.SoftDeleteTestCaseRequest)
+      com.codecampus.coding.grpc.SoftDeleteTestCaseRequestOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return com.codecampus.coding.grpc.CodingProto.internal_static_coding_AddCodingDetailRequest_descriptor;
+      return com.codecampus.coding.grpc.CodingProto.internal_static_coding_SoftDeleteTestCaseRequest_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.codecampus.coding.grpc.CodingProto.internal_static_coding_AddCodingDetailRequest_fieldAccessorTable
+      return com.codecampus.coding.grpc.CodingProto.internal_static_coding_SoftDeleteTestCaseRequest_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              com.codecampus.coding.grpc.AddCodingDetailRequest.class, com.codecampus.coding.grpc.AddCodingDetailRequest.Builder.class);
+              com.codecampus.coding.grpc.SoftDeleteTestCaseRequest.class, com.codecampus.coding.grpc.SoftDeleteTestCaseRequest.Builder.class);
     }
 
-    // Construct using com.codecampus.coding.grpc.AddCodingDetailRequest.newBuilder()
+    // Construct using com.codecampus.coding.grpc.SoftDeleteTestCaseRequest.newBuilder()
     private Builder() {
-      maybeForceBuilderInitialization();
+
     }
 
     private Builder(
         com.google.protobuf.GeneratedMessage.BuilderParent parent) {
       super(parent);
-      maybeForceBuilderInitialization();
-    }
-    private void maybeForceBuilderInitialization() {
-      if (com.google.protobuf.GeneratedMessage
-              .alwaysUseFieldBuilders) {
-        internalGetCodingDetailFieldBuilder();
-      }
+
     }
     @java.lang.Override
     public Builder clear() {
       super.clear();
       bitField0_ = 0;
       exerciseId_ = "";
-      codingDetail_ = null;
-      if (codingDetailBuilder_ != null) {
-        codingDetailBuilder_.dispose();
-        codingDetailBuilder_ = null;
-      }
+      testCaseId_ = "";
       return this;
     }
 
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return com.codecampus.coding.grpc.CodingProto.internal_static_coding_AddCodingDetailRequest_descriptor;
+      return com.codecampus.coding.grpc.CodingProto.internal_static_coding_SoftDeleteTestCaseRequest_descriptor;
     }
 
     @java.lang.Override
-    public com.codecampus.coding.grpc.AddCodingDetailRequest getDefaultInstanceForType() {
-      return com.codecampus.coding.grpc.AddCodingDetailRequest.getDefaultInstance();
+    public com.codecampus.coding.grpc.SoftDeleteTestCaseRequest getDefaultInstanceForType() {
+      return com.codecampus.coding.grpc.SoftDeleteTestCaseRequest.getDefaultInstance();
     }
 
     @java.lang.Override
-    public com.codecampus.coding.grpc.AddCodingDetailRequest build() {
-      com.codecampus.coding.grpc.AddCodingDetailRequest result = buildPartial();
+    public com.codecampus.coding.grpc.SoftDeleteTestCaseRequest build() {
+      com.codecampus.coding.grpc.SoftDeleteTestCaseRequest result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -351,47 +348,44 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public com.codecampus.coding.grpc.AddCodingDetailRequest buildPartial() {
-      com.codecampus.coding.grpc.AddCodingDetailRequest result = new com.codecampus.coding.grpc.AddCodingDetailRequest(this);
+    public com.codecampus.coding.grpc.SoftDeleteTestCaseRequest buildPartial() {
+      com.codecampus.coding.grpc.SoftDeleteTestCaseRequest result = new com.codecampus.coding.grpc.SoftDeleteTestCaseRequest(this);
       if (bitField0_ != 0) { buildPartial0(result); }
       onBuilt();
       return result;
     }
 
-    private void buildPartial0(com.codecampus.coding.grpc.AddCodingDetailRequest result) {
+    private void buildPartial0(com.codecampus.coding.grpc.SoftDeleteTestCaseRequest result) {
       int from_bitField0_ = bitField0_;
       if (((from_bitField0_ & 0x00000001) != 0)) {
         result.exerciseId_ = exerciseId_;
       }
-      int to_bitField0_ = 0;
       if (((from_bitField0_ & 0x00000002) != 0)) {
-        result.codingDetail_ = codingDetailBuilder_ == null
-            ? codingDetail_
-            : codingDetailBuilder_.build();
-        to_bitField0_ |= 0x00000001;
+        result.testCaseId_ = testCaseId_;
       }
-      result.bitField0_ |= to_bitField0_;
     }
 
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof com.codecampus.coding.grpc.AddCodingDetailRequest) {
-        return mergeFrom((com.codecampus.coding.grpc.AddCodingDetailRequest)other);
+      if (other instanceof com.codecampus.coding.grpc.SoftDeleteTestCaseRequest) {
+        return mergeFrom((com.codecampus.coding.grpc.SoftDeleteTestCaseRequest)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(com.codecampus.coding.grpc.AddCodingDetailRequest other) {
-      if (other == com.codecampus.coding.grpc.AddCodingDetailRequest.getDefaultInstance()) return this;
+    public Builder mergeFrom(com.codecampus.coding.grpc.SoftDeleteTestCaseRequest other) {
+      if (other == com.codecampus.coding.grpc.SoftDeleteTestCaseRequest.getDefaultInstance()) return this;
       if (!other.getExerciseId().isEmpty()) {
         exerciseId_ = other.exerciseId_;
         bitField0_ |= 0x00000001;
         onChanged();
       }
-      if (other.hasCodingDetail()) {
-        mergeCodingDetail(other.getCodingDetail());
+      if (!other.getTestCaseId().isEmpty()) {
+        testCaseId_ = other.testCaseId_;
+        bitField0_ |= 0x00000002;
+        onChanged();
       }
       this.mergeUnknownFields(other.getUnknownFields());
       onChanged();
@@ -425,9 +419,7 @@ private static final long serialVersionUID = 0L;
               break;
             } // case 10
             case 18: {
-              input.readMessage(
-                  internalGetCodingDetailFieldBuilder().getBuilder(),
-                  extensionRegistry);
+              testCaseId_ = input.readStringRequireUtf8();
               bitField0_ |= 0x00000002;
               break;
             } // case 18
@@ -520,144 +512,95 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private com.codecampus.coding.grpc.CodingDetailDto codingDetail_;
-    private com.google.protobuf.SingleFieldBuilder<
-        com.codecampus.coding.grpc.CodingDetailDto, com.codecampus.coding.grpc.CodingDetailDto.Builder, com.codecampus.coding.grpc.CodingDetailDtoOrBuilder> codingDetailBuilder_;
+    private java.lang.Object testCaseId_ = "";
     /**
-     * <code>.coding.CodingDetailDto codingDetail = 2;</code>
-     * @return Whether the codingDetail field is set.
+     * <code>string testCaseId = 2;</code>
+     * @return The testCaseId.
      */
-    public boolean hasCodingDetail() {
-      return ((bitField0_ & 0x00000002) != 0);
-    }
-    /**
-     * <code>.coding.CodingDetailDto codingDetail = 2;</code>
-     * @return The codingDetail.
-     */
-    public com.codecampus.coding.grpc.CodingDetailDto getCodingDetail() {
-      if (codingDetailBuilder_ == null) {
-        return codingDetail_ == null ? com.codecampus.coding.grpc.CodingDetailDto.getDefaultInstance() : codingDetail_;
+    public java.lang.String getTestCaseId() {
+      java.lang.Object ref = testCaseId_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        testCaseId_ = s;
+        return s;
       } else {
-        return codingDetailBuilder_.getMessage();
+        return (java.lang.String) ref;
       }
     }
     /**
-     * <code>.coding.CodingDetailDto codingDetail = 2;</code>
+     * <code>string testCaseId = 2;</code>
+     * @return The bytes for testCaseId.
      */
-    public Builder setCodingDetail(com.codecampus.coding.grpc.CodingDetailDto value) {
-      if (codingDetailBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        codingDetail_ = value;
+    public com.google.protobuf.ByteString
+        getTestCaseIdBytes() {
+      java.lang.Object ref = testCaseId_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        testCaseId_ = b;
+        return b;
       } else {
-        codingDetailBuilder_.setMessage(value);
+        return (com.google.protobuf.ByteString) ref;
       }
+    }
+    /**
+     * <code>string testCaseId = 2;</code>
+     * @param value The testCaseId to set.
+     * @return This builder for chaining.
+     */
+    public Builder setTestCaseId(
+        java.lang.String value) {
+      if (value == null) { throw new NullPointerException(); }
+      testCaseId_ = value;
       bitField0_ |= 0x00000002;
       onChanged();
       return this;
     }
     /**
-     * <code>.coding.CodingDetailDto codingDetail = 2;</code>
+     * <code>string testCaseId = 2;</code>
+     * @return This builder for chaining.
      */
-    public Builder setCodingDetail(
-        com.codecampus.coding.grpc.CodingDetailDto.Builder builderForValue) {
-      if (codingDetailBuilder_ == null) {
-        codingDetail_ = builderForValue.build();
-      } else {
-        codingDetailBuilder_.setMessage(builderForValue.build());
-      }
-      bitField0_ |= 0x00000002;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>.coding.CodingDetailDto codingDetail = 2;</code>
-     */
-    public Builder mergeCodingDetail(com.codecampus.coding.grpc.CodingDetailDto value) {
-      if (codingDetailBuilder_ == null) {
-        if (((bitField0_ & 0x00000002) != 0) &&
-          codingDetail_ != null &&
-          codingDetail_ != com.codecampus.coding.grpc.CodingDetailDto.getDefaultInstance()) {
-          getCodingDetailBuilder().mergeFrom(value);
-        } else {
-          codingDetail_ = value;
-        }
-      } else {
-        codingDetailBuilder_.mergeFrom(value);
-      }
-      if (codingDetail_ != null) {
-        bitField0_ |= 0x00000002;
-        onChanged();
-      }
-      return this;
-    }
-    /**
-     * <code>.coding.CodingDetailDto codingDetail = 2;</code>
-     */
-    public Builder clearCodingDetail() {
+    public Builder clearTestCaseId() {
+      testCaseId_ = getDefaultInstance().getTestCaseId();
       bitField0_ = (bitField0_ & ~0x00000002);
-      codingDetail_ = null;
-      if (codingDetailBuilder_ != null) {
-        codingDetailBuilder_.dispose();
-        codingDetailBuilder_ = null;
-      }
       onChanged();
       return this;
     }
     /**
-     * <code>.coding.CodingDetailDto codingDetail = 2;</code>
+     * <code>string testCaseId = 2;</code>
+     * @param value The bytes for testCaseId to set.
+     * @return This builder for chaining.
      */
-    public com.codecampus.coding.grpc.CodingDetailDto.Builder getCodingDetailBuilder() {
+    public Builder setTestCaseIdBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) { throw new NullPointerException(); }
+      checkByteStringIsUtf8(value);
+      testCaseId_ = value;
       bitField0_ |= 0x00000002;
       onChanged();
-      return internalGetCodingDetailFieldBuilder().getBuilder();
-    }
-    /**
-     * <code>.coding.CodingDetailDto codingDetail = 2;</code>
-     */
-    public com.codecampus.coding.grpc.CodingDetailDtoOrBuilder getCodingDetailOrBuilder() {
-      if (codingDetailBuilder_ != null) {
-        return codingDetailBuilder_.getMessageOrBuilder();
-      } else {
-        return codingDetail_ == null ?
-            com.codecampus.coding.grpc.CodingDetailDto.getDefaultInstance() : codingDetail_;
-      }
-    }
-    /**
-     * <code>.coding.CodingDetailDto codingDetail = 2;</code>
-     */
-    private com.google.protobuf.SingleFieldBuilder<
-        com.codecampus.coding.grpc.CodingDetailDto, com.codecampus.coding.grpc.CodingDetailDto.Builder, com.codecampus.coding.grpc.CodingDetailDtoOrBuilder> 
-        internalGetCodingDetailFieldBuilder() {
-      if (codingDetailBuilder_ == null) {
-        codingDetailBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-            com.codecampus.coding.grpc.CodingDetailDto, com.codecampus.coding.grpc.CodingDetailDto.Builder, com.codecampus.coding.grpc.CodingDetailDtoOrBuilder>(
-                getCodingDetail(),
-                getParentForChildren(),
-                isClean());
-        codingDetail_ = null;
-      }
-      return codingDetailBuilder_;
+      return this;
     }
 
-    // @@protoc_insertion_point(builder_scope:coding.AddCodingDetailRequest)
+    // @@protoc_insertion_point(builder_scope:coding.SoftDeleteTestCaseRequest)
   }
 
-  // @@protoc_insertion_point(class_scope:coding.AddCodingDetailRequest)
-  private static final com.codecampus.coding.grpc.AddCodingDetailRequest DEFAULT_INSTANCE;
+  // @@protoc_insertion_point(class_scope:coding.SoftDeleteTestCaseRequest)
+  private static final com.codecampus.coding.grpc.SoftDeleteTestCaseRequest DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new com.codecampus.coding.grpc.AddCodingDetailRequest();
+    DEFAULT_INSTANCE = new com.codecampus.coding.grpc.SoftDeleteTestCaseRequest();
   }
 
-  public static com.codecampus.coding.grpc.AddCodingDetailRequest getDefaultInstance() {
+  public static com.codecampus.coding.grpc.SoftDeleteTestCaseRequest getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
-  private static final com.google.protobuf.Parser<AddCodingDetailRequest>
-      PARSER = new com.google.protobuf.AbstractParser<AddCodingDetailRequest>() {
+  private static final com.google.protobuf.Parser<SoftDeleteTestCaseRequest>
+      PARSER = new com.google.protobuf.AbstractParser<SoftDeleteTestCaseRequest>() {
     @java.lang.Override
-    public AddCodingDetailRequest parsePartialFrom(
+    public SoftDeleteTestCaseRequest parsePartialFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -676,17 +619,17 @@ private static final long serialVersionUID = 0L;
     }
   };
 
-  public static com.google.protobuf.Parser<AddCodingDetailRequest> parser() {
+  public static com.google.protobuf.Parser<SoftDeleteTestCaseRequest> parser() {
     return PARSER;
   }
 
   @java.lang.Override
-  public com.google.protobuf.Parser<AddCodingDetailRequest> getParserForType() {
+  public com.google.protobuf.Parser<SoftDeleteTestCaseRequest> getParserForType() {
     return PARSER;
   }
 
   @java.lang.Override
-  public com.codecampus.coding.grpc.AddCodingDetailRequest getDefaultInstanceForType() {
+  public com.codecampus.coding.grpc.SoftDeleteTestCaseRequest getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

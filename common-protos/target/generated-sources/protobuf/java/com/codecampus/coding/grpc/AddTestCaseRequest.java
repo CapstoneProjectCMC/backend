@@ -27,6 +27,7 @@ private static final long serialVersionUID = 0L;
     super(builder);
   }
   private AddTestCaseRequest() {
+    exerciseId_ = "";
   }
 
   public static final com.google.protobuf.Descriptors.Descriptor
@@ -43,10 +44,49 @@ private static final long serialVersionUID = 0L;
   }
 
   private int bitField0_;
-  public static final int TESTCASE_FIELD_NUMBER = 1;
+  public static final int EXERCISEID_FIELD_NUMBER = 1;
+  @SuppressWarnings("serial")
+  private volatile java.lang.Object exerciseId_ = "";
+  /**
+   * <code>string exerciseId = 1;</code>
+   * @return The exerciseId.
+   */
+  @java.lang.Override
+  public java.lang.String getExerciseId() {
+    java.lang.Object ref = exerciseId_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      exerciseId_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string exerciseId = 1;</code>
+   * @return The bytes for exerciseId.
+   */
+  @java.lang.Override
+  public com.google.protobuf.ByteString
+      getExerciseIdBytes() {
+    java.lang.Object ref = exerciseId_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      exerciseId_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
+  public static final int TESTCASE_FIELD_NUMBER = 2;
   private com.codecampus.coding.grpc.TestCaseDto testCase_;
   /**
-   * <code>.coding.TestCaseDto testCase = 1;</code>
+   * <code>.coding.TestCaseDto testCase = 2;</code>
    * @return Whether the testCase field is set.
    */
   @java.lang.Override
@@ -54,7 +94,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000001) != 0);
   }
   /**
-   * <code>.coding.TestCaseDto testCase = 1;</code>
+   * <code>.coding.TestCaseDto testCase = 2;</code>
    * @return The testCase.
    */
   @java.lang.Override
@@ -62,7 +102,7 @@ private static final long serialVersionUID = 0L;
     return testCase_ == null ? com.codecampus.coding.grpc.TestCaseDto.getDefaultInstance() : testCase_;
   }
   /**
-   * <code>.coding.TestCaseDto testCase = 1;</code>
+   * <code>.coding.TestCaseDto testCase = 2;</code>
    */
   @java.lang.Override
   public com.codecampus.coding.grpc.TestCaseDtoOrBuilder getTestCaseOrBuilder() {
@@ -83,8 +123,11 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
+    if (!com.google.protobuf.GeneratedMessage.isStringEmpty(exerciseId_)) {
+      com.google.protobuf.GeneratedMessage.writeString(output, 1, exerciseId_);
+    }
     if (((bitField0_ & 0x00000001) != 0)) {
-      output.writeMessage(1, getTestCase());
+      output.writeMessage(2, getTestCase());
     }
     getUnknownFields().writeTo(output);
   }
@@ -95,9 +138,12 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
+    if (!com.google.protobuf.GeneratedMessage.isStringEmpty(exerciseId_)) {
+      size += com.google.protobuf.GeneratedMessage.computeStringSize(1, exerciseId_);
+    }
     if (((bitField0_ & 0x00000001) != 0)) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(1, getTestCase());
+        .computeMessageSize(2, getTestCase());
     }
     size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
@@ -114,6 +160,8 @@ private static final long serialVersionUID = 0L;
     }
     com.codecampus.coding.grpc.AddTestCaseRequest other = (com.codecampus.coding.grpc.AddTestCaseRequest) obj;
 
+    if (!getExerciseId()
+        .equals(other.getExerciseId())) return false;
     if (hasTestCase() != other.hasTestCase()) return false;
     if (hasTestCase()) {
       if (!getTestCase()
@@ -130,6 +178,8 @@ private static final long serialVersionUID = 0L;
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
+    hash = (37 * hash) + EXERCISEID_FIELD_NUMBER;
+    hash = (53 * hash) + getExerciseId().hashCode();
     if (hasTestCase()) {
       hash = (37 * hash) + TESTCASE_FIELD_NUMBER;
       hash = (53 * hash) + getTestCase().hashCode();
@@ -271,6 +321,7 @@ private static final long serialVersionUID = 0L;
     public Builder clear() {
       super.clear();
       bitField0_ = 0;
+      exerciseId_ = "";
       testCase_ = null;
       if (testCaseBuilder_ != null) {
         testCaseBuilder_.dispose();
@@ -309,8 +360,11 @@ private static final long serialVersionUID = 0L;
 
     private void buildPartial0(com.codecampus.coding.grpc.AddTestCaseRequest result) {
       int from_bitField0_ = bitField0_;
-      int to_bitField0_ = 0;
       if (((from_bitField0_ & 0x00000001) != 0)) {
+        result.exerciseId_ = exerciseId_;
+      }
+      int to_bitField0_ = 0;
+      if (((from_bitField0_ & 0x00000002) != 0)) {
         result.testCase_ = testCaseBuilder_ == null
             ? testCase_
             : testCaseBuilder_.build();
@@ -331,6 +385,11 @@ private static final long serialVersionUID = 0L;
 
     public Builder mergeFrom(com.codecampus.coding.grpc.AddTestCaseRequest other) {
       if (other == com.codecampus.coding.grpc.AddTestCaseRequest.getDefaultInstance()) return this;
+      if (!other.getExerciseId().isEmpty()) {
+        exerciseId_ = other.exerciseId_;
+        bitField0_ |= 0x00000001;
+        onChanged();
+      }
       if (other.hasTestCase()) {
         mergeTestCase(other.getTestCase());
       }
@@ -361,12 +420,17 @@ private static final long serialVersionUID = 0L;
               done = true;
               break;
             case 10: {
-              input.readMessage(
-                  internalGetTestCaseFieldBuilder().getBuilder(),
-                  extensionRegistry);
+              exerciseId_ = input.readStringRequireUtf8();
               bitField0_ |= 0x00000001;
               break;
             } // case 10
+            case 18: {
+              input.readMessage(
+                  internalGetTestCaseFieldBuilder().getBuilder(),
+                  extensionRegistry);
+              bitField0_ |= 0x00000002;
+              break;
+            } // case 18
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -384,18 +448,90 @@ private static final long serialVersionUID = 0L;
     }
     private int bitField0_;
 
+    private java.lang.Object exerciseId_ = "";
+    /**
+     * <code>string exerciseId = 1;</code>
+     * @return The exerciseId.
+     */
+    public java.lang.String getExerciseId() {
+      java.lang.Object ref = exerciseId_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        exerciseId_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <code>string exerciseId = 1;</code>
+     * @return The bytes for exerciseId.
+     */
+    public com.google.protobuf.ByteString
+        getExerciseIdBytes() {
+      java.lang.Object ref = exerciseId_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        exerciseId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string exerciseId = 1;</code>
+     * @param value The exerciseId to set.
+     * @return This builder for chaining.
+     */
+    public Builder setExerciseId(
+        java.lang.String value) {
+      if (value == null) { throw new NullPointerException(); }
+      exerciseId_ = value;
+      bitField0_ |= 0x00000001;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string exerciseId = 1;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearExerciseId() {
+      exerciseId_ = getDefaultInstance().getExerciseId();
+      bitField0_ = (bitField0_ & ~0x00000001);
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string exerciseId = 1;</code>
+     * @param value The bytes for exerciseId to set.
+     * @return This builder for chaining.
+     */
+    public Builder setExerciseIdBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) { throw new NullPointerException(); }
+      checkByteStringIsUtf8(value);
+      exerciseId_ = value;
+      bitField0_ |= 0x00000001;
+      onChanged();
+      return this;
+    }
+
     private com.codecampus.coding.grpc.TestCaseDto testCase_;
     private com.google.protobuf.SingleFieldBuilder<
         com.codecampus.coding.grpc.TestCaseDto, com.codecampus.coding.grpc.TestCaseDto.Builder, com.codecampus.coding.grpc.TestCaseDtoOrBuilder> testCaseBuilder_;
     /**
-     * <code>.coding.TestCaseDto testCase = 1;</code>
+     * <code>.coding.TestCaseDto testCase = 2;</code>
      * @return Whether the testCase field is set.
      */
     public boolean hasTestCase() {
-      return ((bitField0_ & 0x00000001) != 0);
+      return ((bitField0_ & 0x00000002) != 0);
     }
     /**
-     * <code>.coding.TestCaseDto testCase = 1;</code>
+     * <code>.coding.TestCaseDto testCase = 2;</code>
      * @return The testCase.
      */
     public com.codecampus.coding.grpc.TestCaseDto getTestCase() {
@@ -406,7 +542,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>.coding.TestCaseDto testCase = 1;</code>
+     * <code>.coding.TestCaseDto testCase = 2;</code>
      */
     public Builder setTestCase(com.codecampus.coding.grpc.TestCaseDto value) {
       if (testCaseBuilder_ == null) {
@@ -417,12 +553,12 @@ private static final long serialVersionUID = 0L;
       } else {
         testCaseBuilder_.setMessage(value);
       }
-      bitField0_ |= 0x00000001;
+      bitField0_ |= 0x00000002;
       onChanged();
       return this;
     }
     /**
-     * <code>.coding.TestCaseDto testCase = 1;</code>
+     * <code>.coding.TestCaseDto testCase = 2;</code>
      */
     public Builder setTestCase(
         com.codecampus.coding.grpc.TestCaseDto.Builder builderForValue) {
@@ -431,16 +567,16 @@ private static final long serialVersionUID = 0L;
       } else {
         testCaseBuilder_.setMessage(builderForValue.build());
       }
-      bitField0_ |= 0x00000001;
+      bitField0_ |= 0x00000002;
       onChanged();
       return this;
     }
     /**
-     * <code>.coding.TestCaseDto testCase = 1;</code>
+     * <code>.coding.TestCaseDto testCase = 2;</code>
      */
     public Builder mergeTestCase(com.codecampus.coding.grpc.TestCaseDto value) {
       if (testCaseBuilder_ == null) {
-        if (((bitField0_ & 0x00000001) != 0) &&
+        if (((bitField0_ & 0x00000002) != 0) &&
           testCase_ != null &&
           testCase_ != com.codecampus.coding.grpc.TestCaseDto.getDefaultInstance()) {
           getTestCaseBuilder().mergeFrom(value);
@@ -451,16 +587,16 @@ private static final long serialVersionUID = 0L;
         testCaseBuilder_.mergeFrom(value);
       }
       if (testCase_ != null) {
-        bitField0_ |= 0x00000001;
+        bitField0_ |= 0x00000002;
         onChanged();
       }
       return this;
     }
     /**
-     * <code>.coding.TestCaseDto testCase = 1;</code>
+     * <code>.coding.TestCaseDto testCase = 2;</code>
      */
     public Builder clearTestCase() {
-      bitField0_ = (bitField0_ & ~0x00000001);
+      bitField0_ = (bitField0_ & ~0x00000002);
       testCase_ = null;
       if (testCaseBuilder_ != null) {
         testCaseBuilder_.dispose();
@@ -470,15 +606,15 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.coding.TestCaseDto testCase = 1;</code>
+     * <code>.coding.TestCaseDto testCase = 2;</code>
      */
     public com.codecampus.coding.grpc.TestCaseDto.Builder getTestCaseBuilder() {
-      bitField0_ |= 0x00000001;
+      bitField0_ |= 0x00000002;
       onChanged();
       return internalGetTestCaseFieldBuilder().getBuilder();
     }
     /**
-     * <code>.coding.TestCaseDto testCase = 1;</code>
+     * <code>.coding.TestCaseDto testCase = 2;</code>
      */
     public com.codecampus.coding.grpc.TestCaseDtoOrBuilder getTestCaseOrBuilder() {
       if (testCaseBuilder_ != null) {
@@ -489,7 +625,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>.coding.TestCaseDto testCase = 1;</code>
+     * <code>.coding.TestCaseDto testCase = 2;</code>
      */
     private com.google.protobuf.SingleFieldBuilder<
         com.codecampus.coding.grpc.TestCaseDto, com.codecampus.coding.grpc.TestCaseDto.Builder, com.codecampus.coding.grpc.TestCaseDtoOrBuilder> 

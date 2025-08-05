@@ -5,8 +5,8 @@
 
 package com.codecampus.coding.grpc;
 
-public interface AddTestCaseRequestOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:coding.AddTestCaseRequest)
+public interface SoftDeleteTestCaseRequestOrBuilder extends
+    // @@protoc_insertion_point(interface_extends:coding.SoftDeleteTestCaseRequest)
     com.google.protobuf.MessageOrBuilder {
 
   /**
@@ -22,17 +22,14 @@ public interface AddTestCaseRequestOrBuilder extends
       getExerciseIdBytes();
 
   /**
-   * <code>.coding.TestCaseDto testCase = 2;</code>
-   * @return Whether the testCase field is set.
+   * <code>string testCaseId = 2;</code>
+   * @return The testCaseId.
    */
-  boolean hasTestCase();
+  java.lang.String getTestCaseId();
   /**
-   * <code>.coding.TestCaseDto testCase = 2;</code>
-   * @return The testCase.
+   * <code>string testCaseId = 2;</code>
+   * @return The bytes for testCaseId.
    */
-  com.codecampus.coding.grpc.TestCaseDto getTestCase();
-  /**
-   * <code>.coding.TestCaseDto testCase = 2;</code>
-   */
-  com.codecampus.coding.grpc.TestCaseDtoOrBuilder getTestCaseOrBuilder();
+  com.google.protobuf.ByteString
+      getTestCaseIdBytes();
 }

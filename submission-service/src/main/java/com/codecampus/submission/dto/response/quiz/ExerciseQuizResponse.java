@@ -23,5 +23,6 @@ public record ExerciseQuizResponse(
         BigDecimal cost,
         boolean freeForOrg,
         Set<String> tags,
+        boolean visibility,
         Instant createdAt) {
 }

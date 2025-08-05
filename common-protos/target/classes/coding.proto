@@ -26,6 +26,7 @@ message CodingDetailDto {
   string constraintText = 9;
   string codeTemplate = 10;
   string solution = 11;
+  repeated TestCaseDto testcases = 12;
 }
 
 message TestCaseDto {
@@ -37,16 +38,25 @@ message TestCaseDto {
   string note = 6;
 }
 
+message SoftDeleteRequest {
+  string id = 1;
+}
+
+message SoftDeleteTestCaseRequest {
+  string exerciseId = 1;
+  string testCaseId = 2;
+}
+
 service CodingSyncService {
   rpc CreateCodingExercise(CreateCodingExerciseRequest)
       returns (google.protobuf.Empty);
   rpc AddCodingDetail(AddCodingDetailRequest)
       returns (google.protobuf.Empty);
-  rpc UpsertCodingDetail (UpsertCodingDetailRequest)
-      returns (google.protobuf.Empty);
   rpc AddTestCase(AddTestCaseRequest)
       returns (google.protobuf.Empty);
-  rpc UpsertTestCase (UpsertTestCaseRequest)
+  rpc SoftDeleteExercise (SoftDeleteRequest)
+      returns (google.protobuf.Empty);
+  rpc SoftDeleteTestCase (SoftDeleteTestCaseRequest)
       returns (google.protobuf.Empty);
 }
 
@@ -55,16 +65,12 @@ message CreateCodingExerciseRequest {
 }
 
 message AddCodingDetailRequest {
-  CodingDetailDto detail = 1;
+  string exerciseId = 1;
+  CodingDetailDto codingDetail = 2;
 }
-message UpsertCodingDetailRequest {
-  CodingDetailDto detail = 1;
-}
-
 
 message AddTestCaseRequest {
-  TestCaseDto testCase = 1;
+  string exerciseId = 1;
+  TestCaseDto testCase = 2;
 }
-message UpsertTestCaseRequest {
-  TestCaseDto testCase = 1;
-}
+

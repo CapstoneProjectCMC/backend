@@ -36,6 +36,7 @@ private static final long serialVersionUID = 0L;
     constraintText_ = "";
     codeTemplate_ = "";
     solution_ = "";
+    testcases_ = java.util.Collections.emptyList();
   }
 
   public static final com.google.protobuf.Descriptors.Descriptor
@@ -402,6 +403,47 @@ private static final long serialVersionUID = 0L;
     }
   }
 
+  public static final int TESTCASES_FIELD_NUMBER = 12;
+  @SuppressWarnings("serial")
+  private java.util.List<com.codecampus.coding.grpc.TestCaseDto> testcases_;
+  /**
+   * <code>repeated .coding.TestCaseDto testcases = 12;</code>
+   */
+  @java.lang.Override
+  public java.util.List<com.codecampus.coding.grpc.TestCaseDto> getTestcasesList() {
+    return testcases_;
+  }
+  /**
+   * <code>repeated .coding.TestCaseDto testcases = 12;</code>
+   */
+  @java.lang.Override
+  public java.util.List<? extends com.codecampus.coding.grpc.TestCaseDtoOrBuilder> 
+      getTestcasesOrBuilderList() {
+    return testcases_;
+  }
+  /**
+   * <code>repeated .coding.TestCaseDto testcases = 12;</code>
+   */
+  @java.lang.Override
+  public int getTestcasesCount() {
+    return testcases_.size();
+  }
+  /**
+   * <code>repeated .coding.TestCaseDto testcases = 12;</code>
+   */
+  @java.lang.Override
+  public com.codecampus.coding.grpc.TestCaseDto getTestcases(int index) {
+    return testcases_.get(index);
+  }
+  /**
+   * <code>repeated .coding.TestCaseDto testcases = 12;</code>
+   */
+  @java.lang.Override
+  public com.codecampus.coding.grpc.TestCaseDtoOrBuilder getTestcasesOrBuilder(
+      int index) {
+    return testcases_.get(index);
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -448,6 +490,9 @@ private static final long serialVersionUID = 0L;
     }
     if (!com.google.protobuf.GeneratedMessage.isStringEmpty(solution_)) {
       com.google.protobuf.GeneratedMessage.writeString(output, 11, solution_);
+    }
+    for (int i = 0; i < testcases_.size(); i++) {
+      output.writeMessage(12, testcases_.get(i));
     }
     getUnknownFields().writeTo(output);
   }
@@ -499,6 +544,10 @@ private static final long serialVersionUID = 0L;
     if (!com.google.protobuf.GeneratedMessage.isStringEmpty(solution_)) {
       size += com.google.protobuf.GeneratedMessage.computeStringSize(11, solution_);
     }
+    for (int i = 0; i < testcases_.size(); i++) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(12, testcases_.get(i));
+    }
     size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
     return size;
@@ -536,6 +585,8 @@ private static final long serialVersionUID = 0L;
         .equals(other.getCodeTemplate())) return false;
     if (!getSolution()
         .equals(other.getSolution())) return false;
+    if (!getTestcasesList()
+        .equals(other.getTestcasesList())) return false;
     if (!getUnknownFields().equals(other.getUnknownFields())) return false;
     return true;
   }
@@ -571,6 +622,10 @@ private static final long serialVersionUID = 0L;
     hash = (53 * hash) + getCodeTemplate().hashCode();
     hash = (37 * hash) + SOLUTION_FIELD_NUMBER;
     hash = (53 * hash) + getSolution().hashCode();
+    if (getTestcasesCount() > 0) {
+      hash = (37 * hash) + TESTCASES_FIELD_NUMBER;
+      hash = (53 * hash) + getTestcasesList().hashCode();
+    }
     hash = (29 * hash) + getUnknownFields().hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -714,6 +769,13 @@ private static final long serialVersionUID = 0L;
       constraintText_ = "";
       codeTemplate_ = "";
       solution_ = "";
+      if (testcasesBuilder_ == null) {
+        testcases_ = java.util.Collections.emptyList();
+      } else {
+        testcases_ = null;
+        testcasesBuilder_.clear();
+      }
+      bitField0_ = (bitField0_ & ~0x00000800);
       return this;
     }
 
@@ -740,9 +802,22 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.codecampus.coding.grpc.CodingDetailDto buildPartial() {
       com.codecampus.coding.grpc.CodingDetailDto result = new com.codecampus.coding.grpc.CodingDetailDto(this);
+      buildPartialRepeatedFields(result);
       if (bitField0_ != 0) { buildPartial0(result); }
       onBuilt();
       return result;
+    }
+
+    private void buildPartialRepeatedFields(com.codecampus.coding.grpc.CodingDetailDto result) {
+      if (testcasesBuilder_ == null) {
+        if (((bitField0_ & 0x00000800) != 0)) {
+          testcases_ = java.util.Collections.unmodifiableList(testcases_);
+          bitField0_ = (bitField0_ & ~0x00000800);
+        }
+        result.testcases_ = testcases_;
+      } else {
+        result.testcases_ = testcasesBuilder_.build();
+      }
     }
 
     private void buildPartial0(com.codecampus.coding.grpc.CodingDetailDto result) {
@@ -849,6 +924,32 @@ private static final long serialVersionUID = 0L;
         bitField0_ |= 0x00000400;
         onChanged();
       }
+      if (testcasesBuilder_ == null) {
+        if (!other.testcases_.isEmpty()) {
+          if (testcases_.isEmpty()) {
+            testcases_ = other.testcases_;
+            bitField0_ = (bitField0_ & ~0x00000800);
+          } else {
+            ensureTestcasesIsMutable();
+            testcases_.addAll(other.testcases_);
+          }
+          onChanged();
+        }
+      } else {
+        if (!other.testcases_.isEmpty()) {
+          if (testcasesBuilder_.isEmpty()) {
+            testcasesBuilder_.dispose();
+            testcasesBuilder_ = null;
+            testcases_ = other.testcases_;
+            bitField0_ = (bitField0_ & ~0x00000800);
+            testcasesBuilder_ = 
+              com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
+                 internalGetTestcasesFieldBuilder() : null;
+          } else {
+            testcasesBuilder_.addAllMessages(other.testcases_);
+          }
+        }
+      }
       this.mergeUnknownFields(other.getUnknownFields());
       onChanged();
       return this;
@@ -931,6 +1032,19 @@ private static final long serialVersionUID = 0L;
               bitField0_ |= 0x00000400;
               break;
             } // case 90
+            case 98: {
+              com.codecampus.coding.grpc.TestCaseDto m =
+                  input.readMessage(
+                      com.codecampus.coding.grpc.TestCaseDto.parser(),
+                      extensionRegistry);
+              if (testcasesBuilder_ == null) {
+                ensureTestcasesIsMutable();
+                testcases_.add(m);
+              } else {
+                testcasesBuilder_.addMessage(m);
+              }
+              break;
+            } // case 98
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -1677,6 +1791,246 @@ private static final long serialVersionUID = 0L;
       bitField0_ |= 0x00000400;
       onChanged();
       return this;
+    }
+
+    private java.util.List<com.codecampus.coding.grpc.TestCaseDto> testcases_ =
+      java.util.Collections.emptyList();
+    private void ensureTestcasesIsMutable() {
+      if (!((bitField0_ & 0x00000800) != 0)) {
+        testcases_ = new java.util.ArrayList<com.codecampus.coding.grpc.TestCaseDto>(testcases_);
+        bitField0_ |= 0x00000800;
+       }
+    }
+
+    private com.google.protobuf.RepeatedFieldBuilder<
+        com.codecampus.coding.grpc.TestCaseDto, com.codecampus.coding.grpc.TestCaseDto.Builder, com.codecampus.coding.grpc.TestCaseDtoOrBuilder> testcasesBuilder_;
+
+    /**
+     * <code>repeated .coding.TestCaseDto testcases = 12;</code>
+     */
+    public java.util.List<com.codecampus.coding.grpc.TestCaseDto> getTestcasesList() {
+      if (testcasesBuilder_ == null) {
+        return java.util.Collections.unmodifiableList(testcases_);
+      } else {
+        return testcasesBuilder_.getMessageList();
+      }
+    }
+    /**
+     * <code>repeated .coding.TestCaseDto testcases = 12;</code>
+     */
+    public int getTestcasesCount() {
+      if (testcasesBuilder_ == null) {
+        return testcases_.size();
+      } else {
+        return testcasesBuilder_.getCount();
+      }
+    }
+    /**
+     * <code>repeated .coding.TestCaseDto testcases = 12;</code>
+     */
+    public com.codecampus.coding.grpc.TestCaseDto getTestcases(int index) {
+      if (testcasesBuilder_ == null) {
+        return testcases_.get(index);
+      } else {
+        return testcasesBuilder_.getMessage(index);
+      }
+    }
+    /**
+     * <code>repeated .coding.TestCaseDto testcases = 12;</code>
+     */
+    public Builder setTestcases(
+        int index, com.codecampus.coding.grpc.TestCaseDto value) {
+      if (testcasesBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureTestcasesIsMutable();
+        testcases_.set(index, value);
+        onChanged();
+      } else {
+        testcasesBuilder_.setMessage(index, value);
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .coding.TestCaseDto testcases = 12;</code>
+     */
+    public Builder setTestcases(
+        int index, com.codecampus.coding.grpc.TestCaseDto.Builder builderForValue) {
+      if (testcasesBuilder_ == null) {
+        ensureTestcasesIsMutable();
+        testcases_.set(index, builderForValue.build());
+        onChanged();
+      } else {
+        testcasesBuilder_.setMessage(index, builderForValue.build());
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .coding.TestCaseDto testcases = 12;</code>
+     */
+    public Builder addTestcases(com.codecampus.coding.grpc.TestCaseDto value) {
+      if (testcasesBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureTestcasesIsMutable();
+        testcases_.add(value);
+        onChanged();
+      } else {
+        testcasesBuilder_.addMessage(value);
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .coding.TestCaseDto testcases = 12;</code>
+     */
+    public Builder addTestcases(
+        int index, com.codecampus.coding.grpc.TestCaseDto value) {
+      if (testcasesBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureTestcasesIsMutable();
+        testcases_.add(index, value);
+        onChanged();
+      } else {
+        testcasesBuilder_.addMessage(index, value);
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .coding.TestCaseDto testcases = 12;</code>
+     */
+    public Builder addTestcases(
+        com.codecampus.coding.grpc.TestCaseDto.Builder builderForValue) {
+      if (testcasesBuilder_ == null) {
+        ensureTestcasesIsMutable();
+        testcases_.add(builderForValue.build());
+        onChanged();
+      } else {
+        testcasesBuilder_.addMessage(builderForValue.build());
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .coding.TestCaseDto testcases = 12;</code>
+     */
+    public Builder addTestcases(
+        int index, com.codecampus.coding.grpc.TestCaseDto.Builder builderForValue) {
+      if (testcasesBuilder_ == null) {
+        ensureTestcasesIsMutable();
+        testcases_.add(index, builderForValue.build());
+        onChanged();
+      } else {
+        testcasesBuilder_.addMessage(index, builderForValue.build());
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .coding.TestCaseDto testcases = 12;</code>
+     */
+    public Builder addAllTestcases(
+        java.lang.Iterable<? extends com.codecampus.coding.grpc.TestCaseDto> values) {
+      if (testcasesBuilder_ == null) {
+        ensureTestcasesIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, testcases_);
+        onChanged();
+      } else {
+        testcasesBuilder_.addAllMessages(values);
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .coding.TestCaseDto testcases = 12;</code>
+     */
+    public Builder clearTestcases() {
+      if (testcasesBuilder_ == null) {
+        testcases_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000800);
+        onChanged();
+      } else {
+        testcasesBuilder_.clear();
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .coding.TestCaseDto testcases = 12;</code>
+     */
+    public Builder removeTestcases(int index) {
+      if (testcasesBuilder_ == null) {
+        ensureTestcasesIsMutable();
+        testcases_.remove(index);
+        onChanged();
+      } else {
+        testcasesBuilder_.remove(index);
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .coding.TestCaseDto testcases = 12;</code>
+     */
+    public com.codecampus.coding.grpc.TestCaseDto.Builder getTestcasesBuilder(
+        int index) {
+      return internalGetTestcasesFieldBuilder().getBuilder(index);
+    }
+    /**
+     * <code>repeated .coding.TestCaseDto testcases = 12;</code>
+     */
+    public com.codecampus.coding.grpc.TestCaseDtoOrBuilder getTestcasesOrBuilder(
+        int index) {
+      if (testcasesBuilder_ == null) {
+        return testcases_.get(index);  } else {
+        return testcasesBuilder_.getMessageOrBuilder(index);
+      }
+    }
+    /**
+     * <code>repeated .coding.TestCaseDto testcases = 12;</code>
+     */
+    public java.util.List<? extends com.codecampus.coding.grpc.TestCaseDtoOrBuilder> 
+         getTestcasesOrBuilderList() {
+      if (testcasesBuilder_ != null) {
+        return testcasesBuilder_.getMessageOrBuilderList();
+      } else {
+        return java.util.Collections.unmodifiableList(testcases_);
+      }
+    }
+    /**
+     * <code>repeated .coding.TestCaseDto testcases = 12;</code>
+     */
+    public com.codecampus.coding.grpc.TestCaseDto.Builder addTestcasesBuilder() {
+      return internalGetTestcasesFieldBuilder().addBuilder(
+          com.codecampus.coding.grpc.TestCaseDto.getDefaultInstance());
+    }
+    /**
+     * <code>repeated .coding.TestCaseDto testcases = 12;</code>
+     */
+    public com.codecampus.coding.grpc.TestCaseDto.Builder addTestcasesBuilder(
+        int index) {
+      return internalGetTestcasesFieldBuilder().addBuilder(
+          index, com.codecampus.coding.grpc.TestCaseDto.getDefaultInstance());
+    }
+    /**
+     * <code>repeated .coding.TestCaseDto testcases = 12;</code>
+     */
+    public java.util.List<com.codecampus.coding.grpc.TestCaseDto.Builder> 
+         getTestcasesBuilderList() {
+      return internalGetTestcasesFieldBuilder().getBuilderList();
+    }
+    private com.google.protobuf.RepeatedFieldBuilder<
+        com.codecampus.coding.grpc.TestCaseDto, com.codecampus.coding.grpc.TestCaseDto.Builder, com.codecampus.coding.grpc.TestCaseDtoOrBuilder> 
+        internalGetTestcasesFieldBuilder() {
+      if (testcasesBuilder_ == null) {
+        testcasesBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
+            com.codecampus.coding.grpc.TestCaseDto, com.codecampus.coding.grpc.TestCaseDto.Builder, com.codecampus.coding.grpc.TestCaseDtoOrBuilder>(
+                testcases_,
+                ((bitField0_ & 0x00000800) != 0),
+                getParentForChildren(),
+                isClean());
+        testcases_ = null;
+      }
+      return testcasesBuilder_;
     }
 
     // @@protoc_insertion_point(builder_scope:coding.CodingDetailDto)

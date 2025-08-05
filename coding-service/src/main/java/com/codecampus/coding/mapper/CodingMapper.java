@@ -22,8 +22,8 @@ public interface CodingMapper {
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void patchCodingExerciseDtoToCodingExercise(
-            @MappingTarget CodingExercise codingExercise,
-            CodingExerciseDto codingExerciseDto);
+            CodingExerciseDto codingExerciseDto,
+            @MappingTarget CodingExercise codingExercise);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "allowedLanguages",
@@ -39,6 +39,6 @@ public interface CodingMapper {
     TestCaseDto toTestCaseDtoFromTestCase(TestCase t);
 
     void patchTestCaseDtoToTestCase(
-            @MappingTarget TestCase testCase,
-            TestCaseDto testCaseDto);
+            TestCaseDto testCaseDto,
+            @MappingTarget TestCase testCase);
 }

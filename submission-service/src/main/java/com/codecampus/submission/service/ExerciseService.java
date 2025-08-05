@@ -148,7 +148,11 @@ public class ExerciseService {
                 .getExerciseOrThrow(id);
         exerciseMapper.patchUpdateExerciseRequestToExercise(request, exercise);
 
-        grpcQuizClient.pushExercise(exercise);
+        if (exercise.getExerciseType() == ExerciseType.QUIZ) {
+            grpcQuizClient.pushExercise(exercise);
+        } else if (exercise.getExerciseType() == ExerciseType.CODING) {
+            grpcCodingClient.pushExercise(exercise);
+        }
         exerciseEventProducer.publishUpdatedExerciseEvent(exercise);
     }
 
@@ -162,8 +166,11 @@ public class ExerciseService {
 
         exerciseEventProducer.publishDeletedExerciseEvent(exercise);
         if (exercise.getExerciseType() ==
-                ExerciseType.QUIZ) {   // đồng bộ quiz‑svc
+                ExerciseType.QUIZ) {
             grpcQuizClient.softDeleteExercise(exerciseId);
+        } else if (exercise.getExerciseType()
+                == ExerciseType.CODING) {
+            grpcCodingClient.softDeleteExercise(exerciseId);
         }
     }
 
@@ -231,6 +238,7 @@ public class ExerciseService {
                 .tags(exercise.getTags())
                 .allowAiQuestion(exercise.isAllowAiQuestion())
                 .quizDetail(qSlice)
+                .visibility(exercise.isVisibility())
                 .createdBy(exercise.getCreatedBy())
                 .createdAt(exercise.getCreatedAt())
                 .updatedBy(exercise.getUpdatedBy())

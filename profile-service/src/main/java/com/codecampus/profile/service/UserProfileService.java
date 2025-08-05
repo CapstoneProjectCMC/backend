@@ -173,16 +173,14 @@ public class UserProfileService {
      * @return UserProfileResponse sau khi cập nhật
      * @throws AppException nếu không tìm thấy hồ sơ
      */
-    public UserProfileResponse updateMyUserProfile(
+    public void updateMyUserProfile(
             UserProfileUpdateRequest request) {
 
         UserProfile profile = getUserProfile();
 
         userProfileMapper.updateUserProfile(profile, request);
-        return userProfileMapper.toUserProfileResponse(
+        userProfileMapper.toUserProfileResponse(
                 userProfileRepository.save(profile)
         );
     }
-
-
 }

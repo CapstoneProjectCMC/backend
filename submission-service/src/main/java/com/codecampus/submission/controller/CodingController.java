@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,7 +37,10 @@ public class CodingController {
             @PathVariable("exerciseId") String exerciseId,
             @RequestBody @Valid AddCodingDetailRequest addCodingRequest) {
 
-        codingService.addCodingDetail(exerciseId, addCodingRequest);
+        codingService.addCodingDetail(
+                exerciseId,
+                addCodingRequest,
+                false);
 
         return ApiResponse.<Void>builder()
                 .message("Tạo Coding thành công!")
@@ -61,22 +65,37 @@ public class CodingController {
             @RequestBody @Valid TestCaseDto testCaseDto)
             throws BadRequestException {
 
-        codingService.addTestCase(exerciseId, testCaseDto);
+        codingService.addTestCase(
+                exerciseId,
+                testCaseDto,
+                false);
 
         return ApiResponse.<TestCase>builder()
                 .message("Thêm testcase cho coding thành công!")
                 .build();
     }
 
-    @PatchMapping("/coding/test-case/{testCaseId}")
+    @PatchMapping("/coding/{exerciseId}/test-case/{testCaseId}")
     ApiResponse<Void> updateTestCase(
+            @PathVariable String exerciseId,
             @PathVariable String testCaseId,
-            @RequestBody UpdateTestCaseRequest dto) {
+            @RequestBody UpdateTestCaseRequest request) {
 
-        codingService.updateTestCase(testCaseId, dto);
+        codingService.updateTestCase(exerciseId, testCaseId, request);
 
         return ApiResponse.<Void>builder()
-                .message("Sửa Test‑case thành công!")
+                .message("Sửa testcase thành công!")
+                .build();
+    }
+
+    @DeleteMapping("/coding/{exerciseId}/test-case/{testCaseId}")
+    ApiResponse<Void> softDeleteTestCase(
+            @PathVariable String exerciseId,
+            @PathVariable String testCaseId) {
+        codingService.softDeleteTestCase(exerciseId, testCaseId);
+
+        return ApiResponse.<Void>builder()
+                .message("Đã xoá testcase!")
                 .build();
     }
 }

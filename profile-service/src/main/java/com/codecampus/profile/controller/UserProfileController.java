@@ -61,10 +61,10 @@ public class UserProfileController {
     }
 
     @PatchMapping("/user/my-profile")
-    ApiResponse<UserProfileResponse> updateMyUserProfile(
+    ApiResponse<Void> updateMyUserProfile(
             @RequestBody UserProfileUpdateRequest request) {
-        return ApiResponse.<UserProfileResponse>builder()
-                .result(userProfileService.updateMyUserProfile(request))
+        userProfileService.updateMyUserProfile(request);
+        return ApiResponse.<Void>builder()
                 .message("Update thành công profile!")
                 .build();
     }

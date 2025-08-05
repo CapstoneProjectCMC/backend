@@ -13,7 +13,6 @@ com\codecampus\coding\grpc\CodingSyncServiceGrpc$CodingSyncServiceFutureStub.cla
 com\codecampus\quiz\grpc\QuizPlayServiceGrpc.class
 com\codecampus\quiz\grpc\AddOptionRequest.class
 com\codecampus\submission\grpc\CreateQuizSubmissionRequest$1.class
-com\codecampus\coding\grpc\UpsertTestCaseRequestOrBuilder.class
 com\codecampus\quiz\grpc\AddQuestionRequest$Builder.class
 com\codecampus\quiz\grpc\OptionDto.class
 com\codecampus\quiz\grpc\QuizPlayServiceGrpc$QuizPlayServiceFutureStub.class
@@ -35,7 +34,6 @@ com\codecampus\quiz\grpc\CreateQuizExerciseRequestOrBuilder.class
 com\codecampus\quiz\grpc\QuestionType.class
 com\codecampus\quiz\grpc\QuestionDto$1.class
 com\codecampus\quiz\grpc\QuestionDtoLoadResponseOrBuilder.class
-com\codecampus\coding\grpc\UpsertCodingDetailRequest.class
 com\codecampus\coding\grpc\CodingSyncServiceGrpc$CodingSyncServiceStub.class
 com\codecampus\quiz\grpc\SubmitQuizRequest.class
 com\codecampus\quiz\grpc\SubmitQuizRequest$Builder.class
@@ -43,7 +41,6 @@ com\codecampus\quiz\grpc\LoadQuizResponse.class
 com\codecampus\coding\grpc\AddTestCaseRequest$1.class
 com\codecampus\quiz\grpc\QuizExerciseDto.class
 com\codecampus\submission\grpc\SubmissionSyncServiceGrpc.class
-com\codecampus\coding\grpc\UpsertCodingDetailRequestOrBuilder.class
 com\codecampus\quiz\grpc\QuizPlayServiceGrpc$QuizPlayServiceBaseDescriptorSupplier.class
 com\codecampus\quiz\grpc\SubmitQuizResponseOrBuilder.class
 com\codecampus\coding\grpc\AddCodingDetailRequest$1.class
@@ -65,6 +62,7 @@ com\codecampus\coding\grpc\TestCaseDtoOrBuilder.class
 com\codecampus\submission\grpc\QuizSubmissionDtoOrBuilder.class
 com\codecampus\quiz\grpc\SubmitQuizResponse$1.class
 com\codecampus\coding\grpc\AddTestCaseRequest.class
+com\codecampus\coding\grpc\SoftDeleteRequestOrBuilder.class
 com\codecampus\quiz\grpc\OptionDtoLoadResponse$1.class
 com\codecampus\submission\grpc\SubmissionSyncServiceGrpc$AsyncService.class
 com\codecampus\coding\grpc\CodingSyncServiceGrpc$AsyncService.class
@@ -78,6 +76,8 @@ com\codecampus\coding\grpc\CodingSyncServiceGrpc$CodingSyncServiceBaseDescriptor
 com\codecampus\quiz\grpc\QuizPlayServiceGrpc$1.class
 com\codecampus\coding\grpc\CodingSyncServiceGrpc$CodingSyncServiceImplBase.class
 com\codecampus\coding\grpc\CreateCodingExerciseRequest$1.class
+com\codecampus\coding\grpc\SoftDeleteRequest.class
+com\codecampus\coding\grpc\SoftDeleteTestCaseRequestOrBuilder.class
 com\codecampus\quiz\grpc\SoftDeleteOptionRequestOrBuilder.class
 com\codecampus\quiz\grpc\AddQuestionRequest$1.class
 com\codecampus\quiz\grpc\AddQuestionRequest.class
@@ -95,7 +95,6 @@ com\codecampus\coding\grpc\AddTestCaseRequest$Builder.class
 com\codecampus\submission\grpc\CreateQuizSubmissionRequestOrBuilder.class
 com\codecampus\quiz\grpc\QuizSyncServiceGrpc$QuizSyncServiceFileDescriptorSupplier.class
 com\codecampus\quiz\grpc\SoftDeleteQuestionRequest$Builder.class
-com\codecampus\coding\grpc\UpsertTestCaseRequest$Builder.class
 com\codecampus\quiz\grpc\AssignmentDto$1.class
 com\codecampus\quiz\grpc\QuizPlayServiceGrpc$2.class
 com\codecampus\submission\grpc\QuizSubmissionDto$1.class
@@ -111,19 +110,18 @@ com\codecampus\coding\grpc\CodingSyncServiceGrpc$1.class
 com\codecampus\submission\grpc\SubmissionSyncServiceGrpc$SubmissionSyncServiceFutureStub.class
 com\codecampus\quiz\grpc\SoftDeleteRequestOrBuilder.class
 com\codecampus\submission\grpc\SubmissionSyncServiceGrpc$SubmissionSyncServiceBlockingStub.class
-com\codecampus\coding\grpc\UpsertCodingDetailRequest$Builder.class
 com\codecampus\submission\grpc\SubmissionSyncServiceGrpc$SubmissionSyncServiceBlockingV2Stub.class
 com\codecampus\quiz\grpc\OptionDtoOrBuilder.class
-com\codecampus\coding\grpc\UpsertTestCaseRequest$1.class
 com\codecampus\quiz\grpc\QuestionDtoLoadResponse$1.class
 com\codecampus\submission\grpc\QuizSubmissionDto.class
 com\codecampus\coding\grpc\CreateCodingExerciseRequest$Builder.class
 com\codecampus\quiz\grpc\QuizSyncServiceGrpc$2.class
+com\codecampus\coding\grpc\SoftDeleteRequest$1.class
 com\codecampus\quiz\grpc\AddOptionRequest$Builder.class
 com\codecampus\quiz\grpc\LoadQuizResponseOrBuilder.class
 com\codecampus\quiz\grpc\SoftDeleteRequest$1.class
 com\codecampus\coding\grpc\TestCaseDto$1.class
-com\codecampus\coding\grpc\UpsertCodingDetailRequest$1.class
+com\codecampus\coding\grpc\SoftDeleteTestCaseRequest$1.class
 com\codecampus\submission\grpc\QuizSubmissionAnswerDto$Builder.class
 com\codecampus\quiz\grpc\LoadQuizRequestOrBuilder.class
 com\codecampus\quiz\grpc\OptionDto$Builder.class
@@ -138,8 +136,10 @@ com\codecampus\quiz\grpc\QuizSyncServiceGrpc$QuizSyncServiceBlockingV2Stub.class
 com\codecampus\coding\grpc\CodingDetailDto$1.class
 com\codecampus\quiz\grpc\QuizPlayServiceGrpc$QuizPlayServiceFileDescriptorSupplier.class
 com\codecampus\quiz\grpc\QuizSyncServiceGrpc$AsyncService.class
+com\codecampus\coding\grpc\SoftDeleteRequest$Builder.class
 com\codecampus\quiz\grpc\AddQuizDetailRequest$1.class
 com\codecampus\quiz\grpc\AssignmentDto$Builder.class
+com\codecampus\coding\grpc\SoftDeleteTestCaseRequest.class
 com\codecampus\quiz\grpc\QuizSyncServiceGrpc$QuizSyncServiceStub.class
 com\codecampus\quiz\grpc\QuizSyncServiceGrpc.class
 com\codecampus\submission\grpc\SubmissionSyncServiceGrpc$4.class
@@ -153,11 +153,11 @@ com\codecampus\coding\grpc\CodingSyncServiceGrpc$CodingSyncServiceMethodDescript
 com\codecampus\coding\grpc\CodingSyncServiceGrpc.class
 com\codecampus\quiz\grpc\SoftDeleteOptionRequest$1.class
 com\codecampus\quiz\grpc\QuizPlayServiceGrpc$QuizPlayServiceImplBase.class
+com\codecampus\coding\grpc\SoftDeleteTestCaseRequest$Builder.class
 com\codecampus\submission\grpc\SubmissionSyncServiceGrpc$3.class
 com\codecampus\coding\grpc\AddCodingDetailRequestOrBuilder.class
 com\codecampus\quiz\grpc\AnswerDtoOrBuilder.class
 com\codecampus\submission\grpc\SubmissionSyncServiceGrpc$SubmissionSyncServiceBaseDescriptorSupplier.class
-com\codecampus\coding\grpc\UpsertTestCaseRequest.class
 com\codecampus\quiz\grpc\SubmitQuizResponse$Builder.class
 com\codecampus\submission\grpc\QuizSubmissionDto$Builder.class
 com\codecampus\submission\grpc\QuizSubmissionAnswerDtoOrBuilder.class
