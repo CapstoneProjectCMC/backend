@@ -22,3 +22,7 @@ spring:
       password: dinhanst2832004
     schema-action: create
 
+app:
+  services:
+    file: http://localhost:8082/file
+

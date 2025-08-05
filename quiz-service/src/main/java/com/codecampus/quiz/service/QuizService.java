@@ -161,18 +161,19 @@ public class QuizService {
         questionDto.getOptionsList().forEach(optionDto -> {
             Option option = question.findOptionById(optionDto.getId())
                     .orElseGet(() -> {
-                        Option newOption = new Option();
-                        newOption.setId(optionDto.getId());
-                        newOption.setQuestion(question);
-                        question.getOptions().add(newOption);
-                        return newOption;
+                        Option o = quizMapper.toOptionFromOptionDto(
+                                optionDto);
+                        o.setQuestion(question);
+                        question.getOptions().add(o);
+                        return o;
                     });
 
             quizMapper.patchOptionDtoToOption(optionDto, option);
         });
 
         QuizScoringHelper.recalc(quiz);
-        questionRepository.save(question);
+        quizExerciseRepository.save(quiz);
+
         loadQuizCacheService.refresh(addQuestionRequest.getExerciseId());
     }
 
@@ -199,11 +200,10 @@ public class QuizService {
 
         Option option = question.findOptionById(optionDto.getId())
                 .orElseGet(() -> {
-                    Option newOption = new Option();
-                    newOption.setId(optionDto.getId());
-                    newOption.setQuestion(question);
-                    question.getOptions().add(newOption);
-                    return newOption;
+                    Option o = quizMapper.toOptionFromOptionDto(optionDto);
+                    o.setQuestion(question);
+                    question.getOptions().add(o);
+                    return o;
                 });
         quizMapper.patchOptionDtoToOption(optionDto, option);
 

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FileService.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("file/api/[controller]")]
     [ApiController]
     public class FileDocumentController : BaseApiController
     {

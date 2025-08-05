@@ -192,6 +192,27 @@ services:
       retries: 5
     networks: [ backend ]
 
+  minio-init:
+    image: minio/mc                        # MinIO Client
+    depends_on:
+      - minio
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    entrypoint: |
+      /bin/sh -c "
+        set -e                                # dừng ngay khi có lỗi
+        # đợi MinIO lên
+        until mc alias set minio http://minio:9000 $${MINIO_ROOT_USER} $${MINIO_ROOT_PASSWORD} >/dev/null 2>&1; do
+          echo '⌛ Waiting for MinIO…'
+          sleep 3
+        done
+        mc mb --ignore-existing minio/programmingcontest2025
+        mc anonymous set download minio/programmingcontest2025
+        echo '✅ Bucket ready!'
+      "
+    networks: [ backend ]
+
   # ---------- Elasticsearch ----------
   elasticsearch:
     image: bitnami/elasticsearch:8.7.0
@@ -216,6 +237,7 @@ services:
       timeout: 10s
       retries: 5
     networks: [ backend ]
+
 
   # ---------- Kibana ----------
   kibana:

@@ -1,19 +1,16 @@
 package com.codecampus.coding.dto.request;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.AccessLevel;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
-@Getter
-@Setter
 @Builder
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class SubmissionRequestDto {
-  String submissionId;
-  String submittedCode;
-  String userId;
-  String exerciseId;
-  int memory;
-  float cpus;
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public record SubmissionRequestDto(
+        String submissionId,
+        String submittedCode,
+        String userId,
+        String exerciseId,
+        int memory,
+        float cpus) {
 }

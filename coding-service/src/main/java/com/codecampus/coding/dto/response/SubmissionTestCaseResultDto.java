@@ -1,16 +1,15 @@
 package com.codecampus.coding.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.experimental.FieldDefaults;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class SubmissionTestCaseResultDto {
-    String input;
-    String expectedOutput;
-    String actualOutput;
-    boolean passed;
-    long executionTimeMs;
+@Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public record SubmissionTestCaseResultDto(
+        String input,
+        String expectedOutput,
+        String actualOutput,
+        boolean passed,
+        long executionTimeMs) {
 }
