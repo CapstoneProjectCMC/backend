@@ -8,9 +8,11 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public record SubmissionRequestDto(
         String submissionId,
-        String submittedCode,
-        String userId,
         String exerciseId,
-        int memory,
-        float cpus) {
+        String studentId,
+        String language,
+        String sourceCode,
+        int memoryMb,
+        float cpus,
+        int timeTakenSeconds) {
 }

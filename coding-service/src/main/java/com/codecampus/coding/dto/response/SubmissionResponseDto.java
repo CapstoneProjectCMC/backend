@@ -11,7 +11,8 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public record SubmissionResponseDto(
         String submissionId,
-        String status, // Accepted, Wrong Answer, Error
-        String message,
+        int score,
+        int totalPoints,
+        boolean passed,
         List<SubmissionTestCaseResultDto> testCases) {
 }

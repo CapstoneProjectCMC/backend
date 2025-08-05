@@ -2,6 +2,7 @@ package com.codecampus.submission.service;
 
 import com.codecampus.submission.constant.sort.SortField;
 import com.codecampus.submission.constant.submission.ExerciseType;
+import com.codecampus.submission.constant.submission.SubmissionStatus;
 import com.codecampus.submission.dto.common.PageResponse;
 import com.codecampus.submission.dto.request.CreateExerciseRequest;
 import com.codecampus.submission.dto.request.UpdateExerciseRequest;
@@ -11,6 +12,12 @@ import com.codecampus.submission.dto.response.quiz.quiz_detail.ExerciseQuizDetai
 import com.codecampus.submission.dto.response.quiz.quiz_detail.QuizDetailSliceDetailResponse;
 import com.codecampus.submission.entity.Exercise;
 import com.codecampus.submission.entity.Submission;
+import com.codecampus.submission.entity.SubmissionResultDetail;
+import com.codecampus.submission.entity.TestCase;
+import com.codecampus.submission.entity.data.SubmissionResultId;
+import com.codecampus.submission.exception.AppException;
+import com.codecampus.submission.exception.ErrorCode;
+import com.codecampus.submission.grpc.CreateCodeSubmissionRequest;
 import com.codecampus.submission.grpc.CreateQuizSubmissionRequest;
 import com.codecampus.submission.grpc.QuizSubmissionDto;
 import com.codecampus.submission.helper.AuthenticationHelper;
@@ -24,6 +31,7 @@ import com.codecampus.submission.repository.AssignmentRepository;
 import com.codecampus.submission.repository.ExerciseRepository;
 import com.codecampus.submission.repository.QuestionRepository;
 import com.codecampus.submission.repository.SubmissionRepository;
+import com.codecampus.submission.repository.TestCaseRepository;
 import com.codecampus.submission.service.grpc.GrpcCodingClient;
 import com.codecampus.submission.service.grpc.GrpcQuizClient;
 import com.codecampus.submission.service.kafka.ExerciseEventProducer;
@@ -36,6 +44,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.Instant;
 
 @Service
 @RequiredArgsConstructor
@@ -60,6 +70,7 @@ public class ExerciseService {
 
     QuizHelper quizHelper;
     ExerciseHelper exerciseHelper;
+    private final TestCaseRepository testCaseRepository;
 
 
     @Transactional
@@ -139,6 +150,60 @@ public class ExerciseService {
 
         // Cập nhật xếp hạng contest
         contestService.updateRankingOnSubmission(submission);
+    }
+
+    @Transactional
+    public void createCodeSubmission(
+            CreateCodeSubmissionRequest request) {
+        Exercise exercise =
+                exerciseHelper.getExerciseOrThrow(
+                        request.getSubmission().getExerciseId());
+
+        Submission submission = Submission.builder()
+                .exercise(exercise)
+                .userId(request.getSubmission().getStudentId())
+                .submittedAt(Instant.ofEpochSecond(
+                        request.getSubmission().getSubmittedAt().getSeconds(),
+                        request.getSubmission().getSubmittedAt().getNanos()))
+                .language(request.getSubmission().getLanguage())
+                .sourceCode(request.getSubmission().getSourceCode())
+                .timeTakenSeconds(request.getSubmission().getTimeTakenSeconds())
+                .score(request.getSubmission().getScore())
+                .status(request.getSubmission().getScore() ==
+                        request.getSubmission().getTotalPoints()
+                        ? SubmissionStatus.PASSED
+                        : (request.getSubmission().getScore() == 0
+                        ? SubmissionStatus.FAILED
+                        : SubmissionStatus.PARTIAL))
+                .build();
+        submissionRepository.save(submission);
+
+        // Lưu chi tiết Testcase
+        request.getSubmission().getResultsList().forEach(r -> {
+            TestCase testCase = testCaseRepository
+                    .findById(r.getTestCaseId())
+                    .orElseThrow(() -> new AppException(
+                            ErrorCode.TESTCASE_NOT_FOUND));
+            SubmissionResultDetail submissionResultDetail =
+                    SubmissionResultDetail.builder()
+                            .id(new SubmissionResultId(submission.getId(),
+                                    testCase.getId()))
+                            .submission(submission)
+                            .testCase(testCase)
+                            .passed(r.getPassed())
+                            .runTimeTs(r.getRuntimeMs())
+                            .memoryUsed(r.getMemoryKb())
+                            .output(r.getOutput())
+                            .errorMessage(r.getErrorMessage())
+                            .build();
+
+            // Side-effects
+            if (submission.getStatus() == SubmissionStatus.PASSED) {
+                assignmentService.markCompleted(exercise.getId(),
+                        submission.getUserId());
+            }
+            contestService.updateRankingOnSubmission(submission);
+        });
     }
 
     @Transactional

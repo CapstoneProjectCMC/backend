@@ -1,4 +1,5 @@
 F:\fileCode\capstoneProject\backend\common-protos\src\main\java\org\codecampus\Main.java
+F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\grpc-java\com\codecampus\coding\grpc\CodingPlayServiceGrpc.java
 F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\grpc-java\com\codecampus\coding\grpc\CodingSyncServiceGrpc.java
 F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\grpc-java\com\codecampus\quiz\grpc\QuizPlayServiceGrpc.java
 F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\grpc-java\com\codecampus\quiz\grpc\QuizSyncServiceGrpc.java
@@ -18,8 +19,14 @@ F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\proto
 F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\coding\grpc\SoftDeleteRequestOrBuilder.java
 F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\coding\grpc\SoftDeleteTestCaseRequest.java
 F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\coding\grpc\SoftDeleteTestCaseRequestOrBuilder.java
+F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\coding\grpc\SubmitCodeRequest.java
+F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\coding\grpc\SubmitCodeRequestOrBuilder.java
+F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\coding\grpc\SubmitCodeResponse.java
+F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\coding\grpc\SubmitCodeResponseOrBuilder.java
 F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\coding\grpc\TestCaseDto.java
 F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\coding\grpc\TestCaseDtoOrBuilder.java
+F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\coding\grpc\TestCaseResultDto.java
+F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\coding\grpc\TestCaseResultDtoOrBuilder.java
 F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\quiz\grpc\AddOptionRequest.java
 F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\quiz\grpc\AddOptionRequestOrBuilder.java
 F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\quiz\grpc\AddQuestionRequest.java
@@ -60,6 +67,10 @@ F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\proto
 F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\quiz\grpc\SubmitQuizResponseOrBuilder.java
 F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\quiz\grpc\UpsertAssignmentRequest.java
 F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\quiz\grpc\UpsertAssignmentRequestOrBuilder.java
+F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\submission\grpc\CodeSubmissionDto.java
+F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\submission\grpc\CodeSubmissionDtoOrBuilder.java
+F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\submission\grpc\CreateCodeSubmissionRequest.java
+F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\submission\grpc\CreateCodeSubmissionRequestOrBuilder.java
 F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\submission\grpc\CreateQuizSubmissionRequest.java
 F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\submission\grpc\CreateQuizSubmissionRequestOrBuilder.java
 F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\submission\grpc\QuizSubmissionAnswerDto.java
@@ -67,3 +78,5 @@ F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\proto
 F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\submission\grpc\QuizSubmissionDto.java
 F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\submission\grpc\QuizSubmissionDtoOrBuilder.java
 F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\submission\grpc\SubmissionSyncProto.java
+F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\submission\grpc\TestCaseResultSyncDto.java
+F:\fileCode\capstoneProject\backend\common-protos\target\generated-sources\protobuf\java\com\codecampus\submission\grpc\TestCaseResultSyncDtoOrBuilder.java

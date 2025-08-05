@@ -47,6 +47,34 @@ message SoftDeleteTestCaseRequest {
   string testCaseId = 2;
 }
 
+message SubmitCodeRequest {
+  string submissionId = 1;   // UUID tạo sẵn ở FE hoặc coding-svc
+  string exerciseId = 2;
+  string studentId = 3;
+  string language = 4;
+  string sourceCode = 5;
+  int32 memoryMb = 6;
+  float cpus = 7;
+  int32 timeTakenSeconds = 8;
+}
+
+message TestCaseResultDto {
+  string testCaseId = 1;
+  bool passed = 2;
+  int32 runtimeMs = 3;
+  int32 memoryKb = 4;
+  string output = 5;
+  string errorMessage = 6;
+}
+
+message SubmitCodeResponse {
+  string submissionId = 1;
+  int32 score = 2;
+  int32 totalPoints = 3;
+  bool passed = 4;
+  repeated TestCaseResultDto results = 5;
+}
+
 service CodingSyncService {
   rpc CreateCodingExercise(CreateCodingExerciseRequest)
       returns (google.protobuf.Empty);
@@ -58,6 +86,11 @@ service CodingSyncService {
       returns (google.protobuf.Empty);
   rpc SoftDeleteTestCase (SoftDeleteTestCaseRequest)
       returns (google.protobuf.Empty);
+}
+
+service CodingPlayService {
+  rpc SubmitCode(SubmitCodeRequest)
+      returns (SubmitCodeResponse);
 }
 
 message CreateCodingExerciseRequest {

@@ -11,5 +11,5 @@ public record SubmissionTestCaseResultDto(
         String expectedOutput,
         String actualOutput,
         boolean passed,
-        long executionTimeMs) {
+        int executionTimeMs) {
 }

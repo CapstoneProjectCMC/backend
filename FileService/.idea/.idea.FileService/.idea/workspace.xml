@@ -12,47 +12,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b5542390-86ea-4e7c-8261-890d4e9fdf28" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../coding-service/src/main/java/com/codecampus/coding/helper/AuthenticationHelper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../submission-service/src/main/java/com/codecampus/submission/controller/InternalCodingController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.FileService/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.FileService/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../build-service.sh" beforeDir="false" afterPath="$PROJECT_DIR$/../build-service.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../coding-service/src/main/java/com/codecampus/coding/entity/CodingExercise.java" beforeDir="false" afterPath="$PROJECT_DIR$/../coding-service/src/main/java/com/codecampus/coding/entity/CodingExercise.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../coding-service/src/main/java/com/codecampus/coding/entity/TestCase.java" beforeDir="false" afterPath="$PROJECT_DIR$/../coding-service/src/main/java/com/codecampus/coding/entity/TestCase.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../coding-service/src/main/java/com/codecampus/coding/mapper/CodingMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/../coding-service/src/main/java/com/codecampus/coding/mapper/CodingMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../coding-service/src/main/java/com/codecampus/coding/service/CodingService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../coding-service/src/main/java/com/codecampus/coding/service/CodingService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../coding-service/src/main/java/com/codecampus/coding/service/grpc/CodingSyncServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/../coding-service/src/main/java/com/codecampus/coding/service/grpc/CodingSyncServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../common-protos/src/main/proto/coding.proto" beforeDir="false" afterPath="$PROJECT_DIR$/../common-protos/src/main/proto/coding.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../common-protos/target/classes/coding.proto" beforeDir="false" afterPath="$PROJECT_DIR$/../common-protos/target/classes/coding.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../common-protos/target/generated-sources/protobuf/grpc-java/com/codecampus/coding/grpc/CodingSyncServiceGrpc.java" beforeDir="false" afterPath="$PROJECT_DIR$/../common-protos/target/generated-sources/protobuf/grpc-java/com/codecampus/coding/grpc/CodingSyncServiceGrpc.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../common-protos/target/generated-sources/protobuf/java/com/codecampus/coding/grpc/AddCodingDetailRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../common-protos/target/generated-sources/protobuf/java/com/codecampus/coding/grpc/AddCodingDetailRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../common-protos/target/generated-sources/protobuf/java/com/codecampus/coding/grpc/AddCodingDetailRequestOrBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/../common-protos/target/generated-sources/protobuf/java/com/codecampus/coding/grpc/AddCodingDetailRequestOrBuilder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../common-protos/target/generated-sources/protobuf/java/com/codecampus/coding/grpc/AddTestCaseRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../common-protos/target/generated-sources/protobuf/java/com/codecampus/coding/grpc/AddTestCaseRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../common-protos/target/generated-sources/protobuf/java/com/codecampus/coding/grpc/AddTestCaseRequestOrBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/../common-protos/target/generated-sources/protobuf/java/com/codecampus/coding/grpc/AddTestCaseRequestOrBuilder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../common-protos/target/generated-sources/protobuf/java/com/codecampus/coding/grpc/CodingDetailDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/../common-protos/target/generated-sources/protobuf/java/com/codecampus/coding/grpc/CodingDetailDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../common-protos/target/generated-sources/protobuf/java/com/codecampus/coding/grpc/CodingDetailDtoOrBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/../common-protos/target/generated-sources/protobuf/java/com/codecampus/coding/grpc/CodingDetailDtoOrBuilder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../common-protos/target/generated-sources/protobuf/java/com/codecampus/coding/grpc/CodingProto.java" beforeDir="false" afterPath="$PROJECT_DIR$/../common-protos/target/generated-sources/protobuf/java/com/codecampus/coding/grpc/CodingProto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../common-protos/target/generated-sources/protobuf/java/com/codecampus/coding/grpc/UpsertCodingDetailRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../common-protos/target/generated-sources/protobuf/java/com/codecampus/coding/grpc/UpsertCodingDetailRequestOrBuilder.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../common-protos/target/generated-sources/protobuf/java/com/codecampus/coding/grpc/UpsertTestCaseRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../common-protos/target/generated-sources/protobuf/java/com/codecampus/coding/grpc/UpsertTestCaseRequestOrBuilder.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../common-protos/target/generated-sources/protobuf/java/com/codecampus/quiz/grpc/QuizExerciseDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/../common-protos/target/generated-sources/protobuf/java/com/codecampus/quiz/grpc/QuizExerciseDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../common-protos/target/generated-sources/protobuf/java/com/codecampus/quiz/grpc/QuizExerciseDtoOrBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/../common-protos/target/generated-sources/protobuf/java/com/codecampus/quiz/grpc/QuizExerciseDtoOrBuilder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../common-protos/target/generated-sources/protobuf/java/com/codecampus/quiz/grpc/QuizProto.java" beforeDir="false" afterPath="$PROJECT_DIR$/../common-protos/target/generated-sources/protobuf/java/com/codecampus/quiz/grpc/QuizProto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../common-protos/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/../common-protos/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../common-protos/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/../common-protos/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../profile-service/src/main/java/com/codecampus/profile/controller/UserProfileController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../profile-service/src/main/java/com/codecampus/profile/controller/UserProfileController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../profile-service/src/main/java/com/codecampus/profile/service/UserProfileService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../profile-service/src/main/java/com/codecampus/profile/service/UserProfileService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../submission-service/src/main/java/com/codecampus/submission/controller/CodingController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../submission-service/src/main/java/com/codecampus/submission/controller/CodingController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../submission-service/src/main/java/com/codecampus/submission/dto/response/quiz/ExerciseQuizResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/../submission-service/src/main/java/com/codecampus/submission/dto/response/quiz/ExerciseQuizResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../submission-service/src/main/java/com/codecampus/submission/dto/response/quiz/quiz_detail/ExerciseQuizDetailResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/../submission-service/src/main/java/com/codecampus/submission/dto/response/quiz/quiz_detail/ExerciseQuizDetailResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../submission-service/src/main/java/com/codecampus/submission/mapper/CodingMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/../submission-service/src/main/java/com/codecampus/submission/mapper/CodingMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../submission-service/src/main/java/com/codecampus/submission/repository/TestCaseRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/../submission-service/src/main/java/com/codecampus/submission/repository/TestCaseRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../submission-service/src/main/java/com/codecampus/submission/service/CodingService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../submission-service/src/main/java/com/codecampus/submission/service/CodingService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../submission-service/src/main/java/com/codecampus/submission/service/ExerciseService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../submission-service/src/main/java/com/codecampus/submission/service/ExerciseService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../submission-service/src/main/java/com/codecampus/submission/service/QuizService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../submission-service/src/main/java/com/codecampus/submission/service/QuizService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../submission-service/src/main/java/com/codecampus/submission/service/grpc/GrpcCodingClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/../submission-service/src/main/java/com/codecampus/submission/service/grpc/GrpcCodingClient.java" afterDir="false" />
-    </list>
+    <list default="true" id="b5542390-86ea-4e7c-8261-890d4e9fdf28" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -216,7 +176,7 @@
       <workItem from="1753860247609" duration="4469000" />
       <workItem from="1754299004848" duration="1937000" />
       <workItem from="1754312416247" duration="3816000" />
-      <workItem from="1754381621192" duration="3570000" />
+      <workItem from="1754381621192" duration="4223000" />
     </task>
     <servers />
   </component>
