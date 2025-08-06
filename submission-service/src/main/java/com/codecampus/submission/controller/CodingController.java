@@ -1,9 +1,11 @@
 package com.codecampus.submission.controller;
 
+import com.codecampus.submission.constant.sort.SortField;
 import com.codecampus.submission.dto.common.ApiResponse;
+import com.codecampus.submission.dto.common.PageResponse;
 import com.codecampus.submission.dto.request.coding.AddCodingDetailRequest;
 import com.codecampus.submission.dto.request.coding.TestCaseDto;
-import com.codecampus.submission.dto.request.coding.UpdateCodingDetailRequest;
+import com.codecampus.submission.dto.request.coding.UpdateCodingDetailWithTestCaseRequest;
 import com.codecampus.submission.dto.request.coding.UpdateTestCaseRequest;
 import com.codecampus.submission.entity.TestCase;
 import com.codecampus.submission.service.CodingService;
@@ -21,9 +23,8 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @Slf4j
 @Builder
@@ -51,11 +52,11 @@ public class CodingController {
     }
 
     @PatchMapping("/coding/exercise/{exerciseId}/coding-detail")
-    ApiResponse<Void> updateCodingDetail(
+    ApiResponse<Void> updateCodingDetailWithTestCaseRequest(
             @PathVariable String exerciseId,
-            @RequestBody UpdateCodingDetailRequest dto) {
+            @RequestBody UpdateCodingDetailWithTestCaseRequest dto) {
 
-        codingService.updateCodingDetail(exerciseId, dto);
+        codingService.updateCodingDetailWithTestCaseRequest(exerciseId, dto);
 
         return ApiResponse.<Void>builder()
                 .message("Sửa Coding‑detail thành công!")
@@ -63,11 +64,27 @@ public class CodingController {
     }
 
     @GetMapping("/coding/{exerciseId}/test-cases")
-    ApiResponse<List<TestCase>> getTestCases(
-            @PathVariable String exerciseId) {
-        return ApiResponse.<List<TestCase>>builder()
+    ApiResponse<PageResponse<TestCase>> getTestCases(
+            @PathVariable String exerciseId,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "CREATED_AT") SortField sortBy,
+            @RequestParam(defaultValue = "false") boolean asc) {
+        return ApiResponse.<PageResponse<TestCase>>builder()
                 .message("Get các testcases thành công!")
-                .result(codingService.getTestCases(exerciseId))
+                .result(codingService.getTestCases(
+                        exerciseId,
+                        page, size,
+                        sortBy, asc))
+                .build();
+    }
+
+    @GetMapping("/coding/test-case/{testCaseId}")
+    ApiResponse<TestCase> getTestCaseById(
+            @PathVariable String testCaseId) {
+        return ApiResponse.<TestCase>builder()
+                .result(codingService.getTestCaseOrThrow(testCaseId))
+                .message("Chi tiết testcase!")
                 .build();
     }
 

@@ -7,10 +7,14 @@ import com.codecampus.submission.dto.common.PageResponse;
 import com.codecampus.submission.dto.request.CreateExerciseRequest;
 import com.codecampus.submission.dto.request.UpdateExerciseRequest;
 import com.codecampus.submission.dto.request.quiz.CreateQuizExerciseRequest;
+import com.codecampus.submission.dto.response.coding.coding_detail.CodingDetailSliceDetailResponse;
+import com.codecampus.submission.dto.response.coding.coding_detail.ExerciseCodingDetailResponse;
 import com.codecampus.submission.dto.response.quiz.ExerciseQuizResponse;
 import com.codecampus.submission.dto.response.quiz.quiz_detail.ExerciseQuizDetailResponse;
 import com.codecampus.submission.dto.response.quiz.quiz_detail.QuizDetailSliceDetailResponse;
+import com.codecampus.submission.entity.CodingDetail;
 import com.codecampus.submission.entity.Exercise;
+import com.codecampus.submission.entity.QuizDetail;
 import com.codecampus.submission.entity.Submission;
 import com.codecampus.submission.entity.SubmissionResultDetail;
 import com.codecampus.submission.entity.TestCase;
@@ -22,6 +26,7 @@ import com.codecampus.submission.grpc.CreateCodeSubmissionRequest;
 import com.codecampus.submission.grpc.CreateQuizSubmissionRequest;
 import com.codecampus.submission.grpc.QuizSubmissionDto;
 import com.codecampus.submission.helper.AuthenticationHelper;
+import com.codecampus.submission.helper.CodingHelper;
 import com.codecampus.submission.helper.ExerciseHelper;
 import com.codecampus.submission.helper.PageResponseHelper;
 import com.codecampus.submission.helper.QuizHelper;
@@ -48,6 +53,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -73,6 +79,7 @@ public class ExerciseService {
     SubmissionMapper submissionMapper;
 
     QuizHelper quizHelper;
+    CodingHelper codingHelper;
     ExerciseHelper exerciseHelper;
 
 
@@ -277,7 +284,8 @@ public class ExerciseService {
         return PageResponseHelper.toPageResponse(pageData, page);
     }
 
-    public ExerciseQuizDetailResponse getExerciseDetail(
+    @Transactional(readOnly = true)
+    public ExerciseQuizDetailResponse getQuizExerciseDetail(
             String exerciseId,
             int qPage, int qSize,
             SortField qSortBy, boolean qAsc) {
@@ -285,9 +293,18 @@ public class ExerciseService {
         Exercise exercise =
                 exerciseHelper.getExerciseOrThrow(exerciseId);
 
+        if (exercise.getExerciseType() != ExerciseType.QUIZ) {
+            throw new AppException(ErrorCode.EXERCISE_TYPE);
+        }
+
+        QuizDetail quizDetail = Optional.ofNullable(
+                        exercise.getQuizDetail())
+                .orElseThrow(() -> new AppException(
+                        ErrorCode.QUIZ_DETAIL_NOT_FOUND));
+
         QuizDetailSliceDetailResponse qSlice =
                 quizHelper.buildQuizSliceWithOptions(
-                        exercise, qPage, qSize, qSortBy, qAsc
+                        quizDetail, qPage, qSize, qSortBy, qAsc
                 );
 
         return ExerciseQuizDetailResponse.builder()
@@ -310,6 +327,56 @@ public class ExerciseService {
                 .allowAiQuestion(exercise.isAllowAiQuestion())
                 .quizDetail(qSlice)
                 .visibility(exercise.isVisibility())
+                .createdBy(exercise.getCreatedBy())
+                .createdAt(exercise.getCreatedAt())
+                .updatedBy(exercise.getUpdatedBy())
+                .updatedAt(exercise.getUpdatedAt())
+                .deletedBy(exercise.getDeletedBy())
+                .deletedAt(exercise.getDeletedAt())
+                .build();
+    }
+
+    @Transactional(readOnly = true)
+    public ExerciseCodingDetailResponse getCodingExerciseDetail(
+            String exerciseId,
+            int tcPage, int tcSize,
+            SortField tcSortBy, boolean tcAsc) {
+
+        Exercise exercise =
+                exerciseHelper.getExerciseOrThrow(exerciseId);
+
+        if (exercise.getExerciseType() != ExerciseType.CODING) {
+            throw new AppException(ErrorCode.EXERCISE_TYPE);
+        }
+
+        CodingDetail codingDetail = Optional.ofNullable(
+                        exercise.getCodingDetail())
+                .orElseThrow(() -> new AppException(
+                        ErrorCode.CODING_DETAIL_NOT_FOUND));
+
+        CodingDetailSliceDetailResponse slice = codingHelper.buildCodingSlice(
+                codingDetail, tcPage, tcSize, tcSortBy, tcAsc);
+
+        return ExerciseCodingDetailResponse.builder()
+                .id(exercise.getId())
+                .userId(exercise.getUserId())
+                .title(exercise.getTitle())
+                .description(exercise.getDescription())
+                .exerciseType(exercise.getExerciseType())
+                .difficulty(exercise.getDifficulty())
+                .orgId(exercise.getOrgId())
+                .active(exercise.isActive())
+                .cost(exercise.getCost())
+                .freeForOrg(exercise.isFreeForOrg())
+                .startTime(exercise.getStartTime())
+                .endTime(exercise.getEndTime())
+                .duration(exercise.getDuration())
+                .allowDiscussionId(exercise.getAllowDiscussionId())
+                .resourceIds(exercise.getResourceIds())
+                .tags(exercise.getTags())
+                .allowAiQuestion(exercise.isAllowAiQuestion())
+                .visibility(exercise.isVisibility())
+                .codingDetail(slice)
                 .createdBy(exercise.getCreatedBy())
                 .createdAt(exercise.getCreatedAt())
                 .updatedBy(exercise.getUpdatedBy())

@@ -1,9 +1,13 @@
 package com.codecampus.submission.service;
 
+import com.codecampus.submission.constant.sort.SortField;
 import com.codecampus.submission.constant.submission.ExerciseType;
+import com.codecampus.submission.dto.common.PageResponse;
 import com.codecampus.submission.dto.request.coding.AddCodingDetailRequest;
 import com.codecampus.submission.dto.request.coding.TestCaseDto;
+import com.codecampus.submission.dto.request.coding.TestCasePatchDto;
 import com.codecampus.submission.dto.request.coding.UpdateCodingDetailRequest;
+import com.codecampus.submission.dto.request.coding.UpdateCodingDetailWithTestCaseRequest;
 import com.codecampus.submission.dto.request.coding.UpdateTestCaseRequest;
 import com.codecampus.submission.entity.CodingDetail;
 import com.codecampus.submission.entity.Exercise;
@@ -11,23 +15,30 @@ import com.codecampus.submission.entity.TestCase;
 import com.codecampus.submission.exception.AppException;
 import com.codecampus.submission.exception.ErrorCode;
 import com.codecampus.submission.helper.AuthenticationHelper;
+import com.codecampus.submission.helper.CodingHelper;
+import com.codecampus.submission.helper.PageResponseHelper;
+import com.codecampus.submission.helper.SortHelper;
 import com.codecampus.submission.mapper.CodingMapper;
 import com.codecampus.submission.mapper.TestCaseMapper;
 import com.codecampus.submission.repository.CodingDetailRepository;
 import com.codecampus.submission.repository.ExerciseRepository;
 import com.codecampus.submission.repository.TestCaseRepository;
 import com.codecampus.submission.service.grpc.GrpcCodingClient;
-import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -41,6 +52,7 @@ public class CodingService {
 
     TestCaseMapper testCaseMapper;
     CodingMapper codingMapper;
+    private final CodingHelper codingHelper;
 
     @Transactional
     public CodingDetail addCodingDetail(
@@ -138,9 +150,9 @@ public class CodingService {
 
 
     @Transactional
-    public void updateCodingDetail(
+    public void updateCodingDetailWithTestCaseRequest(
             String exerciseId,
-            UpdateCodingDetailRequest updateCodingDetailRequest) {
+            UpdateCodingDetailWithTestCaseRequest request) {
 
         Exercise exercise = getExerciseOrThrow(exerciseId);
         CodingDetail codingDetail =
@@ -148,9 +160,54 @@ public class CodingService {
                         .orElseThrow(() -> new AppException(
                                 ErrorCode.CODING_DETAIL_NOT_FOUND));
 
-        codingMapper.patchUpdateCodingDetailRequestToCodingDetail(codingDetail,
-                updateCodingDetailRequest);
+        codingMapper.patchUpdateCodingDetailRequestToCodingDetail(
+                codingDetail,
+                new UpdateCodingDetailRequest(
+                        request.topic(), request.allowedLanguages(),
+                        request.input(),
+                        request.output(), request.constraintText(),
+                        request.timeLimit(),
+                        request.memoryLimit(), request.maxSubmissions(),
+                        request.codeTemplate(), request.solution()));
 
+        if (request.testCases() != null && !request.testCases().isEmpty()) {
+
+            Map<String, TestCase> current = codingDetail
+                    .getTestCases()
+                    .stream()
+                    .collect(Collectors.toMap(TestCase::getId,
+                            testCase -> testCase));
+
+
+            for (TestCasePatchDto testCasePatchDto : request.testCases()) {
+
+                TestCase testCase = Optional
+                        .ofNullable(current.get(testCasePatchDto.id()))
+                        .orElseThrow(
+                                () -> new AppException(
+                                        ErrorCode.TESTCASE_NOT_FOUND)
+                        );
+
+                // --- Xoá mềm ---
+                if (Boolean.TRUE.equals(testCasePatchDto.delete())) {
+                    if (!testCase.isDeleted()) {
+                        testCase.markDeleted(
+                                AuthenticationHelper.getMyUsername());
+                        grpcCodingClient.softDeleteTestCase(
+                                exerciseId, testCase.getId());
+                    }
+                    continue;
+                }
+
+                // --- Cập nhật ---
+                TestCase existing = current.get(testCasePatchDto.id());
+                codingHelper.patchTestCasePatchDtoToTestCase(
+                        existing, testCasePatchDto);
+                grpcCodingClient.pushTestCase(exerciseId, existing);
+            }
+        }
+
+        codingDetailRepository.save(codingDetail);
         grpcCodingClient.pushCodingDetail(exerciseId, codingDetail);
     }
 
@@ -165,10 +222,20 @@ public class CodingService {
         grpcCodingClient.softDeleteTestCase(exerciseId, testCaseId);
     }
 
-    @Transactional
-    public List<TestCase> getTestCases(String exerciseId) {
-        return testCaseRepository
-                .findByCodingDetailExerciseId(exerciseId);
+    @Transactional(readOnly = true)
+    public PageResponse<TestCase> getTestCases(
+            String exerciseId,
+            int page, int size,
+            SortField sortBy, boolean asc) {
+
+        Pageable pageable = PageRequest.of(page - 1, size,
+                SortHelper.build(sortBy, asc));
+
+        Page<TestCase> pageData =
+                testCaseRepository.findByCodingDetailExerciseId(
+                        exerciseId, pageable);
+
+        return PageResponseHelper.toPageResponse(pageData, page);
     }
 
     public Exercise getExerciseOrThrow(String exerciseId) {

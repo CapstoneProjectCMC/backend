@@ -72,6 +72,8 @@ public enum ErrorCode {
     TESTCASE_NOT_FOUND(4048311, NOT_FOUND_STATUS,
             "Không tìm thấy testcase!",
             NOT_FOUND),
+    QUIZ_DETAIL_NOT_FOUND(4048312, NOT_FOUND_STATUS,
+            "Không tìm thấy bài tập quiz!", NOT_FOUND),
 
 
     // 409 - Conflict
