@@ -2,6 +2,7 @@
 using OrganizationService.Core.Extensions;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,53 +13,91 @@ namespace OrganizationService.Core.ApiModels
     {
         public ApiResponseModel()
         {
-            StatusCode = StatusCodeEnum.Success.ToString();
+            Code = (int)StatusCodeEnum.Success;
+            Message = GetDescription(StatusCodeEnum.Success);
+            Status = "success";
+            Result = null;
         }
         public ApiResponseModel(object data)
         {
-            StatusCode = StatusCodeEnum.Success.ToString();
+            Code = (int)StatusCodeEnum.Success;
             Data = data;
         }
-        public ApiResponseModel(StatusCodeEnum statusCode)
+        public ApiResponseModel(StatusCodeEnum status)
         {
-            StatusCode = statusCode.ToString().Split("_")[0];
+            Code = (int)status;
+            Message = GetDescription(status);
+            Status = status == StatusCodeEnum.Success ? "success" : "fail";
+            Result = null;
         }
-        public ApiResponseModel(StatusCodeEnum statusCode, object data)
+        public ApiResponseModel(StatusCodeEnum status, object? data)
         {
-            StatusCode = statusCode.ToString().Split("_")[0];
-            Data = data;
-            StatusEnum = statusCode;
+            Code = (int)status;
+            Message = GetDescription(status);
+            Status = status == StatusCodeEnum.Success ? "success" : "fail";
+            Result = data;
         }
 
-        private StatusCodeEnum StatusEnum { get; set; }
-        public string StatusCode { get; set; }
-        public string Message
+        public int Code { get; set; }
+
+        public string Message { get; set; } = string.Empty;
+
+        public string Status { get; set; } = "success";
+
+        public object? Result { get; set; }
+        private static string GetDescription(StatusCodeEnum value)
         {
-            get
+            var fi = value.GetType().GetField(value.ToString());
+            if (fi != null)
             {
-                return StatusEnum.GetDescription();
+                var attributes = (DescriptionAttribute[])fi.GetCustomAttributes(
+                    typeof(DescriptionAttribute), false);
+
+                if (attributes.Length > 0)
+                    return attributes[0].Description;
             }
+            return value.ToString();
         }
         public object? Data { get; set; }
     }
-
     public class ApiResponseModel<T>
     {
-        public ApiResponseModel(T data)
+        public ApiResponseModel()
         {
-            StatusCode = StatusCodeEnum.Success.ToString();
-            Data = data;
+            Code = (int)StatusCodeEnum.Success;
+            Message = GetDescription(StatusCodeEnum.Success);
+            Status = "success";
         }
 
-        private StatusCodeEnum StatusEnum { get; set; }
-        public string StatusCode { get; set; }
-        public string Message
+        public ApiResponseModel(T data) : this()
         {
-            get
-            {
-                return StatusEnum.GetDescription();
-            }
+            Result = data;
         }
-        public T Data { get; set; }
+
+        public ApiResponseModel(StatusCodeEnum status, T? data = default)
+        {
+            Code = (int)status;
+            Message = GetDescription(status);
+            Status = status == StatusCodeEnum.Success ? "success" : "fail";
+            Result = data;
+        }
+
+        public int Code { get; set; }
+        public string Message { get; set; } = string.Empty;
+        public string Status { get; set; } = "success";
+        public T? Result { get; set; }
+        private static string GetDescription(StatusCodeEnum value)
+        {
+            var fi = value.GetType().GetField(value.ToString());
+            if (fi != null)
+            {
+                var attributes = (DescriptionAttribute[])fi.GetCustomAttributes(
+                    typeof(DescriptionAttribute), false);
+
+                if (attributes.Length > 0)
+                    return attributes[0].Description;
+            }
+            return value.ToString();
+        }
     }
 }

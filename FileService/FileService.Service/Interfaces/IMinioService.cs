@@ -8,8 +8,8 @@ namespace FileService.Service.Interfaces
 {
     public interface IMinioService
     {
-        Task UploadFileAsync(string objectName, string filePath, string contentType);
-        Task<string> GetFileAsync(string objectName);
+        Task UploadStreamAsync(string objectName, Stream fileStream, string contentType);
+        Task<string> GetPublicFileUrlAsync(string objectName);
         Task<string> GeneratePresignedUrlAsync(string objectName, int expirySeconds);
         Task EnsureBucketExistsAsync();
         Task RemoveFileAsync(string objectName);

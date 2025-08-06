@@ -13,5 +13,6 @@ namespace OrganizationService.Core.ApiModels
         public string? Email { get; set; }
         public string? Role { get; set; }
         public Guid? ActionId { get; set; }
+        public List<string> Permissions { get; set; } = new();
     }
 }
