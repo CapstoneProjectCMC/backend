@@ -156,7 +156,7 @@ builder.Services.AddSwaggerGen(c =>
 
 builder.WebHost.ConfigureKestrel(options =>
 {
-    options.Limits.MaxRequestBodySize = 104857600; // 100 MB
+    options.Limits.MaxRequestBodySize = 6L * 1024 * 1024 * 1024; // 6GB
 });
 
 
@@ -173,6 +173,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+using (var scope = app.Services.CreateScope())
+{
+    var minioService = scope.ServiceProvider.GetRequiredService<IMinioService>();
+    await minioService.EnsureBucketExistsAsync();
+}
+
 //kích hoạt CORS policy
 app.UseCors(MyAllowSpecificOrigins);
 
@@ -187,5 +193,5 @@ app.UseMiddleware<UserContextMiddleware>();
 app.MapControllers();
 
 
-app.Run();
+await app.RunAsync();
 

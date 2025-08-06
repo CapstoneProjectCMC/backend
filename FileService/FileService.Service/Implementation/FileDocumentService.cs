@@ -21,7 +21,6 @@ namespace FileService.Service.Implementation
         private readonly ITagService _tagService;
         private readonly IRepository<Tags> _tagRepository;
 
-
         public FileDocumentService(
             AppSettings appSettings,
             UserContext userContext,
@@ -65,14 +64,14 @@ namespace FileService.Service.Implementation
             var result = new List<FileDocumentModel>();
             foreach (var file in items)
             {
-                var presignedUrl = await _minioService.GetFileAsync(file.Url.TrimStart('/'));
+                var publicUrl = await _minioService.GetPublicFileUrlAsync(file.Url.TrimStart('/'));
 
                 var fileModel = new FileDocumentModel
                 {
                     Id = file.Id,
                     FileName = file.FileName,
                     FileType = file.FileType,
-                    Url = presignedUrl,  
+                    Url = publicUrl,  
                     Size = file.Size,
                     Checksum = file.Checksum,
                     Category = file.Category,
@@ -100,26 +99,25 @@ namespace FileService.Service.Implementation
 
         public async Task<FileDocumentModel> GetFileDetailById(Guid id)
         {
-
             var file = await _fileDocumentRepository.GetByIdAsync(id);
             if (file == null || file.IsRemoved)
                 throw new ErrorException(StatusCodeEnum.A02);
 
             var tags = file.TagIds.Any()
-        ? await _tagRepository.FilterAsync(Builders<Tags>.Filter.In(t => t.Id, file.TagIds))
-        : new List<Tags>();
+                ? await _tagRepository.FilterAsync(Builders<Tags>.Filter.In(t => t.Id, file.TagIds))
+                : new List<Tags>();
 
             var tagDict = tags.ToDictionary(t => t.Id, t => new TagModel { Id = t.Id, Name = t.Label });
 
-            // Tạo presigned URL từ MinIO
-            var presignedUrl = await _minioService.GetFileAsync(file.Url.TrimStart('/')); // Loại bỏ '/' đầu nếu có
+            // Tạo publicUrl URL từ MinIO
+            var publicUrl = await _minioService.GetPublicFileUrlAsync(file.Url.TrimStart('/')); // Loại bỏ '/' đầu nếu có
 
             return new FileDocumentModel
             {
                 Id = file.Id,
                 FileName = file.FileName,
                 FileType = file.FileType,
-                Url = presignedUrl,
+                Url = publicUrl,
                 Size = file.Size,
                 Checksum = file.Checksum,
                 Category = file.Category,
@@ -161,31 +159,14 @@ namespace FileService.Service.Implementation
             var ext = Path.GetExtension(dto.File.FileName);
             var fileName = $"files/{fileId}{ext}";
 
-            //tạo và tải file tạm
-            var tempFilePath = Path.GetTempFileName();
-            await using (var stream = new FileStream(tempFilePath, FileMode.Create))
+            using (var stream = dto.File.OpenReadStream())
             {
-                await dto.File.CopyToAsync(stream);
+                if (stream.Length == 0)
+                    throw new ErrorException(StatusCodeEnum.A01, "Source file is empty");
+
+                await _minioService.UploadStreamAsync(fileName, stream, dto.File.ContentType);
             }
 
-            //upload lên MinIO
-
-            await _minioService.UploadFileAsync(fileName, tempFilePath, dto.File.ContentType);
-
-            //xóa file tạm với kiểm tra
-            if (File.Exists(tempFilePath))
-            {
-                try
-                {
-                    File.Delete(tempFilePath);
-                    Console.WriteLine($"Deleted temp file: {tempFilePath}");
-                }
-                catch (IOException ex)
-                {
-                    Console.WriteLine($"Failed to delete file {tempFilePath}: {ex.Message}");
-                    throw;
-                }
-            }
             var tagIds = await _tagService.GetOrCreateTagIdsAsync(dto.Tags ?? Enumerable.Empty<string>());
 
             var file = new FileDocument
@@ -201,17 +182,16 @@ namespace FileService.Service.Implementation
                 IsActive = true,
                 CreatedAt = DateTime.UtcNow,
                 CreatedBy = _userContext.UserId,
-                OrgId = dto.OrgId,
+                OrgId = dto?.OrgId.HasValue == true && dto.OrgId != Guid.Empty ? dto.OrgId : null,
                 IsLectureVideo = dto.IsLectureVideo,
                 IsTextbook = dto.IsTextbook
             };
 
-            var checksum = await FileHelper.ComputeChecksumAsync(dto.File.OpenReadStream());
-            var exists = await _fileDocumentRepository.ExistsAsync(f => f.Checksum == checksum && !f.IsRemoved);
-            if (exists)
-                throw new ErrorException(StatusCodeEnum.A03);
-
-            file.Checksum = checksum;
+            // Tính toán checksum của file
+            await using (var checksumStream = dto.File.OpenReadStream())
+            {
+                file.Checksum = await FileHelper.ComputeChecksumAsync(checksumStream);
+            }
 
             if (dto.IsLectureVideo)
             {
@@ -233,8 +213,8 @@ namespace FileService.Service.Implementation
 
             await _fileDocumentRepository.CreateAsync(file);
 
-            var presignedUrl = await _minioService.GetFileAsync(file.Url);
-            return presignedUrl;
+            var publicUrl = await _minioService.GetPublicFileUrlAsync(file.Url);
+            return publicUrl;
         }
 
         public async Task<EditFileDocumentResponseModel> EditFileDetailAsync(Guid id, EditFileDocumentDto dto)
@@ -269,7 +249,7 @@ namespace FileService.Service.Implementation
             file.IsActive = dto.IsActive;
             file.IsLectureVideo = dto.IsLectureVideo;
             file.IsTextbook = dto.IsTextbook;
-            file.OrgId = dto.OrgId;
+            file.OrgId = string.IsNullOrWhiteSpace(dto.OrgId?.ToString()) ? null : dto.OrgId;
             file.UpdatedAt = DateTime.UtcNow;
             file.UpdatedBy = _userContext.UserId;
 
@@ -280,9 +260,6 @@ namespace FileService.Service.Implementation
                 file.Size = dto.File.Length;
 
                 var checksum = await FileHelper.ComputeChecksumAsync(dto.File.OpenReadStream());
-                var exists = await _fileDocumentRepository.ExistsAsync(f => f.Checksum == checksum && f.Id != file.Id && !f.IsRemoved);
-                if (exists)
-                    throw new ErrorException(StatusCodeEnum.A03);
 
                 // Xóa file cũ trên MinIO
                 await _minioService.RemoveFileAsync(file.Url.TrimStart('/'));
@@ -311,9 +288,21 @@ namespace FileService.Service.Implementation
                 var tempFilePath = Path.GetTempFileName();
                 await using (var stream = new FileStream(tempFilePath, FileMode.Create))
                 {
-                    await dto.File.CopyToAsync(stream);
+                    try
+                    {
+                        await dto.File.CopyToAsync(stream);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception($"Failed to copy file to temp location {tempFilePath}: {ex.Message}", ex);
+                    }
                 }
-                await _minioService.UploadFileAsync(file.Url.TrimStart('/'), tempFilePath, dto.File.ContentType);
+                //await _minioService.UploadStreamAsync(file.Url.TrimStart('/'), tempFilePath, dto.File.ContentType);
+
+                using (var newStream = dto.File.OpenReadStream())
+                {
+                    await _minioService.UploadStreamAsync(file.Url.TrimStart('/'), newStream, dto.File.ContentType);
+                }
 
                 if (dto.IsLectureVideo)
                 {
@@ -363,7 +352,7 @@ namespace FileService.Service.Implementation
 
             await _fileDocumentRepository.UpdateAsync(file);
 
-            var presignedUrl = await _minioService.GetFileAsync(file.Url.TrimStart('/'));
+            var publicUrl = await _minioService.GetPublicFileUrlAsync(file.Url.TrimStart('/'));
 
             var tags = file.TagIds.Any()
                 ? await _tagRepository.FilterAsync(Builders<Tags>.Filter.In(t => t.Id, file.TagIds))
@@ -384,7 +373,7 @@ namespace FileService.Service.Implementation
                 IsTextbook = file.IsTextbook,
                 OrgId = file.OrgId,
                 FileType = file.FileType,
-                Url = presignedUrl,
+                Url = publicUrl,
                 Size = file.Size,
                 Checksum = file.Checksum,
                 ThumbnailUrl = file.ThumbnailUrl,

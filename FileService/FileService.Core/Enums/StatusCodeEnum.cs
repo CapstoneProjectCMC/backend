@@ -30,9 +30,6 @@ namespace FileService.Core.Enums
         [Description("{{Object}} không được tìm thấy")]
         A02 = 4048206,
 
-        [Description("File với checksum giống nhau đã tồn tại.")]
-        A03 = 4098207,
-
         [Description("Tên file không được để trống.")]
         A04 = 4008208,
 

@@ -9,55 +9,43 @@ namespace OrganizationService.Core.Enums
 {
     public enum StatusCodeEnum
     {
-        Success = 0,
+        [Description("Thành công.")]
+        Success = 2008200,
 
-        [Description("System Error.")]
-        Error = 1,
+        [Description("Lỗi hệ thống.")]
+        Error = 5008201,
 
-        [Description("Concurrency Conflict")]
-        ConcurrencyConflict = 2,
+        [Description("Xung đột đồng thời")]
+        ConcurrencyConflict = 4098202,
 
-        [Description("Not Found")]
-        PageIndexInvalid = 3,
+        [Description("Không tìm thấy")]
+        PageIndexInvalid = 4048203,
 
-        [Description("Page Size Invalid")]
-        PageSizeInvalid = 4,
+        [Description("Kích thước trang không hợp lệ")]
+        PageSizeInvalid = 4008204,
 
-        [Description("{Required Field} is required.")]
-        A01,
+        [Description("{Required Field} được yêu cầu.")]
+        A01 = 4008205,
+
+        [Description("{{Object}} không được tìm thấy")]
+        A02 = 4048206,
+
+        [Description("File với checksum giống nhau đã tồn tại.")]
+        A03 = 4098207,
 
         [Description("Incorrect username or password. Please try again.")]
-        B01,
-
-        [Description("{{Object}} not found")]
-        A02,
-
-        [Description("Stale Dated Days must be from 60 to 365.")]
-        C01,
-
-        [Description("This Client Number is already active in the system.")]
-        C02,
-
-        [Description("This Account Number is already active in the system.")]
-        C03,
-
-        [Description("{{Client_Name}} has been created successfully.")]
-        C04,
+        B01 = 4018213,
 
         [Description("Download Interrupted. Please check your internet connection and try again.")]
-        C05,
-
-        //This message is used in BE, not display to FE screen 
-        [Description("At least one creation type must be selected is CREATE EXCEPTIONS.")]
-        C06,
+        C05 = 5038214,
 
         [Description("Bad request.")]
-        BadRequest,
+        BadRequest = 4008215,
 
         [Description("Invalid filter option.")]
-        InvalidOption,
+        InvalidOption = 4008216,
 
         [Description("Unmatched columns found.")]
-        UnmatchedColumns,
+        UnmatchedColumns = 4008217,
     }
 }

@@ -2,6 +2,7 @@
 using FileService.Service.ApiModels.FileDocumentModels;
 using FileService.Service.Interfaces;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;
 
@@ -9,13 +10,15 @@ namespace FileService.Service.Implementation
 {
     public class FfmpegService : IFfmpegService
     {
+        private readonly ILogger<FfmpegService> _logger;
         private readonly IMinioService _minioService;
         private readonly string _tempFolder;
 
-        public FfmpegService(IOptions<FfmpegSettings> settings, IMinioService minioService)
+        public FfmpegService(ILogger<FfmpegService> logger, IOptions<FfmpegSettings> settings, IMinioService minioService)
         {
+            _logger = logger;
             _minioService = minioService;
-            _tempFolder = Path.GetTempPath(); // Sử dụng thư mục tạm để xử lý
+            _tempFolder = Path.Combine(Path.GetTempPath(), "ffmpeg-tmp");
             Directory.CreateDirectory(_tempFolder);
         }
 
@@ -35,20 +38,16 @@ namespace FileService.Service.Implementation
             string output = process.StandardOutput.ReadToEnd();
             process.WaitForExit();
 
-            if (double.TryParse(output.Trim(), out double seconds))
-            {
-                return TimeSpan.FromSeconds(seconds);
-            }
-
-            return null;
+            return double.TryParse(output.Trim(), out double seconds)
+                ? TimeSpan.FromSeconds(seconds)
+                : null;
         }
-
 
         private async Task RunFfmpegAsync(string arguments)
         {
             var startInfo = new ProcessStartInfo
             {
-                FileName = "ffmpeg", 
+                FileName = "ffmpeg",
                 Arguments = arguments,
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
@@ -68,18 +67,16 @@ namespace FileService.Service.Implementation
                 throw new Exception($"FFmpeg exited with code {process.ExitCode}. Error: {stderr}");
         }
 
-
         public async Task<VideoProcessResultModel> ProcessVideoAsync(IFormFile videoFile)
-        {   
+        {
             if (videoFile == null || videoFile.Length == 0)
                 throw new ArgumentException("Invalid video file.");
-
-            if (videoFile.Length > 500 * 1024 * 1024) // 500MB
-                throw new ArgumentException("Video file too large.");
+            if (videoFile.Length > 5L * 1024 * 1024 * 1024)
+                throw new ArgumentException("Video file too large (limit: 5GB).");
 
             var fileId = Guid.NewGuid().ToString();
             var ext = Path.GetExtension(videoFile.FileName);
-            var tempInputPath = Path.Combine(Path.GetTempPath(), $"{fileId}{ext}");
+            var tempInputPath = Path.Combine(_tempFolder, $"{fileId}{ext}");
             var outputFolder = Path.Combine(_tempFolder, fileId);
             var thumbnailPath = Path.Combine(_tempFolder, $"{fileId}.jpg");
             var masterPlaylistPath = Path.Combine(outputFolder, "master.m3u8");
@@ -87,20 +84,20 @@ namespace FileService.Service.Implementation
             Directory.CreateDirectory(outputFolder);
             Directory.CreateDirectory(Path.GetDirectoryName(thumbnailPath)!);
 
-            for (int i = 0; i <= 5; i++)
-            {
-                var resolutionFolder = Path.Combine(outputFolder, $"v{i}");
-                Directory.CreateDirectory(resolutionFolder);
-            }
-
-            // Save the uploaded video file to a temporary location
-            await using (var stream = new FileStream(tempInputPath, FileMode.Create))
-            {
-                await videoFile.CopyToAsync(stream);
-            }
-
             try
             {
+                for (int i = 0; i <= 5; i++)
+                {
+                    var resolutionFolder = Path.Combine(outputFolder, $"v{i}");
+                    Directory.CreateDirectory(resolutionFolder);
+                }
+
+                // Save input video to temp file
+                await using (var stream = new FileStream(tempInputPath, FileMode.Create))
+                {
+                    await videoFile.CopyToAsync(stream);
+                }
+
                 // Create thumbnail
                 var thumbnailArgs = $"-ss 00:00:01 -i \"{tempInputPath}\" -frames:v 1 -q:v 2 \"{thumbnailPath}\"";
                 await RunFfmpegAsync(thumbnailArgs);
@@ -131,31 +128,48 @@ namespace FileService.Service.Implementation
 
                 await RunFfmpegAsync(ffmpegArgs);
 
-                // Upload thumbnail to MinIO
-                var thumbnailObjectName = $"thumbnails/{fileId}.jpg";
-                await _minioService.UploadFileAsync(thumbnailObjectName, thumbnailPath, "image/jpeg");
+                // Upload thumbnail
+                var thumbKey = $"thumbnails/{fileId}.jpg";
+                await using (var thumbStream = File.OpenRead(thumbnailPath))
+                {
+                    await _minioService.UploadStreamAsync(thumbKey, thumbStream, "image/jpeg");
+                }
 
-                // Upload HLS master playlist and segments to MinIO
-                var hlsObjectName = $"videos/{fileId}/master.m3u8";
-                await _minioService.UploadFileAsync(hlsObjectName, masterPlaylistPath, "application/x-mpegURL");
+                // Upload master playlist
+                var baseVideoPath = $"videos/{fileId}/master.m3u8";
+                await using (var masterStream = File.OpenRead(masterPlaylistPath))
+                {
+                    await _minioService.UploadStreamAsync(baseVideoPath, masterStream, "application/x-mpegURL");
+                }
 
-                // Upload all segment files
+                // Upload HLS segments and playlists
                 for (int i = 0; i <= 5; i++)
                 {
                     var segmentFolder = Path.Combine(outputFolder, $"v{i}");
                     var segmentFiles = Directory.GetFiles(segmentFolder, "segment*.ts");
+
                     foreach (var segmentFile in segmentFiles)
                     {
-                        var segmentObjectName = $"videos/{fileId}/v{i}/" + Path.GetFileName(segmentFile);
-                        await _minioService.UploadFileAsync(segmentObjectName, segmentFile, "video/MP2T");
+                        var segKey = $"videos/{fileId}/v{i}/{Path.GetFileName(segmentFile)}";
+                        await using var segStream = File.OpenRead(segmentFile);
+                        await _minioService.UploadStreamAsync(segKey, segStream, "video/MP2T");
                     }
+
+                    // Upload playlist.m3u8 for each resolution folder
+                    var playlistFile = Path.Combine(segmentFolder, "playlist.m3u8");
+                    if (File.Exists(playlistFile))
+                    {
+                        var playlistKey = $"videos/{fileId}/v{i}/playlist.m3u8";
+                        await using var playlistStream = File.OpenRead(playlistFile);
+                        await _minioService.UploadStreamAsync(playlistKey, playlistStream, "application/x-mpegURL");
+                    }
+
                 }
 
                 // get duration using ffprobe
                 var duration = GetVideoDuration(tempInputPath);
-                // Get presigned URLs from MinIO
-                var thumbnailUrl = await _minioService.GetFileAsync(thumbnailObjectName);
-                var hlsUrl = await _minioService.GetFileAsync(hlsObjectName);
+                var thumbnailUrl = await _minioService.GetPublicFileUrlAsync(thumbKey);
+                var hlsUrl = await _minioService.GetPublicFileUrlAsync(baseVideoPath);
 
                 return new VideoProcessResultModel
                 {
@@ -167,9 +181,7 @@ namespace FileService.Service.Implementation
             }
             catch (Exception ex)
             {
-                Console.WriteLine("FFmpeg processing failed: " + ex.Message);
-                Console.WriteLine("StackTrace: " + ex.StackTrace);
-
+                Console.WriteLine($"Video processing failed: {ex.Message}");
                 return new VideoProcessResultModel
                 {
                     ThumbnailUrl = null,
@@ -220,4 +232,5 @@ namespace FileService.Service.Implementation
             }
         }
     }
+
 }
