@@ -169,6 +169,9 @@ private static final long serialVersionUID = 0L;
   public static final int SCORE_FIELD_NUMBER = 4;
   private int score_ = 0;
   /**
+   * <pre>
+   * </pre>
+   *
    * <code>int32 score = 4;</code>
    * @return The score.
    */
@@ -180,6 +183,9 @@ private static final long serialVersionUID = 0L;
   public static final int TOTALPOINTS_FIELD_NUMBER = 5;
   private int totalPoints_ = 0;
   /**
+   * <pre>
+   * </pre>
+   *
    * <code>int32 totalPoints = 5;</code>
    * @return The totalPoints.
    */
@@ -1139,6 +1145,9 @@ private static final long serialVersionUID = 0L;
 
     private int score_ ;
     /**
+     * <pre>
+     * </pre>
+     *
      * <code>int32 score = 4;</code>
      * @return The score.
      */
@@ -1147,6 +1156,9 @@ private static final long serialVersionUID = 0L;
       return score_;
     }
     /**
+     * <pre>
+     * </pre>
+     *
      * <code>int32 score = 4;</code>
      * @param value The score to set.
      * @return This builder for chaining.
@@ -1159,6 +1171,9 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
+     * <pre>
+     * </pre>
+     *
      * <code>int32 score = 4;</code>
      * @return This builder for chaining.
      */
@@ -1171,6 +1186,9 @@ private static final long serialVersionUID = 0L;
 
     private int totalPoints_ ;
     /**
+     * <pre>
+     * </pre>
+     *
      * <code>int32 totalPoints = 5;</code>
      * @return The totalPoints.
      */
@@ -1179,6 +1197,9 @@ private static final long serialVersionUID = 0L;
       return totalPoints_;
     }
     /**
+     * <pre>
+     * </pre>
+     *
      * <code>int32 totalPoints = 5;</code>
      * @param value The totalPoints to set.
      * @return This builder for chaining.
@@ -1191,6 +1212,9 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
+     * <pre>
+     * </pre>
+     *
      * <code>int32 totalPoints = 5;</code>
      * @return This builder for chaining.
      */

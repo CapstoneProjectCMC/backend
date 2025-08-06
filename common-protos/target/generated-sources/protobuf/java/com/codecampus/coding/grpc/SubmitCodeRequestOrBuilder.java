@@ -10,87 +10,67 @@ public interface SubmitCodeRequestOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <pre>
-   * UUID tạo sẵn ở FE hoặc coding-svc
-   * </pre>
-   *
-   * <code>string submissionId = 1;</code>
-   * @return The submissionId.
-   */
-  java.lang.String getSubmissionId();
-  /**
-   * <pre>
-   * UUID tạo sẵn ở FE hoặc coding-svc
-   * </pre>
-   *
-   * <code>string submissionId = 1;</code>
-   * @return The bytes for submissionId.
-   */
-  com.google.protobuf.ByteString
-      getSubmissionIdBytes();
-
-  /**
-   * <code>string exerciseId = 2;</code>
+   * <code>string exerciseId = 1;</code>
    * @return The exerciseId.
    */
   java.lang.String getExerciseId();
   /**
-   * <code>string exerciseId = 2;</code>
+   * <code>string exerciseId = 1;</code>
    * @return The bytes for exerciseId.
    */
   com.google.protobuf.ByteString
       getExerciseIdBytes();
 
   /**
-   * <code>string studentId = 3;</code>
+   * <code>string studentId = 2;</code>
    * @return The studentId.
    */
   java.lang.String getStudentId();
   /**
-   * <code>string studentId = 3;</code>
+   * <code>string studentId = 2;</code>
    * @return The bytes for studentId.
    */
   com.google.protobuf.ByteString
       getStudentIdBytes();
 
   /**
-   * <code>string language = 4;</code>
+   * <code>string language = 3;</code>
    * @return The language.
    */
   java.lang.String getLanguage();
   /**
-   * <code>string language = 4;</code>
+   * <code>string language = 3;</code>
    * @return The bytes for language.
    */
   com.google.protobuf.ByteString
       getLanguageBytes();
 
   /**
-   * <code>string sourceCode = 5;</code>
+   * <code>string sourceCode = 4;</code>
    * @return The sourceCode.
    */
   java.lang.String getSourceCode();
   /**
-   * <code>string sourceCode = 5;</code>
+   * <code>string sourceCode = 4;</code>
    * @return The bytes for sourceCode.
    */
   com.google.protobuf.ByteString
       getSourceCodeBytes();
 
   /**
-   * <code>int32 memoryMb = 6;</code>
+   * <code>int32 memoryMb = 5;</code>
    * @return The memoryMb.
    */
   int getMemoryMb();
 
   /**
-   * <code>float cpus = 7;</code>
+   * <code>float cpus = 6;</code>
    * @return The cpus.
    */
   float getCpus();
 
   /**
-   * <code>int32 timeTakenSeconds = 8;</code>
+   * <code>int32 timeTakenSeconds = 7;</code>
    * @return The timeTakenSeconds.
    */
   int getTimeTakenSeconds();

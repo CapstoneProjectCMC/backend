@@ -32,10 +32,10 @@ public interface CodingMapper {
             @MappingTarget CodingExercise codingExercise,
             CodingDetailDto codingDetailDto);
 
-    @Mapping(target = "exercise", ignore = true)
+    @Mapping(target = "coding", ignore = true)
     TestCase toTestCaseFromTestCaseDto(TestCaseDto testCaseDto);
 
-    @Mapping(target = "exerciseId", source = "exercise.id")
+    @Mapping(target = "exerciseId", source = "coding.id")
     TestCaseDto toTestCaseDtoFromTestCase(TestCase t);
 
     void patchTestCaseDtoToTestCase(

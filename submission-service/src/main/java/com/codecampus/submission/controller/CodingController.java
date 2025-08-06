@@ -16,11 +16,14 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @Slf4j
 @Builder
@@ -56,6 +59,15 @@ public class CodingController {
 
         return ApiResponse.<Void>builder()
                 .message("Sửa Coding‑detail thành công!")
+                .build();
+    }
+
+    @GetMapping("/coding/{exerciseId}/test-cases")
+    ApiResponse<List<TestCase>> getTestCases(
+            @PathVariable String exerciseId) {
+        return ApiResponse.<List<TestCase>>builder()
+                .message("Get các testcases thành công!")
+                .result(codingService.getTestCases(exerciseId))
                 .build();
     }
 

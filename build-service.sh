@@ -31,7 +31,8 @@ main() {
 #  do
 #    build_push_java "$svc"
 #  done
-  build_push_java "profile-service"
+#  build_push_java "profile-service"
+  build_push_file_service
 }
 
 main "$@"

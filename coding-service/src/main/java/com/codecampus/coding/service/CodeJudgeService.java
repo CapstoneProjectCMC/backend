@@ -1,20 +1,22 @@
 package com.codecampus.coding.service;
 
-import com.codecampus.coding.dto.request.SubmissionRequestDto;
 import com.codecampus.coding.dto.response.CodeResult;
-import com.codecampus.coding.dto.response.SubmissionResponseDto;
-import com.codecampus.coding.dto.response.SubmissionTestCaseResultDto;
+import com.codecampus.coding.dto.response.CompiledArtifact;
 import com.codecampus.coding.entity.CodeSubmission;
+import com.codecampus.coding.entity.CodeSubmissionResult;
 import com.codecampus.coding.entity.CodingExercise;
 import com.codecampus.coding.entity.TestCase;
-import com.codecampus.coding.entity.data.CodeSubmissionId;
+import com.codecampus.coding.grpc.SubmitCodeRequest;
+import com.codecampus.coding.grpc.SubmitCodeResponse;
+import com.codecampus.coding.grpc.TestCaseResultDto;
 import com.codecampus.coding.helper.CodingHelper;
-import com.codecampus.coding.mapper.SubmissionMapper;
 import com.codecampus.coding.repository.CodeSubmissionRepository;
+import com.codecampus.coding.repository.CodeSubmissionResultRepository;
 import com.codecampus.submission.grpc.CodeSubmissionDto;
 import com.codecampus.submission.grpc.CreateCodeSubmissionRequest;
 import com.codecampus.submission.grpc.SubmissionSyncServiceGrpc;
 import com.codecampus.submission.grpc.TestCaseResultSyncDto;
+import com.google.protobuf.Timestamp;
 import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -22,10 +24,12 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -34,8 +38,7 @@ import java.util.Optional;
 public class CodeJudgeService {
 
     CodeSubmissionRepository codeSubmissionRepository;
-
-    SubmissionMapper submissionMapper;
+    CodeSubmissionResultRepository codeSubmissionResultRepository;
 
     CodingHelper codingHelper;
 
@@ -45,97 +48,122 @@ public class CodeJudgeService {
             submissionStub;
 
     @Transactional
-    public SubmissionResponseDto judgeCodeSubmission(
-            SubmissionRequestDto request) {
+    public SubmitCodeResponse judgeCodeSubmission(
+            SubmitCodeRequest request) {
 
         CodingExercise codingExercise = codingHelper
-                .findCodingOrThrow(request.exerciseId());
+                .findCodingOrThrow(request.getExerciseId());
 
-        List<TestCaseResultSyncDto> testCaseResultSyncDtoList =
-                new ArrayList<>();
-        List<SubmissionTestCaseResultDto> submissionTestCaseResultDtoList =
-                new ArrayList<>();
+        CodeSubmission codeSubmission = CodeSubmission.builder()
+                .exercise(codingExercise)
+                .studentId(request.getStudentId())
+                .language(request.getLanguage())
+                .sourceCode(request.getSourceCode())
+                .submittedAt(Instant.now())
+                .timeTakenSeconds(request.getTimeTakenSeconds())
+                .build();
+        codeSubmissionRepository.saveAndFlush(codeSubmission);
 
         int passedCount = 0;
+        List<TestCaseResultSyncDto> testCaseResultSyncDtoList =
+                new ArrayList<>();
+
+        /* Compile một lần, chạy từng test-case */
+        CompiledArtifact bin;
+        try {
+            Path tmpDir = createTempDir();
+            bin = dockerSandboxService.compile(
+                    request.getLanguage(), request.getSourceCode(), tmpDir);
+        } catch (InterruptedException | IOException e) {
+            throw new RuntimeException(e);
+        }
 
         for (TestCase testCase : codingExercise.getTestCases()) {
-            CodeResult codeResult = dockerSandboxService.run(
-                    request.sourceCode(),
-                    request.language(),
+            CodeResult codeResult = dockerSandboxService.runTest(
+                    bin,
                     testCase,
-                    request.memoryMb(),
-                    request.cpus());
+                    request.getMemoryMb(),
+                    request.getCpus());
 
-            boolean passed = codeResult.isPassed();
-            if (passed) {
+            if (codeResult.isPassed()) {
                 passedCount++;
             }
 
-            CodeSubmission codeSubmission = CodeSubmission.builder()
-                    .id(new CodeSubmissionId(request.submissionId(),
-                            testCase.getId()))
-                    .exercise(codingExercise)
-                    .testCase(testCase)
-                    .studentId(request.studentId())
-                    .language(request.language())
-                    .sourceCode(request.sourceCode())
-                    .submittedAt(Instant.now())
-                    .timeTakenSeconds(request.timeTakenSeconds())
-                    .passed(passed)
-                    .runtimeMs(codeResult.getRuntimeMs())
-                    .memoryKb(codeResult.getMemoryKb())
-                    .output(codeResult.getOutput())
-                    .errorMessage(codeResult.getError())
-                    .build();
-            codeSubmissionRepository.save(codeSubmission);
-
-            submissionTestCaseResultDtoList.add(new SubmissionTestCaseResultDto(
-                    testCase.getInput(), testCase.getExpectedOutput(),
-                    codeResult.getOutput(), passed, codeResult.getRuntimeMs()));
+            CodeSubmissionResult codeSubmissionResult =
+                    CodeSubmissionResult.builder()
+                            .submission(codeSubmission).testCase(testCase)
+                            .passed(codeResult.isPassed())
+                            .runtimeMs(codeResult.getRuntimeMs())
+                            .memoryKb(codeResult.getMemoryKb())
+                            .output(codeResult.getOutput())
+                            .errorMessage(codeResult.getError())
+                            .build();
+            codeSubmissionResultRepository.save(codeSubmissionResult);
 
             // Sync
             testCaseResultSyncDtoList.add(TestCaseResultSyncDto.newBuilder()
                     .setTestCaseId(testCase.getId())
-                    .setPassed(passed)
+                    .setPassed(codeResult.isPassed())
                     .setRuntimeMs(codeResult.getRuntimeMs())
                     .setMemoryKb(codeResult.getMemoryKb())
-                    .setOutput(Optional.ofNullable(codeResult.getOutput())
-                            .orElse(""))
+                    .setOutput(
+                            codeResult.getOutput() == null ? "" :
+                                    codeResult.getOutput())
                     .setErrorMessage(
-                            Optional.ofNullable(codeResult.getError())
-                                    .orElse(""))
+                            codeResult.getError() == null ? "" :
+                                    codeResult.getError())
                     .build());
         }
 
-        CodeSubmissionDto codeSubmissionDto = CodeSubmissionDto.newBuilder()
-                .setId(request.submissionId())
-                .setExerciseId(request.exerciseId())
-                .setStudentId(request.studentId())
-                .setScore(passedCount)
-                .setTotalPoints(codingExercise.getTestCases().size())
-                .setLanguage(request.language())
-                .setSourceCode(request.sourceCode())
-                .setSubmittedAt(com.google.protobuf.Timestamp.newBuilder()
-                        .setSeconds(Instant.now().getEpochSecond())
-                        .setNanos(Instant.now().getNano())
-                        .build())
-                .setTimeTakenSeconds(request.timeTakenSeconds())
-                .addAllResults(testCaseResultSyncDtoList)
-                .build();
+        codeSubmission.setScore(passedCount);
+        codeSubmission.setTotalPoints(codingExercise.getTestCases().size());
+        codeSubmission.setPassed(
+                passedCount == codeSubmission.getTotalPoints());
+
 
         /* Sync tới submission service */
         submissionStub.createCodeSubmission(
                 CreateCodeSubmissionRequest.newBuilder()
-                        .setSubmission(codeSubmissionDto)
+                        .setSubmission(CodeSubmissionDto.newBuilder()
+                                .setId(codeSubmission.getId())
+                                .setExerciseId(request.getExerciseId())
+                                .setStudentId(request.getStudentId())
+                                .setScore(passedCount)
+                                .setTotalPoints(codeSubmission.getTotalPoints())
+                                .setLanguage(request.getLanguage())
+                                .setSourceCode(request.getSourceCode())
+                                .setSubmittedAt(Timestamp.newBuilder()
+                                        .setSeconds(
+                                                Instant.now().getEpochSecond())
+                                        .setNanos(Instant.now().getNano())
+                                        .build())
+                                .setTimeTakenSeconds(
+                                        request.getTimeTakenSeconds())
+                                .addAllResults(testCaseResultSyncDtoList)
+                                .build())
                         .build());
 
-        return SubmissionResponseDto.builder()
-                .submissionId(request.submissionId())
-                .score(passedCount)
-                .totalPoints(codingExercise.getTestCases().size())
-                .passed(passedCount == codingExercise.getTestCases().size())
-                .testCases(submissionTestCaseResultDtoList)
+
+        return SubmitCodeResponse.newBuilder()
+                .setSubmissionId(codeSubmission.getId())
+                .setScore(passedCount)
+                .setTotalPoints(codeSubmission.getTotalPoints())
+                .setPassed(codeSubmission.isPassed())
+                .addAllResults(testCaseResultSyncDtoList.stream()
+                        .map(r -> TestCaseResultDto.newBuilder()
+                                .setTestCaseId(r.getTestCaseId())
+                                .setPassed(r.getPassed())
+                                .setRuntimeMs(r.getRuntimeMs())
+                                .setMemoryKb(r.getMemoryKb())
+                                .setOutput(r.getOutput())
+                                .setErrorMessage(r.getErrorMessage())
+                                .build())
+                        .toList())
                 .build();
+    }
+
+    Path createTempDir() throws IOException {
+        return Files.createTempDirectory("judge_");
     }
 }
 

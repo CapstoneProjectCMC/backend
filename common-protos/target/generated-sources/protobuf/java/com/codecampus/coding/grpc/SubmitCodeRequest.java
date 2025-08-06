@@ -27,7 +27,6 @@ private static final long serialVersionUID = 0L;
     super(builder);
   }
   private SubmitCodeRequest() {
-    submissionId_ = "";
     exerciseId_ = "";
     studentId_ = "";
     language_ = "";
@@ -47,58 +46,11 @@ private static final long serialVersionUID = 0L;
             com.codecampus.coding.grpc.SubmitCodeRequest.class, com.codecampus.coding.grpc.SubmitCodeRequest.Builder.class);
   }
 
-  public static final int SUBMISSIONID_FIELD_NUMBER = 1;
-  @SuppressWarnings("serial")
-  private volatile java.lang.Object submissionId_ = "";
-  /**
-   * <pre>
-   * UUID tạo sẵn ở FE hoặc coding-svc
-   * </pre>
-   *
-   * <code>string submissionId = 1;</code>
-   * @return The submissionId.
-   */
-  @java.lang.Override
-  public java.lang.String getSubmissionId() {
-    java.lang.Object ref = submissionId_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      submissionId_ = s;
-      return s;
-    }
-  }
-  /**
-   * <pre>
-   * UUID tạo sẵn ở FE hoặc coding-svc
-   * </pre>
-   *
-   * <code>string submissionId = 1;</code>
-   * @return The bytes for submissionId.
-   */
-  @java.lang.Override
-  public com.google.protobuf.ByteString
-      getSubmissionIdBytes() {
-    java.lang.Object ref = submissionId_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      submissionId_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
-  }
-
-  public static final int EXERCISEID_FIELD_NUMBER = 2;
+  public static final int EXERCISEID_FIELD_NUMBER = 1;
   @SuppressWarnings("serial")
   private volatile java.lang.Object exerciseId_ = "";
   /**
-   * <code>string exerciseId = 2;</code>
+   * <code>string exerciseId = 1;</code>
    * @return The exerciseId.
    */
   @java.lang.Override
@@ -115,7 +67,7 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
-   * <code>string exerciseId = 2;</code>
+   * <code>string exerciseId = 1;</code>
    * @return The bytes for exerciseId.
    */
   @java.lang.Override
@@ -133,11 +85,11 @@ private static final long serialVersionUID = 0L;
     }
   }
 
-  public static final int STUDENTID_FIELD_NUMBER = 3;
+  public static final int STUDENTID_FIELD_NUMBER = 2;
   @SuppressWarnings("serial")
   private volatile java.lang.Object studentId_ = "";
   /**
-   * <code>string studentId = 3;</code>
+   * <code>string studentId = 2;</code>
    * @return The studentId.
    */
   @java.lang.Override
@@ -154,7 +106,7 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
-   * <code>string studentId = 3;</code>
+   * <code>string studentId = 2;</code>
    * @return The bytes for studentId.
    */
   @java.lang.Override
@@ -172,11 +124,11 @@ private static final long serialVersionUID = 0L;
     }
   }
 
-  public static final int LANGUAGE_FIELD_NUMBER = 4;
+  public static final int LANGUAGE_FIELD_NUMBER = 3;
   @SuppressWarnings("serial")
   private volatile java.lang.Object language_ = "";
   /**
-   * <code>string language = 4;</code>
+   * <code>string language = 3;</code>
    * @return The language.
    */
   @java.lang.Override
@@ -193,7 +145,7 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
-   * <code>string language = 4;</code>
+   * <code>string language = 3;</code>
    * @return The bytes for language.
    */
   @java.lang.Override
@@ -211,11 +163,11 @@ private static final long serialVersionUID = 0L;
     }
   }
 
-  public static final int SOURCECODE_FIELD_NUMBER = 5;
+  public static final int SOURCECODE_FIELD_NUMBER = 4;
   @SuppressWarnings("serial")
   private volatile java.lang.Object sourceCode_ = "";
   /**
-   * <code>string sourceCode = 5;</code>
+   * <code>string sourceCode = 4;</code>
    * @return The sourceCode.
    */
   @java.lang.Override
@@ -232,7 +184,7 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
-   * <code>string sourceCode = 5;</code>
+   * <code>string sourceCode = 4;</code>
    * @return The bytes for sourceCode.
    */
   @java.lang.Override
@@ -250,10 +202,10 @@ private static final long serialVersionUID = 0L;
     }
   }
 
-  public static final int MEMORYMB_FIELD_NUMBER = 6;
+  public static final int MEMORYMB_FIELD_NUMBER = 5;
   private int memoryMb_ = 0;
   /**
-   * <code>int32 memoryMb = 6;</code>
+   * <code>int32 memoryMb = 5;</code>
    * @return The memoryMb.
    */
   @java.lang.Override
@@ -261,10 +213,10 @@ private static final long serialVersionUID = 0L;
     return memoryMb_;
   }
 
-  public static final int CPUS_FIELD_NUMBER = 7;
+  public static final int CPUS_FIELD_NUMBER = 6;
   private float cpus_ = 0F;
   /**
-   * <code>float cpus = 7;</code>
+   * <code>float cpus = 6;</code>
    * @return The cpus.
    */
   @java.lang.Override
@@ -272,10 +224,10 @@ private static final long serialVersionUID = 0L;
     return cpus_;
   }
 
-  public static final int TIMETAKENSECONDS_FIELD_NUMBER = 8;
+  public static final int TIMETAKENSECONDS_FIELD_NUMBER = 7;
   private int timeTakenSeconds_ = 0;
   /**
-   * <code>int32 timeTakenSeconds = 8;</code>
+   * <code>int32 timeTakenSeconds = 7;</code>
    * @return The timeTakenSeconds.
    */
   @java.lang.Override
@@ -297,29 +249,26 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (!com.google.protobuf.GeneratedMessage.isStringEmpty(submissionId_)) {
-      com.google.protobuf.GeneratedMessage.writeString(output, 1, submissionId_);
-    }
     if (!com.google.protobuf.GeneratedMessage.isStringEmpty(exerciseId_)) {
-      com.google.protobuf.GeneratedMessage.writeString(output, 2, exerciseId_);
+      com.google.protobuf.GeneratedMessage.writeString(output, 1, exerciseId_);
     }
     if (!com.google.protobuf.GeneratedMessage.isStringEmpty(studentId_)) {
-      com.google.protobuf.GeneratedMessage.writeString(output, 3, studentId_);
+      com.google.protobuf.GeneratedMessage.writeString(output, 2, studentId_);
     }
     if (!com.google.protobuf.GeneratedMessage.isStringEmpty(language_)) {
-      com.google.protobuf.GeneratedMessage.writeString(output, 4, language_);
+      com.google.protobuf.GeneratedMessage.writeString(output, 3, language_);
     }
     if (!com.google.protobuf.GeneratedMessage.isStringEmpty(sourceCode_)) {
-      com.google.protobuf.GeneratedMessage.writeString(output, 5, sourceCode_);
+      com.google.protobuf.GeneratedMessage.writeString(output, 4, sourceCode_);
     }
     if (memoryMb_ != 0) {
-      output.writeInt32(6, memoryMb_);
+      output.writeInt32(5, memoryMb_);
     }
     if (java.lang.Float.floatToRawIntBits(cpus_) != 0) {
-      output.writeFloat(7, cpus_);
+      output.writeFloat(6, cpus_);
     }
     if (timeTakenSeconds_ != 0) {
-      output.writeInt32(8, timeTakenSeconds_);
+      output.writeInt32(7, timeTakenSeconds_);
     }
     getUnknownFields().writeTo(output);
   }
@@ -330,32 +279,29 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
-    if (!com.google.protobuf.GeneratedMessage.isStringEmpty(submissionId_)) {
-      size += com.google.protobuf.GeneratedMessage.computeStringSize(1, submissionId_);
-    }
     if (!com.google.protobuf.GeneratedMessage.isStringEmpty(exerciseId_)) {
-      size += com.google.protobuf.GeneratedMessage.computeStringSize(2, exerciseId_);
+      size += com.google.protobuf.GeneratedMessage.computeStringSize(1, exerciseId_);
     }
     if (!com.google.protobuf.GeneratedMessage.isStringEmpty(studentId_)) {
-      size += com.google.protobuf.GeneratedMessage.computeStringSize(3, studentId_);
+      size += com.google.protobuf.GeneratedMessage.computeStringSize(2, studentId_);
     }
     if (!com.google.protobuf.GeneratedMessage.isStringEmpty(language_)) {
-      size += com.google.protobuf.GeneratedMessage.computeStringSize(4, language_);
+      size += com.google.protobuf.GeneratedMessage.computeStringSize(3, language_);
     }
     if (!com.google.protobuf.GeneratedMessage.isStringEmpty(sourceCode_)) {
-      size += com.google.protobuf.GeneratedMessage.computeStringSize(5, sourceCode_);
+      size += com.google.protobuf.GeneratedMessage.computeStringSize(4, sourceCode_);
     }
     if (memoryMb_ != 0) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(6, memoryMb_);
+        .computeInt32Size(5, memoryMb_);
     }
     if (java.lang.Float.floatToRawIntBits(cpus_) != 0) {
       size += com.google.protobuf.CodedOutputStream
-        .computeFloatSize(7, cpus_);
+        .computeFloatSize(6, cpus_);
     }
     if (timeTakenSeconds_ != 0) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(8, timeTakenSeconds_);
+        .computeInt32Size(7, timeTakenSeconds_);
     }
     size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
@@ -372,8 +318,6 @@ private static final long serialVersionUID = 0L;
     }
     com.codecampus.coding.grpc.SubmitCodeRequest other = (com.codecampus.coding.grpc.SubmitCodeRequest) obj;
 
-    if (!getSubmissionId()
-        .equals(other.getSubmissionId())) return false;
     if (!getExerciseId()
         .equals(other.getExerciseId())) return false;
     if (!getStudentId()
@@ -400,8 +344,6 @@ private static final long serialVersionUID = 0L;
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
-    hash = (37 * hash) + SUBMISSIONID_FIELD_NUMBER;
-    hash = (53 * hash) + getSubmissionId().hashCode();
     hash = (37 * hash) + EXERCISEID_FIELD_NUMBER;
     hash = (53 * hash) + getExerciseId().hashCode();
     hash = (37 * hash) + STUDENTID_FIELD_NUMBER;
@@ -548,7 +490,6 @@ private static final long serialVersionUID = 0L;
     public Builder clear() {
       super.clear();
       bitField0_ = 0;
-      submissionId_ = "";
       exerciseId_ = "";
       studentId_ = "";
       language_ = "";
@@ -590,27 +531,24 @@ private static final long serialVersionUID = 0L;
     private void buildPartial0(com.codecampus.coding.grpc.SubmitCodeRequest result) {
       int from_bitField0_ = bitField0_;
       if (((from_bitField0_ & 0x00000001) != 0)) {
-        result.submissionId_ = submissionId_;
-      }
-      if (((from_bitField0_ & 0x00000002) != 0)) {
         result.exerciseId_ = exerciseId_;
       }
-      if (((from_bitField0_ & 0x00000004) != 0)) {
+      if (((from_bitField0_ & 0x00000002) != 0)) {
         result.studentId_ = studentId_;
       }
-      if (((from_bitField0_ & 0x00000008) != 0)) {
+      if (((from_bitField0_ & 0x00000004) != 0)) {
         result.language_ = language_;
       }
-      if (((from_bitField0_ & 0x00000010) != 0)) {
+      if (((from_bitField0_ & 0x00000008) != 0)) {
         result.sourceCode_ = sourceCode_;
       }
-      if (((from_bitField0_ & 0x00000020) != 0)) {
+      if (((from_bitField0_ & 0x00000010) != 0)) {
         result.memoryMb_ = memoryMb_;
       }
-      if (((from_bitField0_ & 0x00000040) != 0)) {
+      if (((from_bitField0_ & 0x00000020) != 0)) {
         result.cpus_ = cpus_;
       }
-      if (((from_bitField0_ & 0x00000080) != 0)) {
+      if (((from_bitField0_ & 0x00000040) != 0)) {
         result.timeTakenSeconds_ = timeTakenSeconds_;
       }
     }
@@ -627,29 +565,24 @@ private static final long serialVersionUID = 0L;
 
     public Builder mergeFrom(com.codecampus.coding.grpc.SubmitCodeRequest other) {
       if (other == com.codecampus.coding.grpc.SubmitCodeRequest.getDefaultInstance()) return this;
-      if (!other.getSubmissionId().isEmpty()) {
-        submissionId_ = other.submissionId_;
-        bitField0_ |= 0x00000001;
-        onChanged();
-      }
       if (!other.getExerciseId().isEmpty()) {
         exerciseId_ = other.exerciseId_;
-        bitField0_ |= 0x00000002;
+        bitField0_ |= 0x00000001;
         onChanged();
       }
       if (!other.getStudentId().isEmpty()) {
         studentId_ = other.studentId_;
-        bitField0_ |= 0x00000004;
+        bitField0_ |= 0x00000002;
         onChanged();
       }
       if (!other.getLanguage().isEmpty()) {
         language_ = other.language_;
-        bitField0_ |= 0x00000008;
+        bitField0_ |= 0x00000004;
         onChanged();
       }
       if (!other.getSourceCode().isEmpty()) {
         sourceCode_ = other.sourceCode_;
-        bitField0_ |= 0x00000010;
+        bitField0_ |= 0x00000008;
         onChanged();
       }
       if (other.getMemoryMb() != 0) {
@@ -688,45 +621,40 @@ private static final long serialVersionUID = 0L;
               done = true;
               break;
             case 10: {
-              submissionId_ = input.readStringRequireUtf8();
+              exerciseId_ = input.readStringRequireUtf8();
               bitField0_ |= 0x00000001;
               break;
             } // case 10
             case 18: {
-              exerciseId_ = input.readStringRequireUtf8();
+              studentId_ = input.readStringRequireUtf8();
               bitField0_ |= 0x00000002;
               break;
             } // case 18
             case 26: {
-              studentId_ = input.readStringRequireUtf8();
+              language_ = input.readStringRequireUtf8();
               bitField0_ |= 0x00000004;
               break;
             } // case 26
             case 34: {
-              language_ = input.readStringRequireUtf8();
+              sourceCode_ = input.readStringRequireUtf8();
               bitField0_ |= 0x00000008;
               break;
             } // case 34
-            case 42: {
-              sourceCode_ = input.readStringRequireUtf8();
+            case 40: {
+              memoryMb_ = input.readInt32();
               bitField0_ |= 0x00000010;
               break;
-            } // case 42
-            case 48: {
-              memoryMb_ = input.readInt32();
+            } // case 40
+            case 53: {
+              cpus_ = input.readFloat();
               bitField0_ |= 0x00000020;
               break;
-            } // case 48
-            case 61: {
-              cpus_ = input.readFloat();
+            } // case 53
+            case 56: {
+              timeTakenSeconds_ = input.readInt32();
               bitField0_ |= 0x00000040;
               break;
-            } // case 61
-            case 64: {
-              timeTakenSeconds_ = input.readInt32();
-              bitField0_ |= 0x00000080;
-              break;
-            } // case 64
+            } // case 56
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -744,101 +672,9 @@ private static final long serialVersionUID = 0L;
     }
     private int bitField0_;
 
-    private java.lang.Object submissionId_ = "";
-    /**
-     * <pre>
-     * UUID tạo sẵn ở FE hoặc coding-svc
-     * </pre>
-     *
-     * <code>string submissionId = 1;</code>
-     * @return The submissionId.
-     */
-    public java.lang.String getSubmissionId() {
-      java.lang.Object ref = submissionId_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        submissionId_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
-    }
-    /**
-     * <pre>
-     * UUID tạo sẵn ở FE hoặc coding-svc
-     * </pre>
-     *
-     * <code>string submissionId = 1;</code>
-     * @return The bytes for submissionId.
-     */
-    public com.google.protobuf.ByteString
-        getSubmissionIdBytes() {
-      java.lang.Object ref = submissionId_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        submissionId_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <pre>
-     * UUID tạo sẵn ở FE hoặc coding-svc
-     * </pre>
-     *
-     * <code>string submissionId = 1;</code>
-     * @param value The submissionId to set.
-     * @return This builder for chaining.
-     */
-    public Builder setSubmissionId(
-        java.lang.String value) {
-      if (value == null) { throw new NullPointerException(); }
-      submissionId_ = value;
-      bitField0_ |= 0x00000001;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     * UUID tạo sẵn ở FE hoặc coding-svc
-     * </pre>
-     *
-     * <code>string submissionId = 1;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearSubmissionId() {
-      submissionId_ = getDefaultInstance().getSubmissionId();
-      bitField0_ = (bitField0_ & ~0x00000001);
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     * UUID tạo sẵn ở FE hoặc coding-svc
-     * </pre>
-     *
-     * <code>string submissionId = 1;</code>
-     * @param value The bytes for submissionId to set.
-     * @return This builder for chaining.
-     */
-    public Builder setSubmissionIdBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) { throw new NullPointerException(); }
-      checkByteStringIsUtf8(value);
-      submissionId_ = value;
-      bitField0_ |= 0x00000001;
-      onChanged();
-      return this;
-    }
-
     private java.lang.Object exerciseId_ = "";
     /**
-     * <code>string exerciseId = 2;</code>
+     * <code>string exerciseId = 1;</code>
      * @return The exerciseId.
      */
     public java.lang.String getExerciseId() {
@@ -854,7 +690,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string exerciseId = 2;</code>
+     * <code>string exerciseId = 1;</code>
      * @return The bytes for exerciseId.
      */
     public com.google.protobuf.ByteString
@@ -871,7 +707,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string exerciseId = 2;</code>
+     * <code>string exerciseId = 1;</code>
      * @param value The exerciseId to set.
      * @return This builder for chaining.
      */
@@ -879,22 +715,22 @@ private static final long serialVersionUID = 0L;
         java.lang.String value) {
       if (value == null) { throw new NullPointerException(); }
       exerciseId_ = value;
-      bitField0_ |= 0x00000002;
+      bitField0_ |= 0x00000001;
       onChanged();
       return this;
     }
     /**
-     * <code>string exerciseId = 2;</code>
+     * <code>string exerciseId = 1;</code>
      * @return This builder for chaining.
      */
     public Builder clearExerciseId() {
       exerciseId_ = getDefaultInstance().getExerciseId();
-      bitField0_ = (bitField0_ & ~0x00000002);
+      bitField0_ = (bitField0_ & ~0x00000001);
       onChanged();
       return this;
     }
     /**
-     * <code>string exerciseId = 2;</code>
+     * <code>string exerciseId = 1;</code>
      * @param value The bytes for exerciseId to set.
      * @return This builder for chaining.
      */
@@ -903,14 +739,14 @@ private static final long serialVersionUID = 0L;
       if (value == null) { throw new NullPointerException(); }
       checkByteStringIsUtf8(value);
       exerciseId_ = value;
-      bitField0_ |= 0x00000002;
+      bitField0_ |= 0x00000001;
       onChanged();
       return this;
     }
 
     private java.lang.Object studentId_ = "";
     /**
-     * <code>string studentId = 3;</code>
+     * <code>string studentId = 2;</code>
      * @return The studentId.
      */
     public java.lang.String getStudentId() {
@@ -926,7 +762,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string studentId = 3;</code>
+     * <code>string studentId = 2;</code>
      * @return The bytes for studentId.
      */
     public com.google.protobuf.ByteString
@@ -943,7 +779,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string studentId = 3;</code>
+     * <code>string studentId = 2;</code>
      * @param value The studentId to set.
      * @return This builder for chaining.
      */
@@ -951,22 +787,22 @@ private static final long serialVersionUID = 0L;
         java.lang.String value) {
       if (value == null) { throw new NullPointerException(); }
       studentId_ = value;
-      bitField0_ |= 0x00000004;
+      bitField0_ |= 0x00000002;
       onChanged();
       return this;
     }
     /**
-     * <code>string studentId = 3;</code>
+     * <code>string studentId = 2;</code>
      * @return This builder for chaining.
      */
     public Builder clearStudentId() {
       studentId_ = getDefaultInstance().getStudentId();
-      bitField0_ = (bitField0_ & ~0x00000004);
+      bitField0_ = (bitField0_ & ~0x00000002);
       onChanged();
       return this;
     }
     /**
-     * <code>string studentId = 3;</code>
+     * <code>string studentId = 2;</code>
      * @param value The bytes for studentId to set.
      * @return This builder for chaining.
      */
@@ -975,14 +811,14 @@ private static final long serialVersionUID = 0L;
       if (value == null) { throw new NullPointerException(); }
       checkByteStringIsUtf8(value);
       studentId_ = value;
-      bitField0_ |= 0x00000004;
+      bitField0_ |= 0x00000002;
       onChanged();
       return this;
     }
 
     private java.lang.Object language_ = "";
     /**
-     * <code>string language = 4;</code>
+     * <code>string language = 3;</code>
      * @return The language.
      */
     public java.lang.String getLanguage() {
@@ -998,7 +834,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string language = 4;</code>
+     * <code>string language = 3;</code>
      * @return The bytes for language.
      */
     public com.google.protobuf.ByteString
@@ -1015,7 +851,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string language = 4;</code>
+     * <code>string language = 3;</code>
      * @param value The language to set.
      * @return This builder for chaining.
      */
@@ -1023,22 +859,22 @@ private static final long serialVersionUID = 0L;
         java.lang.String value) {
       if (value == null) { throw new NullPointerException(); }
       language_ = value;
-      bitField0_ |= 0x00000008;
+      bitField0_ |= 0x00000004;
       onChanged();
       return this;
     }
     /**
-     * <code>string language = 4;</code>
+     * <code>string language = 3;</code>
      * @return This builder for chaining.
      */
     public Builder clearLanguage() {
       language_ = getDefaultInstance().getLanguage();
-      bitField0_ = (bitField0_ & ~0x00000008);
+      bitField0_ = (bitField0_ & ~0x00000004);
       onChanged();
       return this;
     }
     /**
-     * <code>string language = 4;</code>
+     * <code>string language = 3;</code>
      * @param value The bytes for language to set.
      * @return This builder for chaining.
      */
@@ -1047,14 +883,14 @@ private static final long serialVersionUID = 0L;
       if (value == null) { throw new NullPointerException(); }
       checkByteStringIsUtf8(value);
       language_ = value;
-      bitField0_ |= 0x00000008;
+      bitField0_ |= 0x00000004;
       onChanged();
       return this;
     }
 
     private java.lang.Object sourceCode_ = "";
     /**
-     * <code>string sourceCode = 5;</code>
+     * <code>string sourceCode = 4;</code>
      * @return The sourceCode.
      */
     public java.lang.String getSourceCode() {
@@ -1070,7 +906,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string sourceCode = 5;</code>
+     * <code>string sourceCode = 4;</code>
      * @return The bytes for sourceCode.
      */
     public com.google.protobuf.ByteString
@@ -1087,7 +923,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string sourceCode = 5;</code>
+     * <code>string sourceCode = 4;</code>
      * @param value The sourceCode to set.
      * @return This builder for chaining.
      */
@@ -1095,22 +931,22 @@ private static final long serialVersionUID = 0L;
         java.lang.String value) {
       if (value == null) { throw new NullPointerException(); }
       sourceCode_ = value;
-      bitField0_ |= 0x00000010;
+      bitField0_ |= 0x00000008;
       onChanged();
       return this;
     }
     /**
-     * <code>string sourceCode = 5;</code>
+     * <code>string sourceCode = 4;</code>
      * @return This builder for chaining.
      */
     public Builder clearSourceCode() {
       sourceCode_ = getDefaultInstance().getSourceCode();
-      bitField0_ = (bitField0_ & ~0x00000010);
+      bitField0_ = (bitField0_ & ~0x00000008);
       onChanged();
       return this;
     }
     /**
-     * <code>string sourceCode = 5;</code>
+     * <code>string sourceCode = 4;</code>
      * @param value The bytes for sourceCode to set.
      * @return This builder for chaining.
      */
@@ -1119,14 +955,14 @@ private static final long serialVersionUID = 0L;
       if (value == null) { throw new NullPointerException(); }
       checkByteStringIsUtf8(value);
       sourceCode_ = value;
-      bitField0_ |= 0x00000010;
+      bitField0_ |= 0x00000008;
       onChanged();
       return this;
     }
 
     private int memoryMb_ ;
     /**
-     * <code>int32 memoryMb = 6;</code>
+     * <code>int32 memoryMb = 5;</code>
      * @return The memoryMb.
      */
     @java.lang.Override
@@ -1134,23 +970,23 @@ private static final long serialVersionUID = 0L;
       return memoryMb_;
     }
     /**
-     * <code>int32 memoryMb = 6;</code>
+     * <code>int32 memoryMb = 5;</code>
      * @param value The memoryMb to set.
      * @return This builder for chaining.
      */
     public Builder setMemoryMb(int value) {
 
       memoryMb_ = value;
-      bitField0_ |= 0x00000020;
+      bitField0_ |= 0x00000010;
       onChanged();
       return this;
     }
     /**
-     * <code>int32 memoryMb = 6;</code>
+     * <code>int32 memoryMb = 5;</code>
      * @return This builder for chaining.
      */
     public Builder clearMemoryMb() {
-      bitField0_ = (bitField0_ & ~0x00000020);
+      bitField0_ = (bitField0_ & ~0x00000010);
       memoryMb_ = 0;
       onChanged();
       return this;
@@ -1158,7 +994,7 @@ private static final long serialVersionUID = 0L;
 
     private float cpus_ ;
     /**
-     * <code>float cpus = 7;</code>
+     * <code>float cpus = 6;</code>
      * @return The cpus.
      */
     @java.lang.Override
@@ -1166,23 +1002,23 @@ private static final long serialVersionUID = 0L;
       return cpus_;
     }
     /**
-     * <code>float cpus = 7;</code>
+     * <code>float cpus = 6;</code>
      * @param value The cpus to set.
      * @return This builder for chaining.
      */
     public Builder setCpus(float value) {
 
       cpus_ = value;
-      bitField0_ |= 0x00000040;
+      bitField0_ |= 0x00000020;
       onChanged();
       return this;
     }
     /**
-     * <code>float cpus = 7;</code>
+     * <code>float cpus = 6;</code>
      * @return This builder for chaining.
      */
     public Builder clearCpus() {
-      bitField0_ = (bitField0_ & ~0x00000040);
+      bitField0_ = (bitField0_ & ~0x00000020);
       cpus_ = 0F;
       onChanged();
       return this;
@@ -1190,7 +1026,7 @@ private static final long serialVersionUID = 0L;
 
     private int timeTakenSeconds_ ;
     /**
-     * <code>int32 timeTakenSeconds = 8;</code>
+     * <code>int32 timeTakenSeconds = 7;</code>
      * @return The timeTakenSeconds.
      */
     @java.lang.Override
@@ -1198,23 +1034,23 @@ private static final long serialVersionUID = 0L;
       return timeTakenSeconds_;
     }
     /**
-     * <code>int32 timeTakenSeconds = 8;</code>
+     * <code>int32 timeTakenSeconds = 7;</code>
      * @param value The timeTakenSeconds to set.
      * @return This builder for chaining.
      */
     public Builder setTimeTakenSeconds(int value) {
 
       timeTakenSeconds_ = value;
-      bitField0_ |= 0x00000080;
+      bitField0_ |= 0x00000040;
       onChanged();
       return this;
     }
     /**
-     * <code>int32 timeTakenSeconds = 8;</code>
+     * <code>int32 timeTakenSeconds = 7;</code>
      * @return This builder for chaining.
      */
     public Builder clearTimeTakenSeconds() {
-      bitField0_ = (bitField0_ & ~0x00000080);
+      bitField0_ = (bitField0_ & ~0x00000040);
       timeTakenSeconds_ = 0;
       onChanged();
       return this;

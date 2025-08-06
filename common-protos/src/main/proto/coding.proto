@@ -48,14 +48,13 @@ message SoftDeleteTestCaseRequest {
 }
 
 message SubmitCodeRequest {
-  string submissionId = 1;   // UUID tạo sẵn ở FE hoặc coding-svc
-  string exerciseId = 2;
-  string studentId = 3;
-  string language = 4;
-  string sourceCode = 5;
-  int32 memoryMb = 6;
-  float cpus = 7;
-  int32 timeTakenSeconds = 8;
+  string exerciseId = 1;
+  string studentId = 2;
+  string language = 3;
+  string sourceCode = 4;
+  int32 memoryMb = 5;
+  float cpus = 6;
+  int32 timeTakenSeconds = 7;
 }
 
 message TestCaseResultDto {

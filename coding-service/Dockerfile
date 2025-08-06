@@ -1,32 +1,24 @@
 FROM python:3.9-slim
 
-# Cài các công cụ biên dịch cần thiết (gcc g++)
+# docker build -t capstoneprojectpythondocker:latest .
+# ===== Công cụ biên dịch =====
+#  - build-essential (gcc, g++, make…)
+#  - OpenJDK 17 headless  (javac, java, jar)
 RUN apt-get update && \
-    apt-get install -y gcc g++ && \
-    rm -rf /var/lib/apt/lists/*
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        build-essential \
+        openjdk-17-jdk-headless \
+        && rm -rf /var/lib/apt/lists/*
 
-# Cài sẵn các thư viện Python phổ biến cho competitive programming & data
+# ===== Thư viện Python hay dùng trong competitive-prog / data =====
 RUN pip install --no-cache-dir \
-    numpy \
-    pandas \
-    requests \
-    matplotlib \
-    scipy \
-    pillow \
-    sympy \
-    networkx \
-    scikit-learn
+      numpy pandas requests matplotlib scipy pillow sympy networkx scikit-learn
 
-# Tạo user không phải root
+# ===== Tạo user hạn quyền & set workspace =====
 RUN useradd -m sandbox
-
-# Set working directory
 WORKDIR /app
-
-# Chuyển quyền thư mục cho user
 RUN chown -R sandbox:sandbox /app
-
-# Chạy container dưới user sandbox
 USER sandbox
 
-CMD ["python3", "/app/Main.py"]
+# ===== Lệnh mặc định – container “nhàn rỗi” =====
+CMD ["bash"]

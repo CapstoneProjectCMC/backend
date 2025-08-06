@@ -74,7 +74,7 @@ public class CodingSyncServiceImpl
             StreamObserver<Empty> responseObserver) {
 
         codingService.softDeleteTestCase(
-                softDeleteTestCaseRequest.getTestCaseId(),
+                softDeleteTestCaseRequest.getExerciseId(),
                 softDeleteTestCaseRequest.getTestCaseId()
         );
 

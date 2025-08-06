@@ -105,38 +105,37 @@ public final class CodingProto {
       "\016\n\006sample\030\005 \001(\010\022\014\n\004note\030\006 \001(\t\"\037\n\021SoftDel" +
       "eteRequest\022\n\n\002id\030\001 \001(\t\"C\n\031SoftDeleteTest" +
       "CaseRequest\022\022\n\nexerciseId\030\001 \001(\t\022\022\n\ntestC" +
-      "aseId\030\002 \001(\t\"\260\001\n\021SubmitCodeRequest\022\024\n\014sub" +
-      "missionId\030\001 \001(\t\022\022\n\nexerciseId\030\002 \001(\t\022\021\n\ts" +
-      "tudentId\030\003 \001(\t\022\020\n\010language\030\004 \001(\t\022\022\n\nsour" +
-      "ceCode\030\005 \001(\t\022\020\n\010memoryMb\030\006 \001(\005\022\014\n\004cpus\030\007" +
-      " \001(\002\022\030\n\020timeTakenSeconds\030\010 \001(\005\"\202\001\n\021TestC" +
-      "aseResultDto\022\022\n\ntestCaseId\030\001 \001(\t\022\016\n\006pass" +
-      "ed\030\002 \001(\010\022\021\n\truntimeMs\030\003 \001(\005\022\020\n\010memoryKb\030" +
-      "\004 \001(\005\022\016\n\006output\030\005 \001(\t\022\024\n\014errorMessage\030\006 " +
-      "\001(\t\"\212\001\n\022SubmitCodeResponse\022\024\n\014submission" +
-      "Id\030\001 \001(\t\022\r\n\005score\030\002 \001(\005\022\023\n\013totalPoints\030\003" +
-      " \001(\005\022\016\n\006passed\030\004 \001(\010\022*\n\007results\030\005 \003(\0132\031." +
-      "coding.TestCaseResultDto\"J\n\033CreateCoding" +
-      "ExerciseRequest\022+\n\010exercise\030\001 \001(\0132\031.codi" +
-      "ng.CodingExerciseDto\"[\n\026AddCodingDetailR" +
-      "equest\022\022\n\nexerciseId\030\001 \001(\t\022-\n\014codingDeta" +
-      "il\030\002 \001(\0132\027.coding.CodingDetailDto\"O\n\022Add" +
-      "TestCaseRequest\022\022\n\nexerciseId\030\001 \001(\t\022%\n\010t" +
-      "estCase\030\002 \001(\0132\023.coding.TestCaseDto2\220\003\n\021C" +
-      "odingSyncService\022S\n\024CreateCodingExercise" +
-      "\022#.coding.CreateCodingExerciseRequest\032\026." +
-      "google.protobuf.Empty\022I\n\017AddCodingDetail" +
-      "\022\036.coding.AddCodingDetailRequest\032\026.googl" +
-      "e.protobuf.Empty\022A\n\013AddTestCase\022\032.coding" +
-      ".AddTestCaseRequest\032\026.google.protobuf.Em" +
-      "pty\022G\n\022SoftDeleteExercise\022\031.coding.SoftD" +
-      "eleteRequest\032\026.google.protobuf.Empty\022O\n\022" +
-      "SoftDeleteTestCase\022!.coding.SoftDeleteTe" +
-      "stCaseRequest\032\026.google.protobuf.Empty2X\n" +
-      "\021CodingPlayService\022C\n\nSubmitCode\022\031.codin" +
-      "g.SubmitCodeRequest\032\032.coding.SubmitCodeR" +
-      "esponseB+\n\032com.codecampus.coding.grpcB\013C" +
-      "odingProtoP\001b\006proto3"
+      "aseId\030\002 \001(\t\"\232\001\n\021SubmitCodeRequest\022\022\n\nexe" +
+      "rciseId\030\001 \001(\t\022\021\n\tstudentId\030\002 \001(\t\022\020\n\010lang" +
+      "uage\030\003 \001(\t\022\022\n\nsourceCode\030\004 \001(\t\022\020\n\010memory" +
+      "Mb\030\005 \001(\005\022\014\n\004cpus\030\006 \001(\002\022\030\n\020timeTakenSecon" +
+      "ds\030\007 \001(\005\"\202\001\n\021TestCaseResultDto\022\022\n\ntestCa" +
+      "seId\030\001 \001(\t\022\016\n\006passed\030\002 \001(\010\022\021\n\truntimeMs\030" +
+      "\003 \001(\005\022\020\n\010memoryKb\030\004 \001(\005\022\016\n\006output\030\005 \001(\t\022" +
+      "\024\n\014errorMessage\030\006 \001(\t\"\212\001\n\022SubmitCodeResp" +
+      "onse\022\024\n\014submissionId\030\001 \001(\t\022\r\n\005score\030\002 \001(" +
+      "\005\022\023\n\013totalPoints\030\003 \001(\005\022\016\n\006passed\030\004 \001(\010\022*" +
+      "\n\007results\030\005 \003(\0132\031.coding.TestCaseResultD" +
+      "to\"J\n\033CreateCodingExerciseRequest\022+\n\010exe" +
+      "rcise\030\001 \001(\0132\031.coding.CodingExerciseDto\"[" +
+      "\n\026AddCodingDetailRequest\022\022\n\nexerciseId\030\001" +
+      " \001(\t\022-\n\014codingDetail\030\002 \001(\0132\027.coding.Codi" +
+      "ngDetailDto\"O\n\022AddTestCaseRequest\022\022\n\nexe" +
+      "rciseId\030\001 \001(\t\022%\n\010testCase\030\002 \001(\0132\023.coding" +
+      ".TestCaseDto2\220\003\n\021CodingSyncService\022S\n\024Cr" +
+      "eateCodingExercise\022#.coding.CreateCoding" +
+      "ExerciseRequest\032\026.google.protobuf.Empty\022" +
+      "I\n\017AddCodingDetail\022\036.coding.AddCodingDet" +
+      "ailRequest\032\026.google.protobuf.Empty\022A\n\013Ad" +
+      "dTestCase\022\032.coding.AddTestCaseRequest\032\026." +
+      "google.protobuf.Empty\022G\n\022SoftDeleteExerc" +
+      "ise\022\031.coding.SoftDeleteRequest\032\026.google." +
+      "protobuf.Empty\022O\n\022SoftDeleteTestCase\022!.c" +
+      "oding.SoftDeleteTestCaseRequest\032\026.google" +
+      ".protobuf.Empty2X\n\021CodingPlayService\022C\n\n" +
+      "SubmitCode\022\031.coding.SubmitCodeRequest\032\032." +
+      "coding.SubmitCodeResponseB+\n\032com.codecam" +
+      "pus.coding.grpcB\013CodingProtoP\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -179,7 +178,7 @@ public final class CodingProto {
     internal_static_coding_SubmitCodeRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_coding_SubmitCodeRequest_descriptor,
-        new java.lang.String[] { "SubmissionId", "ExerciseId", "StudentId", "Language", "SourceCode", "MemoryMb", "Cpus", "TimeTakenSeconds", });
+        new java.lang.String[] { "ExerciseId", "StudentId", "Language", "SourceCode", "MemoryMb", "Cpus", "TimeTakenSeconds", });
     internal_static_coding_TestCaseResultDto_descriptor =
       getDescriptor().getMessageTypes().get(6);
     internal_static_coding_TestCaseResultDto_fieldAccessorTable = new

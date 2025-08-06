@@ -46,12 +46,18 @@ public interface CodeSubmissionDtoOrBuilder extends
       getStudentIdBytes();
 
   /**
+   * <pre>
+   * </pre>
+   *
    * <code>int32 score = 4;</code>
    * @return The score.
    */
   int getScore();
 
   /**
+   * <pre>
+   * </pre>
+   *
    * <code>int32 totalPoints = 5;</code>
    * @return The totalPoints.
    */

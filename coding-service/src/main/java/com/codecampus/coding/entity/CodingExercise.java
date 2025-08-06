@@ -55,7 +55,7 @@ public class CodingExercise extends AuditMetadata {
     String solution;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "exercise",
+    @OneToMany(mappedBy = "coding",
             cascade = CascadeType.ALL,
             orphanRemoval = true)
     List<TestCase> testCases = new ArrayList<>();
