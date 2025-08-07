@@ -46,6 +46,37 @@ public final class CodingPlayServiceGrpc {
     return getSubmitCodeMethod;
   }
 
+  private static volatile io.grpc.MethodDescriptor<com.codecampus.coding.grpc.LoadCodingRequest,
+      com.codecampus.coding.grpc.LoadCodingResponse> getLoadCodingMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "LoadCoding",
+      requestType = com.codecampus.coding.grpc.LoadCodingRequest.class,
+      responseType = com.codecampus.coding.grpc.LoadCodingResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<com.codecampus.coding.grpc.LoadCodingRequest,
+      com.codecampus.coding.grpc.LoadCodingResponse> getLoadCodingMethod() {
+    io.grpc.MethodDescriptor<com.codecampus.coding.grpc.LoadCodingRequest, com.codecampus.coding.grpc.LoadCodingResponse> getLoadCodingMethod;
+    if ((getLoadCodingMethod = CodingPlayServiceGrpc.getLoadCodingMethod) == null) {
+      synchronized (CodingPlayServiceGrpc.class) {
+        if ((getLoadCodingMethod = CodingPlayServiceGrpc.getLoadCodingMethod) == null) {
+          CodingPlayServiceGrpc.getLoadCodingMethod = getLoadCodingMethod =
+              io.grpc.MethodDescriptor.<com.codecampus.coding.grpc.LoadCodingRequest, com.codecampus.coding.grpc.LoadCodingResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "LoadCoding"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.codecampus.coding.grpc.LoadCodingRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.codecampus.coding.grpc.LoadCodingResponse.getDefaultInstance()))
+              .setSchemaDescriptor(new CodingPlayServiceMethodDescriptorSupplier("LoadCoding"))
+              .build();
+        }
+      }
+    }
+    return getLoadCodingMethod;
+  }
+
   /**
    * Creates a new async stub that supports all call types for the service
    */
@@ -115,6 +146,13 @@ public final class CodingPlayServiceGrpc {
         io.grpc.stub.StreamObserver<com.codecampus.coding.grpc.SubmitCodeResponse> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getSubmitCodeMethod(), responseObserver);
     }
+
+    /**
+     */
+    default void loadCoding(com.codecampus.coding.grpc.LoadCodingRequest request,
+        io.grpc.stub.StreamObserver<com.codecampus.coding.grpc.LoadCodingResponse> responseObserver) {
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getLoadCodingMethod(), responseObserver);
+    }
   }
 
   /**
@@ -151,6 +189,14 @@ public final class CodingPlayServiceGrpc {
       io.grpc.stub.ClientCalls.asyncUnaryCall(
           getChannel().newCall(getSubmitCodeMethod(), getCallOptions()), request, responseObserver);
     }
+
+    /**
+     */
+    public void loadCoding(com.codecampus.coding.grpc.LoadCodingRequest request,
+        io.grpc.stub.StreamObserver<com.codecampus.coding.grpc.LoadCodingResponse> responseObserver) {
+      io.grpc.stub.ClientCalls.asyncUnaryCall(
+          getChannel().newCall(getLoadCodingMethod(), getCallOptions()), request, responseObserver);
+    }
   }
 
   /**
@@ -175,6 +221,13 @@ public final class CodingPlayServiceGrpc {
       return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getSubmitCodeMethod(), getCallOptions(), request);
     }
+
+    /**
+     */
+    public com.codecampus.coding.grpc.LoadCodingResponse loadCoding(com.codecampus.coding.grpc.LoadCodingRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getLoadCodingMethod(), getCallOptions(), request);
+    }
   }
 
   /**
@@ -198,6 +251,13 @@ public final class CodingPlayServiceGrpc {
     public com.codecampus.coding.grpc.SubmitCodeResponse submitCode(com.codecampus.coding.grpc.SubmitCodeRequest request) {
       return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getSubmitCodeMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public com.codecampus.coding.grpc.LoadCodingResponse loadCoding(com.codecampus.coding.grpc.LoadCodingRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getLoadCodingMethod(), getCallOptions(), request);
     }
   }
 
@@ -224,9 +284,18 @@ public final class CodingPlayServiceGrpc {
       return io.grpc.stub.ClientCalls.futureUnaryCall(
           getChannel().newCall(getSubmitCodeMethod(), getCallOptions()), request);
     }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<com.codecampus.coding.grpc.LoadCodingResponse> loadCoding(
+        com.codecampus.coding.grpc.LoadCodingRequest request) {
+      return io.grpc.stub.ClientCalls.futureUnaryCall(
+          getChannel().newCall(getLoadCodingMethod(), getCallOptions()), request);
+    }
   }
 
   private static final int METHODID_SUBMIT_CODE = 0;
+  private static final int METHODID_LOAD_CODING = 1;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -248,6 +317,10 @@ public final class CodingPlayServiceGrpc {
         case METHODID_SUBMIT_CODE:
           serviceImpl.submitCode((com.codecampus.coding.grpc.SubmitCodeRequest) request,
               (io.grpc.stub.StreamObserver<com.codecampus.coding.grpc.SubmitCodeResponse>) responseObserver);
+          break;
+        case METHODID_LOAD_CODING:
+          serviceImpl.loadCoding((com.codecampus.coding.grpc.LoadCodingRequest) request,
+              (io.grpc.stub.StreamObserver<com.codecampus.coding.grpc.LoadCodingResponse>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -274,6 +347,13 @@ public final class CodingPlayServiceGrpc {
               com.codecampus.coding.grpc.SubmitCodeRequest,
               com.codecampus.coding.grpc.SubmitCodeResponse>(
                 service, METHODID_SUBMIT_CODE)))
+        .addMethod(
+          getLoadCodingMethod(),
+          io.grpc.stub.ServerCalls.asyncUnaryCall(
+            new MethodHandlers<
+              com.codecampus.coding.grpc.LoadCodingRequest,
+              com.codecampus.coding.grpc.LoadCodingResponse>(
+                service, METHODID_LOAD_CODING)))
         .build();
   }
 
@@ -323,6 +403,7 @@ public final class CodingPlayServiceGrpc {
           serviceDescriptor = result = io.grpc.ServiceDescriptor.newBuilder(SERVICE_NAME)
               .setSchemaDescriptor(new CodingPlayServiceFileDescriptorSupplier())
               .addMethod(getSubmitCodeMethod())
+              .addMethod(getLoadCodingMethod())
               .build();
         }
       }

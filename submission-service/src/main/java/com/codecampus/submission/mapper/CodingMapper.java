@@ -72,12 +72,18 @@ public interface CodingMapper {
                 .build();
     }
 
-    default CodingExerciseDto toCodingExerciseDtoFromExercise(Exercise e) {
+    default CodingExerciseDto toCodingExerciseDtoFromExercise(
+            Exercise exercise) {
         return CodingExerciseDto.newBuilder()
-                .setId(e.getId())
-                .setTitle(e.getTitle())
+                .setId(exercise.getId())
+                .setTitle(exercise.getTitle())
                 .setDescription(
-                        Optional.ofNullable(e.getDescription()).orElse(""))
+                        Optional.ofNullable(exercise.getDescription())
+                                .orElse(""))
+                .setPublicAccessible(
+                        exercise.isVisibility())        // reuse visibility
+                .setCreatedBy(
+                        Optional.ofNullable(exercise.getCreatedBy()).orElse(""))
                 .build();
     }
 }

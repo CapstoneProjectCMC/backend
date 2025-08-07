@@ -1,9 +1,12 @@
 package com.codecampus.coding.service.grpc;
 
 import com.codecampus.coding.grpc.CodingPlayServiceGrpc;
+import com.codecampus.coding.grpc.LoadCodingRequest;
+import com.codecampus.coding.grpc.LoadCodingResponse;
 import com.codecampus.coding.grpc.SubmitCodeRequest;
 import com.codecampus.coding.grpc.SubmitCodeResponse;
 import com.codecampus.coding.service.CodeJudgeService;
+import com.codecampus.coding.service.CodingService;
 import io.grpc.stub.StreamObserver;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +21,7 @@ import net.devh.boot.grpc.server.service.GrpcService;
 public class CodingPlayServiceImpl
         extends CodingPlayServiceGrpc.CodingPlayServiceImplBase {
 
+    CodingService codingService;
     CodeJudgeService codeJudgeService;
 
     @Override
@@ -29,6 +33,19 @@ public class CodingPlayServiceImpl
                 codeJudgeService.judgeCodeSubmission(request);
 
         responseObserver.onNext(submitCodeResponse);
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void loadCoding(
+            LoadCodingRequest request,
+            StreamObserver<LoadCodingResponse> responseObserver) {
+
+        LoadCodingResponse response =
+                codingService.loadCoding(
+                        request.getExerciseId());
+
+        responseObserver.onNext(response);
         responseObserver.onCompleted();
     }
 }

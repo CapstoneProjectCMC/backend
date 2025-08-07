@@ -6,12 +6,12 @@
 package com.codecampus.coding.grpc;
 
 /**
- * Protobuf type {@code coding.CodingExerciseDto}
+ * Protobuf type {@code coding.TestCaseDtoLoadResponse}
  */
-public final class CodingExerciseDto extends
+public final class TestCaseDtoLoadResponse extends
     com.google.protobuf.GeneratedMessage implements
-    // @@protoc_insertion_point(message_implements:coding.CodingExerciseDto)
-    CodingExerciseDtoOrBuilder {
+    // @@protoc_insertion_point(message_implements:coding.TestCaseDtoLoadResponse)
+    TestCaseDtoLoadResponseOrBuilder {
 private static final long serialVersionUID = 0L;
   static {
     com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
@@ -20,30 +20,30 @@ private static final long serialVersionUID = 0L;
       /* minor= */ 30,
       /* patch= */ 2,
       /* suffix= */ "",
-      CodingExerciseDto.class.getName());
+      TestCaseDtoLoadResponse.class.getName());
   }
-  // Use CodingExerciseDto.newBuilder() to construct.
-  private CodingExerciseDto(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+  // Use TestCaseDtoLoadResponse.newBuilder() to construct.
+  private TestCaseDtoLoadResponse(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
     super(builder);
   }
-  private CodingExerciseDto() {
+  private TestCaseDtoLoadResponse() {
     id_ = "";
-    title_ = "";
-    description_ = "";
-    createdBy_ = "";
+    input_ = "";
+    expectedOutput_ = "";
+    note_ = "";
   }
 
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return com.codecampus.coding.grpc.CodingProto.internal_static_coding_CodingExerciseDto_descriptor;
+    return com.codecampus.coding.grpc.CodingProto.internal_static_coding_TestCaseDtoLoadResponse_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return com.codecampus.coding.grpc.CodingProto.internal_static_coding_CodingExerciseDto_fieldAccessorTable
+    return com.codecampus.coding.grpc.CodingProto.internal_static_coding_TestCaseDtoLoadResponse_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            com.codecampus.coding.grpc.CodingExerciseDto.class, com.codecampus.coding.grpc.CodingExerciseDto.Builder.class);
+            com.codecampus.coding.grpc.TestCaseDtoLoadResponse.class, com.codecampus.coding.grpc.TestCaseDtoLoadResponse.Builder.class);
   }
 
   public static final int ID_FIELD_NUMBER = 1;
@@ -85,128 +85,136 @@ private static final long serialVersionUID = 0L;
     }
   }
 
-  public static final int TITLE_FIELD_NUMBER = 2;
+  public static final int INPUT_FIELD_NUMBER = 2;
   @SuppressWarnings("serial")
-  private volatile java.lang.Object title_ = "";
+  private volatile java.lang.Object input_ = "";
   /**
-   * <code>string title = 2;</code>
-   * @return The title.
+   * <code>string input = 2;</code>
+   * @return The input.
    */
   @java.lang.Override
-  public java.lang.String getTitle() {
-    java.lang.Object ref = title_;
+  public java.lang.String getInput() {
+    java.lang.Object ref = input_;
     if (ref instanceof java.lang.String) {
       return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
       java.lang.String s = bs.toStringUtf8();
-      title_ = s;
+      input_ = s;
       return s;
     }
   }
   /**
-   * <code>string title = 2;</code>
-   * @return The bytes for title.
+   * <code>string input = 2;</code>
+   * @return The bytes for input.
    */
   @java.lang.Override
   public com.google.protobuf.ByteString
-      getTitleBytes() {
-    java.lang.Object ref = title_;
+      getInputBytes() {
+    java.lang.Object ref = input_;
     if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
               (java.lang.String) ref);
-      title_ = b;
+      input_ = b;
       return b;
     } else {
       return (com.google.protobuf.ByteString) ref;
     }
   }
 
-  public static final int DESCRIPTION_FIELD_NUMBER = 3;
+  public static final int EXPECTEDOUTPUT_FIELD_NUMBER = 3;
   @SuppressWarnings("serial")
-  private volatile java.lang.Object description_ = "";
+  private volatile java.lang.Object expectedOutput_ = "";
   /**
-   * <code>string description = 3;</code>
-   * @return The description.
+   * <pre>
+   * sẽ "" nếu !sample
+   * </pre>
+   *
+   * <code>string expectedOutput = 3;</code>
+   * @return The expectedOutput.
    */
   @java.lang.Override
-  public java.lang.String getDescription() {
-    java.lang.Object ref = description_;
+  public java.lang.String getExpectedOutput() {
+    java.lang.Object ref = expectedOutput_;
     if (ref instanceof java.lang.String) {
       return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
       java.lang.String s = bs.toStringUtf8();
-      description_ = s;
+      expectedOutput_ = s;
       return s;
     }
   }
   /**
-   * <code>string description = 3;</code>
-   * @return The bytes for description.
+   * <pre>
+   * sẽ "" nếu !sample
+   * </pre>
+   *
+   * <code>string expectedOutput = 3;</code>
+   * @return The bytes for expectedOutput.
    */
   @java.lang.Override
   public com.google.protobuf.ByteString
-      getDescriptionBytes() {
-    java.lang.Object ref = description_;
+      getExpectedOutputBytes() {
+    java.lang.Object ref = expectedOutput_;
     if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
               (java.lang.String) ref);
-      description_ = b;
+      expectedOutput_ = b;
       return b;
     } else {
       return (com.google.protobuf.ByteString) ref;
     }
   }
 
-  public static final int PUBLICACCESSIBLE_FIELD_NUMBER = 4;
-  private boolean publicAccessible_ = false;
+  public static final int SAMPLE_FIELD_NUMBER = 4;
+  private boolean sample_ = false;
   /**
-   * <code>bool publicAccessible = 4;</code>
-   * @return The publicAccessible.
+   * <code>bool sample = 4;</code>
+   * @return The sample.
    */
   @java.lang.Override
-  public boolean getPublicAccessible() {
-    return publicAccessible_;
+  public boolean getSample() {
+    return sample_;
   }
 
-  public static final int CREATEDBY_FIELD_NUMBER = 5;
+  public static final int NOTE_FIELD_NUMBER = 5;
   @SuppressWarnings("serial")
-  private volatile java.lang.Object createdBy_ = "";
+  private volatile java.lang.Object note_ = "";
   /**
-   * <code>string createdBy = 5;</code>
-   * @return The createdBy.
+   * <code>string note = 5;</code>
+   * @return The note.
    */
   @java.lang.Override
-  public java.lang.String getCreatedBy() {
-    java.lang.Object ref = createdBy_;
+  public java.lang.String getNote() {
+    java.lang.Object ref = note_;
     if (ref instanceof java.lang.String) {
       return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
       java.lang.String s = bs.toStringUtf8();
-      createdBy_ = s;
+      note_ = s;
       return s;
     }
   }
   /**
-   * <code>string createdBy = 5;</code>
-   * @return The bytes for createdBy.
+   * <code>string note = 5;</code>
+   * @return The bytes for note.
    */
   @java.lang.Override
   public com.google.protobuf.ByteString
-      getCreatedByBytes() {
-    java.lang.Object ref = createdBy_;
+      getNoteBytes() {
+    java.lang.Object ref = note_;
     if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
               (java.lang.String) ref);
-      createdBy_ = b;
+      note_ = b;
       return b;
     } else {
       return (com.google.protobuf.ByteString) ref;
@@ -230,17 +238,17 @@ private static final long serialVersionUID = 0L;
     if (!com.google.protobuf.GeneratedMessage.isStringEmpty(id_)) {
       com.google.protobuf.GeneratedMessage.writeString(output, 1, id_);
     }
-    if (!com.google.protobuf.GeneratedMessage.isStringEmpty(title_)) {
-      com.google.protobuf.GeneratedMessage.writeString(output, 2, title_);
+    if (!com.google.protobuf.GeneratedMessage.isStringEmpty(input_)) {
+      com.google.protobuf.GeneratedMessage.writeString(output, 2, input_);
     }
-    if (!com.google.protobuf.GeneratedMessage.isStringEmpty(description_)) {
-      com.google.protobuf.GeneratedMessage.writeString(output, 3, description_);
+    if (!com.google.protobuf.GeneratedMessage.isStringEmpty(expectedOutput_)) {
+      com.google.protobuf.GeneratedMessage.writeString(output, 3, expectedOutput_);
     }
-    if (publicAccessible_ != false) {
-      output.writeBool(4, publicAccessible_);
+    if (sample_ != false) {
+      output.writeBool(4, sample_);
     }
-    if (!com.google.protobuf.GeneratedMessage.isStringEmpty(createdBy_)) {
-      com.google.protobuf.GeneratedMessage.writeString(output, 5, createdBy_);
+    if (!com.google.protobuf.GeneratedMessage.isStringEmpty(note_)) {
+      com.google.protobuf.GeneratedMessage.writeString(output, 5, note_);
     }
     getUnknownFields().writeTo(output);
   }
@@ -254,18 +262,18 @@ private static final long serialVersionUID = 0L;
     if (!com.google.protobuf.GeneratedMessage.isStringEmpty(id_)) {
       size += com.google.protobuf.GeneratedMessage.computeStringSize(1, id_);
     }
-    if (!com.google.protobuf.GeneratedMessage.isStringEmpty(title_)) {
-      size += com.google.protobuf.GeneratedMessage.computeStringSize(2, title_);
+    if (!com.google.protobuf.GeneratedMessage.isStringEmpty(input_)) {
+      size += com.google.protobuf.GeneratedMessage.computeStringSize(2, input_);
     }
-    if (!com.google.protobuf.GeneratedMessage.isStringEmpty(description_)) {
-      size += com.google.protobuf.GeneratedMessage.computeStringSize(3, description_);
+    if (!com.google.protobuf.GeneratedMessage.isStringEmpty(expectedOutput_)) {
+      size += com.google.protobuf.GeneratedMessage.computeStringSize(3, expectedOutput_);
     }
-    if (publicAccessible_ != false) {
+    if (sample_ != false) {
       size += com.google.protobuf.CodedOutputStream
-        .computeBoolSize(4, publicAccessible_);
+        .computeBoolSize(4, sample_);
     }
-    if (!com.google.protobuf.GeneratedMessage.isStringEmpty(createdBy_)) {
-      size += com.google.protobuf.GeneratedMessage.computeStringSize(5, createdBy_);
+    if (!com.google.protobuf.GeneratedMessage.isStringEmpty(note_)) {
+      size += com.google.protobuf.GeneratedMessage.computeStringSize(5, note_);
     }
     size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
@@ -277,21 +285,21 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof com.codecampus.coding.grpc.CodingExerciseDto)) {
+    if (!(obj instanceof com.codecampus.coding.grpc.TestCaseDtoLoadResponse)) {
       return super.equals(obj);
     }
-    com.codecampus.coding.grpc.CodingExerciseDto other = (com.codecampus.coding.grpc.CodingExerciseDto) obj;
+    com.codecampus.coding.grpc.TestCaseDtoLoadResponse other = (com.codecampus.coding.grpc.TestCaseDtoLoadResponse) obj;
 
     if (!getId()
         .equals(other.getId())) return false;
-    if (!getTitle()
-        .equals(other.getTitle())) return false;
-    if (!getDescription()
-        .equals(other.getDescription())) return false;
-    if (getPublicAccessible()
-        != other.getPublicAccessible()) return false;
-    if (!getCreatedBy()
-        .equals(other.getCreatedBy())) return false;
+    if (!getInput()
+        .equals(other.getInput())) return false;
+    if (!getExpectedOutput()
+        .equals(other.getExpectedOutput())) return false;
+    if (getSample()
+        != other.getSample()) return false;
+    if (!getNote()
+        .equals(other.getNote())) return false;
     if (!getUnknownFields().equals(other.getUnknownFields())) return false;
     return true;
   }
@@ -305,58 +313,58 @@ private static final long serialVersionUID = 0L;
     hash = (19 * hash) + getDescriptor().hashCode();
     hash = (37 * hash) + ID_FIELD_NUMBER;
     hash = (53 * hash) + getId().hashCode();
-    hash = (37 * hash) + TITLE_FIELD_NUMBER;
-    hash = (53 * hash) + getTitle().hashCode();
-    hash = (37 * hash) + DESCRIPTION_FIELD_NUMBER;
-    hash = (53 * hash) + getDescription().hashCode();
-    hash = (37 * hash) + PUBLICACCESSIBLE_FIELD_NUMBER;
+    hash = (37 * hash) + INPUT_FIELD_NUMBER;
+    hash = (53 * hash) + getInput().hashCode();
+    hash = (37 * hash) + EXPECTEDOUTPUT_FIELD_NUMBER;
+    hash = (53 * hash) + getExpectedOutput().hashCode();
+    hash = (37 * hash) + SAMPLE_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
-        getPublicAccessible());
-    hash = (37 * hash) + CREATEDBY_FIELD_NUMBER;
-    hash = (53 * hash) + getCreatedBy().hashCode();
+        getSample());
+    hash = (37 * hash) + NOTE_FIELD_NUMBER;
+    hash = (53 * hash) + getNote().hashCode();
     hash = (29 * hash) + getUnknownFields().hashCode();
     memoizedHashCode = hash;
     return hash;
   }
 
-  public static com.codecampus.coding.grpc.CodingExerciseDto parseFrom(
+  public static com.codecampus.coding.grpc.TestCaseDtoLoadResponse parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static com.codecampus.coding.grpc.CodingExerciseDto parseFrom(
+  public static com.codecampus.coding.grpc.TestCaseDtoLoadResponse parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static com.codecampus.coding.grpc.CodingExerciseDto parseFrom(
+  public static com.codecampus.coding.grpc.TestCaseDtoLoadResponse parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static com.codecampus.coding.grpc.CodingExerciseDto parseFrom(
+  public static com.codecampus.coding.grpc.TestCaseDtoLoadResponse parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static com.codecampus.coding.grpc.CodingExerciseDto parseFrom(byte[] data)
+  public static com.codecampus.coding.grpc.TestCaseDtoLoadResponse parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static com.codecampus.coding.grpc.CodingExerciseDto parseFrom(
+  public static com.codecampus.coding.grpc.TestCaseDtoLoadResponse parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static com.codecampus.coding.grpc.CodingExerciseDto parseFrom(java.io.InputStream input)
+  public static com.codecampus.coding.grpc.TestCaseDtoLoadResponse parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessage
         .parseWithIOException(PARSER, input);
   }
-  public static com.codecampus.coding.grpc.CodingExerciseDto parseFrom(
+  public static com.codecampus.coding.grpc.TestCaseDtoLoadResponse parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -364,26 +372,26 @@ private static final long serialVersionUID = 0L;
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
 
-  public static com.codecampus.coding.grpc.CodingExerciseDto parseDelimitedFrom(java.io.InputStream input)
+  public static com.codecampus.coding.grpc.TestCaseDtoLoadResponse parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessage
         .parseDelimitedWithIOException(PARSER, input);
   }
 
-  public static com.codecampus.coding.grpc.CodingExerciseDto parseDelimitedFrom(
+  public static com.codecampus.coding.grpc.TestCaseDtoLoadResponse parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessage
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static com.codecampus.coding.grpc.CodingExerciseDto parseFrom(
+  public static com.codecampus.coding.grpc.TestCaseDtoLoadResponse parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessage
         .parseWithIOException(PARSER, input);
   }
-  public static com.codecampus.coding.grpc.CodingExerciseDto parseFrom(
+  public static com.codecampus.coding.grpc.TestCaseDtoLoadResponse parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -396,7 +404,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(com.codecampus.coding.grpc.CodingExerciseDto prototype) {
+  public static Builder newBuilder(com.codecampus.coding.grpc.TestCaseDtoLoadResponse prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -412,26 +420,26 @@ private static final long serialVersionUID = 0L;
     return builder;
   }
   /**
-   * Protobuf type {@code coding.CodingExerciseDto}
+   * Protobuf type {@code coding.TestCaseDtoLoadResponse}
    */
   public static final class Builder extends
       com.google.protobuf.GeneratedMessage.Builder<Builder> implements
-      // @@protoc_insertion_point(builder_implements:coding.CodingExerciseDto)
-      com.codecampus.coding.grpc.CodingExerciseDtoOrBuilder {
+      // @@protoc_insertion_point(builder_implements:coding.TestCaseDtoLoadResponse)
+      com.codecampus.coding.grpc.TestCaseDtoLoadResponseOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return com.codecampus.coding.grpc.CodingProto.internal_static_coding_CodingExerciseDto_descriptor;
+      return com.codecampus.coding.grpc.CodingProto.internal_static_coding_TestCaseDtoLoadResponse_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.codecampus.coding.grpc.CodingProto.internal_static_coding_CodingExerciseDto_fieldAccessorTable
+      return com.codecampus.coding.grpc.CodingProto.internal_static_coding_TestCaseDtoLoadResponse_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              com.codecampus.coding.grpc.CodingExerciseDto.class, com.codecampus.coding.grpc.CodingExerciseDto.Builder.class);
+              com.codecampus.coding.grpc.TestCaseDtoLoadResponse.class, com.codecampus.coding.grpc.TestCaseDtoLoadResponse.Builder.class);
     }
 
-    // Construct using com.codecampus.coding.grpc.CodingExerciseDto.newBuilder()
+    // Construct using com.codecampus.coding.grpc.TestCaseDtoLoadResponse.newBuilder()
     private Builder() {
 
     }
@@ -446,27 +454,27 @@ private static final long serialVersionUID = 0L;
       super.clear();
       bitField0_ = 0;
       id_ = "";
-      title_ = "";
-      description_ = "";
-      publicAccessible_ = false;
-      createdBy_ = "";
+      input_ = "";
+      expectedOutput_ = "";
+      sample_ = false;
+      note_ = "";
       return this;
     }
 
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return com.codecampus.coding.grpc.CodingProto.internal_static_coding_CodingExerciseDto_descriptor;
+      return com.codecampus.coding.grpc.CodingProto.internal_static_coding_TestCaseDtoLoadResponse_descriptor;
     }
 
     @java.lang.Override
-    public com.codecampus.coding.grpc.CodingExerciseDto getDefaultInstanceForType() {
-      return com.codecampus.coding.grpc.CodingExerciseDto.getDefaultInstance();
+    public com.codecampus.coding.grpc.TestCaseDtoLoadResponse getDefaultInstanceForType() {
+      return com.codecampus.coding.grpc.TestCaseDtoLoadResponse.getDefaultInstance();
     }
 
     @java.lang.Override
-    public com.codecampus.coding.grpc.CodingExerciseDto build() {
-      com.codecampus.coding.grpc.CodingExerciseDto result = buildPartial();
+    public com.codecampus.coding.grpc.TestCaseDtoLoadResponse build() {
+      com.codecampus.coding.grpc.TestCaseDtoLoadResponse result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -474,64 +482,64 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public com.codecampus.coding.grpc.CodingExerciseDto buildPartial() {
-      com.codecampus.coding.grpc.CodingExerciseDto result = new com.codecampus.coding.grpc.CodingExerciseDto(this);
+    public com.codecampus.coding.grpc.TestCaseDtoLoadResponse buildPartial() {
+      com.codecampus.coding.grpc.TestCaseDtoLoadResponse result = new com.codecampus.coding.grpc.TestCaseDtoLoadResponse(this);
       if (bitField0_ != 0) { buildPartial0(result); }
       onBuilt();
       return result;
     }
 
-    private void buildPartial0(com.codecampus.coding.grpc.CodingExerciseDto result) {
+    private void buildPartial0(com.codecampus.coding.grpc.TestCaseDtoLoadResponse result) {
       int from_bitField0_ = bitField0_;
       if (((from_bitField0_ & 0x00000001) != 0)) {
         result.id_ = id_;
       }
       if (((from_bitField0_ & 0x00000002) != 0)) {
-        result.title_ = title_;
+        result.input_ = input_;
       }
       if (((from_bitField0_ & 0x00000004) != 0)) {
-        result.description_ = description_;
+        result.expectedOutput_ = expectedOutput_;
       }
       if (((from_bitField0_ & 0x00000008) != 0)) {
-        result.publicAccessible_ = publicAccessible_;
+        result.sample_ = sample_;
       }
       if (((from_bitField0_ & 0x00000010) != 0)) {
-        result.createdBy_ = createdBy_;
+        result.note_ = note_;
       }
     }
 
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof com.codecampus.coding.grpc.CodingExerciseDto) {
-        return mergeFrom((com.codecampus.coding.grpc.CodingExerciseDto)other);
+      if (other instanceof com.codecampus.coding.grpc.TestCaseDtoLoadResponse) {
+        return mergeFrom((com.codecampus.coding.grpc.TestCaseDtoLoadResponse)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(com.codecampus.coding.grpc.CodingExerciseDto other) {
-      if (other == com.codecampus.coding.grpc.CodingExerciseDto.getDefaultInstance()) return this;
+    public Builder mergeFrom(com.codecampus.coding.grpc.TestCaseDtoLoadResponse other) {
+      if (other == com.codecampus.coding.grpc.TestCaseDtoLoadResponse.getDefaultInstance()) return this;
       if (!other.getId().isEmpty()) {
         id_ = other.id_;
         bitField0_ |= 0x00000001;
         onChanged();
       }
-      if (!other.getTitle().isEmpty()) {
-        title_ = other.title_;
+      if (!other.getInput().isEmpty()) {
+        input_ = other.input_;
         bitField0_ |= 0x00000002;
         onChanged();
       }
-      if (!other.getDescription().isEmpty()) {
-        description_ = other.description_;
+      if (!other.getExpectedOutput().isEmpty()) {
+        expectedOutput_ = other.expectedOutput_;
         bitField0_ |= 0x00000004;
         onChanged();
       }
-      if (other.getPublicAccessible() != false) {
-        setPublicAccessible(other.getPublicAccessible());
+      if (other.getSample() != false) {
+        setSample(other.getSample());
       }
-      if (!other.getCreatedBy().isEmpty()) {
-        createdBy_ = other.createdBy_;
+      if (!other.getNote().isEmpty()) {
+        note_ = other.note_;
         bitField0_ |= 0x00000010;
         onChanged();
       }
@@ -567,22 +575,22 @@ private static final long serialVersionUID = 0L;
               break;
             } // case 10
             case 18: {
-              title_ = input.readStringRequireUtf8();
+              input_ = input.readStringRequireUtf8();
               bitField0_ |= 0x00000002;
               break;
             } // case 18
             case 26: {
-              description_ = input.readStringRequireUtf8();
+              expectedOutput_ = input.readStringRequireUtf8();
               bitField0_ |= 0x00000004;
               break;
             } // case 26
             case 32: {
-              publicAccessible_ = input.readBool();
+              sample_ = input.readBool();
               bitField0_ |= 0x00000008;
               break;
             } // case 32
             case 42: {
-              createdBy_ = input.readStringRequireUtf8();
+              note_ = input.readStringRequireUtf8();
               bitField0_ |= 0x00000010;
               break;
             } // case 42
@@ -675,271 +683,291 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private java.lang.Object title_ = "";
+    private java.lang.Object input_ = "";
     /**
-     * <code>string title = 2;</code>
-     * @return The title.
+     * <code>string input = 2;</code>
+     * @return The input.
      */
-    public java.lang.String getTitle() {
-      java.lang.Object ref = title_;
+    public java.lang.String getInput() {
+      java.lang.Object ref = input_;
       if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
-        title_ = s;
+        input_ = s;
         return s;
       } else {
         return (java.lang.String) ref;
       }
     }
     /**
-     * <code>string title = 2;</code>
-     * @return The bytes for title.
+     * <code>string input = 2;</code>
+     * @return The bytes for input.
      */
     public com.google.protobuf.ByteString
-        getTitleBytes() {
-      java.lang.Object ref = title_;
+        getInputBytes() {
+      java.lang.Object ref = input_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        title_ = b;
+        input_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
     /**
-     * <code>string title = 2;</code>
-     * @param value The title to set.
+     * <code>string input = 2;</code>
+     * @param value The input to set.
      * @return This builder for chaining.
      */
-    public Builder setTitle(
+    public Builder setInput(
         java.lang.String value) {
       if (value == null) { throw new NullPointerException(); }
-      title_ = value;
+      input_ = value;
       bitField0_ |= 0x00000002;
       onChanged();
       return this;
     }
     /**
-     * <code>string title = 2;</code>
+     * <code>string input = 2;</code>
      * @return This builder for chaining.
      */
-    public Builder clearTitle() {
-      title_ = getDefaultInstance().getTitle();
+    public Builder clearInput() {
+      input_ = getDefaultInstance().getInput();
       bitField0_ = (bitField0_ & ~0x00000002);
       onChanged();
       return this;
     }
     /**
-     * <code>string title = 2;</code>
-     * @param value The bytes for title to set.
+     * <code>string input = 2;</code>
+     * @param value The bytes for input to set.
      * @return This builder for chaining.
      */
-    public Builder setTitleBytes(
+    public Builder setInputBytes(
         com.google.protobuf.ByteString value) {
       if (value == null) { throw new NullPointerException(); }
       checkByteStringIsUtf8(value);
-      title_ = value;
+      input_ = value;
       bitField0_ |= 0x00000002;
       onChanged();
       return this;
     }
 
-    private java.lang.Object description_ = "";
+    private java.lang.Object expectedOutput_ = "";
     /**
-     * <code>string description = 3;</code>
-     * @return The description.
+     * <pre>
+     * sẽ "" nếu !sample
+     * </pre>
+     *
+     * <code>string expectedOutput = 3;</code>
+     * @return The expectedOutput.
      */
-    public java.lang.String getDescription() {
-      java.lang.Object ref = description_;
+    public java.lang.String getExpectedOutput() {
+      java.lang.Object ref = expectedOutput_;
       if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
-        description_ = s;
+        expectedOutput_ = s;
         return s;
       } else {
         return (java.lang.String) ref;
       }
     }
     /**
-     * <code>string description = 3;</code>
-     * @return The bytes for description.
+     * <pre>
+     * sẽ "" nếu !sample
+     * </pre>
+     *
+     * <code>string expectedOutput = 3;</code>
+     * @return The bytes for expectedOutput.
      */
     public com.google.protobuf.ByteString
-        getDescriptionBytes() {
-      java.lang.Object ref = description_;
+        getExpectedOutputBytes() {
+      java.lang.Object ref = expectedOutput_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        description_ = b;
+        expectedOutput_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
     /**
-     * <code>string description = 3;</code>
-     * @param value The description to set.
+     * <pre>
+     * sẽ "" nếu !sample
+     * </pre>
+     *
+     * <code>string expectedOutput = 3;</code>
+     * @param value The expectedOutput to set.
      * @return This builder for chaining.
      */
-    public Builder setDescription(
+    public Builder setExpectedOutput(
         java.lang.String value) {
       if (value == null) { throw new NullPointerException(); }
-      description_ = value;
+      expectedOutput_ = value;
       bitField0_ |= 0x00000004;
       onChanged();
       return this;
     }
     /**
-     * <code>string description = 3;</code>
+     * <pre>
+     * sẽ "" nếu !sample
+     * </pre>
+     *
+     * <code>string expectedOutput = 3;</code>
      * @return This builder for chaining.
      */
-    public Builder clearDescription() {
-      description_ = getDefaultInstance().getDescription();
+    public Builder clearExpectedOutput() {
+      expectedOutput_ = getDefaultInstance().getExpectedOutput();
       bitField0_ = (bitField0_ & ~0x00000004);
       onChanged();
       return this;
     }
     /**
-     * <code>string description = 3;</code>
-     * @param value The bytes for description to set.
+     * <pre>
+     * sẽ "" nếu !sample
+     * </pre>
+     *
+     * <code>string expectedOutput = 3;</code>
+     * @param value The bytes for expectedOutput to set.
      * @return This builder for chaining.
      */
-    public Builder setDescriptionBytes(
+    public Builder setExpectedOutputBytes(
         com.google.protobuf.ByteString value) {
       if (value == null) { throw new NullPointerException(); }
       checkByteStringIsUtf8(value);
-      description_ = value;
+      expectedOutput_ = value;
       bitField0_ |= 0x00000004;
       onChanged();
       return this;
     }
 
-    private boolean publicAccessible_ ;
+    private boolean sample_ ;
     /**
-     * <code>bool publicAccessible = 4;</code>
-     * @return The publicAccessible.
+     * <code>bool sample = 4;</code>
+     * @return The sample.
      */
     @java.lang.Override
-    public boolean getPublicAccessible() {
-      return publicAccessible_;
+    public boolean getSample() {
+      return sample_;
     }
     /**
-     * <code>bool publicAccessible = 4;</code>
-     * @param value The publicAccessible to set.
+     * <code>bool sample = 4;</code>
+     * @param value The sample to set.
      * @return This builder for chaining.
      */
-    public Builder setPublicAccessible(boolean value) {
+    public Builder setSample(boolean value) {
 
-      publicAccessible_ = value;
+      sample_ = value;
       bitField0_ |= 0x00000008;
       onChanged();
       return this;
     }
     /**
-     * <code>bool publicAccessible = 4;</code>
+     * <code>bool sample = 4;</code>
      * @return This builder for chaining.
      */
-    public Builder clearPublicAccessible() {
+    public Builder clearSample() {
       bitField0_ = (bitField0_ & ~0x00000008);
-      publicAccessible_ = false;
+      sample_ = false;
       onChanged();
       return this;
     }
 
-    private java.lang.Object createdBy_ = "";
+    private java.lang.Object note_ = "";
     /**
-     * <code>string createdBy = 5;</code>
-     * @return The createdBy.
+     * <code>string note = 5;</code>
+     * @return The note.
      */
-    public java.lang.String getCreatedBy() {
-      java.lang.Object ref = createdBy_;
+    public java.lang.String getNote() {
+      java.lang.Object ref = note_;
       if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
-        createdBy_ = s;
+        note_ = s;
         return s;
       } else {
         return (java.lang.String) ref;
       }
     }
     /**
-     * <code>string createdBy = 5;</code>
-     * @return The bytes for createdBy.
+     * <code>string note = 5;</code>
+     * @return The bytes for note.
      */
     public com.google.protobuf.ByteString
-        getCreatedByBytes() {
-      java.lang.Object ref = createdBy_;
+        getNoteBytes() {
+      java.lang.Object ref = note_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        createdBy_ = b;
+        note_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
     /**
-     * <code>string createdBy = 5;</code>
-     * @param value The createdBy to set.
+     * <code>string note = 5;</code>
+     * @param value The note to set.
      * @return This builder for chaining.
      */
-    public Builder setCreatedBy(
+    public Builder setNote(
         java.lang.String value) {
       if (value == null) { throw new NullPointerException(); }
-      createdBy_ = value;
+      note_ = value;
       bitField0_ |= 0x00000010;
       onChanged();
       return this;
     }
     /**
-     * <code>string createdBy = 5;</code>
+     * <code>string note = 5;</code>
      * @return This builder for chaining.
      */
-    public Builder clearCreatedBy() {
-      createdBy_ = getDefaultInstance().getCreatedBy();
+    public Builder clearNote() {
+      note_ = getDefaultInstance().getNote();
       bitField0_ = (bitField0_ & ~0x00000010);
       onChanged();
       return this;
     }
     /**
-     * <code>string createdBy = 5;</code>
-     * @param value The bytes for createdBy to set.
+     * <code>string note = 5;</code>
+     * @param value The bytes for note to set.
      * @return This builder for chaining.
      */
-    public Builder setCreatedByBytes(
+    public Builder setNoteBytes(
         com.google.protobuf.ByteString value) {
       if (value == null) { throw new NullPointerException(); }
       checkByteStringIsUtf8(value);
-      createdBy_ = value;
+      note_ = value;
       bitField0_ |= 0x00000010;
       onChanged();
       return this;
     }
 
-    // @@protoc_insertion_point(builder_scope:coding.CodingExerciseDto)
+    // @@protoc_insertion_point(builder_scope:coding.TestCaseDtoLoadResponse)
   }
 
-  // @@protoc_insertion_point(class_scope:coding.CodingExerciseDto)
-  private static final com.codecampus.coding.grpc.CodingExerciseDto DEFAULT_INSTANCE;
+  // @@protoc_insertion_point(class_scope:coding.TestCaseDtoLoadResponse)
+  private static final com.codecampus.coding.grpc.TestCaseDtoLoadResponse DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new com.codecampus.coding.grpc.CodingExerciseDto();
+    DEFAULT_INSTANCE = new com.codecampus.coding.grpc.TestCaseDtoLoadResponse();
   }
 
-  public static com.codecampus.coding.grpc.CodingExerciseDto getDefaultInstance() {
+  public static com.codecampus.coding.grpc.TestCaseDtoLoadResponse getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
-  private static final com.google.protobuf.Parser<CodingExerciseDto>
-      PARSER = new com.google.protobuf.AbstractParser<CodingExerciseDto>() {
+  private static final com.google.protobuf.Parser<TestCaseDtoLoadResponse>
+      PARSER = new com.google.protobuf.AbstractParser<TestCaseDtoLoadResponse>() {
     @java.lang.Override
-    public CodingExerciseDto parsePartialFrom(
+    public TestCaseDtoLoadResponse parsePartialFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -958,17 +986,17 @@ private static final long serialVersionUID = 0L;
     }
   };
 
-  public static com.google.protobuf.Parser<CodingExerciseDto> parser() {
+  public static com.google.protobuf.Parser<TestCaseDtoLoadResponse> parser() {
     return PARSER;
   }
 
   @java.lang.Override
-  public com.google.protobuf.Parser<CodingExerciseDto> getParserForType() {
+  public com.google.protobuf.Parser<TestCaseDtoLoadResponse> getParserForType() {
     return PARSER;
   }
 
   @java.lang.Override
-  public com.codecampus.coding.grpc.CodingExerciseDto getDefaultInstanceForType() {
+  public com.codecampus.coding.grpc.TestCaseDtoLoadResponse getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

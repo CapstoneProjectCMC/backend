@@ -212,6 +212,7 @@ public class QuizService {
         grpcQuizClient.pushQuestion(exerciseId, question);
     }
 
+    @Deprecated
     @Transactional
     public void updateQuestion(
             String exerciseId,

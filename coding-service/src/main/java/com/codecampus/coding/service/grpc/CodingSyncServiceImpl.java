@@ -6,6 +6,7 @@ import com.codecampus.coding.grpc.CodingSyncServiceGrpc;
 import com.codecampus.coding.grpc.CreateCodingExerciseRequest;
 import com.codecampus.coding.grpc.SoftDeleteRequest;
 import com.codecampus.coding.grpc.SoftDeleteTestCaseRequest;
+import com.codecampus.coding.grpc.UpsertAssignmentRequest;
 import com.codecampus.coding.service.CodingService;
 import com.google.protobuf.Empty;
 import io.grpc.stub.StreamObserver;
@@ -77,6 +78,17 @@ public class CodingSyncServiceImpl
                 softDeleteTestCaseRequest.getExerciseId(),
                 softDeleteTestCaseRequest.getTestCaseId()
         );
+
+        responseObserver.onNext(Empty.getDefaultInstance());
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void upsertAssignment(
+            UpsertAssignmentRequest upsertAssignmentRequest,
+            StreamObserver<Empty> responseObserver) {
+
+        codingService.upsertAssignment(upsertAssignmentRequest);
 
         responseObserver.onNext(Empty.getDefaultInstance());
         responseObserver.onCompleted();

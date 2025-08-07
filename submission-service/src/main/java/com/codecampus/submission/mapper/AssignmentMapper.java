@@ -9,7 +9,11 @@ import org.mapstruct.Mapping;
 public interface AssignmentMapper {
 
     @Mapping(target = "exerciseId", source = "exercise.id")
-    AssignmentDto toAssignmentDtoFromAssignment(
+    AssignmentDto toQuizAssignmentDtoFromAssignment(
+            Assignment assignment);
+
+    @Mapping(target = "exerciseId", source = "exercise.id")
+    com.codecampus.coding.grpc.AssignmentDto toCodingAssignmentDtoFromAssignment(
             Assignment assignment);
 
     default com.google.protobuf.Timestamp mapInstantToProtobufTimestamp(

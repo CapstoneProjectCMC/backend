@@ -6,10 +6,13 @@ import com.codecampus.coding.grpc.CodingSyncServiceGrpc;
 import com.codecampus.coding.grpc.CreateCodingExerciseRequest;
 import com.codecampus.coding.grpc.SoftDeleteRequest;
 import com.codecampus.coding.grpc.SoftDeleteTestCaseRequest;
+import com.codecampus.coding.grpc.UpsertAssignmentRequest;
 import com.codecampus.submission.constant.submission.ExerciseType;
+import com.codecampus.submission.entity.Assignment;
 import com.codecampus.submission.entity.CodingDetail;
 import com.codecampus.submission.entity.Exercise;
 import com.codecampus.submission.entity.TestCase;
+import com.codecampus.submission.mapper.AssignmentMapper;
 import com.codecampus.submission.mapper.CodingMapper;
 import io.grpc.StatusRuntimeException;
 import lombok.AccessLevel;
@@ -27,6 +30,7 @@ public class GrpcCodingClient {
 
     CodingSyncServiceGrpc.CodingSyncServiceBlockingStub stub;
     CodingMapper codingMapper;
+    AssignmentMapper assignmentMapper;
 
     @Transactional
     public void pushExercise(Exercise exercise) {
@@ -48,6 +52,7 @@ public class GrpcCodingClient {
         }
     }
 
+    @Transactional
     public void softDeleteExercise(String exerciseId) {
         stub.softDeleteExercise(SoftDeleteRequest
                 .newBuilder()
@@ -82,11 +87,23 @@ public class GrpcCodingClient {
         stub.addTestCase(addTestRequest);
     }
 
+    @Transactional
     public void softDeleteTestCase(String exerciseId, String testCaseId) {
         stub.softDeleteTestCase(SoftDeleteTestCaseRequest
                 .newBuilder()
                 .setExerciseId(exerciseId)
                 .setTestCaseId(testCaseId)
                 .build());
+    }
+
+    @Transactional
+    public void pushAssignment(Assignment assignment) {
+        UpsertAssignmentRequest request = UpsertAssignmentRequest.newBuilder()
+                .setAssignment(
+                        assignmentMapper.toCodingAssignmentDtoFromAssignment(
+                                assignment))
+                .build();
+
+        stub.upsertAssignment(request);
     }
 }

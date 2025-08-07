@@ -54,6 +54,8 @@ public class CodingExercise extends AuditMetadata {
     String codeTemplate;
     String solution;
 
+    boolean publicAccessible;
+
     @JsonManagedReference
     @OneToMany(mappedBy = "coding",
             cascade = CascadeType.ALL,

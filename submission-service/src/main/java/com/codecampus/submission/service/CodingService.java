@@ -52,7 +52,8 @@ public class CodingService {
 
     TestCaseMapper testCaseMapper;
     CodingMapper codingMapper;
-    private final CodingHelper codingHelper;
+    
+    CodingHelper codingHelper;
 
     @Transactional
     public CodingDetail addCodingDetail(

@@ -12,6 +12,8 @@ message CodingExerciseDto {
   string id = 1;
   string title = 2;
   string description = 3;
+  bool publicAccessible = 4;
+  string createdBy = 5;
 }
 
 message CodingDetailDto {
@@ -74,6 +76,49 @@ message SubmitCodeResponse {
   repeated TestCaseResultDto results = 5;
 }
 
+message LoadCodingRequest {
+  string exerciseId = 1;
+  string studentId = 2;   // gửi kèm để check assignment
+}
+
+message CodingDetailLoadResponse {
+  string topic = 1;
+  repeated string allowedLanguages = 2;
+  string input = 3;
+  string output = 4;
+  string constraintText = 5;
+  int32 timeLimit = 6;
+  int32 memoryLimit = 7;
+  int32 maxSubmissions = 8;
+  string codeTemplate = 9;
+  repeated TestCaseDtoLoadResponse testcases = 10;
+}
+
+message LoadCodingResponse {
+  CodingExerciseDto exercise = 1;
+  CodingDetailLoadResponse detail = 2;
+}
+
+message TestCaseDtoLoadResponse {
+  string id = 1;
+  string input = 2;
+  string expectedOutput = 3;   // sẽ "" nếu !sample
+  bool sample = 4;
+  string note = 5;
+}
+
+message AssignmentDto {
+  string id = 1;
+  string exerciseId = 2;
+  string studentId = 3;
+  google.protobuf.Timestamp dueAt = 4;
+  bool completed = 5;
+}
+
+message UpsertAssignmentRequest {
+  AssignmentDto assignment = 1;
+}
+
 service CodingSyncService {
   rpc CreateCodingExercise(CreateCodingExerciseRequest)
       returns (google.protobuf.Empty);
@@ -85,11 +130,15 @@ service CodingSyncService {
       returns (google.protobuf.Empty);
   rpc SoftDeleteTestCase (SoftDeleteTestCaseRequest)
       returns (google.protobuf.Empty);
+  rpc UpsertAssignment(UpsertAssignmentRequest)
+      returns (google.protobuf.Empty);
 }
 
 service CodingPlayService {
   rpc SubmitCode(SubmitCodeRequest)
       returns (SubmitCodeResponse);
+  rpc LoadCoding(LoadCodingRequest)
+      returns (LoadCodingResponse);
 }
 
 message CreateCodingExerciseRequest {

@@ -138,8 +138,9 @@ public class GrpcQuizClient {
     @Transactional
     public void pushAssignment(Assignment assignment) {
         UpsertAssignmentRequest request = UpsertAssignmentRequest.newBuilder()
-                .setAssignment(assignmentMapper.toAssignmentDtoFromAssignment(
-                        assignment))
+                .setAssignment(
+                        assignmentMapper.toQuizAssignmentDtoFromAssignment(
+                                assignment))
                 .build();
 
         stub.upsertAssignment(request);

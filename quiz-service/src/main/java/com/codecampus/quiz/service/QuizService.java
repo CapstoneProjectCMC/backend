@@ -225,7 +225,7 @@ public class QuizService {
         loadQuizCacheService.refresh(exerciseId);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public LoadQuizResponse loadQuiz(
             String exerciseId) {
 
