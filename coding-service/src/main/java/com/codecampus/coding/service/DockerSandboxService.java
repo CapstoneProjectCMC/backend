@@ -54,7 +54,7 @@ public class DockerSandboxService {
         }
 
         // 3. Tên nhị phân / jar random để tránh trùng
-        String binName = STR."bin_\{UUID.randomUUID()}";
+        String binName = "bin_" + UUID.randomUUID();
         String image = "capstoneprojectpythondocker";   // đã có sẵn GCC, JDK
 
         ProcessBuilder processBuilder = switch (language) {
@@ -67,14 +67,13 @@ public class DockerSandboxService {
                     "docker", "run", "--rm",
                     "-v", workDir + ":/code", image,
                     "bash", "-c",
-                    "javac /code/Main.java -d /code && " +
-                            "jar --create --file=/code/" + binName +
-                            ".jar -C /code Main.class");
+                    "javac /code/Main.java -d /code");
             default -> throw new IllegalStateException();
         };
 
         exec(processBuilder);
-        return new CompiledArtifact(language, binName, workDir);
+        return new CompiledArtifact(language,
+                "java".equals(language) ? "Main" : binName, workDir);
     }
 
     /**
@@ -105,8 +104,8 @@ public class DockerSandboxService {
             List<String> cmd = switch (compiledArtifact.lang()) {
                 case "python" -> List.of("python3", "/app/Main.py");
                 case "cpp" -> List.of("/app/" + compiledArtifact.binary());
-                case "java" -> List.of("java", "-jar",
-                        "/app/" + compiledArtifact.binary() + ".jar");
+                case "java" -> List.of("java", "-cp", "/app",
+                        compiledArtifact.binary());
                 default -> throw new IllegalStateException();
             };
 
