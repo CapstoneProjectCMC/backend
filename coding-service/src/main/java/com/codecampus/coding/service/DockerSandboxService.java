@@ -25,6 +25,17 @@ import java.util.stream.Stream;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class DockerSandboxService {
 
+    private static final String SANDBOX_IMAGE =
+            System.getenv().getOrDefault("SANDBOX_IMAGE",
+                    "capstoneprojectpythondocker:latest");
+    private static final Path RUNNER_ROOT =
+            Path.of(System.getenv().getOrDefault("RUNNER_ROOT", "/work"));
+
+    public static Path createWorkDir() throws IOException {
+        Files.createDirectories(RUNNER_ROOT);
+        return Files.createTempDirectory(RUNNER_ROOT, "pg_");
+    }
+
     /**
      * Biên dịch mã nguồn 1 lần, trả về “artifact” (đường dẫn | tên bin)
      * để run nhiều test-case.
@@ -55,7 +66,7 @@ public class DockerSandboxService {
 
         // 3. Tên nhị phân / jar random để tránh trùng
         String binName = "bin_" + UUID.randomUUID();
-        String image = "capstoneprojectpythondocker";   // đã có sẵn GCC, JDK
+        String image = SANDBOX_IMAGE;   // đã có sẵn GCC, JDK
 
         ProcessBuilder processBuilder = switch (language) {
             case "cpp" -> new ProcessBuilder(
@@ -97,7 +108,7 @@ public class DockerSandboxService {
                     "--network", "none",
                     "-v", compiledArtifact.workDir().toString() + ":/app",
                     "--name", container,
-                    "capstoneprojectpythondocker", "bash");
+                    SANDBOX_IMAGE, "bash");
             exec(processBuilder);
 
             /* Build */

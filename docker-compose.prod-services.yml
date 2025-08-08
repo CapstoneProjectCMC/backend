@@ -42,8 +42,20 @@ services:
       - CODING_USERNAME=${CODING_USERNAME}
       - CODING_DB_PASSWORD=${CODING_DB_PASSWORD}
       - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - SANDBOX_IMAGE=capstoneprojectpythondocker:latest
+      - RUNNER_ROOT=/work
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock  # cần cho 'docker run'
+      - runner_data:/work
     ports: [ "8084:8084", "9592:9592" ]
     networks: [ backend ]
+
+  sandbox-image:
+    build:
+      context: .
+      dockerfile: ./docker/sandbox.Dockerfile
+    image: capstoneprojectpythondocker:latest
+    profiles: [ "build-only" ]
 
   quiz-service:
     image: ${DOCKERHUB_USER}/codecampus-quiz-service:${IMAGE_TAG:-latest}
@@ -134,16 +146,4 @@ networks:
     name: codecampus_backend
 
 volumes:
-  identity_pg_data:
-  submission_pg_data:
-  quiz_pg_data:
-  coding_pg_data:
-  ai_pg_data:
-  kafka_data:
-  neo4j_data:
-  redis_data:
-  minio_data:
-  elasticsearch_data:
-  file_mongo_data:
-  notification_mongo_data:
-  chat_mongo_data:
+  runner_data:

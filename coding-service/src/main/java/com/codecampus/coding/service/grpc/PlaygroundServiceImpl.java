@@ -35,11 +35,22 @@ import java.util.stream.Stream;
 public class PlaygroundServiceImpl
         extends PlaygroundServiceGrpc.PlaygroundServiceImplBase {
 
+    private static final String SANDBOX_IMAGE =
+            System.getenv().getOrDefault("SANDBOX_IMAGE",
+                    "capstoneprojectpythondocker:latest");
+    private static final Path RUNNER_ROOT =
+            Path.of(System.getenv().getOrDefault("RUNNER_ROOT", "/work"));
     private final ExecutorService ioPool = Executors.newCachedThreadPool();
 
     // Huỷ job gần nhất
     private final AtomicReference<Context.CancellableContext> lastJob =
             new AtomicReference<>();
+
+    private static Path createWorkDir() throws IOException {
+        Files.createDirectories(RUNNER_ROOT);
+        return Files.createTempDirectory(RUNNER_ROOT,
+                "pg_"); // <— nằm trong volume host
+    }
 
     @PreDestroy
     public void shutdown() {
@@ -71,7 +82,7 @@ public class PlaygroundServiceImpl
             );
 
             // 1) Setup workdir & write source
-            workDir = Files.createTempDirectory("pg_");
+            workDir = createWorkDir();
             String lang = runRequest.getLanguage();
 
             switch (lang) {
@@ -93,7 +104,7 @@ public class PlaygroundServiceImpl
             }
 
             // 2) Compile (python bỏ qua)
-            final String image = "capstoneprojectpythondocker";
+            final String image = SANDBOX_IMAGE;
             String binName = "bin_" + UUID.randomUUID();
 
             if (!"python".equals(lang)) {

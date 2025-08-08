@@ -29,7 +29,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -37,13 +39,13 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CodeJudgeService {
 
+    static final Path RUNNER_ROOT =
+            Path.of(System.getenv().getOrDefault("RUNNER_ROOT", "/work"));
+
     CodeSubmissionRepository codeSubmissionRepository;
     CodeSubmissionResultRepository codeSubmissionResultRepository;
-
     CodingHelper codingHelper;
-
     DockerSandboxService dockerSandboxService;
-
     SubmissionSyncServiceGrpc.SubmissionSyncServiceBlockingStub
             submissionStub;
 
@@ -69,50 +71,64 @@ public class CodeJudgeService {
                 new ArrayList<>();
 
         /* Compile một lần, chạy từng test-case */
+        Path workDir = null;
         CompiledArtifact bin;
         try {
-            Path tmpDir = createTempDir();
+            workDir = createWorkDir();
             bin = dockerSandboxService.compile(
-                    request.getLanguage(), request.getSourceCode(), tmpDir);
+                    request.getLanguage(),
+                    request.getSourceCode(),
+                    workDir);
         } catch (InterruptedException | IOException e) {
+            // compile failure từ DockerSandboxService.exec → log rồi rethrow
+            safeDeleteDir(workDir);
             throw new RuntimeException(e);
         }
 
-        for (TestCase testCase : codingExercise.getTestCases()) {
-            CodeResult codeResult = dockerSandboxService.runTest(
-                    bin,
-                    testCase,
-                    request.getMemoryMb(),
-                    request.getCpus());
+        /* ====== Default limit khi client không set ====== */
+        int memoryMb = request.getMemoryMb() > 0 ? request.getMemoryMb() : 256;
+        float cpus = request.getCpus() > 0 ? request.getCpus() : 0.5f;
 
-            if (codeResult.isPassed()) {
-                passedCount++;
+        try {
+            for (TestCase testCase : codingExercise.getTestCases()) {
+                CodeResult codeResult = dockerSandboxService.runTest(
+                        bin,
+                        testCase,
+                        memoryMb,
+                        cpus);
+
+                if (codeResult.isPassed()) {
+                    passedCount++;
+                }
+
+                CodeSubmissionResult codeSubmissionResult =
+                        CodeSubmissionResult.builder()
+                                .submission(codeSubmission).testCase(testCase)
+                                .passed(codeResult.isPassed())
+                                .runtimeMs(codeResult.getRuntimeMs())
+                                .memoryKb(codeResult.getMemoryKb())
+                                .output(codeResult.getOutput())
+                                .errorMessage(codeResult.getError())
+                                .build();
+                codeSubmissionResultRepository.save(codeSubmissionResult);
+
+                // Sync
+                testCaseResultSyncDtoList.add(TestCaseResultSyncDto.newBuilder()
+                        .setTestCaseId(testCase.getId())
+                        .setPassed(codeResult.isPassed())
+                        .setRuntimeMs(codeResult.getRuntimeMs())
+                        .setMemoryKb(codeResult.getMemoryKb())
+                        .setOutput(
+                                codeResult.getOutput() == null ? "" :
+                                        codeResult.getOutput())
+                        .setErrorMessage(
+                                codeResult.getError() == null ? "" :
+                                        codeResult.getError())
+                        .build());
             }
 
-            CodeSubmissionResult codeSubmissionResult =
-                    CodeSubmissionResult.builder()
-                            .submission(codeSubmission).testCase(testCase)
-                            .passed(codeResult.isPassed())
-                            .runtimeMs(codeResult.getRuntimeMs())
-                            .memoryKb(codeResult.getMemoryKb())
-                            .output(codeResult.getOutput())
-                            .errorMessage(codeResult.getError())
-                            .build();
-            codeSubmissionResultRepository.save(codeSubmissionResult);
-
-            // Sync
-            testCaseResultSyncDtoList.add(TestCaseResultSyncDto.newBuilder()
-                    .setTestCaseId(testCase.getId())
-                    .setPassed(codeResult.isPassed())
-                    .setRuntimeMs(codeResult.getRuntimeMs())
-                    .setMemoryKb(codeResult.getMemoryKb())
-                    .setOutput(
-                            codeResult.getOutput() == null ? "" :
-                                    codeResult.getOutput())
-                    .setErrorMessage(
-                            codeResult.getError() == null ? "" :
-                                    codeResult.getError())
-                    .build());
+        } finally {
+            safeDeleteDir(workDir);
         }
 
         codeSubmission.setScore(passedCount);
@@ -162,8 +178,25 @@ public class CodeJudgeService {
                 .build();
     }
 
-    Path createTempDir() throws IOException {
-        return Files.createTempDirectory("judge_");
+
+    Path createWorkDir() throws IOException {
+        Files.createDirectories(RUNNER_ROOT);
+        return Files.createTempDirectory(RUNNER_ROOT, "judge_");
+    }
+
+    void safeDeleteDir(Path dir) {
+        if (dir == null) {
+            return;
+        }
+        try (Stream<Path> s = Files.walk(dir)) {
+            s.sorted(Comparator.reverseOrder()).forEach(p -> {
+                try {
+                    Files.deleteIfExists(p);
+                } catch (Exception ignored) {
+                }
+            });
+        } catch (Exception ignored) {
+        }
     }
 }
 
