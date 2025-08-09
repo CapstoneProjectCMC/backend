@@ -9,7 +9,8 @@ import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
-import org.mapstruct.NullValuePropertyMappingStrategy;
+
+import static org.mapstruct.NullValuePropertyMappingStrategy.IGNORE;
 
 @Mapper(
         componentModel = "spring",
@@ -30,7 +31,7 @@ public interface UserProfileMapper {
     )
     UserProfileResponse toUserProfileResponse(UserProfile userProfile);
 
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @BeanMapping(nullValuePropertyMappingStrategy = IGNORE)
     @Mapping(
             source = "dob",
             target = "dob",

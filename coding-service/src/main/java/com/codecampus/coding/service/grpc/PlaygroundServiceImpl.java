@@ -48,7 +48,7 @@ public class PlaygroundServiceImpl
 
     private static Path createWorkDir() throws IOException {
         Files.createDirectories(RUNNER_ROOT);
-        return Files.createTempDirectory(RUNNER_ROOT,
+        return Files.createTempDirectory(
                 "pg_"); // <— nằm trong volume host
     }
 
@@ -104,7 +104,7 @@ public class PlaygroundServiceImpl
             }
 
             // 2) Compile (python bỏ qua)
-            final String image = SANDBOX_IMAGE;
+            final String image = "capstoneprojectpythondocker";
             String binName = "bin_" + UUID.randomUUID();
 
             if (!"python".equals(lang)) {

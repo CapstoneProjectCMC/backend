@@ -26,7 +26,17 @@ import java.util.Optional;
 @Repository
 public interface UserProfileRepository
         extends Neo4jRepository<UserProfile, String> {
+
     Optional<UserProfile> findByUserId(String userId);
+
+    @Query("""
+                MATCH (u:User {userId:$userId})
+                WHERE u.deletedAt IS NULL
+                RETURN u
+                LIMIT 1
+            """)
+    Optional<UserProfile> findActiveByUserId(
+            String userId);
 
     boolean existsByUserId(String userId);
 

@@ -54,11 +54,15 @@ public class UserProfile {
     String avatarUrl;
     String backgroundUrl;
     String bio;
-    boolean gender;
+    Boolean gender;
     String displayName;
-    int education;
+    Integer education;
     String[] links;
     String city;
+
+    // --- SOFT DELETE ---
+    Instant deletedAt;
+    String deletedBy;
 
     /* Relationships */
 

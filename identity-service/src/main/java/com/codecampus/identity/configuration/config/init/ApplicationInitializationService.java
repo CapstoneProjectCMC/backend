@@ -50,19 +50,20 @@ public class ApplicationInitializationService {
                 .roles(roles)
                 .build());
 
-        profileClient.createUserProfile(UserProfileCreationRequest.builder()
-                .userId(user.getId())
-                .firstName("Admin")
-                .lastName("Sys")
-                .dob(ConvertUtils.parseDdMmYyyyToInstant("28/03/2004"))
-                .bio("Too lazy to write anything :v")
-                .gender(true)
-                .displayName("ADMIN SYS")
-                .education(11)
-                .links(new String[] {"https://github.com/yunomix2834",
-                        "https://github.com/CapstoneProjectCMC/backend"})
-                .city("Vietnam")
-                .build()
+        profileClient.internalCreateUserProfile(
+                UserProfileCreationRequest.builder()
+                        .userId(user.getId())
+                        .firstName("Admin")
+                        .lastName("Sys")
+                        .dob(ConvertUtils.parseDdMmYyyyToInstant("28/03/2004"))
+                        .bio("Too lazy to write anything :v")
+                        .gender(true)
+                        .displayName("ADMIN SYS")
+                        .education(11)
+                        .links(new String[] {"https://github.com/yunomix2834",
+                                "https://github.com/CapstoneProjectCMC/backend"})
+                        .city("Vietnam")
+                        .build()
         );
     }
 
@@ -81,19 +82,20 @@ public class ApplicationInitializationService {
                 .roles(roles)
                 .build());
 
-        profileClient.createUserProfile(UserProfileCreationRequest.builder()
-                .userId(user.getId())
-                .firstName("Code")
-                .lastName("Campus")
-                .dob(ConvertUtils.parseDdMmYyyyToInstant("28/03/2004"))
-                .bio("Too lazy to write anything :v")
-                .gender(true)
-                .displayName("ADMIN SYS")
-                .education(11)
-                .links(new String[] {"https://github.com/yunomix2834",
-                        "https://github.com/CapstoneProjectCMC/backend"})
-                .city("Vietnam")
-                .build()
+        profileClient.internalCreateUserProfile(
+                UserProfileCreationRequest.builder()
+                        .userId(user.getId())
+                        .firstName("Code")
+                        .lastName("Campus")
+                        .dob(ConvertUtils.parseDdMmYyyyToInstant("28/03/2004"))
+                        .bio("Too lazy to write anything :v")
+                        .gender(true)
+                        .displayName("ADMIN SYS")
+                        .education(11)
+                        .links(new String[] {"https://github.com/yunomix2834",
+                                "https://github.com/CapstoneProjectCMC/backend"})
+                        .city("Vietnam")
+                        .build()
         );
     }
 

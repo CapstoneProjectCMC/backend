@@ -195,6 +195,9 @@ public class UserService {
         User user = findUser(userId);
         user.markDeleted(AuthenticationHelper.getMyEmail());
         userRepository.save(user);
+
+        profileSyncHelper.softDeleteProfile(userId,
+                AuthenticationHelper.getMyUsername());
     }
 
     /**

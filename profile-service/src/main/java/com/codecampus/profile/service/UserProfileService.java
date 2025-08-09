@@ -43,7 +43,6 @@ import static com.codecampus.profile.helper.PageResponseHelper.toPageResponse;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserProfileService {
     UserProfileRepository userProfileRepository;
-
     UserProfileMapper userProfileMapper;
     AuthenticationHelper authenticationHelper;
 
@@ -139,7 +138,7 @@ public class UserProfileService {
      */
     public UserProfile getUserProfile(String userId) {
         return userProfileRepository
-                .findByUserId(userId)
+                .findActiveByUserId(userId)
                 .orElseThrow(
                         () -> new AppException(ErrorCode.USER_NOT_FOUND)
                 );
@@ -182,5 +181,40 @@ public class UserProfileService {
         userProfileMapper.toUserProfileResponse(
                 userProfileRepository.save(profile)
         );
+    }
+
+    public void updateUserProfileById(
+            String userId,
+            UserProfileUpdateRequest request) {
+        UserProfile profile = userProfileRepository
+                .findActiveByUserId(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        userProfileMapper.updateUserProfile(profile, request);
+        userProfileRepository.save(profile);
+    }
+
+    public void softDeleteUserProfileByUserId(
+            String userId,
+            String deletedBy) {
+        UserProfile profile = userProfileRepository
+                .findByUserId(userId) // Lấy tất cả userId
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        if (profile.getDeletedAt() == null) {
+            profile.setDeletedAt(Instant.now());
+            profile.setDeletedBy(deletedBy);
+            userProfileRepository.save(profile);
+        }
+    }
+
+    public void restoreByUserId(
+            String userId) {
+        UserProfile profile = userProfileRepository
+                .findByUserId(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        if (profile.getDeletedAt() != null) {
+            profile.setDeletedAt(null);
+            profile.setDeletedBy(null);
+            userProfileRepository.save(profile);
+        }
     }
 }

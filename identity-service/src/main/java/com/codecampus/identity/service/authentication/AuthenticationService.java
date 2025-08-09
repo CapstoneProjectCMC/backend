@@ -385,7 +385,7 @@ public class AuthenticationService {
                         .distinct()
                         .toList()
                 )
-                .claim("active", true)
+                .claim("active", user.isEnabled())
                 .claim("token_type", type)
                 .build();
     }
