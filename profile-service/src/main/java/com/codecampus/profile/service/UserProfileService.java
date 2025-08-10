@@ -65,11 +65,14 @@ public class UserProfileService {
             UserProfileCreationRequest request) {
         authenticationHelper.checkExistsUserid(request.getUserId());
 
-        UserProfile userProfile = userProfileMapper.toUserProfile(request);
+        UserProfile userProfile =
+                userProfileMapper.toUserProfileFromUserProfileCreationRequest(
+                        request);
         userProfile.setCreatedAt(Instant.now());
         userProfile = userProfileRepository.save(userProfile);
 
-        return userProfileMapper.toUserProfileResponse(userProfile);
+        return userProfileMapper.toUserProfileResponseFromUserProfile(
+                userProfile);
     }
 
     /**
@@ -82,7 +85,7 @@ public class UserProfileService {
     public UserProfileResponse getUserProfileByUserId(String userId) {
         return userProfileRepository
                 .findByUserId(userId)
-                .map(userProfileMapper::toUserProfileResponse)
+                .map(userProfileMapper::toUserProfileResponseFromUserProfile)
                 .orElseThrow(
                         () -> new AppException(ErrorCode.USER_NOT_FOUND)
                 );
@@ -98,7 +101,7 @@ public class UserProfileService {
     public UserProfileResponse getUserProfileById(String id) {
         return userProfileRepository
                 .findById(id)
-                .map(userProfileMapper::toUserProfileResponse)
+                .map(userProfileMapper::toUserProfileResponseFromUserProfile)
                 .orElseThrow(
                         () -> new AppException(ErrorCode.USER_NOT_FOUND)
                 );
@@ -117,7 +120,7 @@ public class UserProfileService {
         Pageable pageable = PageRequest.of(page - 1, size);
         var pageData = userProfileRepository
                 .findAll(pageable)
-                .map(userProfileMapper::toUserProfileResponse);
+                .map(userProfileMapper::toUserProfileResponseFromUserProfile);
 
         return toPageResponse(pageData, page);
     }
@@ -177,8 +180,9 @@ public class UserProfileService {
 
         UserProfile profile = getUserProfile();
 
-        userProfileMapper.updateUserProfile(profile, request);
-        userProfileMapper.toUserProfileResponse(
+        userProfileMapper.updateUserProfileUpdateRequestToUserProfile(profile,
+                request);
+        userProfileMapper.toUserProfileResponseFromUserProfile(
                 userProfileRepository.save(profile)
         );
     }
@@ -189,7 +193,8 @@ public class UserProfileService {
         UserProfile profile = userProfileRepository
                 .findActiveByUserId(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
-        userProfileMapper.updateUserProfile(profile, request);
+        userProfileMapper.updateUserProfileUpdateRequestToUserProfile(profile,
+                request);
         userProfileRepository.save(profile);
     }
 

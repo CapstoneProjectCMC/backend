@@ -23,6 +23,7 @@ import com.codecampus.identity.repository.account.RoleRepository;
 import com.codecampus.identity.repository.account.UserRepository;
 import com.codecampus.identity.repository.httpclient.google.OutboundGoogleIdentityClient;
 import com.codecampus.identity.repository.httpclient.google.OutboundGoogleUserClient;
+import com.codecampus.identity.service.kafka.UserEventProducer;
 import com.codecampus.identity.utils.EmailUtils;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JOSEObjectType;
@@ -91,6 +92,7 @@ public class AuthenticationService {
     OutboundGoogleUserClient outboundGoogleUserClient;
     AuthenticationHelper authenticationHelper;
     ProfileSyncHelper profileSyncHelper;
+    UserEventProducer userEventProducer;
 
     @NonFinal
     @Value("${app.jwt.signerKey}")
@@ -189,7 +191,7 @@ public class AuthenticationService {
                                             .displayName(googleUser.getName())
                                             .build();
 
-                            profileSyncHelper.createProfile(newUser, googleRequest);
+                            userEventProducer.publishCreatedUserEvent(newUser);
                             return newUser;
                         }
                 );

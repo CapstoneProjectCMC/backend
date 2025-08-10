@@ -23,11 +23,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
-import org.springframework.data.neo4j.core.support.UUIDStringGenerator;
 
 import java.time.Instant;
 import java.util.HashSet;
@@ -42,10 +40,12 @@ import java.util.Set;
 @Node("User")
 public class UserProfile {
     @Id
-    @GeneratedValue(generatorClass = UUIDStringGenerator.class)
-    String id;
-
     String userId;
+
+    String username;
+    String email;
+    @Builder.Default
+    Boolean active = true;
 
     String firstName;
     String lastName;

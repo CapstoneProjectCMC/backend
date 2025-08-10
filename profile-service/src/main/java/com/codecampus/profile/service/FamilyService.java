@@ -60,7 +60,8 @@ public class FamilyService {
      */
     public void removeChild(String parentId, String childId) {
         UserProfile parent = userProfileService.getUserProfile(parentId);
-        parent.getChildren().removeIf(child -> childId.equals(child.getId()));
+        parent.getChildren()
+                .removeIf(child -> childId.equals(child.getUserId()));
         userProfileRepository.save(parent);
     }
 

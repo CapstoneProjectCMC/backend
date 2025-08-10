@@ -44,6 +44,11 @@ spring:
           auth: true
           starttls:
             enable: true
+  kafka:
+    bootstrap-servers: localhost:9094
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
 
 app:
   services:
@@ -58,4 +63,6 @@ app:
     client-id: "839020123858-qnan968uvj0u9d5h6bq5cd5ulls9h7dk.apps.googleusercontent.com"
     client-secret: "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"
     redirect-uri: "http://localhost:4200/auth/identity/authenticate"
+  event:
+    user-events: "user-events"
 

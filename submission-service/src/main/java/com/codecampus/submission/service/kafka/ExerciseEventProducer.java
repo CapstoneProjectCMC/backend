@@ -22,7 +22,7 @@ public class ExerciseEventProducer {
 
     @Value("${app.event.exercise-events}")
     @NonFinal
-    static String EXERCISE_EVENTS_TOPIC = "exercise-events";
+    static String EXERCISE_EVENTS_TOPIC;
 
     KafkaTemplate<String, String> kafkaTemplate;
     ObjectMapper objectMapper;

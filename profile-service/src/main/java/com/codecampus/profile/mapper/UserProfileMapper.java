@@ -22,14 +22,16 @@ public interface UserProfileMapper {
             target = "dob",
             qualifiedByName = "DdMmYyyyToInstant"
     )
-    UserProfile toUserProfile(UserProfileCreationRequest request);
+    UserProfile toUserProfileFromUserProfileCreationRequest(
+            UserProfileCreationRequest request);
 
     @Mapping(
             source = "dob",
             target = "dob",
             qualifiedByName = "instantToDdMmYyyyUTC"
     )
-    UserProfileResponse toUserProfileResponse(UserProfile userProfile);
+    UserProfileResponse toUserProfileResponseFromUserProfile(
+            UserProfile userProfile);
 
     @BeanMapping(nullValuePropertyMappingStrategy = IGNORE)
     @Mapping(
@@ -37,7 +39,7 @@ public interface UserProfileMapper {
             target = "dob",
             qualifiedByName = "DdMmYyyyToInstant"
     )
-    void updateUserProfile(
+    void updateUserProfileUpdateRequestToUserProfile(
             @MappingTarget UserProfile userProfile,
             UserProfileUpdateRequest request
     );
