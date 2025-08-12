@@ -1,13 +1,15 @@
 package com.codecampus.identity.configuration.config.init;
 
-import com.codecampus.identity.dto.request.profile.UserProfileCreationRequest;
 import com.codecampus.identity.entity.account.Role;
 import com.codecampus.identity.entity.account.User;
+import com.codecampus.identity.mapper.kafka.UserPayloadMapper;
 import com.codecampus.identity.repository.account.PermissionRepository;
 import com.codecampus.identity.repository.account.RoleRepository;
 import com.codecampus.identity.repository.account.UserRepository;
 import com.codecampus.identity.repository.httpclient.profile.ProfileClient;
+import com.codecampus.identity.service.kafka.UserEventProducer;
 import com.codecampus.identity.utils.ConvertUtils;
+import events.user.data.UserProfileCreationPayload;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
@@ -32,11 +34,19 @@ public class ApplicationInitializationService {
     RoleRepository roleRepository;
     PermissionRepository permissionRepository;
     UserRepository userRepository;
+
     PasswordEncoder passwordEncoder;
     ProfileClient profileClient;
 
+    UserPayloadMapper userPayloadMapper;
+
+    UserEventProducer userEventProducer;
+
     @Transactional
-    void createAdminUser(String username, String password, String email) {
+    void createAdminUser(
+            String username,
+            String password,
+            String email) {
         Role adminRole = checkRoleAndCreate(ADMIN_ROLE);
 
         Set<Role> roles = new HashSet<>();
@@ -50,9 +60,10 @@ public class ApplicationInitializationService {
                 .roles(roles)
                 .build());
 
-        profileClient.internalCreateUserProfile(
-                UserProfileCreationRequest.builder()
-                        .userId(user.getId())
+        userEventProducer.publishCreatedUserEvent(user);
+
+        UserProfileCreationPayload payload =
+                UserProfileCreationPayload.builder()
                         .firstName("Admin")
                         .lastName("Sys")
                         .dob(ConvertUtils.parseDdMmYyyyToInstant("28/03/2004"))
@@ -63,8 +74,9 @@ public class ApplicationInitializationService {
                         .links(new String[] {"https://github.com/yunomix2834",
                                 "https://github.com/CapstoneProjectCMC/backend"})
                         .city("Vietnam")
-                        .build()
-        );
+                        .build();
+
+        userEventProducer.publishRegisteredUserEvent(user, payload);
     }
 
     @Transactional
@@ -82,9 +94,10 @@ public class ApplicationInitializationService {
                 .roles(roles)
                 .build());
 
-        profileClient.internalCreateUserProfile(
-                UserProfileCreationRequest.builder()
-                        .userId(user.getId())
+        userEventProducer.publishCreatedUserEvent(user);
+
+        UserProfileCreationPayload payload =
+                UserProfileCreationPayload.builder()
                         .firstName("Code")
                         .lastName("Campus")
                         .dob(ConvertUtils.parseDdMmYyyyToInstant("28/03/2004"))
@@ -95,8 +108,9 @@ public class ApplicationInitializationService {
                         .links(new String[] {"https://github.com/yunomix2834",
                                 "https://github.com/CapstoneProjectCMC/backend"})
                         .city("Vietnam")
-                        .build()
-        );
+                        .build();
+
+        userEventProducer.publishRegisteredUserEvent(user, payload);
     }
 
     Role checkRoleAndCreate(String roleName) {

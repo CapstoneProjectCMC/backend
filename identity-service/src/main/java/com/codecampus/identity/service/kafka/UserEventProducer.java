@@ -5,6 +5,8 @@ import com.codecampus.identity.mapper.kafka.UserPayloadMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import events.user.UserEvent;
+import events.user.UserRegisteredEvent;
+import events.user.data.UserProfileCreationPayload;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -20,13 +22,16 @@ import org.springframework.stereotype.Component;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserEventProducer {
 
-    @Value("${app.event.user-events}")
-    @NonFinal
-    static String USER_EVENTS_TOPIC;
-
     KafkaTemplate<String, String> kafkaTemplate;
     ObjectMapper objectMapper;
     UserPayloadMapper userPayloadMapper;
+
+    @NonFinal
+    @Value("${app.event.user-registrations}")
+    String USER_REGISTRATIONS_TOPIC;
+    @Value("${app.event.user-events}")
+    @NonFinal
+    String USER_EVENTS_TOPIC;
 
     public void publishCreatedUserEvent(
             User user) {
@@ -41,6 +46,10 @@ public class UserEventProducer {
         publishEvent(UserEvent.Type.DELETED, user);
     }
 
+    public void publishRestoredUserEvent(User user) {
+        publishEvent(UserEvent.Type.RESTORED, user);
+    }
+
     void publishEvent(
             UserEvent.Type type,
             User user) {
@@ -52,13 +61,38 @@ public class UserEventProducer {
                         user))
                 .build();
 
+        sendEvent(USER_EVENTS_TOPIC,
+                user.getId(),
+                userEvent
+        );
+    }
+
+    public void publishRegisteredUserEvent(
+            User user,
+            UserProfileCreationPayload profilePayload) {
+        UserRegisteredEvent userRegisteredEvent = UserRegisteredEvent.builder()
+                .id(user.getId())
+                .user(userPayloadMapper.toUserPayloadFromUser(user))
+                .profile(profilePayload)
+                .build();
+
+        sendEvent(USER_REGISTRATIONS_TOPIC,
+                user.getId(),
+                userRegisteredEvent
+        );
+    }
+
+    private void sendEvent(
+            String topic,
+            String key,
+            Object event) {
         try {
             String jsonObject = objectMapper.writeValueAsString(
-                    userEvent);
+                    event);
 
             kafkaTemplate.send(
-                    USER_EVENTS_TOPIC,
-                    user.getId(),
+                    topic,
+                    key,
                     jsonObject);
         } catch (JsonProcessingException exception) {
             log.error("[Kafka] Serialize thất bại", exception);

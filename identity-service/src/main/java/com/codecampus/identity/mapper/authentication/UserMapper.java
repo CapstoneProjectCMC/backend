@@ -13,16 +13,17 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 @Mapper(componentModel = "spring",
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface UserMapper {
-    User toUser(UserCreationRequest userCreationRequest);
+    User toUserFromUserCreationRequest(UserCreationRequest userCreationRequest);
 
     @Mapping(target = "userId", ignore = true)
-    UserProfileCreationRequest toUserProfileCreationRequest(
-            UserCreationRequest req);
+    UserProfileCreationRequest toUserProfileCreationRequestFromUserCreationRequest(
+            UserCreationRequest userCreationRequest);
 
-    UserResponse toUserResponse(User user);
+    UserResponse toUserResponseFromUser(
+            User user);
 
     @Mapping(target = "roles", ignore = true)
-    void updateUser(
+    void updateUserUpdateRequestToUser(
             @MappingTarget User user,
             UserUpdateRequest userUpdateRequest
     );

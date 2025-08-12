@@ -13,11 +13,13 @@ import com.codecampus.identity.helper.AuthenticationHelper;
 import com.codecampus.identity.helper.ProfileSyncHelper;
 import com.codecampus.identity.mapper.authentication.UserMapper;
 import com.codecampus.identity.mapper.client.UserProfileMapper;
+import com.codecampus.identity.mapper.kafka.UserPayloadMapper;
 import com.codecampus.identity.repository.account.RoleRepository;
 import com.codecampus.identity.repository.account.UserRepository;
 import com.codecampus.identity.repository.httpclient.profile.ProfileClient;
 import com.codecampus.identity.service.authentication.OtpService;
 import com.codecampus.identity.service.kafka.UserEventProducer;
+import events.user.data.UserProfileCreationPayload;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
@@ -63,6 +65,7 @@ public class UserService {
 
     UserMapper userMapper;
     UserProfileMapper userProfileMapper;
+    UserPayloadMapper userPayloadMapper;
 
     PasswordEncoder passwordEncoder;
     ProfileClient profileClient;
@@ -91,9 +94,8 @@ public class UserService {
                 request.getEmail()
         );
 
-        User user = userMapper.toUser(request);
+        User user = userMapper.toUserFromUserCreationRequest(request);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-
         HashSet<Role> roles = new HashSet<>();
         roleRepository.findById(USER_ROLE)
                 .ifPresent(roles::add);
@@ -103,6 +105,11 @@ public class UserService {
         try {
             user = userRepository.save(user);
             userEventProducer.publishCreatedUserEvent(user);
+            UserProfileCreationPayload profilePayload =
+                    userPayloadMapper.toUserProfileCreationPayloadFromUserCreationRequest(
+                            request);
+            userEventProducer.publishRegisteredUserEvent(
+                    user, profilePayload);
         } catch (DataIntegrityViolationException e) {
             throw new AppException(ErrorCode.USER_ALREADY_EXISTS);
         }
@@ -170,7 +177,7 @@ public class UserService {
     private void updateUser(
             UserUpdateRequest request,
             User user) {
-        userMapper.updateUser(user, request);
+        userMapper.updateUserUpdateRequestToUser(user, request);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
 //    List<Role> roles = roleRepository.findAllById(request.getRoles());
@@ -197,6 +204,19 @@ public class UserService {
         userEventProducer.publishDeletedUserEvent(user);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
+    @Transactional
+    public void restoreUser(String userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        if (user.getDeletedAt() != null) {
+            user.setDeletedAt(null);
+            user.setDeletedBy(null);
+            userRepository.save(user);
+            userEventProducer.publishRestoredUserEvent(user);
+        }
+    }
+
     /**
      * Lấy danh sách người dùng với phân trang.
      *
@@ -212,7 +232,7 @@ public class UserService {
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<UserResponse> pageData = userRepository
                 .findAll(pageable)
-                .map(userMapper::toUserResponse);
+                .map(userMapper::toUserResponseFromUser);
 
         return toPageResponse(pageData, page);
     }
@@ -225,7 +245,7 @@ public class UserService {
      * @throws AppException nếu không tìm thấy
      */
     public UserResponse getUser(String userId) {
-        return userMapper.toUserResponse(
+        return userMapper.toUserResponseFromUser(
                 userRepository.findById(userId)
                         .orElseThrow(() -> new AppException(
                                 ErrorCode.USER_NOT_FOUND))

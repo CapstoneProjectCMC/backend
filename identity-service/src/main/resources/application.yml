@@ -65,4 +65,5 @@ app:
     redirect-uri: "http://localhost:4200/auth/identity/authenticate"
   event:
     user-events: "user-events"
+    user-registrations: "user-registrations"
 

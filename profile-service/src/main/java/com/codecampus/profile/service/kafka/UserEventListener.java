@@ -25,7 +25,7 @@ public class UserEventListener {
     UserProfileRepository userProfileRepository;
     ObjectMapper objectMapper;
 
-    @KafkaListener(topics = "user-events",
+    @KafkaListener(topics = "${app.event.user-events}",
             groupId = "profile-service"
     )
     public void onMessageUser(String raw) {

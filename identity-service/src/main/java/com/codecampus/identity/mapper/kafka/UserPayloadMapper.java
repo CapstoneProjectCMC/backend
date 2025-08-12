@@ -1,8 +1,10 @@
 package com.codecampus.identity.mapper.kafka;
 
+import com.codecampus.identity.dto.request.authentication.UserCreationRequest;
 import com.codecampus.identity.entity.account.Role;
 import com.codecampus.identity.entity.account.User;
 import events.user.data.UserPayload;
+import events.user.data.UserProfileCreationPayload;
 import org.mapstruct.Mapper;
 
 import java.time.Instant;
@@ -10,6 +12,9 @@ import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
 public interface UserPayloadMapper {
+
+    UserProfileCreationPayload toUserProfileCreationPayloadFromUserCreationRequest(
+            UserCreationRequest userCreationRequest);
 
     default UserPayload toUserPayloadFromUser(User user) {
         return UserPayload.builder()
