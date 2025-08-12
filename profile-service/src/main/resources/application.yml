@@ -21,8 +21,18 @@ spring:
       username: neo4j
       password: dinhanst2832004
     schema-action: create
+  kafka:
+    bootstrap-servers: localhost:9094
+    consumer:
+      group-id: profile-service
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
 
 app:
   services:
     file: http://localhost:8082/file
-
+  event:
+    user-events: "user-events"

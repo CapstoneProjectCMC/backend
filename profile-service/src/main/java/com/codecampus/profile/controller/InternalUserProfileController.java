@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,10 +25,11 @@ import org.springframework.web.bind.annotation.RestController;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Builder
 @Slf4j
+@RequestMapping("/internal")
 public class InternalUserProfileController {
     UserProfileService userProfileService;
 
-    @PostMapping("/internal/user")
+    @PostMapping("/user")
     ApiResponse<UserProfileResponse> internalCreateUserProfile(
             @RequestBody UserProfileCreationRequest request) {
         return ApiResponse.<UserProfileResponse>builder()
@@ -35,7 +37,7 @@ public class InternalUserProfileController {
                 .build();
     }
 
-    @GetMapping("/internal/user/{userId}")
+    @GetMapping("/user/{userId}")
     ApiResponse<UserProfileResponse> internalGetUserProfileByUserId(
             @PathVariable("userId") String userId) {
         return ApiResponse.<UserProfileResponse>builder()
@@ -43,7 +45,7 @@ public class InternalUserProfileController {
                 .build();
     }
 
-    @PatchMapping("/internal/user/{userId}")
+    @PatchMapping("/user/{userId}")
     ApiResponse<Void> internalUpdateProfileByUserId(
             @PathVariable String userId,
             @RequestBody UserProfileUpdateRequest request) {
@@ -52,7 +54,7 @@ public class InternalUserProfileController {
                 .build();
     }
 
-    @DeleteMapping("/internal/user/{userId}")
+    @DeleteMapping("/user/{userId}")
     ApiResponse<Void> internalSoftDeleteByUserId(
             @PathVariable String userId,
             @RequestParam(required = false) String deletedBy) {
@@ -62,7 +64,7 @@ public class InternalUserProfileController {
                 .build();
     }
 
-    @PatchMapping("/internal/user/{userId}/restore")
+    @PatchMapping("/user/{userId}/restore")
     ApiResponse<Void> restoreByUserId(
             @PathVariable String userId) {
         userProfileService.restoreByUserId(userId);

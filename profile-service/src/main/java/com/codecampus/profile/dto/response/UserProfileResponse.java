@@ -16,6 +16,11 @@ import java.time.Instant;
 public class UserProfileResponse {
     String id;
     String userId;
+    
+    String username;
+    String email;
+    boolean active;
+
     String firstName;
     String lastName;
     String dob;

@@ -13,10 +13,13 @@ import com.codecampus.identity.helper.AuthenticationHelper;
 import com.codecampus.identity.helper.ProfileSyncHelper;
 import com.codecampus.identity.mapper.authentication.UserMapper;
 import com.codecampus.identity.mapper.client.UserProfileMapper;
+import com.codecampus.identity.mapper.kafka.UserPayloadMapper;
 import com.codecampus.identity.repository.account.RoleRepository;
 import com.codecampus.identity.repository.account.UserRepository;
 import com.codecampus.identity.repository.httpclient.profile.ProfileClient;
 import com.codecampus.identity.service.authentication.OtpService;
+import com.codecampus.identity.service.kafka.UserEventProducer;
+import events.user.data.UserProfileCreationPayload;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
@@ -62,11 +65,13 @@ public class UserService {
 
     UserMapper userMapper;
     UserProfileMapper userProfileMapper;
+    UserPayloadMapper userPayloadMapper;
 
     PasswordEncoder passwordEncoder;
     ProfileClient profileClient;
     AuthenticationHelper authenticationHelper;
     ProfileSyncHelper profileSyncHelper;
+    UserEventProducer userEventProducer;
 
     /**
      * Tạo mới người dùng, gán vai trò USER và khởi tạo profile.
@@ -79,20 +84,18 @@ public class UserService {
      * </p>
      *
      * @param request thông tin tạo người dùng mới
-     * @return thông tin người dùng vừa tạo (UserResponse)
      * @throws AppException nếu user đã tồn tại
      */
     @PreAuthorize("hasRole('ADMIN')")
     @Transactional
-    public UserResponse createUser(UserCreationRequest request) {
+    public void createUser(UserCreationRequest request) {
         authenticationHelper.checkExistsUsernameEmail(
                 request.getUsername(),
                 request.getEmail()
         );
 
-        User user = userMapper.toUser(request);
+        User user = userMapper.toUserFromUserCreationRequest(request);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-
         HashSet<Role> roles = new HashSet<>();
         roleRepository.findById(USER_ROLE)
                 .ifPresent(roles::add);
@@ -101,12 +104,15 @@ public class UserService {
 
         try {
             user = userRepository.save(user);
-            profileSyncHelper.createProfile(user, request);
+            userEventProducer.publishCreatedUserEvent(user);
+            UserProfileCreationPayload profilePayload =
+                    userPayloadMapper.toUserProfileCreationPayloadFromUserCreationRequest(
+                            request);
+            userEventProducer.publishRegisteredUserEvent(
+                    user, profilePayload);
         } catch (DataIntegrityViolationException e) {
             throw new AppException(ErrorCode.USER_ALREADY_EXISTS);
         }
-
-        return userMapper.toUserResponse(user);
     }
 
     /**
@@ -146,14 +152,13 @@ public class UserService {
      *
      * @param userId  ID người dùng cần cập nhật
      * @param request thông tin cập nhật
-     * @return UserResponse chứa thông tin sau khi cập nhật
      */
     @PreAuthorize("hasRole('ADMIN')")
-    public UserResponse updateUser(
+    public void updateUserById(
             String userId,
             UserUpdateRequest request) {
         User user = findUser(userId);
-        return updateUserAndReturnUserResponse(request, user);
+        updateUser(request, user);
     }
 
     /**
@@ -162,24 +167,24 @@ public class UserService {
      * <p>Chỉ cho phép khi username trả về khớp tên trong authentication.</p>
      *
      * @param request thông tin cập nhật
-     * @return UserResponse sau khi cập nhật
      */
-    public UserResponse updateMyInfo(
+    public void updateMyInfo(
             UserUpdateRequest request) {
         User user = findUser(AuthenticationHelper.getMyUserId());
-        return updateUserAndReturnUserResponse(request, user);
+        updateUser(request, user);
     }
 
-    private UserResponse updateUserAndReturnUserResponse(
+    private void updateUser(
             UserUpdateRequest request,
             User user) {
-        userMapper.updateUser(user, request);
+        userMapper.updateUserUpdateRequestToUser(user, request);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
 //    List<Role> roles = roleRepository.findAllById(request.getRoles());
 //    user.setRoles(new HashSet<>(roles));
+        userRepository.save(user);
 
-        return userMapper.toUserResponse(userRepository.save(user));
+        userEventProducer.publishUpdatedUserEvent(user);
     }
 
     /**
@@ -196,8 +201,20 @@ public class UserService {
         user.markDeleted(AuthenticationHelper.getMyEmail());
         userRepository.save(user);
 
-        profileSyncHelper.softDeleteProfile(userId,
-                AuthenticationHelper.getMyUsername());
+        userEventProducer.publishDeletedUserEvent(user);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @Transactional
+    public void restoreUser(String userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        if (user.getDeletedAt() != null) {
+            user.setDeletedAt(null);
+            user.setDeletedBy(null);
+            userRepository.save(user);
+            userEventProducer.publishRestoredUserEvent(user);
+        }
     }
 
     /**
@@ -215,7 +232,7 @@ public class UserService {
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<UserResponse> pageData = userRepository
                 .findAll(pageable)
-                .map(userMapper::toUserResponse);
+                .map(userMapper::toUserResponseFromUser);
 
         return toPageResponse(pageData, page);
     }
@@ -228,7 +245,7 @@ public class UserService {
      * @throws AppException nếu không tìm thấy
      */
     public UserResponse getUser(String userId) {
-        return userMapper.toUserResponse(
+        return userMapper.toUserResponseFromUser(
                 userRepository.findById(userId)
                         .orElseThrow(() -> new AppException(
                                 ErrorCode.USER_NOT_FOUND))
