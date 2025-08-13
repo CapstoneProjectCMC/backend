@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OrganizationService.Core.ApiModels;
+using OrganizationService.Core.Enums;
 using OrganizationService.Core.Exceptions;
 using OrganizationService.DataAccess.Interfaces;
 using OrganizationService.DataAccess.Models;
@@ -11,27 +12,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace OrganizationService.Service.Implementation
 {
     public class StudentCredentialService : BaseService, IStudentCredentialService
     {
         private readonly IRepository<StudentCredential> _studentCredentialRepository;
-        private readonly IRepository<Class> _classRepository;
-        private readonly IRepository<Organization> _organizationRepository;
 
         public StudentCredentialService(
             AppSettings appSettings,
             IUnitOfWork unitOfWork,
             UserContext userContext,
-            IRepository<StudentCredential> studentCredentialRepository,
-            IRepository<Class> classRepository,
-            IRepository<Organization> organizationRepository)
+            IRepository<StudentCredential> studentCredentialRepository)
              : base(appSettings, unitOfWork, userContext)
         {
             _studentCredentialRepository = studentCredentialRepository;
-            _classRepository = classRepository;
-            _organizationRepository = organizationRepository;
         }
 
         private void ValidatePagingModel(StudentCredentialModel studentCredentialModel)
@@ -47,10 +43,25 @@ namespace OrganizationService.Service.Implementation
             // Validate PageIndex and PageSize
             ValidatePagingModel(studentCredentialModel);
 
-            var data = await _studentCredentialRepository.AsNoTracking
-                .Include(c => c.Class)
-                .Include(c => c.Organization)
-                .ToListAsync();
+            var data = _studentCredentialRepository.AsNoTracking
+             .Include(c => c.Class)
+             .Include(c => c.Organization)
+             .Where(c => !c.IsDeleted)
+             .OrderByDescending(c => c.CreatedAt)
+             .Select(c => new StudentCredentialDto
+             {
+                 Id = c.Id,
+                 OrganizationId = c.OrganizationId,
+                 ClassId = c.ClassId,
+                 Username = c.Username,
+                 IsUsed = c.IsUsed,
+                 ClassName = c.Class.Name,
+                 OrganizationName = c.Organization.Name
+             });
+
+            var list = await data.ToListAsync(); 
+
+            return list;
         }
 
         public async Task<StudentCredentialDto?> GetByIdAsync(Guid id)
@@ -70,7 +81,9 @@ namespace OrganizationService.Service.Implementation
             {
                 Id = studentCredential.Id,
                 OrganizationId = studentCredential.OrganizationId,
+                OrganizationName = studentCredential.Organization.Name,
                 ClassId = studentCredential.ClassId,
+                ClassName = studentCredential.Class.Name,
                 Username = studentCredential.Username,
                 IsUsed = studentCredential.IsUsed
             };
@@ -78,6 +91,13 @@ namespace OrganizationService.Service.Implementation
 
         public async Task<StudentCredentialDto> CreateAsync(CreateStudentCredentialRequest request)
         {
+
+            var exists = await _studentCredentialRepository.FindAsync(x => x.OrganizationId == request.OrganizationId && x.Username == request.Username && !x.IsDeleted);
+            if (exists == null)
+            {
+                throw new ErrorException(StatusCodeEnum.A01, "Username already exists.");
+            }
+
             var credential = new StudentCredential
             {
                 Id = Guid.NewGuid(),
@@ -86,8 +106,7 @@ namespace OrganizationService.Service.Implementation
                 Username = request.Username,
                 PasswordHashed = BCrypt.Net.BCrypt.HashPassword(request.Password),
                 IsUsed = false,
-                CreatedAt = DateTime.UtcNow,
-                CreatedBy = Guid.Empty // TODO: lấy từ context
+                CreatedAt = DateTime.UtcNow
             };
 
             await _studentCredentialRepository.CreateAsync(credential);
@@ -106,7 +125,7 @@ namespace OrganizationService.Service.Implementation
 
         public async Task<bool> UpdateAsync(Guid id, UpdateStudentCredentialRequest request)
         {
-            var cred = await _context.StudentCredentials.FindAsync(id);
+            var cred = await _studentCredentialRepository.FindByIdAsync(id);
             if (cred == null) return false;
 
             if (!string.IsNullOrWhiteSpace(request.Password))
@@ -120,21 +139,24 @@ namespace OrganizationService.Service.Implementation
             }
 
             cred.UpdatedAt = DateTime.UtcNow;
-            cred.UpdatedBy = Guid.Empty; // TODO: lấy từ context
 
-            await _context.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync();
             return true;
         }
 
         public async Task<bool> DeleteAsync(Guid id)
         {
-            var cred = await _context.StudentCredentials.FindAsync(id);
-            if (cred == null) return false;
+            var data = await _studentCredentialRepository.FindByIdAsync(id);
+            if (data == null)
+            {
+                throw new ErrorException(Core.Enums.StatusCodeEnum.A02, "Student credential not found.");
+            }
 
-            _context.StudentCredentials.Remove(cred);
-            await _context.SaveChangesAsync();
+            data.IsDeleted = true;
+
+            _studentCredentialRepository.Delete(data);
+            await _unitOfWork.SaveChangesAsync();
             return true;
         }
     }
-
 }

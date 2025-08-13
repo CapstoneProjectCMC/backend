@@ -16,6 +16,5 @@ namespace OrganizationService.DataAccess.Models
         public Guid OrganizationId { get; set; }
         public Organization Organization { get; set; } 
         public ICollection<Class> Classes { get; set; }
-        //public ICollection<OrganizationMember> OrganizationMembers { get; set; }
     }
 }

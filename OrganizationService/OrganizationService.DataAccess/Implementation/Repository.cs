@@ -112,9 +112,6 @@ namespace OrganizationService.DataAccess.Implementation
             };
             return result.Distinct();
         }
-
-
-
         public async Task<IEnumerable<T>> GetListAsync()
         {
             return await ActiveRecords.ToListAsync();
@@ -133,6 +130,7 @@ namespace OrganizationService.DataAccess.Implementation
         public async Task InsertAsync(T obj)
         {
             obj.CreatedBy = _userContext.UserId;
+            obj.CreatedAt = DateTime.UtcNow;
 
             await _dbContext.Set<T>().AddAsync(obj);
         }
@@ -158,11 +156,26 @@ namespace OrganizationService.DataAccess.Implementation
 
         public void Delete(T obj)
         {
-            obj.UpdatedAt = DateTime.UtcNow;
-            obj.UpdatedBy = _userContext.UserId;
+            obj.DeletedAt = DateTime.UtcNow;
+            obj.DeletedBy = _userContext.UserId;
             obj.IsDeleted = true;
 
             _dbContext.Set<T>().Update(obj);
+        }
+
+        public async Task DeleteAsync(Guid id)
+        {
+            var entity = await _dbContext.Set<T>()
+                .FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted);
+
+            if (entity == null)
+                throw new KeyNotFoundException("Không tìm thấy bản ghi hoặc đã bị xóa.");
+
+            entity.DeletedAt = DateTime.UtcNow;
+            entity.DeletedBy = _userContext.UserId;
+            entity.IsDeleted = true;
+
+            await _dbContext.SaveChangesAsync();
         }
 
         public async Task<T> DeleteByIdAsync(Guid id)
