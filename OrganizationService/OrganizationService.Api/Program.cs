@@ -10,6 +10,8 @@ using OrganizationService.Core.ApiModels;
 using OrganizationService.DataAccess.DbContexts;
 using OrganizationService.DataAccess.Implementation;
 using OrganizationService.DataAccess.Interfaces;
+using OrganizationService.Service.Implementation;
+using OrganizationService.Service.Interfaces;
 using System.Data;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -36,7 +38,11 @@ builder.Services.AddDbContext<OrganizationServiceDbContext>(options => options.U
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<UserContext>();
-
+builder.Services.AddScoped<IStudentCredentialService, StudentCredentialService>();
+builder.Services.AddScoped<IClassService, ClassService>();
+builder.Services.AddScoped<IGradeService, GradeService>();
+builder.Services.AddScoped<IOrganizationService, OrganizationService.Service.Implementation.OrganizationService>();
+builder.Services.AddScoped<IOrganizationMemberService, OrganizationMemberService>();
 
 
 builder.Services.Configure<IdentityOptions>(options =>

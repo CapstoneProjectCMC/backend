@@ -11,7 +11,7 @@ namespace OrganizationService.Core.ApiModels
     {
         [DefaultValue(1)]
         public int PageIndex { get; set; } 
-        [DefaultValue(20)]
+        [DefaultValue(30)]
         public int PageSize { get; set; } 
     }
 }

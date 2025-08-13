@@ -10,9 +10,9 @@ namespace OrganizationService.Service.Interfaces
 {
     public interface IStudentCredentialService
     {
+        Task<IEnumerable<StudentCredentialDto>> GetViewModelsAsync(StudentCredentialModel studentCredentialModel);
+        Task<StudentCredentialDto> GetByIdAsync(Guid id);
         Task<StudentCredentialDto> CreateAsync(CreateStudentCredentialRequest request);
-        Task<StudentCredentialDto?> GetByIdAsync(Guid id);
-        Task<IEnumerable<StudentCredentialDto>> GetByClassIdAsync(Guid classId);
         Task<bool> UpdateAsync(Guid id, UpdateStudentCredentialRequest request);
         Task<bool> DeleteAsync(Guid id);
     }

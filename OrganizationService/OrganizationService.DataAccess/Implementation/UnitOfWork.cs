@@ -11,10 +11,7 @@ namespace OrganizationService.DataAccess.Implementation
 {
     public class UnitOfWork : IUnitOfWork
     {
-        public UnitOfWork(
-            OrganizationServiceDbContext dbContext
-
-        )
+        public UnitOfWork(OrganizationServiceDbContext dbContext)
         {
             _dbContext = dbContext;
         }

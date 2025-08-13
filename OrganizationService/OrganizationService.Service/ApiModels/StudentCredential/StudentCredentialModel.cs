@@ -9,5 +9,9 @@ namespace OrganizationService.Service.ApiModels.StudentCredential
 {
     public class StudentCredentialModel : PagingBaseModel
     {
+        public Guid? OrganizationId { get; set; }
+        public Guid? GradeId { get; set; }
+        public Guid? ClassId { get; set; }
+        public bool? IsUsed { get; set; }
     }
 }

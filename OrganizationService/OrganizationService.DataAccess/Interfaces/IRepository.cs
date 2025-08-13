@@ -23,12 +23,13 @@ namespace OrganizationService.DataAccess.Interfaces
         void UpdateMany(IEnumerable<T> objs);
         Task InsertAsync(T obj);
         void Delete(T obj);
+        Task DeleteAsync(Guid id);
         Task<T> DeleteByIdAsync(Guid id);
         Task<T> CreateAsync(T obj);
         Task<PaginatedList<T>> GetPagedListAsync(
             Expression<Func<T, bool>> predicate = null,
              int pageIndex = 0,
-             int pageSize = 20
+             int pageSize = 30
             );
         Task DeleteManyAsync(Expression<Func<T, bool>> predicate);
         Task<IEnumerable<T>> FindElementAsync(Expression<Func<T, bool>> predicate);
