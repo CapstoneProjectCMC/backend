@@ -38,7 +38,7 @@ public class TestCase extends AuditMetadata {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "coding_exercise_id", nullable = false)
     @JsonBackReference
-    CodingExercise exercise;
+    CodingExercise coding;
 
     String input;
     String expectedOutput;

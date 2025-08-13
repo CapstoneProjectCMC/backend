@@ -2,18 +2,31 @@ package com.codecampus.submission.service;
 
 import com.codecampus.submission.constant.sort.SortField;
 import com.codecampus.submission.constant.submission.ExerciseType;
+import com.codecampus.submission.constant.submission.SubmissionStatus;
 import com.codecampus.submission.dto.common.PageResponse;
 import com.codecampus.submission.dto.request.CreateExerciseRequest;
 import com.codecampus.submission.dto.request.UpdateExerciseRequest;
 import com.codecampus.submission.dto.request.quiz.CreateQuizExerciseRequest;
+import com.codecampus.submission.dto.response.coding.coding_detail.CodingDetailSliceDetailResponse;
+import com.codecampus.submission.dto.response.coding.coding_detail.ExerciseCodingDetailResponse;
 import com.codecampus.submission.dto.response.quiz.ExerciseQuizResponse;
 import com.codecampus.submission.dto.response.quiz.quiz_detail.ExerciseQuizDetailResponse;
 import com.codecampus.submission.dto.response.quiz.quiz_detail.QuizDetailSliceDetailResponse;
+import com.codecampus.submission.entity.CodingDetail;
 import com.codecampus.submission.entity.Exercise;
+import com.codecampus.submission.entity.QuizDetail;
 import com.codecampus.submission.entity.Submission;
+import com.codecampus.submission.entity.SubmissionResultDetail;
+import com.codecampus.submission.entity.TestCase;
+import com.codecampus.submission.entity.data.SubmissionResultId;
+import com.codecampus.submission.exception.AppException;
+import com.codecampus.submission.exception.ErrorCode;
+import com.codecampus.submission.grpc.CodeSubmissionDto;
+import com.codecampus.submission.grpc.CreateCodeSubmissionRequest;
 import com.codecampus.submission.grpc.CreateQuizSubmissionRequest;
 import com.codecampus.submission.grpc.QuizSubmissionDto;
 import com.codecampus.submission.helper.AuthenticationHelper;
+import com.codecampus.submission.helper.CodingHelper;
 import com.codecampus.submission.helper.ExerciseHelper;
 import com.codecampus.submission.helper.PageResponseHelper;
 import com.codecampus.submission.helper.QuizHelper;
@@ -24,6 +37,8 @@ import com.codecampus.submission.repository.AssignmentRepository;
 import com.codecampus.submission.repository.ExerciseRepository;
 import com.codecampus.submission.repository.QuestionRepository;
 import com.codecampus.submission.repository.SubmissionRepository;
+import com.codecampus.submission.repository.SubmissionResultRepository;
+import com.codecampus.submission.repository.TestCaseRepository;
 import com.codecampus.submission.service.grpc.GrpcCodingClient;
 import com.codecampus.submission.service.grpc.GrpcQuizClient;
 import com.codecampus.submission.service.kafka.ExerciseEventProducer;
@@ -37,6 +52,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -46,6 +64,8 @@ public class ExerciseService {
     QuestionRepository questionRepository;
     SubmissionRepository submissionRepository;
     AssignmentRepository assignmentRepository;
+    TestCaseRepository testCaseRepository;
+    SubmissionResultRepository submissionResultRepository;
 
     ContestService contestService;
     AssignmentService assignmentService;
@@ -59,6 +79,7 @@ public class ExerciseService {
     SubmissionMapper submissionMapper;
 
     QuizHelper quizHelper;
+    CodingHelper codingHelper;
     ExerciseHelper exerciseHelper;
 
 
@@ -142,13 +163,74 @@ public class ExerciseService {
     }
 
     @Transactional
+    public void createCodeSubmission(
+            CreateCodeSubmissionRequest request) {
+
+        CodeSubmissionDto codeSubmissionDto = request.getSubmission();
+
+        Exercise exercise =
+                exerciseHelper.getExerciseOrThrow(
+                        codeSubmissionDto.getExerciseId());
+
+        Submission submission = Submission.builder()
+                .exercise(exercise)
+                .userId(codeSubmissionDto.getStudentId())
+                .submittedAt(Instant.ofEpochSecond(
+                        codeSubmissionDto.getSubmittedAt().getSeconds(),
+                        codeSubmissionDto.getSubmittedAt().getNanos()))
+                .language(codeSubmissionDto.getLanguage())
+                .sourceCode(codeSubmissionDto.getSourceCode())
+                .timeTakenSeconds(codeSubmissionDto.getTimeTakenSeconds())
+                .score(codeSubmissionDto.getScore())
+                .status(codeSubmissionDto.getScore() ==
+                        codeSubmissionDto.getTotalPoints()
+                        ? SubmissionStatus.PASSED
+                        : (codeSubmissionDto.getScore() == 0
+                        ? SubmissionStatus.FAILED
+                        : SubmissionStatus.PARTIAL))
+                .build();
+        submissionRepository.save(submission);
+
+        // Lưu chi tiết Testcase
+        codeSubmissionDto.getResultsList().forEach(r -> {
+            TestCase testCase = testCaseRepository
+                    .findById(r.getTestCaseId())
+                    .orElseThrow(() -> new AppException(
+                            ErrorCode.TESTCASE_NOT_FOUND));
+
+            submissionResultRepository.save(SubmissionResultDetail.builder()
+                    .id(new SubmissionResultId(submission.getId(),
+                            testCase.getId()))
+                    .submission(submission)
+                    .testCase(testCase)
+                    .passed(r.getPassed())
+                    .runTimeTs(r.getRuntimeMs())
+                    .memoryUsed(r.getMemoryKb())
+                    .output(r.getOutput())
+                    .errorMessage(r.getErrorMessage())
+                    .build());
+        });
+
+        /* Side-effects */
+        if (submission.getStatus() == SubmissionStatus.PASSED) {
+            assignmentService.markCompleted(exercise.getId(),
+                    submission.getId());
+        }
+        contestService.updateRankingOnSubmission(submission);
+    }
+
+    @Transactional
     public void updateExercise(
             String id, UpdateExerciseRequest request) {
         Exercise exercise = exerciseHelper
                 .getExerciseOrThrow(id);
         exerciseMapper.patchUpdateExerciseRequestToExercise(request, exercise);
 
-        grpcQuizClient.pushExercise(exercise);
+        if (exercise.getExerciseType() == ExerciseType.QUIZ) {
+            grpcQuizClient.pushExercise(exercise);
+        } else if (exercise.getExerciseType() == ExerciseType.CODING) {
+            grpcCodingClient.pushExercise(exercise);
+        }
         exerciseEventProducer.publishUpdatedExerciseEvent(exercise);
     }
 
@@ -162,8 +244,11 @@ public class ExerciseService {
 
         exerciseEventProducer.publishDeletedExerciseEvent(exercise);
         if (exercise.getExerciseType() ==
-                ExerciseType.QUIZ) {   // đồng bộ quiz‑svc
+                ExerciseType.QUIZ) {
             grpcQuizClient.softDeleteExercise(exerciseId);
+        } else if (exercise.getExerciseType()
+                == ExerciseType.CODING) {
+            grpcCodingClient.softDeleteExercise(exerciseId);
         }
     }
 
@@ -199,7 +284,8 @@ public class ExerciseService {
         return PageResponseHelper.toPageResponse(pageData, page);
     }
 
-    public ExerciseQuizDetailResponse getExerciseDetail(
+    @Transactional(readOnly = true)
+    public ExerciseQuizDetailResponse getQuizExerciseDetail(
             String exerciseId,
             int qPage, int qSize,
             SortField qSortBy, boolean qAsc) {
@@ -207,9 +293,18 @@ public class ExerciseService {
         Exercise exercise =
                 exerciseHelper.getExerciseOrThrow(exerciseId);
 
+        if (exercise.getExerciseType() != ExerciseType.QUIZ) {
+            throw new AppException(ErrorCode.EXERCISE_TYPE);
+        }
+
+        QuizDetail quizDetail = Optional.ofNullable(
+                        exercise.getQuizDetail())
+                .orElseThrow(() -> new AppException(
+                        ErrorCode.QUIZ_DETAIL_NOT_FOUND));
+
         QuizDetailSliceDetailResponse qSlice =
                 quizHelper.buildQuizSliceWithOptions(
-                        exercise, qPage, qSize, qSortBy, qAsc
+                        quizDetail, qPage, qSize, qSortBy, qAsc
                 );
 
         return ExerciseQuizDetailResponse.builder()
@@ -231,6 +326,57 @@ public class ExerciseService {
                 .tags(exercise.getTags())
                 .allowAiQuestion(exercise.isAllowAiQuestion())
                 .quizDetail(qSlice)
+                .visibility(exercise.isVisibility())
+                .createdBy(exercise.getCreatedBy())
+                .createdAt(exercise.getCreatedAt())
+                .updatedBy(exercise.getUpdatedBy())
+                .updatedAt(exercise.getUpdatedAt())
+                .deletedBy(exercise.getDeletedBy())
+                .deletedAt(exercise.getDeletedAt())
+                .build();
+    }
+
+    @Transactional(readOnly = true)
+    public ExerciseCodingDetailResponse getCodingExerciseDetail(
+            String exerciseId,
+            int tcPage, int tcSize,
+            SortField tcSortBy, boolean tcAsc) {
+
+        Exercise exercise =
+                exerciseHelper.getExerciseOrThrow(exerciseId);
+
+        if (exercise.getExerciseType() != ExerciseType.CODING) {
+            throw new AppException(ErrorCode.EXERCISE_TYPE);
+        }
+
+        CodingDetail codingDetail = Optional.ofNullable(
+                        exercise.getCodingDetail())
+                .orElseThrow(() -> new AppException(
+                        ErrorCode.CODING_DETAIL_NOT_FOUND));
+
+        CodingDetailSliceDetailResponse slice = codingHelper.buildCodingSlice(
+                codingDetail, tcPage, tcSize, tcSortBy, tcAsc);
+
+        return ExerciseCodingDetailResponse.builder()
+                .id(exercise.getId())
+                .userId(exercise.getUserId())
+                .title(exercise.getTitle())
+                .description(exercise.getDescription())
+                .exerciseType(exercise.getExerciseType())
+                .difficulty(exercise.getDifficulty())
+                .orgId(exercise.getOrgId())
+                .active(exercise.isActive())
+                .cost(exercise.getCost())
+                .freeForOrg(exercise.isFreeForOrg())
+                .startTime(exercise.getStartTime())
+                .endTime(exercise.getEndTime())
+                .duration(exercise.getDuration())
+                .allowDiscussionId(exercise.getAllowDiscussionId())
+                .resourceIds(exercise.getResourceIds())
+                .tags(exercise.getTags())
+                .allowAiQuestion(exercise.isAllowAiQuestion())
+                .visibility(exercise.isVisibility())
+                .codingDetail(slice)
                 .createdBy(exercise.getCreatedBy())
                 .createdAt(exercise.getCreatedAt())
                 .updatedBy(exercise.getUpdatedBy())

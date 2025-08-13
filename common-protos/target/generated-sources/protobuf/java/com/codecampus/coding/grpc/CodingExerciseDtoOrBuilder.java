@@ -44,4 +44,22 @@ public interface CodingExerciseDtoOrBuilder extends
    */
   com.google.protobuf.ByteString
       getDescriptionBytes();
+
+  /**
+   * <code>bool publicAccessible = 4;</code>
+   * @return The publicAccessible.
+   */
+  boolean getPublicAccessible();
+
+  /**
+   * <code>string createdBy = 5;</code>
+   * @return The createdBy.
+   */
+  java.lang.String getCreatedBy();
+  /**
+   * <code>string createdBy = 5;</code>
+   * @return The bytes for createdBy.
+   */
+  com.google.protobuf.ByteString
+      getCreatedByBytes();
 }

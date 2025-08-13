@@ -9,14 +9,14 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 
 /**
- * Tiện ích chuyển đổi giữa định dạng chuỗi ngày "dd/MM/yyyy"
- * và đối tượng {@link Instant}.
+ * Tiện ích chuyển đổi giữa chuỗi ngày theo định dạng dd/MM/yyyy
+ * và đối tượng Instant, hỗ trợ cả múi giờ UTC và múi giờ hệ thống.
  *
- * <p>Cung cấp các phương thức:
+ * <p>Các chức năng chính:
  * <ul>
- *   <li>{@link #parseDdMmYyyyToInstant(String)}: Chuyển chuỗi ngày sang {@code Instant} tại đầu ngày (00:00 UTC).</li>
- *   <li>{@link #formatInstantToDdMmYyyyUtc(Instant)}: Định dạng {@code Instant} sang chuỗi ngày theo UTC.</li>
- *   <li>{@link #formatInstantToDdMmYyyyLocal(Instant)}: Định dạng {@code Instant} sang chuỗi ngày theo múi giờ hệ thống.</li>
+ *   <li>Chuyển chuỗi ngày "dd/MM/yyyy" sang Instant tại đầu ngày (UTC).</li>
+ *   <li>Định dạng Instant thành chuỗi ngày "dd/MM/yyyy" tính theo UTC.</li>
+ *   <li>Định dạng Instant thành chuỗi ngày "dd/MM/yyyy" tính theo múi giờ hệ thống.</li>
  * </ul>
  * </p>
  */
@@ -24,6 +24,8 @@ public class ConvertUtils {
     // Định dạng dd/MM/yyyy
     private static final DateTimeFormatter DMY_FORMATTER =
             DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private static final DateTimeFormatter DMY_FORMATTER_SHORT =
+            DateTimeFormatter.ofPattern("dd/MM/yy");
 
     /**
      * Chuyển chuỗi ngày có định dạng dd/MM/yyyy sang Instant (đầu ngày).

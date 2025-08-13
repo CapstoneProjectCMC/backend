@@ -41,6 +41,61 @@ public final class CodingProto {
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_coding_TestCaseDto_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_coding_SoftDeleteRequest_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_coding_SoftDeleteRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_coding_SoftDeleteTestCaseRequest_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_coding_SoftDeleteTestCaseRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_coding_SubmitCodeRequest_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_coding_SubmitCodeRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_coding_TestCaseResultDto_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_coding_TestCaseResultDto_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_coding_SubmitCodeResponse_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_coding_SubmitCodeResponse_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_coding_LoadCodingRequest_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_coding_LoadCodingRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_coding_CodingDetailLoadResponse_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_coding_CodingDetailLoadResponse_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_coding_LoadCodingResponse_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_coding_LoadCodingResponse_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_coding_TestCaseDtoLoadResponse_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_coding_TestCaseDtoLoadResponse_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_coding_AssignmentDto_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_coding_AssignmentDto_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_coding_UpsertAssignmentRequest_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_coding_UpsertAssignmentRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
     internal_static_coding_CreateCodingExerciseRequest_descriptor;
   static final 
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
@@ -51,20 +106,10 @@ public final class CodingProto {
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_coding_AddCodingDetailRequest_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_coding_UpsertCodingDetailRequest_descriptor;
-  static final 
-    com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_coding_UpsertCodingDetailRequest_fieldAccessorTable;
-  static final com.google.protobuf.Descriptors.Descriptor
     internal_static_coding_AddTestCaseRequest_descriptor;
   static final 
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_coding_AddTestCaseRequest_fieldAccessorTable;
-  static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_coding_UpsertTestCaseRequest_descriptor;
-  static final 
-    com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_coding_UpsertTestCaseRequest_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -76,37 +121,75 @@ public final class CodingProto {
     java.lang.String[] descriptorData = {
       "\n\014coding.proto\022\006coding\032\033google/protobuf/" +
       "empty.proto\032\037google/protobuf/timestamp.p" +
-      "roto\"C\n\021CodingExerciseDto\022\n\n\002id\030\001 \001(\t\022\r\n" +
-      "\005title\030\002 \001(\t\022\023\n\013description\030\003 \001(\t\"\355\001\n\017Co" +
-      "dingDetailDto\022\022\n\nexerciseId\030\001 \001(\t\022\030\n\020all" +
-      "owedLanguages\030\002 \003(\t\022\r\n\005input\030\003 \001(\t\022\016\n\006ou" +
-      "tput\030\004 \001(\t\022\021\n\ttimeLimit\030\005 \001(\005\022\023\n\013memoryL" +
-      "imit\030\006 \001(\005\022\026\n\016maxSubmissions\030\007 \001(\005\022\r\n\005to" +
-      "pic\030\010 \001(\t\022\026\n\016constraintText\030\t \001(\t\022\024\n\014cod" +
-      "eTemplate\030\n \001(\t\022\020\n\010solution\030\013 \001(\t\"r\n\013Tes" +
-      "tCaseDto\022\n\n\002id\030\001 \001(\t\022\022\n\nexerciseId\030\002 \001(\t" +
-      "\022\r\n\005input\030\003 \001(\t\022\026\n\016expectedOutput\030\004 \001(\t\022" +
-      "\016\n\006sample\030\005 \001(\010\022\014\n\004note\030\006 \001(\t\"J\n\033CreateC" +
-      "odingExerciseRequest\022+\n\010exercise\030\001 \001(\0132\031" +
-      ".coding.CodingExerciseDto\"A\n\026AddCodingDe" +
-      "tailRequest\022\'\n\006detail\030\001 \001(\0132\027.coding.Cod" +
-      "ingDetailDto\"D\n\031UpsertCodingDetailReques" +
-      "t\022\'\n\006detail\030\001 \001(\0132\027.coding.CodingDetailD" +
-      "to\";\n\022AddTestCaseRequest\022%\n\010testCase\030\001 \001" +
-      "(\0132\023.coding.TestCaseDto\">\n\025UpsertTestCas" +
-      "eRequest\022%\n\010testCase\030\001 \001(\0132\023.coding.Test" +
-      "CaseDto2\220\003\n\021CodingSyncService\022S\n\024CreateC" +
-      "odingExercise\022#.coding.CreateCodingExerc" +
-      "iseRequest\032\026.google.protobuf.Empty\022I\n\017Ad" +
-      "dCodingDetail\022\036.coding.AddCodingDetailRe" +
-      "quest\032\026.google.protobuf.Empty\022O\n\022UpsertC" +
-      "odingDetail\022!.coding.UpsertCodingDetailR" +
-      "equest\032\026.google.protobuf.Empty\022A\n\013AddTes" +
-      "tCase\022\032.coding.AddTestCaseRequest\032\026.goog" +
-      "le.protobuf.Empty\022G\n\016UpsertTestCase\022\035.co" +
-      "ding.UpsertTestCaseRequest\032\026.google.prot" +
-      "obuf.EmptyB+\n\032com.codecampus.coding.grpc" +
-      "B\013CodingProtoP\001b\006proto3"
+      "roto\"p\n\021CodingExerciseDto\022\n\n\002id\030\001 \001(\t\022\r\n" +
+      "\005title\030\002 \001(\t\022\023\n\013description\030\003 \001(\t\022\030\n\020pub" +
+      "licAccessible\030\004 \001(\010\022\021\n\tcreatedBy\030\005 \001(\t\"\225" +
+      "\002\n\017CodingDetailDto\022\022\n\nexerciseId\030\001 \001(\t\022\030" +
+      "\n\020allowedLanguages\030\002 \003(\t\022\r\n\005input\030\003 \001(\t\022" +
+      "\016\n\006output\030\004 \001(\t\022\021\n\ttimeLimit\030\005 \001(\005\022\023\n\013me" +
+      "moryLimit\030\006 \001(\005\022\026\n\016maxSubmissions\030\007 \001(\005\022" +
+      "\r\n\005topic\030\010 \001(\t\022\026\n\016constraintText\030\t \001(\t\022\024" +
+      "\n\014codeTemplate\030\n \001(\t\022\020\n\010solution\030\013 \001(\t\022&" +
+      "\n\ttestcases\030\014 \003(\0132\023.coding.TestCaseDto\"r" +
+      "\n\013TestCaseDto\022\n\n\002id\030\001 \001(\t\022\022\n\nexerciseId\030" +
+      "\002 \001(\t\022\r\n\005input\030\003 \001(\t\022\026\n\016expectedOutput\030\004" +
+      " \001(\t\022\016\n\006sample\030\005 \001(\010\022\014\n\004note\030\006 \001(\t\"\037\n\021So" +
+      "ftDeleteRequest\022\n\n\002id\030\001 \001(\t\"C\n\031SoftDelet" +
+      "eTestCaseRequest\022\022\n\nexerciseId\030\001 \001(\t\022\022\n\n" +
+      "testCaseId\030\002 \001(\t\"\232\001\n\021SubmitCodeRequest\022\022" +
+      "\n\nexerciseId\030\001 \001(\t\022\021\n\tstudentId\030\002 \001(\t\022\020\n" +
+      "\010language\030\003 \001(\t\022\022\n\nsourceCode\030\004 \001(\t\022\020\n\010m" +
+      "emoryMb\030\005 \001(\005\022\014\n\004cpus\030\006 \001(\002\022\030\n\020timeTaken" +
+      "Seconds\030\007 \001(\005\"\202\001\n\021TestCaseResultDto\022\022\n\nt" +
+      "estCaseId\030\001 \001(\t\022\016\n\006passed\030\002 \001(\010\022\021\n\trunti" +
+      "meMs\030\003 \001(\005\022\020\n\010memoryKb\030\004 \001(\005\022\016\n\006output\030\005" +
+      " \001(\t\022\024\n\014errorMessage\030\006 \001(\t\"\212\001\n\022SubmitCod" +
+      "eResponse\022\024\n\014submissionId\030\001 \001(\t\022\r\n\005score" +
+      "\030\002 \001(\005\022\023\n\013totalPoints\030\003 \001(\005\022\016\n\006passed\030\004 " +
+      "\001(\010\022*\n\007results\030\005 \003(\0132\031.coding.TestCaseRe" +
+      "sultDto\":\n\021LoadCodingRequest\022\022\n\nexercise" +
+      "Id\030\001 \001(\t\022\021\n\tstudentId\030\002 \001(\t\"\204\002\n\030CodingDe" +
+      "tailLoadResponse\022\r\n\005topic\030\001 \001(\t\022\030\n\020allow" +
+      "edLanguages\030\002 \003(\t\022\r\n\005input\030\003 \001(\t\022\016\n\006outp" +
+      "ut\030\004 \001(\t\022\026\n\016constraintText\030\005 \001(\t\022\021\n\ttime" +
+      "Limit\030\006 \001(\005\022\023\n\013memoryLimit\030\007 \001(\005\022\026\n\016maxS" +
+      "ubmissions\030\010 \001(\005\022\024\n\014codeTemplate\030\t \001(\t\0222" +
+      "\n\ttestcases\030\n \003(\0132\037.coding.TestCaseDtoLo" +
+      "adResponse\"s\n\022LoadCodingResponse\022+\n\010exer" +
+      "cise\030\001 \001(\0132\031.coding.CodingExerciseDto\0220\n" +
+      "\006detail\030\002 \001(\0132 .coding.CodingDetailLoadR" +
+      "esponse\"j\n\027TestCaseDtoLoadResponse\022\n\n\002id" +
+      "\030\001 \001(\t\022\r\n\005input\030\002 \001(\t\022\026\n\016expectedOutput\030" +
+      "\003 \001(\t\022\016\n\006sample\030\004 \001(\010\022\014\n\004note\030\005 \001(\t\"\200\001\n\r" +
+      "AssignmentDto\022\n\n\002id\030\001 \001(\t\022\022\n\nexerciseId\030" +
+      "\002 \001(\t\022\021\n\tstudentId\030\003 \001(\t\022)\n\005dueAt\030\004 \001(\0132" +
+      "\032.google.protobuf.Timestamp\022\021\n\tcompleted" +
+      "\030\005 \001(\010\"D\n\027UpsertAssignmentRequest\022)\n\nass" +
+      "ignment\030\001 \001(\0132\025.coding.AssignmentDto\"J\n\033" +
+      "CreateCodingExerciseRequest\022+\n\010exercise\030" +
+      "\001 \001(\0132\031.coding.CodingExerciseDto\"[\n\026AddC" +
+      "odingDetailRequest\022\022\n\nexerciseId\030\001 \001(\t\022-" +
+      "\n\014codingDetail\030\002 \001(\0132\027.coding.CodingDeta" +
+      "ilDto\"O\n\022AddTestCaseRequest\022\022\n\nexerciseI" +
+      "d\030\001 \001(\t\022%\n\010testCase\030\002 \001(\0132\023.coding.TestC" +
+      "aseDto2\335\003\n\021CodingSyncService\022S\n\024CreateCo" +
+      "dingExercise\022#.coding.CreateCodingExerci" +
+      "seRequest\032\026.google.protobuf.Empty\022I\n\017Add" +
+      "CodingDetail\022\036.coding.AddCodingDetailReq" +
+      "uest\032\026.google.protobuf.Empty\022A\n\013AddTestC" +
+      "ase\022\032.coding.AddTestCaseRequest\032\026.google" +
+      ".protobuf.Empty\022G\n\022SoftDeleteExercise\022\031." +
+      "coding.SoftDeleteRequest\032\026.google.protob" +
+      "uf.Empty\022O\n\022SoftDeleteTestCase\022!.coding." +
+      "SoftDeleteTestCaseRequest\032\026.google.proto" +
+      "buf.Empty\022K\n\020UpsertAssignment\022\037.coding.U" +
+      "psertAssignmentRequest\032\026.google.protobuf" +
+      ".Empty2\235\001\n\021CodingPlayService\022C\n\nSubmitCo" +
+      "de\022\031.coding.SubmitCodeRequest\032\032.coding.S" +
+      "ubmitCodeResponse\022C\n\nLoadCoding\022\031.coding" +
+      ".LoadCodingRequest\032\032.coding.LoadCodingRe" +
+      "sponseB+\n\032com.codecampus.coding.grpcB\013Co" +
+      "dingProtoP\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -119,49 +202,103 @@ public final class CodingProto {
     internal_static_coding_CodingExerciseDto_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_coding_CodingExerciseDto_descriptor,
-        new java.lang.String[] { "Id", "Title", "Description", });
+        new java.lang.String[] { "Id", "Title", "Description", "PublicAccessible", "CreatedBy", });
     internal_static_coding_CodingDetailDto_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_coding_CodingDetailDto_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_coding_CodingDetailDto_descriptor,
-        new java.lang.String[] { "ExerciseId", "AllowedLanguages", "Input", "Output", "TimeLimit", "MemoryLimit", "MaxSubmissions", "Topic", "ConstraintText", "CodeTemplate", "Solution", });
+        new java.lang.String[] { "ExerciseId", "AllowedLanguages", "Input", "Output", "TimeLimit", "MemoryLimit", "MaxSubmissions", "Topic", "ConstraintText", "CodeTemplate", "Solution", "Testcases", });
     internal_static_coding_TestCaseDto_descriptor =
       getDescriptor().getMessageTypes().get(2);
     internal_static_coding_TestCaseDto_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_coding_TestCaseDto_descriptor,
         new java.lang.String[] { "Id", "ExerciseId", "Input", "ExpectedOutput", "Sample", "Note", });
-    internal_static_coding_CreateCodingExerciseRequest_descriptor =
+    internal_static_coding_SoftDeleteRequest_descriptor =
       getDescriptor().getMessageTypes().get(3);
+    internal_static_coding_SoftDeleteRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_coding_SoftDeleteRequest_descriptor,
+        new java.lang.String[] { "Id", });
+    internal_static_coding_SoftDeleteTestCaseRequest_descriptor =
+      getDescriptor().getMessageTypes().get(4);
+    internal_static_coding_SoftDeleteTestCaseRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_coding_SoftDeleteTestCaseRequest_descriptor,
+        new java.lang.String[] { "ExerciseId", "TestCaseId", });
+    internal_static_coding_SubmitCodeRequest_descriptor =
+      getDescriptor().getMessageTypes().get(5);
+    internal_static_coding_SubmitCodeRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_coding_SubmitCodeRequest_descriptor,
+        new java.lang.String[] { "ExerciseId", "StudentId", "Language", "SourceCode", "MemoryMb", "Cpus", "TimeTakenSeconds", });
+    internal_static_coding_TestCaseResultDto_descriptor =
+      getDescriptor().getMessageTypes().get(6);
+    internal_static_coding_TestCaseResultDto_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_coding_TestCaseResultDto_descriptor,
+        new java.lang.String[] { "TestCaseId", "Passed", "RuntimeMs", "MemoryKb", "Output", "ErrorMessage", });
+    internal_static_coding_SubmitCodeResponse_descriptor =
+      getDescriptor().getMessageTypes().get(7);
+    internal_static_coding_SubmitCodeResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_coding_SubmitCodeResponse_descriptor,
+        new java.lang.String[] { "SubmissionId", "Score", "TotalPoints", "Passed", "Results", });
+    internal_static_coding_LoadCodingRequest_descriptor =
+      getDescriptor().getMessageTypes().get(8);
+    internal_static_coding_LoadCodingRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_coding_LoadCodingRequest_descriptor,
+        new java.lang.String[] { "ExerciseId", "StudentId", });
+    internal_static_coding_CodingDetailLoadResponse_descriptor =
+      getDescriptor().getMessageTypes().get(9);
+    internal_static_coding_CodingDetailLoadResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_coding_CodingDetailLoadResponse_descriptor,
+        new java.lang.String[] { "Topic", "AllowedLanguages", "Input", "Output", "ConstraintText", "TimeLimit", "MemoryLimit", "MaxSubmissions", "CodeTemplate", "Testcases", });
+    internal_static_coding_LoadCodingResponse_descriptor =
+      getDescriptor().getMessageTypes().get(10);
+    internal_static_coding_LoadCodingResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_coding_LoadCodingResponse_descriptor,
+        new java.lang.String[] { "Exercise", "Detail", });
+    internal_static_coding_TestCaseDtoLoadResponse_descriptor =
+      getDescriptor().getMessageTypes().get(11);
+    internal_static_coding_TestCaseDtoLoadResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_coding_TestCaseDtoLoadResponse_descriptor,
+        new java.lang.String[] { "Id", "Input", "ExpectedOutput", "Sample", "Note", });
+    internal_static_coding_AssignmentDto_descriptor =
+      getDescriptor().getMessageTypes().get(12);
+    internal_static_coding_AssignmentDto_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_coding_AssignmentDto_descriptor,
+        new java.lang.String[] { "Id", "ExerciseId", "StudentId", "DueAt", "Completed", });
+    internal_static_coding_UpsertAssignmentRequest_descriptor =
+      getDescriptor().getMessageTypes().get(13);
+    internal_static_coding_UpsertAssignmentRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_coding_UpsertAssignmentRequest_descriptor,
+        new java.lang.String[] { "Assignment", });
+    internal_static_coding_CreateCodingExerciseRequest_descriptor =
+      getDescriptor().getMessageTypes().get(14);
     internal_static_coding_CreateCodingExerciseRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_coding_CreateCodingExerciseRequest_descriptor,
         new java.lang.String[] { "Exercise", });
     internal_static_coding_AddCodingDetailRequest_descriptor =
-      getDescriptor().getMessageTypes().get(4);
+      getDescriptor().getMessageTypes().get(15);
     internal_static_coding_AddCodingDetailRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_coding_AddCodingDetailRequest_descriptor,
-        new java.lang.String[] { "Detail", });
-    internal_static_coding_UpsertCodingDetailRequest_descriptor =
-      getDescriptor().getMessageTypes().get(5);
-    internal_static_coding_UpsertCodingDetailRequest_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-        internal_static_coding_UpsertCodingDetailRequest_descriptor,
-        new java.lang.String[] { "Detail", });
+        new java.lang.String[] { "ExerciseId", "CodingDetail", });
     internal_static_coding_AddTestCaseRequest_descriptor =
-      getDescriptor().getMessageTypes().get(6);
+      getDescriptor().getMessageTypes().get(16);
     internal_static_coding_AddTestCaseRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_coding_AddTestCaseRequest_descriptor,
-        new java.lang.String[] { "TestCase", });
-    internal_static_coding_UpsertTestCaseRequest_descriptor =
-      getDescriptor().getMessageTypes().get(7);
-    internal_static_coding_UpsertTestCaseRequest_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-        internal_static_coding_UpsertTestCaseRequest_descriptor,
-        new java.lang.String[] { "TestCase", });
+        new java.lang.String[] { "ExerciseId", "TestCase", });
     descriptor.resolveAllFeaturesImmutable();
     com.google.protobuf.EmptyProto.getDescriptor();
     com.google.protobuf.TimestampProto.getDescriptor();

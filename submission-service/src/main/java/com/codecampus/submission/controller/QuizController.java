@@ -7,7 +7,6 @@ import com.codecampus.submission.dto.request.quiz.AddQuizDetailRequest;
 import com.codecampus.submission.dto.request.quiz.OptionDto;
 import com.codecampus.submission.dto.request.quiz.QuestionDto;
 import com.codecampus.submission.dto.request.quiz.UpdateOptionRequest;
-import com.codecampus.submission.dto.request.quiz.UpdateQuestionRequest;
 import com.codecampus.submission.dto.request.quiz.UpdateQuestionWithOptionsRequest;
 import com.codecampus.submission.entity.Option;
 import com.codecampus.submission.entity.Question;
@@ -25,7 +24,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -83,7 +81,7 @@ public class QuizController {
                 .build();
     }
 
-    @PutMapping("/quiz/{exerciseId}/question/{questionId}")
+    @PatchMapping("/quiz/{exerciseId}/question/{questionId}")
     public ApiResponse<Void> updateQuestionWithOptions(
             @PathVariable String exerciseId,
             @PathVariable String questionId,
@@ -99,18 +97,19 @@ public class QuizController {
                 .build();
     }
 
-    @PatchMapping("/quiz/{exerciseId}/question/{questionId}")
-    ApiResponse<Void> updateQuestion(
-            @PathVariable String exerciseId,
-            @PathVariable String questionId,
-            @RequestBody UpdateQuestionRequest request) {
-
-        quizService.updateQuestion(exerciseId, questionId, request);
-
-        return ApiResponse.<Void>builder()
-                .message("Sửa question thành công!")
-                .build();
-    }
+//    @Deprecated
+//    @PatchMapping("/quiz/{exerciseId}/question/{questionId}")
+//    ApiResponse<Void> updateQuestion(
+//            @PathVariable String exerciseId,
+//            @PathVariable String questionId,
+//            @RequestBody UpdateQuestionRequest request) {
+//
+//        quizService.updateQuestion(exerciseId, questionId, request);
+//
+//        return ApiResponse.<Void>builder()
+//                .message("Sửa question thành công!")
+//                .build();
+//    }
 
     @DeleteMapping("/quiz/{exerciseId}/question/{questionId}")
     ApiResponse<Void> softDeleteQuestion(

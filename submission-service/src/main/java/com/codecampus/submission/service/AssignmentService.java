@@ -1,9 +1,11 @@
 package com.codecampus.submission.service;
 
+import com.codecampus.submission.constant.submission.ExerciseType;
 import com.codecampus.submission.entity.Assignment;
 import com.codecampus.submission.entity.Exercise;
 import com.codecampus.submission.helper.ExerciseHelper;
 import com.codecampus.submission.repository.AssignmentRepository;
+import com.codecampus.submission.service.grpc.GrpcCodingClient;
 import com.codecampus.submission.service.grpc.GrpcQuizClient;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,7 @@ public class AssignmentService {
 
     ExerciseHelper exerciseHelper;
     GrpcQuizClient grpcQuizClient;
+    GrpcCodingClient grpcCodingClient;
 
     @Transactional
     public Assignment assignExercise(
@@ -42,7 +45,12 @@ public class AssignmentService {
         assignment.setCompleted(false);
         assignmentRepository.save(assignment);
 
-        grpcQuizClient.pushAssignment(assignment);
+
+        if (exercise.getExerciseType() == ExerciseType.QUIZ) {
+            grpcQuizClient.pushAssignment(assignment);
+        } else if (exercise.getExerciseType() == ExerciseType.CODING) {
+            grpcCodingClient.pushAssignment(assignment);
+        }
         return assignment;
     }
 

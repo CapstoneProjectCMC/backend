@@ -20,7 +20,7 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = "spring")
 public interface SubmissionMapper {
 
-    @Mapping(target = "id", ignore = true)             // QUAN TRỌNG
+    @Mapping(target = "id", ignore = true)
     @Mapping(target = "exercise", ignore = true)
     @Mapping(target = "userId", source = "studentId")
     @Mapping(target = "submittedAt",

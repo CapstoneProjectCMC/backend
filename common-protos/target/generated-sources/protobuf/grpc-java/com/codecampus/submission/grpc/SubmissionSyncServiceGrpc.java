@@ -46,6 +46,37 @@ public final class SubmissionSyncServiceGrpc {
     return getCreateQuizSubmissionMethod;
   }
 
+  private static volatile io.grpc.MethodDescriptor<com.codecampus.submission.grpc.CreateCodeSubmissionRequest,
+      com.google.protobuf.Empty> getCreateCodeSubmissionMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "CreateCodeSubmission",
+      requestType = com.codecampus.submission.grpc.CreateCodeSubmissionRequest.class,
+      responseType = com.google.protobuf.Empty.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<com.codecampus.submission.grpc.CreateCodeSubmissionRequest,
+      com.google.protobuf.Empty> getCreateCodeSubmissionMethod() {
+    io.grpc.MethodDescriptor<com.codecampus.submission.grpc.CreateCodeSubmissionRequest, com.google.protobuf.Empty> getCreateCodeSubmissionMethod;
+    if ((getCreateCodeSubmissionMethod = SubmissionSyncServiceGrpc.getCreateCodeSubmissionMethod) == null) {
+      synchronized (SubmissionSyncServiceGrpc.class) {
+        if ((getCreateCodeSubmissionMethod = SubmissionSyncServiceGrpc.getCreateCodeSubmissionMethod) == null) {
+          SubmissionSyncServiceGrpc.getCreateCodeSubmissionMethod = getCreateCodeSubmissionMethod =
+              io.grpc.MethodDescriptor.<com.codecampus.submission.grpc.CreateCodeSubmissionRequest, com.google.protobuf.Empty>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "CreateCodeSubmission"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.codecampus.submission.grpc.CreateCodeSubmissionRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.google.protobuf.Empty.getDefaultInstance()))
+              .setSchemaDescriptor(new SubmissionSyncServiceMethodDescriptorSupplier("CreateCodeSubmission"))
+              .build();
+        }
+      }
+    }
+    return getCreateCodeSubmissionMethod;
+  }
+
   /**
    * Creates a new async stub that supports all call types for the service
    */
@@ -115,6 +146,13 @@ public final class SubmissionSyncServiceGrpc {
         io.grpc.stub.StreamObserver<com.google.protobuf.Empty> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getCreateQuizSubmissionMethod(), responseObserver);
     }
+
+    /**
+     */
+    default void createCodeSubmission(com.codecampus.submission.grpc.CreateCodeSubmissionRequest request,
+        io.grpc.stub.StreamObserver<com.google.protobuf.Empty> responseObserver) {
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getCreateCodeSubmissionMethod(), responseObserver);
+    }
   }
 
   /**
@@ -151,6 +189,14 @@ public final class SubmissionSyncServiceGrpc {
       io.grpc.stub.ClientCalls.asyncUnaryCall(
           getChannel().newCall(getCreateQuizSubmissionMethod(), getCallOptions()), request, responseObserver);
     }
+
+    /**
+     */
+    public void createCodeSubmission(com.codecampus.submission.grpc.CreateCodeSubmissionRequest request,
+        io.grpc.stub.StreamObserver<com.google.protobuf.Empty> responseObserver) {
+      io.grpc.stub.ClientCalls.asyncUnaryCall(
+          getChannel().newCall(getCreateCodeSubmissionMethod(), getCallOptions()), request, responseObserver);
+    }
   }
 
   /**
@@ -175,6 +221,13 @@ public final class SubmissionSyncServiceGrpc {
       return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getCreateQuizSubmissionMethod(), getCallOptions(), request);
     }
+
+    /**
+     */
+    public com.google.protobuf.Empty createCodeSubmission(com.codecampus.submission.grpc.CreateCodeSubmissionRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getCreateCodeSubmissionMethod(), getCallOptions(), request);
+    }
   }
 
   /**
@@ -198,6 +251,13 @@ public final class SubmissionSyncServiceGrpc {
     public com.google.protobuf.Empty createQuizSubmission(com.codecampus.submission.grpc.CreateQuizSubmissionRequest request) {
       return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getCreateQuizSubmissionMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public com.google.protobuf.Empty createCodeSubmission(com.codecampus.submission.grpc.CreateCodeSubmissionRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getCreateCodeSubmissionMethod(), getCallOptions(), request);
     }
   }
 
@@ -224,9 +284,18 @@ public final class SubmissionSyncServiceGrpc {
       return io.grpc.stub.ClientCalls.futureUnaryCall(
           getChannel().newCall(getCreateQuizSubmissionMethod(), getCallOptions()), request);
     }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<com.google.protobuf.Empty> createCodeSubmission(
+        com.codecampus.submission.grpc.CreateCodeSubmissionRequest request) {
+      return io.grpc.stub.ClientCalls.futureUnaryCall(
+          getChannel().newCall(getCreateCodeSubmissionMethod(), getCallOptions()), request);
+    }
   }
 
   private static final int METHODID_CREATE_QUIZ_SUBMISSION = 0;
+  private static final int METHODID_CREATE_CODE_SUBMISSION = 1;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -247,6 +316,10 @@ public final class SubmissionSyncServiceGrpc {
       switch (methodId) {
         case METHODID_CREATE_QUIZ_SUBMISSION:
           serviceImpl.createQuizSubmission((com.codecampus.submission.grpc.CreateQuizSubmissionRequest) request,
+              (io.grpc.stub.StreamObserver<com.google.protobuf.Empty>) responseObserver);
+          break;
+        case METHODID_CREATE_CODE_SUBMISSION:
+          serviceImpl.createCodeSubmission((com.codecampus.submission.grpc.CreateCodeSubmissionRequest) request,
               (io.grpc.stub.StreamObserver<com.google.protobuf.Empty>) responseObserver);
           break;
         default:
@@ -274,6 +347,13 @@ public final class SubmissionSyncServiceGrpc {
               com.codecampus.submission.grpc.CreateQuizSubmissionRequest,
               com.google.protobuf.Empty>(
                 service, METHODID_CREATE_QUIZ_SUBMISSION)))
+        .addMethod(
+          getCreateCodeSubmissionMethod(),
+          io.grpc.stub.ServerCalls.asyncUnaryCall(
+            new MethodHandlers<
+              com.codecampus.submission.grpc.CreateCodeSubmissionRequest,
+              com.google.protobuf.Empty>(
+                service, METHODID_CREATE_CODE_SUBMISSION)))
         .build();
   }
 
@@ -323,6 +403,7 @@ public final class SubmissionSyncServiceGrpc {
           serviceDescriptor = result = io.grpc.ServiceDescriptor.newBuilder(SERVICE_NAME)
               .setSchemaDescriptor(new SubmissionSyncServiceFileDescriptorSupplier())
               .addMethod(getCreateQuizSubmissionMethod())
+              .addMethod(getCreateCodeSubmissionMethod())
               .build();
         }
       }

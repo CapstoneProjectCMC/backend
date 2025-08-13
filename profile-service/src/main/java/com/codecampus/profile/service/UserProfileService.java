@@ -43,7 +43,6 @@ import static com.codecampus.profile.helper.PageResponseHelper.toPageResponse;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserProfileService {
     UserProfileRepository userProfileRepository;
-
     UserProfileMapper userProfileMapper;
     AuthenticationHelper authenticationHelper;
 
@@ -66,11 +65,14 @@ public class UserProfileService {
             UserProfileCreationRequest request) {
         authenticationHelper.checkExistsUserid(request.getUserId());
 
-        UserProfile userProfile = userProfileMapper.toUserProfile(request);
+        UserProfile userProfile =
+                userProfileMapper.toUserProfileFromUserProfileCreationRequest(
+                        request);
         userProfile.setCreatedAt(Instant.now());
         userProfile = userProfileRepository.save(userProfile);
 
-        return userProfileMapper.toUserProfileResponse(userProfile);
+        return userProfileMapper.toUserProfileResponseFromUserProfile(
+                userProfile);
     }
 
     /**
@@ -83,7 +85,7 @@ public class UserProfileService {
     public UserProfileResponse getUserProfileByUserId(String userId) {
         return userProfileRepository
                 .findByUserId(userId)
-                .map(userProfileMapper::toUserProfileResponse)
+                .map(userProfileMapper::toUserProfileResponseFromUserProfile)
                 .orElseThrow(
                         () -> new AppException(ErrorCode.USER_NOT_FOUND)
                 );
@@ -99,7 +101,7 @@ public class UserProfileService {
     public UserProfileResponse getUserProfileById(String id) {
         return userProfileRepository
                 .findById(id)
-                .map(userProfileMapper::toUserProfileResponse)
+                .map(userProfileMapper::toUserProfileResponseFromUserProfile)
                 .orElseThrow(
                         () -> new AppException(ErrorCode.USER_NOT_FOUND)
                 );
@@ -118,7 +120,7 @@ public class UserProfileService {
         Pageable pageable = PageRequest.of(page - 1, size);
         var pageData = userProfileRepository
                 .findAll(pageable)
-                .map(userProfileMapper::toUserProfileResponse);
+                .map(userProfileMapper::toUserProfileResponseFromUserProfile);
 
         return toPageResponse(pageData, page);
     }
@@ -139,7 +141,7 @@ public class UserProfileService {
      */
     public UserProfile getUserProfile(String userId) {
         return userProfileRepository
-                .findByUserId(userId)
+                .findActiveByUserId(userId)
                 .orElseThrow(
                         () -> new AppException(ErrorCode.USER_NOT_FOUND)
                 );
@@ -173,16 +175,51 @@ public class UserProfileService {
      * @return UserProfileResponse sau khi cập nhật
      * @throws AppException nếu không tìm thấy hồ sơ
      */
-    public UserProfileResponse updateMyUserProfile(
+    public void updateMyUserProfile(
             UserProfileUpdateRequest request) {
 
         UserProfile profile = getUserProfile();
 
-        userProfileMapper.updateUserProfile(profile, request);
-        return userProfileMapper.toUserProfileResponse(
+        userProfileMapper.updateUserProfileUpdateRequestToUserProfile(profile,
+                request);
+        userProfileMapper.toUserProfileResponseFromUserProfile(
                 userProfileRepository.save(profile)
         );
     }
 
+    public void updateUserProfileById(
+            String userId,
+            UserProfileUpdateRequest request) {
+        UserProfile profile = userProfileRepository
+                .findActiveByUserId(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        userProfileMapper.updateUserProfileUpdateRequestToUserProfile(profile,
+                request);
+        userProfileRepository.save(profile);
+    }
 
+    public void softDeleteUserProfileByUserId(
+            String userId,
+            String deletedBy) {
+        UserProfile profile = userProfileRepository
+                .findByUserId(userId) // Lấy tất cả userId
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        if (profile.getDeletedAt() == null) {
+            profile.setDeletedAt(Instant.now());
+            profile.setDeletedBy(deletedBy);
+            userProfileRepository.save(profile);
+        }
+    }
+
+    public void restoreByUserId(
+            String userId) {
+        UserProfile profile = userProfileRepository
+                .findByUserId(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        if (profile.getDeletedAt() != null) {
+            profile.setDeletedAt(null);
+            profile.setDeletedBy(null);
+            userProfileRepository.save(profile);
+        }
+    }
 }

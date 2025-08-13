@@ -9,6 +9,7 @@ import com.codecampus.identity.exception.AppException;
 import com.codecampus.identity.exception.ErrorCode;
 import com.codecampus.identity.repository.account.OtpVerificationRepository;
 import com.codecampus.identity.repository.account.UserRepository;
+import com.codecampus.identity.service.kafka.UserEventProducer;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -41,6 +42,8 @@ public class OtpService {
     JavaMailSender mailSender;
     OtpVerificationRepository otpRepository;
     UserRepository userRepository;
+    
+    UserEventProducer userEventProducer;
 
     @Value("${app.otp.expiry-minutes}")
     @NonFinal
@@ -139,6 +142,7 @@ public class OtpService {
         user.setEnabled(true);
         userRepository.save(user);
 
+        userEventProducer.publishUpdatedUserEvent(user);
         otpRepository.save(otp);
     }
 

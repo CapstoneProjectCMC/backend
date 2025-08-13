@@ -1,0 +1,21 @@
+package com.codecampus.identity.dto.request.profile;
+
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.FieldDefaults;
+
+@Data
+@NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class UserProfileUpdateRequest {
+    String firstName;
+    String lastName;
+    String dob;
+    String bio;
+    Boolean gender;
+    String displayName;
+    Integer education;
+    String[] links;
+    String city;
+}

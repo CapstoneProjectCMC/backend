@@ -14,7 +14,7 @@ public interface UserProfileMapper {
             "email",
             "password"
     })
-    UserProfileCreationRequest toUserProfileCreationRequest(
+    UserProfileCreationRequest toUserProfileCreationRequestFromUserCreationRequest(
             UserCreationRequest userCreationRequest);
 }
 

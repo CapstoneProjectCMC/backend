@@ -143,4 +143,28 @@ public interface CodingDetailDtoOrBuilder extends
    */
   com.google.protobuf.ByteString
       getSolutionBytes();
+
+  /**
+   * <code>repeated .coding.TestCaseDto testcases = 12;</code>
+   */
+  java.util.List<com.codecampus.coding.grpc.TestCaseDto> 
+      getTestcasesList();
+  /**
+   * <code>repeated .coding.TestCaseDto testcases = 12;</code>
+   */
+  com.codecampus.coding.grpc.TestCaseDto getTestcases(int index);
+  /**
+   * <code>repeated .coding.TestCaseDto testcases = 12;</code>
+   */
+  int getTestcasesCount();
+  /**
+   * <code>repeated .coding.TestCaseDto testcases = 12;</code>
+   */
+  java.util.List<? extends com.codecampus.coding.grpc.TestCaseDtoOrBuilder> 
+      getTestcasesOrBuilderList();
+  /**
+   * <code>repeated .coding.TestCaseDto testcases = 12;</code>
+   */
+  com.codecampus.coding.grpc.TestCaseDtoOrBuilder getTestcasesOrBuilder(
+      int index);
 }

@@ -63,7 +63,7 @@ public class User extends AuditMetadata {
 
     @PreRemove
     private void doSoftDelete() {
-        this.setDeletedBy(AuthenticationHelper.getMyEmail());
+        this.setDeletedBy(AuthenticationHelper.getMyUsername());
         this.setDeletedAt(Instant.now());
     }
 }

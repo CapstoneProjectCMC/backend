@@ -24,11 +24,39 @@ message QuizSubmissionDto {
   int32 timeTakenSeconds = 8;
 }
 
+message CodeSubmissionDto {
+  string id = 1;
+  string exerciseId = 2;
+  string studentId = 3;
+  int32 score = 4; //
+  int32 totalPoints = 5; //
+  string language = 6;
+  string sourceCode = 7;
+  google.protobuf.Timestamp submittedAt = 8;
+  int32 timeTakenSeconds = 9;
+  repeated TestCaseResultSyncDto results = 10;
+}
+
+message TestCaseResultSyncDto {
+  string testCaseId = 1;
+  bool passed = 2;
+  int32 runtimeMs = 3;
+  int32 memoryKb = 4;
+  string output = 5;
+  string errorMessage = 6;
+}
+
 service SubmissionSyncService {
   rpc CreateQuizSubmission(CreateQuizSubmissionRequest)
+      returns (google.protobuf.Empty);
+  rpc CreateCodeSubmission (CreateCodeSubmissionRequest)
       returns (google.protobuf.Empty);
 }
 
 message CreateQuizSubmissionRequest {
   QuizSubmissionDto submission = 1;
+}
+
+message CreateCodeSubmissionRequest {
+  CodeSubmissionDto submission = 1;
 }

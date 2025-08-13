@@ -1,0 +1,149 @@
+name: codecampus-services
+services:
+  ########################
+  #     ỨNG DỤNG chính    #
+  ########################
+  identity-service:
+    image: ${DOCKERHUB_USER}/codecampus-identity-service:${IMAGE_TAG:-latest}
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - IDENTITY_DATABASE=${IDENTITY_DATABASE}
+      - IDENTITY_USERNAME=${IDENTITY_USERNAME}
+      - IDENTITY_DB_PASSWORD=${IDENTITY_DB_PASSWORD}
+    ports: [ "8080:8080" ]
+    depends_on:
+      - profile-service
+    networks: [ backend ]
+
+  profile-service:
+    image: ${DOCKERHUB_USER}/codecampus-profile-service:${IMAGE_TAG:-latest}
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - NEO4J_USERNAME=neo4j
+      - NEO4J_PASSWORD=${NEO4J_PASSWORD}
+    ports: [ "8081:8081" ]
+    networks: [ backend ]
+
+  submission-service:
+    image: ${DOCKERHUB_USER}/codecampus-submission-service:${IMAGE_TAG:-latest}
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SUBMISSION_DATABASE=${SUBMISSION_DATABASE}
+      - SUBMISSION_USERNAME=${SUBMISSION_USERNAME}
+      - SUBMISSION_DB_PASSWORD=${SUBMISSION_DB_PASSWORD}
+    ports: [ "8083:8083", "9590:9590" ]
+    networks: [ backend ]
+
+  coding-service:
+    image: ${DOCKERHUB_USER}/codecampus-coding-service:${IMAGE_TAG:-latest}
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - CODING_DATABASE=${CODING_DATABASE}
+      - CODING_USERNAME=${CODING_USERNAME}
+      - CODING_DB_PASSWORD=${CODING_DB_PASSWORD}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - SANDBOX_IMAGE=capstoneprojectpythondocker:latest
+      - RUNNER_ROOT=/work
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock  # cần cho 'docker run'
+      - runner_data:/work
+    ports: [ "8084:8084", "9592:9592" ]
+    networks: [ backend ]
+
+  sandbox-image:
+    build:
+      context: .
+      dockerfile: ./docker/sandbox.Dockerfile
+    image: capstoneprojectpythondocker:latest
+    profiles: [ "build-only" ]
+
+  quiz-service:
+    image: ${DOCKERHUB_USER}/codecampus-quiz-service:${IMAGE_TAG:-latest}
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - QUIZ_DATABASE=${QUIZ_DATABASE}
+      - QUIZ_USERNAME=${QUIZ_USERNAME}
+      - QUIZ_DB_PASSWORD=${QUIZ_DB_PASSWORD}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    ports: [ "8085:8085", "9591:9591" ]
+    networks: [ backend ]
+
+  ai-service:
+    image: ${DOCKERHUB_USER}/codecampus-ai-service:${IMAGE_TAG:-latest}
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - AI_DATABASE=${AI_DATABASE}
+      - AI_USERNAME=${AI_USERNAME}
+      - AI_DB_PASSWORD=${AI_DB_PASSWORD}
+      - SPRING_AI_OPENAI_API_KEY=${OPENAI_API_KEY}
+    ports: [ "8086:8086" ]
+    networks: [ backend ]
+
+  search-service:
+    image: ${DOCKERHUB_USER}/codecampus-search-service:${IMAGE_TAG:-latest}
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - ELASTIC_USERNAME=${ELASTIC_USERNAME}
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+    ports: [ "8087:8087" ]
+    networks: [ backend ]
+
+  notification-service:
+    image: ${DOCKERHUB_USER}/codecampus-notification-service:${IMAGE_TAG:-latest}
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    ports: [ "8088:8088" ]
+    networks: [ backend ]
+
+  chat-service:
+    image: ${DOCKERHUB_USER}/codecampus-chat-service:${IMAGE_TAG:-latest}
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - CHAT_USERNAME=${CHAT_USERNAME}
+      - CHAT_PASSWORD=${CHAT_PASSWORD}
+      - CHAT_DATABASE=${CHAT_DATABASE}
+    ports: [ "8089:8089" ]
+    networks: [ backend ]
+
+  file-service:
+    image: ${DOCKERHUB_USER}/codecampus-file-service:${IMAGE_TAG:-latest}
+    environment:
+      - ASPNETCORE_ENVIRONMENT=staging
+      - MongoDbSettings__ConnectionStrings=mongodb://${FILE_USERNAME}:${FILE_PASSWORD}@file-db:27017/${FILE_DATABASE}?authSource=${FILE_DATABASE}
+      - MongoDbSettings__DatabaseName=${FILE_DATABASE}
+      - AppSettings__MinioConfig__Endpoint=minio
+      - AppSettings__MinioConfig__Port=9000
+      - AppSettings__MinioConfig__AccessKey=${MINIO_ROOT_USER}
+      - AppSettings__MinioConfig__SecretKey=${MINIO_ROOT_PASSWORD}
+      - AppSettings__MinioConfig__BucketName=codecampus2025
+      - AppSettings__MinioConfig__Secure=false
+    ports: [ "8082:8082" ]
+    networks: [ backend ]
+
+  gateway-service:
+    image: ${DOCKERHUB_USER}/codecampus-gateway-service:${IMAGE_TAG:-latest}
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - APP_API_PREFIX=/api/v1
+    ports: [ "8888:8888" ]
+    depends_on:
+      - identity-service
+      - profile-service
+      - submission-service
+      - coding-service
+      - quiz-service
+      - ai-service
+      - search-service
+      - notification-service
+      - chat-service
+    networks: [ backend ]
+
+########################
+#   NETWORK & VOLUME    #
+########################
+networks:
+  backend:
+    name: codecampus_backend
+
+volumes:
+  runner_data:

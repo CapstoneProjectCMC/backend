@@ -4,7 +4,6 @@ import com.codecampus.submission.constant.sort.SortField;
 import com.codecampus.submission.dto.response.quiz.quiz_detail.OptionDetailResponse;
 import com.codecampus.submission.dto.response.quiz.quiz_detail.QuestionDetailResponse;
 import com.codecampus.submission.dto.response.quiz.quiz_detail.QuizDetailSliceDetailResponse;
-import com.codecampus.submission.entity.Exercise;
 import com.codecampus.submission.entity.Option;
 import com.codecampus.submission.entity.Question;
 import com.codecampus.submission.entity.QuizDetail;
@@ -33,14 +32,9 @@ public class QuizHelper {
     }
 
     public QuizDetailSliceDetailResponse buildQuizSliceWithOptions(
-            Exercise exercise,
+            QuizDetail quizDetail,
             int qPage, int qSize,
             SortField qSortBy, boolean qAsc) {
-        QuizDetail quizDetail = exercise.getQuizDetail();
-
-        if (quizDetail == null) {
-            return null;
-        }
 
         Pageable pageable = PageRequest.of(
                 qPage - 1,
@@ -48,7 +42,7 @@ public class QuizHelper {
                 SortHelper.build(qSortBy, qAsc));
 
         Page<Question> pageData =
-                questionRepository.findByQuizDetailId(exercise.getId(),
+                questionRepository.findByQuizDetailId(quizDetail.getId(),
                         pageable);
 
         List<QuestionDetailResponse> questions = pageData.getContent()

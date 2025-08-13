@@ -1,5 +1,6 @@
 package com.codecampus.submission.service.grpc;
 
+import com.codecampus.submission.grpc.CreateCodeSubmissionRequest;
 import com.codecampus.submission.grpc.CreateQuizSubmissionRequest;
 import com.codecampus.submission.grpc.SubmissionSyncServiceGrpc;
 import com.codecampus.submission.service.ExerciseService;
@@ -28,6 +29,17 @@ public class SubmissionSyncServiceImpl
             StreamObserver<Empty> responseObserver) {
 
         exerciseService.createQuizSubmission(request);
+
+        responseObserver.onNext(Empty.getDefaultInstance());
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void createCodeSubmission(
+            CreateCodeSubmissionRequest request,
+            StreamObserver<Empty> responseObserver) {
+
+        exerciseService.createCodeSubmission(request);
 
         responseObserver.onNext(Empty.getDefaultInstance());
         responseObserver.onCompleted();

@@ -19,6 +19,7 @@ import org.hibernate.annotations.Where;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Getter
@@ -53,9 +54,17 @@ public class CodingExercise extends AuditMetadata {
     String codeTemplate;
     String solution;
 
+    boolean publicAccessible;
+
     @JsonManagedReference
-    @OneToMany(mappedBy = "exercise",
+    @OneToMany(mappedBy = "coding",
             cascade = CascadeType.ALL,
             orphanRemoval = true)
     List<TestCase> testCases = new ArrayList<>();
+
+    public Optional<TestCase> findTestCaseById(String testCaseId) {
+        return testCases.stream()
+                .filter(tc -> tc.getId().equals(testCaseId))
+                .findFirst();
+    }
 }

@@ -27,6 +27,7 @@ private static final long serialVersionUID = 0L;
     super(builder);
   }
   private AddCodingDetailRequest() {
+    exerciseId_ = "";
   }
 
   public static final com.google.protobuf.Descriptors.Descriptor
@@ -43,30 +44,69 @@ private static final long serialVersionUID = 0L;
   }
 
   private int bitField0_;
-  public static final int DETAIL_FIELD_NUMBER = 1;
-  private com.codecampus.coding.grpc.CodingDetailDto detail_;
+  public static final int EXERCISEID_FIELD_NUMBER = 1;
+  @SuppressWarnings("serial")
+  private volatile java.lang.Object exerciseId_ = "";
   /**
-   * <code>.coding.CodingDetailDto detail = 1;</code>
-   * @return Whether the detail field is set.
+   * <code>string exerciseId = 1;</code>
+   * @return The exerciseId.
    */
   @java.lang.Override
-  public boolean hasDetail() {
+  public java.lang.String getExerciseId() {
+    java.lang.Object ref = exerciseId_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      exerciseId_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string exerciseId = 1;</code>
+   * @return The bytes for exerciseId.
+   */
+  @java.lang.Override
+  public com.google.protobuf.ByteString
+      getExerciseIdBytes() {
+    java.lang.Object ref = exerciseId_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      exerciseId_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
+  public static final int CODINGDETAIL_FIELD_NUMBER = 2;
+  private com.codecampus.coding.grpc.CodingDetailDto codingDetail_;
+  /**
+   * <code>.coding.CodingDetailDto codingDetail = 2;</code>
+   * @return Whether the codingDetail field is set.
+   */
+  @java.lang.Override
+  public boolean hasCodingDetail() {
     return ((bitField0_ & 0x00000001) != 0);
   }
   /**
-   * <code>.coding.CodingDetailDto detail = 1;</code>
-   * @return The detail.
+   * <code>.coding.CodingDetailDto codingDetail = 2;</code>
+   * @return The codingDetail.
    */
   @java.lang.Override
-  public com.codecampus.coding.grpc.CodingDetailDto getDetail() {
-    return detail_ == null ? com.codecampus.coding.grpc.CodingDetailDto.getDefaultInstance() : detail_;
+  public com.codecampus.coding.grpc.CodingDetailDto getCodingDetail() {
+    return codingDetail_ == null ? com.codecampus.coding.grpc.CodingDetailDto.getDefaultInstance() : codingDetail_;
   }
   /**
-   * <code>.coding.CodingDetailDto detail = 1;</code>
+   * <code>.coding.CodingDetailDto codingDetail = 2;</code>
    */
   @java.lang.Override
-  public com.codecampus.coding.grpc.CodingDetailDtoOrBuilder getDetailOrBuilder() {
-    return detail_ == null ? com.codecampus.coding.grpc.CodingDetailDto.getDefaultInstance() : detail_;
+  public com.codecampus.coding.grpc.CodingDetailDtoOrBuilder getCodingDetailOrBuilder() {
+    return codingDetail_ == null ? com.codecampus.coding.grpc.CodingDetailDto.getDefaultInstance() : codingDetail_;
   }
 
   private byte memoizedIsInitialized = -1;
@@ -83,8 +123,11 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
+    if (!com.google.protobuf.GeneratedMessage.isStringEmpty(exerciseId_)) {
+      com.google.protobuf.GeneratedMessage.writeString(output, 1, exerciseId_);
+    }
     if (((bitField0_ & 0x00000001) != 0)) {
-      output.writeMessage(1, getDetail());
+      output.writeMessage(2, getCodingDetail());
     }
     getUnknownFields().writeTo(output);
   }
@@ -95,9 +138,12 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
+    if (!com.google.protobuf.GeneratedMessage.isStringEmpty(exerciseId_)) {
+      size += com.google.protobuf.GeneratedMessage.computeStringSize(1, exerciseId_);
+    }
     if (((bitField0_ & 0x00000001) != 0)) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(1, getDetail());
+        .computeMessageSize(2, getCodingDetail());
     }
     size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
@@ -114,10 +160,12 @@ private static final long serialVersionUID = 0L;
     }
     com.codecampus.coding.grpc.AddCodingDetailRequest other = (com.codecampus.coding.grpc.AddCodingDetailRequest) obj;
 
-    if (hasDetail() != other.hasDetail()) return false;
-    if (hasDetail()) {
-      if (!getDetail()
-          .equals(other.getDetail())) return false;
+    if (!getExerciseId()
+        .equals(other.getExerciseId())) return false;
+    if (hasCodingDetail() != other.hasCodingDetail()) return false;
+    if (hasCodingDetail()) {
+      if (!getCodingDetail()
+          .equals(other.getCodingDetail())) return false;
     }
     if (!getUnknownFields().equals(other.getUnknownFields())) return false;
     return true;
@@ -130,9 +178,11 @@ private static final long serialVersionUID = 0L;
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
-    if (hasDetail()) {
-      hash = (37 * hash) + DETAIL_FIELD_NUMBER;
-      hash = (53 * hash) + getDetail().hashCode();
+    hash = (37 * hash) + EXERCISEID_FIELD_NUMBER;
+    hash = (53 * hash) + getExerciseId().hashCode();
+    if (hasCodingDetail()) {
+      hash = (37 * hash) + CODINGDETAIL_FIELD_NUMBER;
+      hash = (53 * hash) + getCodingDetail().hashCode();
     }
     hash = (29 * hash) + getUnknownFields().hashCode();
     memoizedHashCode = hash;
@@ -264,17 +314,18 @@ private static final long serialVersionUID = 0L;
     private void maybeForceBuilderInitialization() {
       if (com.google.protobuf.GeneratedMessage
               .alwaysUseFieldBuilders) {
-        internalGetDetailFieldBuilder();
+        internalGetCodingDetailFieldBuilder();
       }
     }
     @java.lang.Override
     public Builder clear() {
       super.clear();
       bitField0_ = 0;
-      detail_ = null;
-      if (detailBuilder_ != null) {
-        detailBuilder_.dispose();
-        detailBuilder_ = null;
+      exerciseId_ = "";
+      codingDetail_ = null;
+      if (codingDetailBuilder_ != null) {
+        codingDetailBuilder_.dispose();
+        codingDetailBuilder_ = null;
       }
       return this;
     }
@@ -309,11 +360,14 @@ private static final long serialVersionUID = 0L;
 
     private void buildPartial0(com.codecampus.coding.grpc.AddCodingDetailRequest result) {
       int from_bitField0_ = bitField0_;
-      int to_bitField0_ = 0;
       if (((from_bitField0_ & 0x00000001) != 0)) {
-        result.detail_ = detailBuilder_ == null
-            ? detail_
-            : detailBuilder_.build();
+        result.exerciseId_ = exerciseId_;
+      }
+      int to_bitField0_ = 0;
+      if (((from_bitField0_ & 0x00000002) != 0)) {
+        result.codingDetail_ = codingDetailBuilder_ == null
+            ? codingDetail_
+            : codingDetailBuilder_.build();
         to_bitField0_ |= 0x00000001;
       }
       result.bitField0_ |= to_bitField0_;
@@ -331,8 +385,13 @@ private static final long serialVersionUID = 0L;
 
     public Builder mergeFrom(com.codecampus.coding.grpc.AddCodingDetailRequest other) {
       if (other == com.codecampus.coding.grpc.AddCodingDetailRequest.getDefaultInstance()) return this;
-      if (other.hasDetail()) {
-        mergeDetail(other.getDetail());
+      if (!other.getExerciseId().isEmpty()) {
+        exerciseId_ = other.exerciseId_;
+        bitField0_ |= 0x00000001;
+        onChanged();
+      }
+      if (other.hasCodingDetail()) {
+        mergeCodingDetail(other.getCodingDetail());
       }
       this.mergeUnknownFields(other.getUnknownFields());
       onChanged();
@@ -361,12 +420,17 @@ private static final long serialVersionUID = 0L;
               done = true;
               break;
             case 10: {
-              input.readMessage(
-                  internalGetDetailFieldBuilder().getBuilder(),
-                  extensionRegistry);
+              exerciseId_ = input.readStringRequireUtf8();
               bitField0_ |= 0x00000001;
               break;
             } // case 10
+            case 18: {
+              input.readMessage(
+                  internalGetCodingDetailFieldBuilder().getBuilder(),
+                  extensionRegistry);
+              bitField0_ |= 0x00000002;
+              break;
+            } // case 18
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -384,125 +448,197 @@ private static final long serialVersionUID = 0L;
     }
     private int bitField0_;
 
-    private com.codecampus.coding.grpc.CodingDetailDto detail_;
-    private com.google.protobuf.SingleFieldBuilder<
-        com.codecampus.coding.grpc.CodingDetailDto, com.codecampus.coding.grpc.CodingDetailDto.Builder, com.codecampus.coding.grpc.CodingDetailDtoOrBuilder> detailBuilder_;
+    private java.lang.Object exerciseId_ = "";
     /**
-     * <code>.coding.CodingDetailDto detail = 1;</code>
-     * @return Whether the detail field is set.
+     * <code>string exerciseId = 1;</code>
+     * @return The exerciseId.
      */
-    public boolean hasDetail() {
-      return ((bitField0_ & 0x00000001) != 0);
-    }
-    /**
-     * <code>.coding.CodingDetailDto detail = 1;</code>
-     * @return The detail.
-     */
-    public com.codecampus.coding.grpc.CodingDetailDto getDetail() {
-      if (detailBuilder_ == null) {
-        return detail_ == null ? com.codecampus.coding.grpc.CodingDetailDto.getDefaultInstance() : detail_;
+    public java.lang.String getExerciseId() {
+      java.lang.Object ref = exerciseId_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        exerciseId_ = s;
+        return s;
       } else {
-        return detailBuilder_.getMessage();
+        return (java.lang.String) ref;
       }
     }
     /**
-     * <code>.coding.CodingDetailDto detail = 1;</code>
+     * <code>string exerciseId = 1;</code>
+     * @return The bytes for exerciseId.
      */
-    public Builder setDetail(com.codecampus.coding.grpc.CodingDetailDto value) {
-      if (detailBuilder_ == null) {
+    public com.google.protobuf.ByteString
+        getExerciseIdBytes() {
+      java.lang.Object ref = exerciseId_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        exerciseId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string exerciseId = 1;</code>
+     * @param value The exerciseId to set.
+     * @return This builder for chaining.
+     */
+    public Builder setExerciseId(
+        java.lang.String value) {
+      if (value == null) { throw new NullPointerException(); }
+      exerciseId_ = value;
+      bitField0_ |= 0x00000001;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string exerciseId = 1;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearExerciseId() {
+      exerciseId_ = getDefaultInstance().getExerciseId();
+      bitField0_ = (bitField0_ & ~0x00000001);
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string exerciseId = 1;</code>
+     * @param value The bytes for exerciseId to set.
+     * @return This builder for chaining.
+     */
+    public Builder setExerciseIdBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) { throw new NullPointerException(); }
+      checkByteStringIsUtf8(value);
+      exerciseId_ = value;
+      bitField0_ |= 0x00000001;
+      onChanged();
+      return this;
+    }
+
+    private com.codecampus.coding.grpc.CodingDetailDto codingDetail_;
+    private com.google.protobuf.SingleFieldBuilder<
+        com.codecampus.coding.grpc.CodingDetailDto, com.codecampus.coding.grpc.CodingDetailDto.Builder, com.codecampus.coding.grpc.CodingDetailDtoOrBuilder> codingDetailBuilder_;
+    /**
+     * <code>.coding.CodingDetailDto codingDetail = 2;</code>
+     * @return Whether the codingDetail field is set.
+     */
+    public boolean hasCodingDetail() {
+      return ((bitField0_ & 0x00000002) != 0);
+    }
+    /**
+     * <code>.coding.CodingDetailDto codingDetail = 2;</code>
+     * @return The codingDetail.
+     */
+    public com.codecampus.coding.grpc.CodingDetailDto getCodingDetail() {
+      if (codingDetailBuilder_ == null) {
+        return codingDetail_ == null ? com.codecampus.coding.grpc.CodingDetailDto.getDefaultInstance() : codingDetail_;
+      } else {
+        return codingDetailBuilder_.getMessage();
+      }
+    }
+    /**
+     * <code>.coding.CodingDetailDto codingDetail = 2;</code>
+     */
+    public Builder setCodingDetail(com.codecampus.coding.grpc.CodingDetailDto value) {
+      if (codingDetailBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
         }
-        detail_ = value;
+        codingDetail_ = value;
       } else {
-        detailBuilder_.setMessage(value);
+        codingDetailBuilder_.setMessage(value);
       }
-      bitField0_ |= 0x00000001;
+      bitField0_ |= 0x00000002;
       onChanged();
       return this;
     }
     /**
-     * <code>.coding.CodingDetailDto detail = 1;</code>
+     * <code>.coding.CodingDetailDto codingDetail = 2;</code>
      */
-    public Builder setDetail(
+    public Builder setCodingDetail(
         com.codecampus.coding.grpc.CodingDetailDto.Builder builderForValue) {
-      if (detailBuilder_ == null) {
-        detail_ = builderForValue.build();
+      if (codingDetailBuilder_ == null) {
+        codingDetail_ = builderForValue.build();
       } else {
-        detailBuilder_.setMessage(builderForValue.build());
+        codingDetailBuilder_.setMessage(builderForValue.build());
       }
-      bitField0_ |= 0x00000001;
+      bitField0_ |= 0x00000002;
       onChanged();
       return this;
     }
     /**
-     * <code>.coding.CodingDetailDto detail = 1;</code>
+     * <code>.coding.CodingDetailDto codingDetail = 2;</code>
      */
-    public Builder mergeDetail(com.codecampus.coding.grpc.CodingDetailDto value) {
-      if (detailBuilder_ == null) {
-        if (((bitField0_ & 0x00000001) != 0) &&
-          detail_ != null &&
-          detail_ != com.codecampus.coding.grpc.CodingDetailDto.getDefaultInstance()) {
-          getDetailBuilder().mergeFrom(value);
+    public Builder mergeCodingDetail(com.codecampus.coding.grpc.CodingDetailDto value) {
+      if (codingDetailBuilder_ == null) {
+        if (((bitField0_ & 0x00000002) != 0) &&
+          codingDetail_ != null &&
+          codingDetail_ != com.codecampus.coding.grpc.CodingDetailDto.getDefaultInstance()) {
+          getCodingDetailBuilder().mergeFrom(value);
         } else {
-          detail_ = value;
+          codingDetail_ = value;
         }
       } else {
-        detailBuilder_.mergeFrom(value);
+        codingDetailBuilder_.mergeFrom(value);
       }
-      if (detail_ != null) {
-        bitField0_ |= 0x00000001;
+      if (codingDetail_ != null) {
+        bitField0_ |= 0x00000002;
         onChanged();
       }
       return this;
     }
     /**
-     * <code>.coding.CodingDetailDto detail = 1;</code>
+     * <code>.coding.CodingDetailDto codingDetail = 2;</code>
      */
-    public Builder clearDetail() {
-      bitField0_ = (bitField0_ & ~0x00000001);
-      detail_ = null;
-      if (detailBuilder_ != null) {
-        detailBuilder_.dispose();
-        detailBuilder_ = null;
+    public Builder clearCodingDetail() {
+      bitField0_ = (bitField0_ & ~0x00000002);
+      codingDetail_ = null;
+      if (codingDetailBuilder_ != null) {
+        codingDetailBuilder_.dispose();
+        codingDetailBuilder_ = null;
       }
       onChanged();
       return this;
     }
     /**
-     * <code>.coding.CodingDetailDto detail = 1;</code>
+     * <code>.coding.CodingDetailDto codingDetail = 2;</code>
      */
-    public com.codecampus.coding.grpc.CodingDetailDto.Builder getDetailBuilder() {
-      bitField0_ |= 0x00000001;
+    public com.codecampus.coding.grpc.CodingDetailDto.Builder getCodingDetailBuilder() {
+      bitField0_ |= 0x00000002;
       onChanged();
-      return internalGetDetailFieldBuilder().getBuilder();
+      return internalGetCodingDetailFieldBuilder().getBuilder();
     }
     /**
-     * <code>.coding.CodingDetailDto detail = 1;</code>
+     * <code>.coding.CodingDetailDto codingDetail = 2;</code>
      */
-    public com.codecampus.coding.grpc.CodingDetailDtoOrBuilder getDetailOrBuilder() {
-      if (detailBuilder_ != null) {
-        return detailBuilder_.getMessageOrBuilder();
+    public com.codecampus.coding.grpc.CodingDetailDtoOrBuilder getCodingDetailOrBuilder() {
+      if (codingDetailBuilder_ != null) {
+        return codingDetailBuilder_.getMessageOrBuilder();
       } else {
-        return detail_ == null ?
-            com.codecampus.coding.grpc.CodingDetailDto.getDefaultInstance() : detail_;
+        return codingDetail_ == null ?
+            com.codecampus.coding.grpc.CodingDetailDto.getDefaultInstance() : codingDetail_;
       }
     }
     /**
-     * <code>.coding.CodingDetailDto detail = 1;</code>
+     * <code>.coding.CodingDetailDto codingDetail = 2;</code>
      */
     private com.google.protobuf.SingleFieldBuilder<
         com.codecampus.coding.grpc.CodingDetailDto, com.codecampus.coding.grpc.CodingDetailDto.Builder, com.codecampus.coding.grpc.CodingDetailDtoOrBuilder> 
-        internalGetDetailFieldBuilder() {
-      if (detailBuilder_ == null) {
-        detailBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+        internalGetCodingDetailFieldBuilder() {
+      if (codingDetailBuilder_ == null) {
+        codingDetailBuilder_ = new com.google.protobuf.SingleFieldBuilder<
             com.codecampus.coding.grpc.CodingDetailDto, com.codecampus.coding.grpc.CodingDetailDto.Builder, com.codecampus.coding.grpc.CodingDetailDtoOrBuilder>(
-                getDetail(),
+                getCodingDetail(),
                 getParentForChildren(),
                 isClean());
-        detail_ = null;
+        codingDetail_ = null;
       }
-      return detailBuilder_;
+      return codingDetailBuilder_;
     }
 
     // @@protoc_insertion_point(builder_scope:coding.AddCodingDetailRequest)

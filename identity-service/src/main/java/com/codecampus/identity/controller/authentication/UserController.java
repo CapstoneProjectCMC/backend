@@ -33,10 +33,10 @@ public class UserController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/user")
-    ApiResponse<UserResponse> createUser(
+    ApiResponse<Void> createUser(
             @RequestBody @Valid UserCreationRequest request) {
-        return ApiResponse.<UserResponse>builder()
-                .result(userService.createUser(request))
+        userService.createUser(request);
+        return ApiResponse.<Void>builder()
                 .message("Create User successful")
                 .build();
     }
@@ -92,20 +92,20 @@ public class UserController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/user/{userId}")
-    ApiResponse<UserResponse> updateUser(
+    ApiResponse<Void> updateUser(
             @PathVariable("userId") String userId,
             @RequestBody UserUpdateRequest request) {
-        return ApiResponse.<UserResponse>builder()
-                .result(userService.updateUser(userId, request))
+        userService.updateUserById(userId, request);
+        return ApiResponse.<Void>builder()
                 .message("Update User successful")
                 .build();
     }
 
     @PutMapping("/user/my-info")
-    ApiResponse<UserResponse> updateMyInfo(
+    ApiResponse<Void> updateMyInfo(
             UserUpdateRequest request) {
-        return ApiResponse.<UserResponse>builder()
-                .result(userService.updateMyInfo(request))
+        userService.updateMyInfo(request);
+        return ApiResponse.<Void>builder()
                 .message("Update My Info successful")
                 .build();
     }

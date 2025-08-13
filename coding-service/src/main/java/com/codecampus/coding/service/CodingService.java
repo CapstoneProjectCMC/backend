@@ -1,23 +1,36 @@
 package com.codecampus.coding.service;
 
+import com.codecampus.coding.entity.Assignment;
 import com.codecampus.coding.entity.CodingExercise;
 import com.codecampus.coding.entity.TestCase;
+import com.codecampus.coding.exception.AppException;
+import com.codecampus.coding.exception.ErrorCode;
 import com.codecampus.coding.grpc.AddCodingDetailRequest;
 import com.codecampus.coding.grpc.AddTestCaseRequest;
-import com.codecampus.coding.grpc.CodingDetailDto;
+import com.codecampus.coding.grpc.AssignmentDto;
 import com.codecampus.coding.grpc.CodingExerciseDto;
 import com.codecampus.coding.grpc.CreateCodingExerciseRequest;
+import com.codecampus.coding.grpc.LoadCodingResponse;
 import com.codecampus.coding.grpc.TestCaseDto;
+import com.codecampus.coding.grpc.UpsertAssignmentRequest;
+import com.codecampus.coding.helper.AuthenticationHelper;
 import com.codecampus.coding.helper.CodingHelper;
+import com.codecampus.coding.mapper.AssignmentMapper;
 import com.codecampus.coding.mapper.CodingMapper;
+import com.codecampus.coding.repository.AssignmentRepository;
 import com.codecampus.coding.repository.CodingExerciseRepository;
-import com.codecampus.coding.repository.TestCaseRepository;
+import com.codecampus.coding.service.redis.LoadCodingCacheService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -26,9 +39,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class CodingService {
 
     CodingExerciseRepository codingExerciseRepository;
-    TestCaseRepository testCaseRepository;
+    AssignmentRepository assignmentRepository;
 
+    RedissonClient redisson;
+
+    AssignmentMapper assignmentMapper;
     CodingMapper codingMapper;
+
+    LoadCodingCacheService loadCodingCacheService;
 
     CodingHelper codingHelper;
 
@@ -41,8 +59,8 @@ public class CodingService {
                 .findById(exerciseDto.getId())
                 .orElseGet(CodingExercise::new);
 
-        codingMapper.patchCodingExerciseDtoToCodingExercise(codingExercise,
-                exerciseDto);
+        codingMapper.patchCodingExerciseDtoToCodingExercise(
+                exerciseDto, codingExercise);
         codingExerciseRepository.save(codingExercise);
     }
 
@@ -50,35 +68,165 @@ public class CodingService {
     public void addCodingDetail(
             AddCodingDetailRequest addCodingRequest) {
 
-        CodingDetailDto codingDetailDto = addCodingRequest.getDetail();
+        CodingExercise coding =
+                codingHelper.findCodingOrThrow(
+                        addCodingRequest.getExerciseId());
 
+        codingMapper.patchCodingDetailDtoToCodingExercise(
+                coding, addCodingRequest.getCodingDetail());
+
+        addCodingRequest.getCodingDetail().getTestcasesList()
+                .forEach(testCaseDto -> {
+                    TestCase testCase = coding.getTestCases()
+                            .stream()
+                            .filter(tc -> tc.getId()
+                                    .equals(testCaseDto.getId()))
+                            .findFirst()
+                            .orElseGet(() -> {
+                                TestCase newTestCase =
+                                        codingMapper.toTestCaseFromTestCaseDto(
+                                                testCaseDto
+                                        );
+
+                                newTestCase.setCoding(coding);
+                                coding.getTestCases().add(newTestCase);
+                                return newTestCase;
+                            });
+
+                    codingMapper.patchTestCaseDtoToTestCase(
+                            testCaseDto, testCase);
+                });
+
+        codingExerciseRepository.save(coding);
+    }
+
+    @Transactional
+    public void softDeleteExercise(String exerciseId) {
         CodingExercise codingExercise =
-                codingHelper.findCodingOrThrow(codingDetailDto.getExerciseId());
-
-        codingMapper.patchCodingDetailDtoToCodingExercise(codingExercise,
-                codingDetailDto);
-
+                codingHelper.findCodingOrThrow(exerciseId);
+        String by = AuthenticationHelper.getMyUsername();
+        codingExercise.markDeleted(by);
+        codingExercise.getTestCases().forEach(tc -> {
+            tc.markDeleted(by);
+        });
         codingExerciseRepository.save(codingExercise);
     }
 
     @Transactional
-    public void addTestCase(AddTestCaseRequest addTestCaseRequest) {
-        TestCaseDto testCaseDto = addTestCaseRequest.getTestCase();
+    public void addTestCase(
+            AddTestCaseRequest addTestCaseRequest) {
         CodingExercise coding =
-                codingHelper.findCodingOrThrow(testCaseDto.getExerciseId());
+                codingHelper.findCodingOrThrow(
+                        addTestCaseRequest.getExerciseId());
+        TestCaseDto testCaseDto = addTestCaseRequest.getTestCase();
 
-        TestCase testCase = coding.getTestCases().stream()
-                .filter(t -> t.getId().equals(testCaseDto.getId()))
-                .findFirst()
+        TestCase testCase = coding.findTestCaseById(testCaseDto.getId())
                 .orElseGet(() -> {
-                    TestCase newTestCase =
-                            codingMapper.toTestCaseFromTestCaseDto(testCaseDto);
-                    newTestCase.setExercise(coding);
-                    coding.getTestCases().add(newTestCase);
-                    return newTestCase;
+                    TestCase tc = codingMapper.toTestCaseFromTestCaseDto(
+                            testCaseDto);
+                    tc.setCoding(coding);
+                    coding.getTestCases().add(tc);
+                    return tc;
                 });
 
-        codingMapper.patchTestCaseDtoToTestCase(testCase, testCaseDto);
-        testCaseRepository.save(testCase);
+        codingMapper.patchTestCaseDtoToTestCase(testCaseDto, testCase);
+
+        codingExerciseRepository.save(coding);
     }
+
+    @Transactional
+    public void softDeleteTestCase(
+            String exerciseId,
+            String testCaseId) {
+
+        CodingExercise codingExercise = codingHelper
+                .findCodingOrThrow(exerciseId);
+        codingExercise.findTestCaseById(testCaseId).ifPresent(testCase -> {
+            testCase.markDeleted(AuthenticationHelper.getMyUsername());
+        });
+    }
+
+    @Transactional(readOnly = true)
+    public LoadCodingResponse loadCoding(
+            String exerciseId) {
+
+        String userId = AuthenticationHelper.getMyUserId();
+        String username = AuthenticationHelper.getMyUsername();
+        Set<String> roles = Set.copyOf(AuthenticationHelper.getMyRoles());
+        boolean teacher = AuthenticationHelper.getMyRoles().contains("TEACHER");
+
+        /* ---------- Thử lấy từ cache ---------- */
+        LoadCodingResponse loadCodingCached = loadCodingCacheService
+                .get(exerciseId);
+        if (loadCodingCached != null && codingHelper
+                .hasAccessOnLoadCodingResponse(
+                        loadCodingCached,
+                        userId, username, teacher)) {
+            return loadCodingCached;
+        }
+
+        /* ---------- Stampede lock ---------- */
+        RLock lock = redisson.getLock("lock:coding:" + exerciseId);
+        try {
+            // Chặn stampede: chỉ 1 thread/node truy DB
+            if (lock.tryLock(2, 10, TimeUnit.SECONDS)) {
+                // Re-check sau khi có lock
+                loadCodingCached = loadCodingCacheService.get(exerciseId);
+                if (loadCodingCached != null) {
+                    return loadCodingCached;
+                }
+
+                // Truy DB -> build response
+                CodingExercise coding =
+                        codingHelper.findCodingOrThrow(exerciseId);
+
+                if (!codingHelper.hasAccessOnCodingExercise(
+                        coding, userId,
+                        username, teacher)) {
+                    throw new AppException(ErrorCode.UNAUTHORIZED);
+                }
+
+                LoadCodingResponse rsp =
+                        codingMapper.toLoadCodingResponseFromCodingExercise(
+                                coding);
+
+                // Ghi cache
+                loadCodingCacheService.put(exerciseId, rsp);
+                return rsp;
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        } finally {
+            if (lock.isHeldByCurrentThread()) {
+                lock.unlock();
+            }
+        }
+
+        // Fallback (không lấy được lock)
+        CodingExercise coding = codingHelper.findCodingOrThrow(exerciseId);
+
+        if (!codingHelper.hasAccessOnCodingExercise(
+                coding, userId, username, teacher)) {
+            throw new AppException(ErrorCode.UNAUTHORIZED);
+        }
+
+        return codingMapper.toLoadCodingResponseFromCodingExercise(
+                coding);
+    }
+
+    @Transactional
+    public void upsertAssignment(
+            UpsertAssignmentRequest request) {
+        AssignmentDto assignmentDto = request.getAssignment();
+        Assignment assignment = assignmentRepository
+                .findById(assignmentDto.getId())
+                .orElseGet(Assignment::new);
+
+        assignmentMapper.patchAssignmentDtoToAssignment(
+                assignmentDto,
+                assignment
+        );
+        assignmentRepository.save(assignment);
+    }
+
 }

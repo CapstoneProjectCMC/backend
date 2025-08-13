@@ -16,13 +16,14 @@ import com.codecampus.identity.entity.account.User;
 import com.codecampus.identity.exception.AppException;
 import com.codecampus.identity.exception.ErrorCode;
 import com.codecampus.identity.helper.AuthenticationHelper;
-import com.codecampus.identity.helper.ProfileSyncHelper;
 import com.codecampus.identity.mapper.authentication.UserMapper;
+import com.codecampus.identity.mapper.kafka.UserPayloadMapper;
 import com.codecampus.identity.repository.account.InvalidatedTokenRepository;
 import com.codecampus.identity.repository.account.RoleRepository;
 import com.codecampus.identity.repository.account.UserRepository;
 import com.codecampus.identity.repository.httpclient.google.OutboundGoogleIdentityClient;
 import com.codecampus.identity.repository.httpclient.google.OutboundGoogleUserClient;
+import com.codecampus.identity.service.kafka.UserEventProducer;
 import com.codecampus.identity.utils.EmailUtils;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JOSEObjectType;
@@ -33,6 +34,7 @@ import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
+import events.user.data.UserProfileCreationPayload;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -84,13 +86,14 @@ public class AuthenticationService {
     OtpService otpService;
 
     UserMapper userMapper;
+    UserPayloadMapper userPayloadMapper;
 
     PasswordEncoder passwordEncoder;
 
     OutboundGoogleIdentityClient outboundGoogleIdentityClient;
     OutboundGoogleUserClient outboundGoogleUserClient;
     AuthenticationHelper authenticationHelper;
-    ProfileSyncHelper profileSyncHelper;
+    UserEventProducer userEventProducer;
 
     @NonFinal
     @Value("${app.jwt.signerKey}")
@@ -189,7 +192,12 @@ public class AuthenticationService {
                                             .displayName(googleUser.getName())
                                             .build();
 
-                            profileSyncHelper.createProfile(newUser, googleRequest);
+                            userEventProducer.publishCreatedUserEvent(newUser);
+                            UserProfileCreationPayload profilePayload =
+                                    userPayloadMapper.toUserProfileCreationPayloadFromUserCreationRequest(
+                                            googleRequest);
+                            userEventProducer.publishRegisteredUserEvent(newUser,
+                                    profilePayload);
                             return newUser;
                         }
                 );
@@ -265,18 +273,22 @@ public class AuthenticationService {
         );
 
         // Tạo user nhưng chưa kích hoạt
-        User user = userMapper.toUser(request);
+        User user = userMapper.toUserFromUserCreationRequest(request);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setEnabled(false); // Chưa kích hoạt
-
-        // Gán role mặc định
-        HashSet<Role> roles = new HashSet<>();
-        roleRepository.findById(USER_ROLE).ifPresent(roles::add);
-        user.setRoles(roles);
+        user.setRoles(new HashSet<>());
+        roleRepository.findById(USER_ROLE)
+                .ifPresent(r -> user.getRoles().add(r));
 
         try {
             userRepository.save(user);
-            profileSyncHelper.createProfile(user, request);
+            // Sự kiện định danh
+            userEventProducer.publishCreatedUserEvent(user);
+            // Sự kiện khởi tạo profile giàu dữ liệu
+            var profilePayload =
+                    userPayloadMapper.toUserProfileCreationPayloadFromUserCreationRequest(
+                            request);
+            userEventProducer.publishRegisteredUserEvent(user, profilePayload);
         } catch (DataIntegrityViolationException e) {
             throw new AppException(ErrorCode.USER_ALREADY_EXISTS);
         }
@@ -385,7 +397,7 @@ public class AuthenticationService {
                         .distinct()
                         .toList()
                 )
-                .claim("active", true)
+                .claim("active", user.isEnabled())
                 .claim("token_type", type)
                 .build();
     }

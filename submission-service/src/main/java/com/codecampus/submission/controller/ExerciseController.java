@@ -6,6 +6,7 @@ import com.codecampus.submission.dto.common.PageResponse;
 import com.codecampus.submission.dto.request.CreateExerciseRequest;
 import com.codecampus.submission.dto.request.UpdateExerciseRequest;
 import com.codecampus.submission.dto.request.quiz.CreateQuizExerciseRequest;
+import com.codecampus.submission.dto.response.coding.coding_detail.ExerciseCodingDetailResponse;
 import com.codecampus.submission.dto.response.quiz.ExerciseQuizResponse;
 import com.codecampus.submission.dto.response.quiz.quiz_detail.ExerciseQuizDetailResponse;
 import com.codecampus.submission.service.ExerciseService;
@@ -108,19 +109,36 @@ public class ExerciseController {
                 .build();
     }
 
-    @GetMapping("/exercise/{id}")
-    ApiResponse<ExerciseQuizDetailResponse> getExercise(
+    @GetMapping("/exercise/quiz/{id}")
+    ApiResponse<ExerciseQuizDetailResponse> getQuizExerciseDetail(
             @PathVariable String id,
             @RequestParam(defaultValue = "1") int qPage,
             @RequestParam(defaultValue = "5") int qSize,
             @RequestParam(defaultValue = "ORDER_IN_QUIZ") SortField qSortBy,
             @RequestParam(defaultValue = "false") boolean qAsc) {
         return ApiResponse.<ExerciseQuizDetailResponse>builder()
-                .result(exerciseService.getExerciseDetail(
+                .result(exerciseService.getQuizExerciseDetail(
                         id,
                         qPage, qSize,
                         qSortBy, qAsc))
                 .message("Chi tiết exercise!")
                 .build();
     }
+
+    // controller/ExerciseController.java  (thêm cuối file)
+    @GetMapping("/exercise/coding/{id}")
+    ApiResponse<ExerciseCodingDetailResponse> getCodingExerciseDetail(
+            @PathVariable String id,
+            @RequestParam(defaultValue = "1") int tcPage,
+            @RequestParam(defaultValue = "5") int tcSize,
+            @RequestParam(defaultValue = "CREATED_AT") SortField tcSortBy,
+            @RequestParam(defaultValue = "false") boolean tcAsc) {
+
+        return ApiResponse.<ExerciseCodingDetailResponse>builder()
+                .result(exerciseService.getCodingExerciseDetail(
+                        id, tcPage, tcSize, tcSortBy, tcAsc))
+                .message("Chi tiết exercise coding!")
+                .build();
+    }
+
 }

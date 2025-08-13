@@ -9,7 +9,8 @@ import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
-import org.mapstruct.NullValuePropertyMappingStrategy;
+
+import static org.mapstruct.NullValuePropertyMappingStrategy.IGNORE;
 
 @Mapper(
         componentModel = "spring",
@@ -21,22 +22,24 @@ public interface UserProfileMapper {
             target = "dob",
             qualifiedByName = "DdMmYyyyToInstant"
     )
-    UserProfile toUserProfile(UserProfileCreationRequest request);
+    UserProfile toUserProfileFromUserProfileCreationRequest(
+            UserProfileCreationRequest request);
 
     @Mapping(
             source = "dob",
             target = "dob",
             qualifiedByName = "instantToDdMmYyyyUTC"
     )
-    UserProfileResponse toUserProfileResponse(UserProfile userProfile);
+    UserProfileResponse toUserProfileResponseFromUserProfile(
+            UserProfile userProfile);
 
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @BeanMapping(nullValuePropertyMappingStrategy = IGNORE)
     @Mapping(
             source = "dob",
             target = "dob",
             qualifiedByName = "DdMmYyyyToInstant"
     )
-    void updateUserProfile(
+    void updateUserProfileUpdateRequestToUserProfile(
             @MappingTarget UserProfile userProfile,
             UserProfileUpdateRequest request
     );

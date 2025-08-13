@@ -10,17 +10,29 @@ public interface AddTestCaseRequestOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>.coding.TestCaseDto testCase = 1;</code>
+   * <code>string exerciseId = 1;</code>
+   * @return The exerciseId.
+   */
+  java.lang.String getExerciseId();
+  /**
+   * <code>string exerciseId = 1;</code>
+   * @return The bytes for exerciseId.
+   */
+  com.google.protobuf.ByteString
+      getExerciseIdBytes();
+
+  /**
+   * <code>.coding.TestCaseDto testCase = 2;</code>
    * @return Whether the testCase field is set.
    */
   boolean hasTestCase();
   /**
-   * <code>.coding.TestCaseDto testCase = 1;</code>
+   * <code>.coding.TestCaseDto testCase = 2;</code>
    * @return The testCase.
    */
   com.codecampus.coding.grpc.TestCaseDto getTestCase();
   /**
-   * <code>.coding.TestCaseDto testCase = 1;</code>
+   * <code>.coding.TestCaseDto testCase = 2;</code>
    */
   com.codecampus.coding.grpc.TestCaseDtoOrBuilder getTestCaseOrBuilder();
 }

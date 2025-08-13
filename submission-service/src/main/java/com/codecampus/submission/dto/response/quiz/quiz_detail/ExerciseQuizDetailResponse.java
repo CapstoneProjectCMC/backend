@@ -26,8 +26,9 @@ public record ExerciseQuizDetailResponse(
         String allowDiscussionId,
         Set<String> resourceIds,
         Set<String> tags,
-        boolean allowAiQuestion,                      // <<< MỚI
-        QuizDetailSliceDetailResponse quizDetail,     // <<< Question + Option
+        boolean allowAiQuestion,
+        boolean visibility,
+        QuizDetailSliceDetailResponse quizDetail,
         // audit
         String createdBy,
         Instant createdAt,

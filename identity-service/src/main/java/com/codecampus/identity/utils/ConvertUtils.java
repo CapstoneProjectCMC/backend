@@ -24,6 +24,8 @@ public class ConvertUtils {
     // Định dạng dd/MM/yyyy
     private static final DateTimeFormatter DMY_FORMATTER =
             DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private static final DateTimeFormatter DMY_FORMATTER_SHORT =
+            DateTimeFormatter.ofPattern("dd/MM/yy");
 
     /**
      * Chuyển chuỗi ngày có định dạng dd/MM/yyyy sang Instant (đầu ngày).
