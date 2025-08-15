@@ -20,16 +20,16 @@ import org.springframework.stereotype.Service;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ExerciseEventProducer {
 
-    @Value("${app.event.exercise-events}")
-    @NonFinal
-    static String EXERCISE_EVENTS_TOPIC;
-
     KafkaTemplate<String, String> kafkaTemplate;
     ObjectMapper objectMapper;
     ExercisePayloadMapper exercisePayloadMapper;
+    @Value("${app.event.exercise-events}")
+    @NonFinal
+    String EXERCISE_EVENTS_TOPIC;
 
     public void publishCreatedExerciseEvent(
             Exercise exercise) {
+        log.info("Sending to Kafka topic: {}", EXERCISE_EVENTS_TOPIC);
         publishEvent(ExerciseEvent.Type.CREATED, exercise);
     }
 

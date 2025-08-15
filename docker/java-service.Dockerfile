@@ -19,6 +19,7 @@ COPY search-service/pom.xml search-service/pom.xml
 COPY notification-service/pom.xml notification-service/pom.xml
 COPY chat-service/pom.xml chat-service/pom.xml
 
+
 # Tải dependency trước để cache (Không compile)
 RUN mvn -q -DskipTests dependency:go-offline
 
@@ -32,6 +33,15 @@ RUN mvn -q -DskipTests install -pl common-protos,common-events
 RUN mvn -q -DskipTests -pl ${MODULE} -am package
 
 # ===== Runtime stage =====
+FROM eclipse-temurin:21-jre
+
+# Thiết lập thư mục làm việc
+WORKDIR /app
+
+# Copy JAR với quyền sở hữu phù hợp
+COPY --from=build /workspace/${MODULE}/target/*.jar app.jar
+
+# Đặt quyền sở hữu cho coding-service
 FROM eclipse-temurin:21-jre
 ARG MODULE
 ENV JAVA_OPTS=""

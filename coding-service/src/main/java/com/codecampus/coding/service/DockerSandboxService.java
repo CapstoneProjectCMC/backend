@@ -3,6 +3,7 @@ package com.codecampus.coding.service;
 import com.codecampus.coding.dto.response.CodeResult;
 import com.codecampus.coding.dto.response.CompiledArtifact;
 import com.codecampus.coding.entity.TestCase;
+import com.codecampus.coding.helper.DockerHelper;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -15,7 +16,10 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.PosixFilePermission;
+import java.nio.file.attribute.PosixFilePermissions;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -28,12 +32,26 @@ public class DockerSandboxService {
     private static final String SANDBOX_IMAGE =
             System.getenv().getOrDefault("SANDBOX_IMAGE",
                     "capstoneprojectpythondocker:latest");
+//    private static final String SANDBOX_IMAGE = "capstoneprojectpythondocker";
+
+    private static final String RUNNER_VOLUME =
+            System.getenv().getOrDefault("RUNNER_VOLUME", "runner_data");
     private static final Path RUNNER_ROOT =
             Path.of(System.getenv().getOrDefault("RUNNER_ROOT", "/work"));
 
-    public static Path createWorkDir() throws IOException {
-        Files.createDirectories(RUNNER_ROOT);
-        return Files.createTempDirectory(RUNNER_ROOT, "pg_");
+    private static Path createWorkDir() throws IOException {
+        // Đảm bảo thư mục RUNNER_ROOT tồn tại và có quyền
+        if (!Files.exists(RUNNER_ROOT)) {
+            Files.createDirectories(RUNNER_ROOT);
+        }
+
+        // Tạo thư mục work với quyền 777
+        Path workDir = Files.createTempDirectory(RUNNER_ROOT, "pg_");
+        Set<PosixFilePermission> perms =
+                PosixFilePermissions.fromString("rwxrwxrwx");
+        Files.setPosixFilePermissions(workDir, perms);
+
+        return workDir;
     }
 
     /**
@@ -45,6 +63,11 @@ public class DockerSandboxService {
             String source,
             Path workDir
     ) throws IOException, InterruptedException {
+
+        // Đảm bảo thư mục workDir có quyền ghi
+        Set<PosixFilePermission> perms =
+                PosixFilePermissions.fromString("rwxrwxrwx");
+        Files.setPosixFilePermissions(workDir, perms);
 
         // 1. Ghi file nguồn ra thư mục tạm
         switch (language) {
@@ -66,23 +89,32 @@ public class DockerSandboxService {
 
         // 3. Tên nhị phân / jar random để tránh trùng
         String binName = "bin_" + UUID.randomUUID();
-        String image = SANDBOX_IMAGE;   // đã có sẵn GCC, JDK
+        String inPath = DockerHelper.inVolumePath(workDir);
 
-        ProcessBuilder processBuilder = switch (language) {
+        List<String> runBase = DockerHelper.selfContainer().isBlank()
+                ? DockerHelper.cmd("run", "--rm",
+                "-v", RUNNER_VOLUME + ":/work",
+                "-w", inPath,
+                SANDBOX_IMAGE)
+                : DockerHelper.cmd("run", "--rm",
+                "--volumes-from", DockerHelper.selfContainer(),
+                "-w", inPath,
+                SANDBOX_IMAGE);
+
+        ProcessBuilder compilePb = switch (language) {
             case "cpp" -> new ProcessBuilder(
-                    "docker", "run", "--rm",
-                    "-v", workDir + ":/code", image,
-                    "g++", "-O2", "-std=c++17", "/code/Main.cpp", "-o",
-                    "/code/" + binName);
+                    Stream.concat(runBase.stream(),
+                                    Stream.of("g++", "-O2", "-std=c++17", "Main.cpp",
+                                            "-o", binName))
+                            .toList());
             case "java" -> new ProcessBuilder(
-                    "docker", "run", "--rm",
-                    "-v", workDir + ":/code", image,
-                    "bash", "-c",
-                    "javac /code/Main.java -d /code");
+                    Stream.concat(runBase.stream(),
+                                    Stream.of("javac", "Main.java"))
+                            .toList());
             default -> throw new IllegalStateException();
         };
 
-        exec(processBuilder);
+        exec(compilePb);
         return new CompiledArtifact(language,
                 "java".equals(language) ? "Main" : binName, workDir);
     }
@@ -98,34 +130,44 @@ public class DockerSandboxService {
             int memoryMb,
             float cpus) {
         String container = "judge_" + UUID.randomUUID();
+        String inPath = DockerHelper.inVolumePath(compiledArtifact.workDir());
 
         try {
             /* 1. khởi tạo container rỗng, giới hạn RAM + CPU, network none */
-            ProcessBuilder processBuilder = new ProcessBuilder(
-                    "docker", "run", "-dit",
+            List<String> startArgs = DockerHelper.selfContainer().isBlank()
+                    ? DockerHelper.cmd("run", "-dit",
                     "--memory=%sm".formatted(memoryMb),
                     "--cpus=" + cpus,
                     "--network", "none",
-                    "-v", compiledArtifact.workDir().toString() + ":/app",
+                    "-v", RUNNER_VOLUME + ":/work",
+                    "-w", inPath,
+                    "--name", container,
+                    SANDBOX_IMAGE, "bash")
+                    : DockerHelper.cmd("run", "-dit",
+                    "--memory=%sm".formatted(memoryMb),
+                    "--cpus=" + cpus,
+                    "--network", "none",
+                    "--volumes-from", DockerHelper.selfContainer(),
+                    "-w", inPath,
                     "--name", container,
                     SANDBOX_IMAGE, "bash");
-            exec(processBuilder);
 
-            /* Build */
+            exec(new ProcessBuilder(startArgs));
+
             List<String> cmd = switch (compiledArtifact.lang()) {
-                case "python" -> List.of("python3", "/app/Main.py");
-                case "cpp" -> List.of("/app/" + compiledArtifact.binary());
-                case "java" -> List.of("java", "-cp", "/app",
-                        compiledArtifact.binary());
+                case "python" -> List.of("python3", "Main.py");
+                case "cpp" -> List.of("./" + compiledArtifact.binary());
+                case "java" -> List.of("java", "Main");
                 default -> throw new IllegalStateException();
             };
 
             /* Chạy */
             long startTime = System.nanoTime();
             Process run = new ProcessBuilder(
-                    Stream.concat(Stream.of("docker", "exec", "-i", container),
-                                    cmd.stream())
-                            .toList())
+                    Stream.concat(
+                            DockerHelper.cmd("exec", "-i", "-w", inPath,
+                                    container).stream(),
+                            cmd.stream()).toList())
                     .start();
 
             try (BufferedWriter writer = new BufferedWriter(
@@ -150,16 +192,19 @@ public class DockerSandboxService {
             log.error("Sandbox error", ex);
             return new CodeResult(false, 0, 0, "", ex.getMessage());
         } finally {
-            silent("docker", "rm", "-f", container);
+            silent(DockerHelper.cmd("rm", "-f", container)
+                    .toArray(new String[0]));
         }
     }
 
     void exec(ProcessBuilder processBuilder)
             throws IOException, InterruptedException {
         processBuilder.redirectErrorStream(true);
+
         Process process = processBuilder.start();
         String log = new String(process.getInputStream().readAllBytes());
         int code = process.waitFor();
+
         if (code != 0) {
             throw new RuntimeException("docker run failed: " + log);
         }

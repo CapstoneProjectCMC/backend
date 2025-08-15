@@ -12,7 +12,6 @@ spring:
     connection-timeout: 10s
   lifecycle:
     timeout-per-shutdown-phase: 20s
-
   kafka:
     bootstrap-servers: http://kafka:9092
 

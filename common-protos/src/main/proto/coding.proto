@@ -54,9 +54,7 @@ message SubmitCodeRequest {
   string studentId = 2;
   string language = 3;
   string sourceCode = 4;
-  int32 memoryMb = 5;
-  float cpus = 6;
-  int32 timeTakenSeconds = 7;
+  int32 timeTakenSeconds = 5;
 }
 
 message TestCaseResultDto {
@@ -74,6 +72,9 @@ message SubmitCodeResponse {
   int32 totalPoints = 3;
   bool passed = 4;
   repeated TestCaseResultDto results = 5;
+  int32 memoryMb     = 6;
+  float cpus         = 7;
+  int32 peakMemoryKb = 8;
 }
 
 message LoadCodingRequest {

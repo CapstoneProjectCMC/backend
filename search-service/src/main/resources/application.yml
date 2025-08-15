@@ -12,7 +12,6 @@ spring:
     uris: http://localhost:9200
     username: elasticsearch_search
     password: dinhanst2832004
-
   kafka:
     bootstrap-servers: localhost:9094
     consumer:

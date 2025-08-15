@@ -30,8 +30,7 @@ public class KafkaConsumerConfig {
 
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
-                env.getProperty("spring.kafka.bootstrap-servers",
-                        "localhost:9092"));
+                env.getProperty("spring.kafka.bootstrap-servers"));
         props.put(ConsumerConfig.GROUP_ID_CONFIG,
                 env.getProperty("spring.kafka.consumer.group-id",
                         "search-service"));
