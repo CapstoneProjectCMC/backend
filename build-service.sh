@@ -27,11 +27,11 @@ build_push_file_service() {
 
 main() {
   login
-  for svc in submission-service quiz-service coding-service profile-service
-  do
-    build_push_java "$svc"
-  done
-#  build_push_java "profile-service"
+#  for svc in submission-service quiz-service coding-service profile-service
+#  do
+#    build_push_java "$svc"
+#  done
+  build_push_java "coding-service"
 #  build_push_file_service
 }
 

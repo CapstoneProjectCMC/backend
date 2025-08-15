@@ -1,4 +1,4 @@
-package com.codecampus.search.configuration;
+package com.codecampus.search.configuration.elasticsearch;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.elasticsearch.client.ClientConfiguration;

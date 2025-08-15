@@ -27,10 +27,13 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.PosixFilePermission;
+import java.nio.file.attribute.PosixFilePermissions;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Stream;
 
 @Service
@@ -48,6 +51,19 @@ public class CodeJudgeService {
     DockerSandboxService dockerSandboxService;
     SubmissionSyncServiceGrpc.SubmissionSyncServiceBlockingStub
             submissionStub;
+
+    private static Path createWorkDir() throws IOException {
+        // Đảm bảo thư mục RUNNER_ROOT tồn tại và có quyền
+        if (!Files.exists(RUNNER_ROOT)) {
+            Files.createDirectories(RUNNER_ROOT);
+            Set<PosixFilePermission> rootPerms =
+                    PosixFilePermissions.fromString("rwxrwxrwx");
+            Files.setPosixFilePermissions(RUNNER_ROOT, rootPerms);
+        }
+
+        Path workDir = Files.createTempDirectory(RUNNER_ROOT, "pg_");
+        return workDir;
+    }
 
     @Transactional
     public SubmitCodeResponse judgeCodeSubmission(
@@ -83,6 +99,8 @@ public class CodeJudgeService {
             // compile failure từ DockerSandboxService.exec → log rồi rethrow
             safeDeleteDir(workDir);
             throw new RuntimeException(e);
+        } finally {
+            safeDeleteDir(workDir);
         }
 
         /* ====== Default limit khi client không set ====== */
@@ -176,12 +194,6 @@ public class CodeJudgeService {
                                 .build())
                         .toList())
                 .build();
-    }
-
-
-    Path createWorkDir() throws IOException {
-        Files.createDirectories(RUNNER_ROOT);
-        return Files.createTempDirectory(RUNNER_ROOT, "judge_");
     }
 
     void safeDeleteDir(Path dir) {

@@ -104,7 +104,6 @@ public class UserService {
 
         try {
             user = userRepository.save(user);
-            userEventProducer.publishCreatedUserEvent(user);
             UserProfileCreationPayload profilePayload =
                     userPayloadMapper.toUserProfileCreationPayloadFromUserCreationRequest(
                             request);
