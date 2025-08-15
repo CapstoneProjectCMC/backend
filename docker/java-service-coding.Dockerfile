@@ -45,14 +45,6 @@ RUN mvn -q -DskipTests -pl ${MODULE} -am package
 # ===== Runtime stage =====
 FROM eclipse-temurin:21-jre
 
-# Thiết lập thư mục làm việc
-WORKDIR /app
-
-# Copy JAR với quyền sở hữu phù hợp
-COPY --from=build /workspace/${MODULE}/target/*.jar app.jar
-
-# Đặt quyền sở hữu cho coding-service
-FROM eclipse-temurin:21-jre
 # Build-args
 ARG MODULE
 ARG DOCKER_HOST_GID=999
