@@ -48,6 +48,8 @@ public enum ErrorCode {
     USER_ALREADY_EXISTS(4098101, CONFLICT_STATUS, "Người dùng đã tồn tại!",
             CONFLICT),
 
+    // 410
+
     ;
 
     private final int code;

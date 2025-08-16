@@ -31,6 +31,7 @@
         <module>search-service</module>
         <module>ai-service</module>
         <module>chat-service</module>
+        <module>post-service</module>
     </modules>
 
     <properties>

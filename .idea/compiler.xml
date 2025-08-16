@@ -18,6 +18,15 @@
         </processorPath>
         <module name="gateway-service" />
       </profile>
+      <profile name="Annotation profile for profile-service (1)" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/unknown/lombok-unknown.jar" />
+        </processorPath>
+        <module name="profile-service (1)" />
+      </profile>
       <profile name="Annotation profile for CodeCampus :: Microservices" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
@@ -31,6 +40,7 @@
           <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct/1.6.3/mapstruct-1.6.3.jar" />
         </processorPath>
         <module name="submission-service" />
+        <module name="post-service" />
         <module name="coding-service" />
         <module name="search-service" />
         <module name="quiz-service" />
@@ -58,7 +68,9 @@
       <module name="gateway-service" options="-parameters" />
       <module name="identity-service" options="-parameters --enable-preview -Amapstruct.defaultComponentModel=spring -Amapstruct.verbose=true" />
       <module name="notification-service" options="-parameters --enable-preview -Amapstruct.defaultComponentModel=spring -Amapstruct.verbose=true" />
+      <module name="post-service" options="-parameters --enable-preview -Amapstruct.defaultComponentModel=spring -Amapstruct.verbose=true" />
       <module name="profile-service" options="-parameters --enable-preview -Amapstruct.defaultComponentModel=spring -Amapstruct.verbose=true" />
+      <module name="profile-service (1)" options="-parameters" />
       <module name="quiz-service" options="-parameters --enable-preview -Amapstruct.defaultComponentModel=spring -Amapstruct.verbose=true" />
       <module name="search-service" options="-parameters --enable-preview -Amapstruct.defaultComponentModel=spring -Amapstruct.verbose=true" />
       <module name="submission-service" options="-parameters --enable-preview -Amapstruct.defaultComponentModel=spring -Amapstruct.verbose=true" />
