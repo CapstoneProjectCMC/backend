@@ -1,5 +1,6 @@
 package com.codecampus.post.service;
 
+import com.codecampus.post.dto.response.PostAccessResponseDto;
 import com.codecampus.post.entity.PostAccess;
 import com.codecampus.post.dto.request.PostAccessRequestDto;
 import com.codecampus.post.entity.Post;
@@ -10,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +27,15 @@ public class PostAccessService {
         Post post = postRepository.findById(dto.getPostId())
                 .orElseThrow(() -> new RuntimeException("Post not found"));
 
-        List<PostAccess> accessList = dto.getUserIds().stream()
+        // lấy danh sách userId đã có
+        Set<String> existingUserIds = postAccessRepository.findByPost_PostId(dto.getPostId())
+                .stream()
+                .map(PostAccess::getUserId)
+                .collect(Collectors.toSet());
+
+        // chỉ giữ lại userId chưa có
+        List<PostAccess> newAccessList = dto.getUserIds().stream()
+                .filter(userId -> !existingUserIds.contains(userId))
                 .map(userId -> {
                     PostAccess pa = new PostAccess();
                     pa.setPost(post);
@@ -34,18 +45,30 @@ public class PostAccessService {
                 })
                 .toList();
 
-        postAccessRepository.saveAll(accessList);
+        if (!newAccessList.isEmpty()) {
+            postAccessRepository.saveAll(newAccessList);
+        }
     }
+
 
     // Xoá quyền của nhiều user
     @Transactional
-    public void deleteAccess(String postId, List<String> userIds) {
-        postAccessRepository.deleteByPostIdAndUserIdIn(postId, userIds);
+    public void deleteAccess(PostAccessRequestDto dto) {
+        postAccessRepository.deleteByPost_PostIdAndUserIdIn(dto.getPostId(), dto.getUserIds());
     }
 
     // Lấy danh sách quyền của 1 bài post
-    public List<PostAccess> getAccessByPostId(String postId) {
-        return postAccessRepository.findByPostId(postId);
+    @Transactional
+    public List<PostAccessResponseDto> getAccessByPostId(String postId) {
+        return postAccessRepository.findByPost_PostId(postId).stream()
+                .map(pa -> PostAccessResponseDto.builder()
+                        .postId(pa.getPost().getPostId())
+                        .userId(pa.getUserId())
+                        .isExcluded(Boolean.TRUE.equals(pa.getIsExcluded()))
+                        .build()
+                )
+                .toList();
     }
+
 }
 

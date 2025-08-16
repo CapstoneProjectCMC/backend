@@ -17,6 +17,7 @@ public class PostRequestDto {
     private String title;
     private String orgId;
     private String content;
+    private String oldImgesUrls; // for update post img
     private boolean isPublic;
     private boolean allowComment;
     private String postType;

@@ -1,6 +1,7 @@
 package com.codecampus.post.entity;
 
 import com.codecampus.post.entity.audit.AuditMetadata;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,6 +29,7 @@ public class Post extends AuditMetadata {
     private List<String> imagesUrls;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<PostComment> comments;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)

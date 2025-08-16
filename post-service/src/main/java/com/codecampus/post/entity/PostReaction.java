@@ -1,5 +1,6 @@
 package com.codecampus.post.entity;
 
+import com.codecampus.post.entity.audit.AuditMetadata;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Table(name = "post_reaction")
-public class PostReaction {
+public class PostReaction extends AuditMetadata {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String reactionId;

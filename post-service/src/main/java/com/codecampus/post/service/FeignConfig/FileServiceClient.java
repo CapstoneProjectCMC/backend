@@ -7,7 +7,9 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
-@FeignClient(name = "file-service", url = "${file.service.file-url}") // sửa tên cho phù hợp
+@FeignClient(name = "file-service",
+        url = "http://localhost:8082",
+        configuration = FeignMultipartSupportConfig.class)
 public interface FileServiceClient {
 
     @PostMapping(

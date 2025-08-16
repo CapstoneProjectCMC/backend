@@ -9,8 +9,8 @@ import java.util.List;
 @Repository
 public interface PostAccessRepository extends JpaRepository<PostAccess, String> {
 
-    List<PostAccess> findByPostId(String postId);
+    List<PostAccess> findByPost_PostId(String postId);
 
-    void deleteByPostIdAndUserIdIn(String postId, List<String> userIds);
+    void deleteByPost_PostIdAndUserIdIn(String postId, List<String> userIds);
 }
 

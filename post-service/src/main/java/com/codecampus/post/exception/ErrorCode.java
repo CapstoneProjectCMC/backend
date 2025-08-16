@@ -17,29 +17,33 @@ public enum ErrorCode {
 
 
     // 401 - Unauthorized
-    UNAUTHENTICATED(4018101, UNAUTHORIZED_STATUS, "Chưa xác thực!",
+    UNAUTHENTICATED(4019001, UNAUTHORIZED_STATUS, "Chưa xác thực!",
+            HttpStatus.UNAUTHORIZED),
+    AUTHOR_UNAUTHORIZED(4019002,AUTHOR_STATUS, "Không phải người đăng bài",
             HttpStatus.UNAUTHORIZED),
 
     // 403 - Forbidden
-    UNAUTHORIZED(4038101, FORBIDDEN_STATUS, "Bạn không có quyền truy cập!",
+    UNAUTHORIZED(4039001, FORBIDDEN_STATUS, "Bạn không có quyền truy cập!",
             FORBIDDEN),
 
     // 404 - Not Found
-    USER_NOT_FOUND(4048101, NOT_FOUND_STATUS, "Không tìm thấy người dùng!",
+    USER_NOT_FOUND(4049001, NOT_FOUND_STATUS, "Không tìm thấy người dùng!",
             NOT_FOUND),
-    EXERCISE_NOT_FOUND(4048102, NOT_FOUND_STATUS, "Không tìm thấy bài tập!",
-            NOT_FOUND),
-    TARGET_USER_NOT_FOUND(4048103, NOT_FOUND_STATUS,
+    TARGET_USER_NOT_FOUND(4049003, NOT_FOUND_STATUS,
             "Không tìm thấy người dùng mục tiêu!", NOT_FOUND),
-    POST_NOT_FOUND(4048104, NOT_FOUND_STATUS, "Không tìm thấy bài đăng!",
+    POST_NOT_FOUND(4049004, NOT_FOUND_STATUS, "Không tìm thấy bài đăng!",
             NOT_FOUND),
-    ORG_NOT_FOUND(4048104, NOT_FOUND_STATUS, "Không tìm thấy tổ chức!",
+    ORG_NOT_FOUND(4049004, NOT_FOUND_STATUS, "Không tìm thấy tổ chức!",
             NOT_FOUND),
 
 
     // 409 - Conflict
-    USER_ALREADY_EXISTS(4098101, CONFLICT_STATUS, "Người dùng đã tồn tại!",
+    USER_ALREADY_EXISTS(4099001, CONFLICT_STATUS, "Người dùng đã tồn tại!",
             CONFLICT),
+
+    //410 - invalid
+    INVALID_FILE_TYPE(4109001, BAD_REQUEST_STATUS, "Định dạng tệp không hợp lệ",
+            HttpStatus.BAD_REQUEST)
 
     ;
 

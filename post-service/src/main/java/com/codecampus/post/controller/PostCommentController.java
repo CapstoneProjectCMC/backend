@@ -1,6 +1,8 @@
 package com.codecampus.post.controller;
 
+import com.codecampus.post.dto.common.ApiResponse;
 import com.codecampus.post.dto.request.CommentRequestDto;
+import com.codecampus.post.dto.request.UpdateCommentDto;
 import com.codecampus.post.dto.response.CommentResponseDto;
 import com.codecampus.post.entity.PostComment;
 import com.codecampus.post.service.PostCommentService;
@@ -18,42 +20,55 @@ public class PostCommentController {
 
     private final PostCommentService postCommentService;
 
-    @PostMapping
-    public ResponseEntity<CommentResponseDto> addComment(
+    @PostMapping("/addComment")
+    public ResponseEntity<?> addComment(
             @RequestBody CommentRequestDto dto,
             HttpServletRequest request
     ) {
-        String userId = extractUserIdFromToken(request);
-        PostComment saved = postCommentService.addComment(dto, userId);
+
+        PostComment saved = postCommentService.addComment(dto, request);
         return ResponseEntity.ok(
-                new CommentResponseDto(saved.getCommentId(), saved.getUserId(), saved.getContent(), List.of())
+                ApiResponse.builder()
+                        .message("Thêm bình luận thành công")
+                        .build()
         );
     }
 
-    @GetMapping("/{postId}")
-    public ResponseEntity<List<CommentResponseDto>> getComments(@PathVariable String postId) {
-        return ResponseEntity.ok(postCommentService.getCommentsByPost(postId));
+    @GetMapping("/getCmtByPostId/{postId}")
+    public ResponseEntity<?> getComments(@PathVariable String postId) {
+        List<CommentResponseDto> comments = postCommentService.getCommentsByPost(postId);
+        return ResponseEntity.ok(
+                ApiResponse.builder()
+                        .message("Lấy bình luận thành công")
+                        .result(comments)
+                        .build()
+        );
     }
 
-    @PutMapping("/{commentId}")
-    public ResponseEntity<String> updateComment(
-            @PathVariable String commentId,
-            @RequestBody String newContent,
+    @PutMapping("/updateComment")
+    public ResponseEntity<?> updateComment(
+            @RequestBody UpdateCommentDto requestDto,
             HttpServletRequest request
     ) {
-        String userId = extractUserIdFromToken(request);
-        postCommentService.updateComment(commentId, userId, newContent);
-        return ResponseEntity.ok("Comment updated successfully");
+        postCommentService.updateComment(requestDto, request);
+        return ResponseEntity.ok(
+                ApiResponse.builder()
+                        .message("Bình luận chỉnh sửa thành công")
+                        .build()
+        );
     }
 
-    @DeleteMapping("/{commentId}")
-    public ResponseEntity<String> deleteComment(
+    @DeleteMapping("/deleteComment/{commentId}")
+    public ResponseEntity<?> deleteComment(
             @PathVariable String commentId,
             HttpServletRequest request
     ) {
-        String userId = extractUserIdFromToken(request);
-        postCommentService.deleteComment(commentId, userId);
-        return ResponseEntity.ok("Comment deleted successfully");
+        postCommentService.deleteComment(commentId, request);
+        return ResponseEntity.ok(
+                ApiResponse.builder()
+                        .message("Xoá bình luận thành công")
+                        .build()
+        );
     }
 
     private String extractUserIdFromToken(HttpServletRequest request) {

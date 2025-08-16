@@ -47,6 +47,8 @@ public interface UserProfileRepository
             MATCH (u)-[completed:COMPLETED_EXERCISE]->(e:Exercise)
             RETURN completed, e
             ORDER BY completed.completedAt DESC
+            SKIP $skip
+            LIMIT $limit
             """,
             countQuery = """
                     MATCH (u:User {userId:$userId})
@@ -64,6 +66,8 @@ public interface UserProfileRepository
             MATCH (u)-[saved:SAVED_EXERCISE]->(e:Exercise)
             RETURN saved, e
             ORDER BY saved.saveAt DESC
+            SKIP $skip
+            LIMIT $limit
             """,
             countQuery = """
                     MATCH (u:User {userId:$userId})
@@ -81,6 +85,8 @@ public interface UserProfileRepository
             MATCH (u)-[created:CREATED_EXERCISE]->(e:Exercise)
             RETURN created, e
             ORDER BY created.id DESC
+            SKIP $skip
+            LIMIT $limit
             """,
             countQuery = """
                     MATCH (u:User {userId:$userId})
@@ -100,6 +106,8 @@ public interface UserProfileRepository
             MATCH (u)-[cs:CONTEST_STATUS]->(c:Contest)
             RETURN cs, c
             ORDER BY cs.updatedAt DESC
+            SKIP $skip
+            LIMIT $limit
             """,
             countQuery = """
                     MATCH (u:User {userId:$userId})
@@ -119,6 +127,8 @@ public interface UserProfileRepository
             MATCH (u)-[sp:SAVED_POST]->(p:Post)
             RETURN sp, p
             ORDER BY sp.saveAt DESC
+            SKIP $skip
+            LIMIT $limit
             """,
             countQuery = """
                     MATCH (u:User {userId:$userId})
@@ -136,6 +146,8 @@ public interface UserProfileRepository
             MATCH (u)-[r:REACTION]->(p:Post)
             RETURN r, p
             ORDER BY r.at DESC
+            SKIP $skip
+            LIMIT $limit
             """,
             countQuery = """
                     MATCH (u:User {userId:$userId})
@@ -153,6 +165,8 @@ public interface UserProfileRepository
             MATCH (u)-[rp:REPORTED_POST]->(p:Post)
             RETURN rp, p
             ORDER BY rp.reportedAt DESC
+            SKIP $skip
+            LIMIT $limit
             """,
             countQuery = """
                     MATCH (u:User {userId:$userId})
@@ -172,6 +186,8 @@ public interface UserProfileRepository
             MATCH (u)-[:HAS_ACTIVITY]->(a:ActivityWeek)
             RETURN a
             ORDER BY a.weekStart DESC
+            SKIP $skip
+            LIMIT $limit
             """,
             countQuery = """
                     MATCH (u:User {userId:$userId})
@@ -192,6 +208,8 @@ public interface UserProfileRepository
             WHERE target.deletedAt IS NULL
             RETURN f, target
             ORDER BY f.since DESC
+            SKIP $skip
+            LIMIT $limit
             """,
             countQuery = """
                     MATCH (me:User {userId:$userId})
@@ -211,6 +229,8 @@ public interface UserProfileRepository
             WHERE src.deletedAt IS NULL
             RETURN f, src
             ORDER BY f.since DESC
+            SKIP $skip
+            LIMIT $limit
             """,
             countQuery = """
                     MATCH (me:User {userId:$userId})
@@ -230,6 +250,8 @@ public interface UserProfileRepository
             WHERE target.deletedAt IS NULL
             RETURN b, target
             ORDER BY b.since DESC
+            SKIP $skip
+            LIMIT $limit
             """,
             countQuery = """
                     MATCH (me:User {userId:$userId})
@@ -250,6 +272,8 @@ public interface UserProfileRepository
             MATCH (u)-[m:MEMBER_ORG]->(o:Organization)
             RETURN m, o
             ORDER BY m.joinAt DESC
+            SKIP $skip
+            LIMIT $limit
             """,
             countQuery = """
                     MATCH (u:User {userId:$userId})
@@ -268,6 +292,8 @@ public interface UserProfileRepository
             WHERE m.memberRole = $role
             RETURN m, o
             ORDER BY m.joinAt DESC
+            SKIP $skip
+            LIMIT $limit
             """,
             countQuery = """
                     MATCH (u:User {userId:$userId})
@@ -287,6 +313,8 @@ public interface UserProfileRepository
             MATCH (u)-[c:CREATED_ORG]->(o:Organization)
             RETURN c, o
             ORDER BY c.createdAt DESC
+            SKIP $skip
+            LIMIT $limit
             """,
             countQuery = """
                     MATCH (u:User {userId:$userId})
@@ -306,6 +334,8 @@ public interface UserProfileRepository
             MATCH (u)-[s:SUBSCRIBED_TO]->(p:Package)
             RETURN s, p
             ORDER BY s.start DESC
+            SKIP $skip
+            LIMIT $limit
             """,
             countQuery = """
                     MATCH (u:User {userId:$userId})
@@ -326,6 +356,8 @@ public interface UserProfileRepository
             WHERE f.type = $type
             RETURN sr, f
             ORDER BY sr.saveAt DESC
+            SKIP $skip
+            LIMIT $limit
             """,
             countQuery = """
                     MATCH (u:User {userId:$userId})

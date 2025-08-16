@@ -15,6 +15,8 @@ public interface OrgRepository
     @Query(value = """
             MATCH (o:Organization {orgId:$orgId})-[a:ASSIGNED_ORG_EXERCISE]->(e:Exercise)
             RETURN a, e ORDER BY e.title
+            SKIP $skip
+            LIMIT $limit
             """,
             countQuery = """
                     MATCH (o:Organization {orgId:$orgId})-[a:ASSIGNED_ORG_EXERCISE]->(:Exercise)

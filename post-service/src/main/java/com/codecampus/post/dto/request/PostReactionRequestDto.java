@@ -13,6 +13,6 @@ public class PostReactionRequestDto {
     private String postId;
     private String userId;
     private String commentId; // for comment reactions, can be null if reacting to the post itself
-    private String reactionType = "like"; // e.g., "like", "love", "laugh", etc.// true if the user has reacted, false otherwise
+    private String reactionType; // upvote || downvote
 }
 

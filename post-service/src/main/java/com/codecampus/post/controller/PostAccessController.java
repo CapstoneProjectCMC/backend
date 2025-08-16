@@ -1,5 +1,6 @@
 package com.codecampus.post.controller;
 
+import com.codecampus.post.dto.common.ApiResponse;
 import com.codecampus.post.dto.request.PostAccessRequestDto;
 import com.codecampus.post.entity.PostAccess;
 import com.codecampus.post.service.PostAccessService;
@@ -10,28 +11,34 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/post-access")
+@RequestMapping("/postAccess")
 @RequiredArgsConstructor
 public class PostAccessController {
 
     private final PostAccessService postAccessService;
 
-    @PostMapping
+    @PostMapping("/addAccess")
     public ResponseEntity<?> addOrUpdateAccess(@RequestBody PostAccessRequestDto dto) {
         postAccessService.saveOrUpdateAccess(dto);
-        return ResponseEntity.ok("Access list updated successfully");
+        return ResponseEntity.ok(ApiResponse.builder()
+                .message("Access list updated successfully")
+                .build());
     }
 
-    @DeleteMapping
+    @DeleteMapping("/deleteAccess")
     public ResponseEntity<?> deleteAccess(
-            @RequestParam String postId,
-            @RequestBody List<String> userIds) {
-        postAccessService.deleteAccess(postId, userIds);
-        return ResponseEntity.ok("Access list deleted successfully");
+            @RequestBody PostAccessRequestDto userIds) {
+        postAccessService.deleteAccess( userIds);
+        return ResponseEntity.ok(ApiResponse.builder()
+                .message("Access list deleted successfully")
+                .build());
     }
 
-    @GetMapping("/{postId}")
-    public ResponseEntity<List<?>> getAccessList(@PathVariable String postId) {
-        return ResponseEntity.ok(postAccessService.getAccessByPostId(postId));
+    @GetMapping("/getPostAccess/{postId}")
+    public ResponseEntity<?> getAccessList(@PathVariable String postId) {
+        return ResponseEntity.ok(ApiResponse.builder()
+                .message("Access list retrieved successfully")
+                .result(postAccessService.getAccessByPostId(postId))
+                .build());
     }
 }

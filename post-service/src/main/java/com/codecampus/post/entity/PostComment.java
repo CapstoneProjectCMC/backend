@@ -1,5 +1,6 @@
 package com.codecampus.post.entity;
 
+import com.codecampus.post.entity.audit.AuditMetadata;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -8,7 +9,7 @@ import java.util.List;
 @Entity
 @Data
 @Table(name = "post_comment")
-public class PostComment {
+public class PostComment extends AuditMetadata {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String commentId;

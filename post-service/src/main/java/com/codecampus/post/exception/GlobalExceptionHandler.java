@@ -1,7 +1,11 @@
 package com.codecampus.post.exception;
 
 import com.codecampus.post.dto.common.ApiResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import feign.FeignException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -9,7 +13,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 @Slf4j
+@RequiredArgsConstructor
 public class GlobalExceptionHandler {
+
+    private final ObjectMapper objectMapper;
+
     /**
      * Xử lý các ngoại lệ RuntimeException không được bắt riêng.
      *
@@ -69,5 +77,26 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(errorCode.getStatusCode())
                 .body(apiResponse);
+    }
+
+    @ExceptionHandler(value = FeignException.class)
+    ResponseEntity<?> handlingFeignException(FeignException exception) {
+        log.error("FeignException: " + exception.getMessage(), exception);
+
+        try {
+            // Lấy body lỗi từ service kia (UTF-8)
+            String body = exception.contentUTF8();
+
+            // Parse về ApiResponse nếu format giống của mình
+            ApiResponse<?> apiResponse = objectMapper.readValue(body, ApiResponse.class);
+
+            return ResponseEntity.status(exception.status())
+                    .body(apiResponse);
+
+        } catch (Exception e) {
+            // Nếu parse thất bại thì trả body thô
+            return ResponseEntity.status(exception.status())
+                    .body(exception.contentUTF8());
+        }
     }
 }
