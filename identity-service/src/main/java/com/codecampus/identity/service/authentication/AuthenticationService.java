@@ -282,8 +282,6 @@ public class AuthenticationService {
 
         try {
             userRepository.save(user);
-            // Sự kiện định danh
-            userEventProducer.publishCreatedUserEvent(user);
             // Sự kiện khởi tạo profile giàu dữ liệu
             var profilePayload =
                     userPayloadMapper.toUserProfileCreationPayloadFromUserCreationRequest(

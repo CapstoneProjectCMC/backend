@@ -18,6 +18,7 @@ using MongoDB.Bson.Serialization;
 using FileService.Service.Implementation;
 using FileService.Service.Interfaces;
 using Microsoft.Extensions.FileProviders;
+using System.Security.Claims;
 
 BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
 
@@ -39,7 +40,7 @@ builder.Services.AddHttpContextAccessor();
 
 var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 Console.WriteLine($"ASPNETCORE_ENVIRONMENT: {env}");
-builder.Services.Configure<MinioConfig>(builder.Configuration.GetSection("MinioConfig"));
+//builder.Services.Configure<MinioConfig>(builder.Configuration.GetSection("MinioConfig"));
 
 builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection("MongoDbSettings"));
 builder.Services.Configure<FfmpegSettings>(builder.Configuration.GetSection("FfmpegSettings"));
@@ -98,7 +99,11 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuerSigningKey = true,
         ValidIssuer = appSettings.Jwt.Issuer,
         ValidAudience = appSettings.Jwt.Audience,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(appSettings.Jwt.Key))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(appSettings.Jwt.Key)),
+
+        // Cấu hình claim để nhận Role
+        RoleClaimType = ClaimTypes.Role
+
     };
 });
 
@@ -173,12 +178,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-using (var scope = app.Services.CreateScope())
-{
-    var minioService = scope.ServiceProvider.GetRequiredService<IMinioService>();
-    await minioService.EnsureBucketExistsAsync();
-}
-
 //kích hoạt CORS policy
 app.UseCors(MyAllowSpecificOrigins);
 
@@ -192,6 +191,5 @@ app.UseMiddleware<UserContextMiddleware>();
 
 app.MapControllers();
 
-
-await app.RunAsync();
+app.Run();
 

@@ -3,6 +3,7 @@ package com.codecampus.coding.service.grpc;
 import com.codecampus.coding.grpc.playground.PlaygroundServiceGrpc;
 import com.codecampus.coding.grpc.playground.RunRequest;
 import com.codecampus.coding.grpc.playground.RunUpdate;
+import com.codecampus.coding.helper.DockerHelper;
 import com.google.protobuf.Timestamp;
 import io.grpc.Context;
 import io.grpc.stub.StreamObserver;
@@ -18,9 +19,12 @@ import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.PosixFilePermission;
+import java.nio.file.attribute.PosixFilePermissions;
 import java.time.Instant;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -38,8 +42,11 @@ public class PlaygroundServiceImpl
     private static final String SANDBOX_IMAGE =
             System.getenv().getOrDefault("SANDBOX_IMAGE",
                     "capstoneprojectpythondocker:latest");
+    private static final String RUNNER_VOLUME =
+            System.getenv().getOrDefault("RUNNER_VOLUME", "runner_data");
     private static final Path RUNNER_ROOT =
             Path.of(System.getenv().getOrDefault("RUNNER_ROOT", "/work"));
+
     private final ExecutorService ioPool = Executors.newCachedThreadPool();
 
     // Huỷ job gần nhất
@@ -48,8 +55,14 @@ public class PlaygroundServiceImpl
 
     private static Path createWorkDir() throws IOException {
         Files.createDirectories(RUNNER_ROOT);
-        return Files.createTempDirectory(
-                "pg_"); // <— nằm trong volume host
+
+        // Tạo thư mục work với quyền 777
+        Path workDir = Files.createTempDirectory(RUNNER_ROOT, "pg_");
+        Set<PosixFilePermission> perms =
+                PosixFilePermissions.fromString("rwxrwxrwx");
+        Files.setPosixFilePermissions(workDir, perms);
+
+        return workDir;
     }
 
     @PreDestroy
@@ -104,8 +117,8 @@ public class PlaygroundServiceImpl
             }
 
             // 2) Compile (python bỏ qua)
-            final String image = "capstoneprojectpythondocker";
             String binName = "bin_" + UUID.randomUUID();
+            String inPath = DockerHelper.inVolumePath(workDir);
 
             if (!"python".equals(lang)) {
                 emit(streamObserver,
@@ -114,19 +127,20 @@ public class PlaygroundServiceImpl
                         -1, 0, 0
                 );
 
+                List<String> runBase = baseRunArgs(inPath);
                 ProcessBuilder compilePb = switch (lang) {
-                    case "cpp" ->
-                            new ProcessBuilder("docker", "run", "--rm", "-v",
-                                    workDir + ":/code", image,
-                                    "g++", "-O2", "-std=c++17",
-                                    "/code/Main.cpp", "-o", "/code/" + binName);
-                    case "java" ->
-                            new ProcessBuilder("docker", "run", "--rm", "-v",
-                                    workDir + ":/code", image,
-                                    "bash", "-c",
-                                    "javac /code/Main.java -d /code");
+                    case "cpp" -> new ProcessBuilder(
+                            Stream.concat(runBase.stream(),
+                                            Stream.of("g++", "-O2", "-std=c++17",
+                                                    "Main.cpp", "-o", binName))
+                                    .toList());
+                    case "java" -> new ProcessBuilder(
+                            Stream.concat(runBase.stream(),
+                                            Stream.of("javac", "Main.java"))
+                                    .toList());
                     default -> null;
                 };
+
                 int compileCode = execStreamingBytes(
                         compilePb,
                         streamObserver,
@@ -159,29 +173,28 @@ public class PlaygroundServiceImpl
                     0.5f;
 
             container = "pg_" + UUID.randomUUID();
+            List<String> startArgs =
+                    baseStartArgs(inPath, container, memoryMb, cpus);
 
             // Chạy tách docker
-            ProcessBuilder startPb = new ProcessBuilder("docker", "run", "-dit",
-                    "--memory=%sm".formatted(memoryMb),
-                    "--cpus=" + cpus,
-                    "--network", "none",
-                    "-v", workDir + ":/app",
-                    "--name", container,
-                    image, "bash");
-            mustOk(startPb, "Cannot start sandbox");
+            ProcessBuilder startPb = new ProcessBuilder(startArgs);
+            mustOkWithOutput(startPb, "Cannot start sandbox");
 
             List<String> cmd = switch (lang) {
-                case "python" -> List.of("python3", "/app/Main.py");
-                case "cpp" -> List.of("/app/" + binName);
-                case "java" -> List.of("java", "-cp", "/app/", "Main");
+                case "python" -> List.of("python3", "Main.py");
+                case "cpp" -> List.of("./" + binName);
+                case "java" -> List.of("java", "Main");
                 default -> List.of("sh", "-c", "exit 2");
             };
 
             long startTime = System.nanoTime();
             Process runPb = new ProcessBuilder(
                     Stream.concat(
-                            Stream.of("docker", "exec", "-i", container),
-                            cmd.stream()).toList()).start();
+                                    DockerHelper.cmd("exec", "-i", "-w", inPath,
+                                            container).stream(),
+                                    cmd.stream())
+                            .toList())
+                    .start();
 
             // Feed stdin (non-blocking)
             ioPool.submit(() -> {
@@ -243,8 +256,8 @@ public class PlaygroundServiceImpl
 
             // Cleanup container
             if (container != null) {
-                Process rm = new ProcessBuilder("docker", "rm", "-f", container)
-                        .start();
+                Process rm = new ProcessBuilder(
+                        DockerHelper.cmd("rm", "-f", container)).start();
                 if (!rm.waitFor(3, TimeUnit.SECONDS)) {
                     log.warn("docker rm -f {} timeout", container);
                 } else if (rm.exitValue() != 0) {
@@ -395,8 +408,10 @@ public class PlaygroundServiceImpl
     private int readContainerMemKb(String container)
             throws IOException, InterruptedException {
         Process process = new ProcessBuilder(
-                "docker", "exec", container, "bash", "-c",
-                "cat /sys/fs/cgroup/memory.current || cat /sys/fs/cgroup/memory/memory.usage_in_bytes").start();
+                DockerHelper.cmd("exec", container, "bash", "-c",
+                        "cat /sys/fs/cgroup/memory.current || cat /sys/fs/cgroup/memory/memory.usage_in_bytes"))
+                .start();
+
         String output = new String(
                 process.getInputStream().readAllBytes(),
                 StandardCharsets.UTF_8
@@ -425,5 +440,65 @@ public class PlaygroundServiceImpl
                     });
         } catch (IOException ignored) {
         }
+    }
+
+    private int execCapture(ProcessBuilder pb, StringBuilder out)
+            throws IOException, InterruptedException {
+        pb.redirectErrorStream(true);
+        Process p = pb.start();
+        byte[] all = p.getInputStream().readAllBytes();
+        out.append(new String(all, StandardCharsets.UTF_8));
+        return p.waitFor();
+    }
+
+    private void mustOkWithOutput(ProcessBuilder pb, String msg)
+            throws IOException, InterruptedException {
+        StringBuilder sb = new StringBuilder();
+        int code = execCapture(pb, sb);
+        if (code != 0) {
+            throw new IllegalStateException(
+                    msg + " (exit=" + code + "): " + sb);
+        }
+    }
+
+    private List<String> baseRunArgs(
+            String workDirInVolume) {
+        String self = DockerHelper.selfContainer();
+        if (!self.isBlank()) {
+            return DockerHelper.cmd("run", "--rm",
+                    "--volumes-from", self,
+                    "-w", workDirInVolume,
+                    SANDBOX_IMAGE);
+        }
+        // Fallback: vẫn hỗ trợ tên volume nếu bạn muốn
+        return DockerHelper.cmd("run", "--rm",
+                "-v", RUNNER_VOLUME + ":/work",
+                "-w", workDirInVolume,
+                SANDBOX_IMAGE);
+    }
+
+    private List<String> baseStartArgs(
+            String workDirInVolume,
+            String containerName,
+            int memoryMb, float cpus) {
+        String self = DockerHelper.selfContainer();
+        if (!self.isBlank()) {
+            return DockerHelper.cmd("run", "-dit",
+                    "--memory=%sm".formatted(memoryMb),
+                    "--cpus=" + cpus,
+                    "--network", "none",
+                    "--volumes-from", self,
+                    "-w", workDirInVolume,
+                    "--name", containerName,
+                    SANDBOX_IMAGE, "bash");
+        }
+        return DockerHelper.cmd("run", "-dit",
+                "--memory=%sm".formatted(memoryMb),
+                "--cpus=" + cpus,
+                "--network", "none",
+                "-v", RUNNER_VOLUME + ":/work",
+                "-w", workDirInVolume,
+                "--name", containerName,
+                SANDBOX_IMAGE, "bash");
     }
 }

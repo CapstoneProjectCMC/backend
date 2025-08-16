@@ -2,10 +2,14 @@
 using FileService.Service.ApiModels.FileDocumentModels;
 using FileService.Service.Dtos.FileDocumentDtos;
 using FileService.Service.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FileService.Api.Controllers
 {
+   // [Authorize]
+   // [Authorize(Policy = "Permission")]
+   // [Authorize(Roles = "ADMIN")]
     [Route("file/api/[controller]")]
     [ApiController]
     public class FileDocumentController : BaseApiController

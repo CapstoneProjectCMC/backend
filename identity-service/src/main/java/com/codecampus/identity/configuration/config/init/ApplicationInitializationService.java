@@ -60,8 +60,6 @@ public class ApplicationInitializationService {
                 .roles(roles)
                 .build());
 
-        userEventProducer.publishCreatedUserEvent(user);
-
         UserProfileCreationPayload payload =
                 UserProfileCreationPayload.builder()
                         .firstName("Admin")

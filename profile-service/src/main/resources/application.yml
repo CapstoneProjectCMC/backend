@@ -36,3 +36,4 @@ app:
     file: http://localhost:8082/file
   event:
     user-events: "user-events"
+    user-registrations: "user-registrations"
