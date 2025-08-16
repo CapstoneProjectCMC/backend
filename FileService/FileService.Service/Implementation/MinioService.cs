@@ -22,25 +22,60 @@ namespace FileService.Service.Implementation
         private readonly IMinioClient _minioClient;
         private readonly MinioConfig _config;
 
-        public MinioService(AppSettings appSettings, UserContext userContext) : base(appSettings, userContext)
+        public MinioService(IOptions<MinioConfig> options, AppSettings appSettings, UserContext userContext) : base(appSettings, userContext)
         {
-            _config = appSettings.MinioConfig ?? throw new ArgumentNullException(nameof(appSettings.MinioConfig)); 
+            _config = options.Value ?? throw new ArgumentNullException(nameof(options.Value));
 
-            _minioClient = new MinioClient()
-                .WithEndpoint(_config.Endpoint, _config.Port)
-                .WithCredentials(_config.AccessKey, _config.SecretKey)
-                .WithSSL(_config.Secure)
-                .Build();
+            Console.WriteLine($"MinioConfig: Endpoint={_config.Endpoint}, Port={_config.Port}, AccessKey length={_config.AccessKey?.Length ?? 0}, Secure={_config.Secure}");
+
+            if (string.IsNullOrWhiteSpace(_config.Endpoint) || _config.Port <= 0 || string.IsNullOrWhiteSpace(_config.AccessKey) || string.IsNullOrWhiteSpace(_config.SecretKey))
+            {
+                throw new InvalidOperationException("Minio configuration is invalid or incomplete.");
+            }
+            try
+            {
+                Console.WriteLine("Attempting to build MinioClient...");
+                _minioClient = new MinioClient()
+                    .WithEndpoint(_config.Endpoint, _config.Port)
+                    .WithCredentials(_config.AccessKey, _config.SecretKey)
+                    .WithSSL(_config.Secure)
+                    .Build();
+                if (_minioClient == null)
+                {
+                    throw new InvalidOperationException("Failed to initialize MinioClient.");
+                }
+                // Kiểm tra kết nối thực tế
+                Console.WriteLine("Testing MinioClient connection...");
+                var buckets = _minioClient.ListBucketsAsync().GetAwaiter().GetResult(); // Kiểm tra nhanh
+                Console.WriteLine("MinioClient initialized and connection tested successfully.");
+            }
+            catch (MinioException ex)
+            {
+                Console.WriteLine($"MinioException: {ex.Message}");
+                throw new InvalidOperationException($"Minio initialization failed: {ex.Message}", ex);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unexpected error: {ex.Message}");
+                throw new InvalidOperationException($"Failed to initialize MinioClient: {ex.Message}", ex);
+            }
         }
 
         public async Task EnsureBucketExistsAsync()
         {
-            var bucketExistsArgs = new BucketExistsArgs().WithBucket(_config.BucketName);
+            if (_minioClient == null)
+            {
+                throw new InvalidOperationException("MinioClient is not initialized.");
+            }
+
             if (string.IsNullOrWhiteSpace(_config.BucketName))
             {
                 throw new InvalidOperationException("Bucket name is not configured.");
             }
+            var bucketExistsArgs = new BucketExistsArgs().WithBucket(_config.BucketName);
+
             bool found = await _minioClient.BucketExistsAsync(bucketExistsArgs);
+           
             if (!found)
             {
                 var makeBucketArgs = new MakeBucketArgs().WithBucket(_config.BucketName);
