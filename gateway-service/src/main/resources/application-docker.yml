@@ -98,6 +98,16 @@ spring:
             - name: RateLimiter
               args:
                 routeId: chat_service
+        - id: post_service
+          #          uri: https://post-service:8090
+          uri: http://post-service:8090
+          predicates:
+            - Path=${app.api-prefix}/post/**
+          filters:
+            - StripPrefix=2
+            - name: RateLimiter
+              args:
+                routeId: post_service
 
 identity:
   service:

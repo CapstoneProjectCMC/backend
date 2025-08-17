@@ -1,38 +1,33 @@
 package com.codecampus.post.service;
 
 
-import com.codecampus.post.Mapper.PostMapper;
 import com.codecampus.post.config.CustomJwtDecoder;
 import com.codecampus.post.dto.common.PageRequestDto;
 import com.codecampus.post.dto.common.PageResponse;
-import com.codecampus.post.dto.request.AddFileDocumentDto;
 import com.codecampus.post.dto.request.PostRequestDto;
 import com.codecampus.post.dto.response.AddFileResponseDto;
 import com.codecampus.post.entity.Post;
 import com.codecampus.post.exception.AppException;
 import com.codecampus.post.exception.ErrorCode;
+import com.codecampus.post.mapper.PostMapper;
 import com.codecampus.post.repository.PostRepository;
-import com.codecampus.post.service.FeignConfig.FileServiceClient;
+import com.codecampus.post.repository.httpClient.FileServiceClient;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.http.HttpHeaders;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -42,11 +37,15 @@ public class PostService {
     private final PostMapper postMapper;
     private final FileServiceClient fileServiceClient;
 
-    public PageResponse<Post> getAllAccessiblePosts(HttpServletRequest request, PageRequestDto pageRequestDto) {
+    public PageResponse<Post> getAllAccessiblePosts(HttpServletRequest request,
+                                                    PageRequestDto pageRequestDto) {
         String token = request.getHeader("Authorization");
-        String userId = customJwtDecoder.decode(token.substring(7)).getClaims().get("userId").toString();
-        Pageable pageable = PageRequest.of(pageRequestDto.getPage(), pageRequestDto.getSize(), Sort.by("createdAt").descending());
-        Page<Post> postPage = postRepository.findAllVisiblePosts(userId, pageable);
+        String userId = customJwtDecoder.decode(token.substring(7)).getClaims()
+                .get("userId").toString();
+        Pageable pageable = PageRequest.of(pageRequestDto.getPage(),
+                pageRequestDto.getSize(), Sort.by("createdAt").descending());
+        Page<Post> postPage =
+                postRepository.findAllVisiblePosts(userId, pageable);
 
         return PageResponse.<Post>builder()
                 .currentPage(postPage.getNumber())
@@ -57,11 +56,16 @@ public class PostService {
                 .build();
     }
 
-    public PageResponse<?> SeachPosts(String searchText, HttpServletRequest request, PageRequestDto pageRequestDto) {
+    public PageResponse<?> SeachPosts(String searchText,
+                                      HttpServletRequest request,
+                                      PageRequestDto pageRequestDto) {
         String token = request.getHeader("Authorization");
-        String userId = customJwtDecoder.decode(token.substring(7)).getClaims().get("userId").toString();
-        Pageable pageable = PageRequest.of(pageRequestDto.getPage(), pageRequestDto.getSize(), Sort.by("created_at").descending());
-        Page<Post> postPage = postRepository.searchVisiblePosts(searchText, userId, pageable);
+        String userId = customJwtDecoder.decode(token.substring(7)).getClaims()
+                .get("userId").toString();
+        Pageable pageable = PageRequest.of(pageRequestDto.getPage(),
+                pageRequestDto.getSize(), Sort.by("created_at").descending());
+        Page<Post> postPage =
+                postRepository.searchVisiblePosts(searchText, userId, pageable);
 
         return PageResponse.<Post>builder()
                 .currentPage(postPage.getNumber())
@@ -80,7 +84,8 @@ public class PostService {
 //                .map(postMapper::toDto);
 //    }
 
-    public void createPost(PostRequestDto postRequestDto, HttpServletRequest request) {
+    public void createPost(PostRequestDto postRequestDto,
+                           HttpServletRequest request) {
         String token = request.getHeader("Authorization");
         String userId = customJwtDecoder.decode(token.substring(7))
                 .getClaims()
@@ -90,7 +95,8 @@ public class PostService {
         List<String> fileUrls = Collections.emptyList();
 
         var fileDoc = postRequestDto.getFileDocument();
-        if (fileDoc != null && fileDoc.getFile() != null && !fileDoc.getFile().isEmpty()) {
+        if (fileDoc != null && fileDoc.getFile() != null &&
+                !fileDoc.getFile().isEmpty()) {
 
             MultipartFile file = fileDoc.getFile();
 
@@ -109,14 +115,15 @@ public class PostService {
                     .orElse(Collections.emptyList());
         }
 
-        Post post = postMapper.toEntity(postRequestDto);
+        Post post = postMapper.toPostFromPostRequestDto(postRequestDto);
         post.setImagesUrls(fileUrls);
         post.setUserId(userId);
 
         postRepository.save(post);
     }
 
-    public void updatePost(PostRequestDto postRequestDto, HttpServletRequest request) {
+    public void updatePost(PostRequestDto postRequestDto,
+                           HttpServletRequest request) {
         String token = request.getHeader("Authorization");
         String userId = customJwtDecoder.decode(token.substring(7))
                 .getClaims()
@@ -125,13 +132,17 @@ public class PostService {
                 .getClaims()
                 .get("username").toString();
 
-        Optional<Post> optionalPost = postRepository.findById(postRequestDto.getPostId());
-        if (optionalPost.isEmpty()) throw new AppException(ErrorCode.POST_NOT_FOUND);
+        Optional<Post> optionalPost =
+                postRepository.findById(postRequestDto.getPostId());
+        if (optionalPost.isEmpty()) {
+            throw new AppException(ErrorCode.POST_NOT_FOUND);
+        }
 
         Post existingPost = optionalPost.get();
 
         // Chỉ cho phép người tạo hoặc admin chỉnh sửa
-        if (!existingPost.getUserId().equals(userId) && !"admin".equals(username)) {
+        if (!existingPost.getUserId().equals(userId) &&
+                !"admin".equals(username)) {
             throw new AppException(ErrorCode.UNAUTHORIZED);
         }
 
@@ -139,10 +150,12 @@ public class PostService {
         List<String> updatedImageUrls = new ArrayList<>();
 
         // 1. Giữ lại ảnh cũ mà người dùng vẫn muốn giữ
-        if (postRequestDto.getOldImgesUrls() != null && !postRequestDto.getOldImgesUrls().isEmpty()) {
+        if (postRequestDto.getOldImgesUrls() != null &&
+                !postRequestDto.getOldImgesUrls().isEmpty()) {
             updatedImageUrls.addAll(
                     existingPost.getImagesUrls().stream()
-                            .filter(url -> postRequestDto.getOldImgesUrls().contains(url))
+                            .filter(url -> postRequestDto.getOldImgesUrls()
+                                    .contains(url))
                             .toList()
             );
         }
@@ -158,17 +171,18 @@ public class PostService {
             }
 
             // Upload ảnh mới
-            AddFileResponseDto response = fileServiceClient.uploadFile(postRequestDto.getFileDocument());
+            AddFileResponseDto response = fileServiceClient.uploadFile(
+                    postRequestDto.getFileDocument());
             List<String> newFileUrls = Optional.ofNullable(response)
-                            .map(AddFileResponseDto::getResult)
-                            .map(List::of)
-                            .orElse(Collections.emptyList());
+                    .map(AddFileResponseDto::getResult)
+                    .map(List::of)
+                    .orElse(Collections.emptyList());
 
             updatedImageUrls.addAll(newFileUrls);
         }
 
         // 3. Cập nhật các field khác
-        postMapper.updateEntityFromDto(postRequestDto, existingPost);
+        postMapper.updatePostRequestDtoToPost(postRequestDto, existingPost);
         existingPost.setImagesUrls(updatedImageUrls);
 
         postRepository.save(existingPost);
@@ -177,9 +191,12 @@ public class PostService {
 
     public void deletePost(String postId, HttpServletRequest request) {
         String token = request.getHeader("Authorization");
-        String deletedBy = customJwtDecoder.decode(token.substring(7)).getClaims().get("username").toString();
+        String deletedBy =
+                customJwtDecoder.decode(token.substring(7)).getClaims()
+                        .get("username").toString();
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("Post not found with id: " + postId));
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Post not found with id: " + postId));
         post.markDeleted(deletedBy);
         postRepository.save(post);
     }

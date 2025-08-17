@@ -111,6 +111,16 @@ services:
     ports: [ "8089:8089" ]
     networks: [ backend ]
 
+  post-service:
+    image: ${DOCKERHUB_USER}/codecampus-post-service:${IMAGE_TAG:-latest}
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - POST_DATABASE=${POST_DATABASE}
+      - POST_USERNAME=${POST_USERNAME}
+      - POST_DB_PASSWORD=${POST_DB_PASSWORD}
+    ports: [ "8090:8090" ]
+    networks: [ backend ]
+
   file-service:
     image: ${DOCKERHUB_USER}/codecampus-file-service:${IMAGE_TAG:-latest}
     environment:

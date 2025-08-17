@@ -1,5 +1,6 @@
 package com.codecampus.profile.repository.client;
 
+import com.codecampus.profile.config.AuthenticationRequestInterceptor;
 import com.codecampus.profile.config.FeignMultipartConfiguration;
 import com.codecampus.profile.constant.file.FileType;
 import com.codecampus.profile.dto.common.FileServiceResponse;
@@ -17,7 +18,8 @@ import java.util.List;
 @FeignClient(
         name = "file-service",
         url = "${app.services.file}",
-        configuration = FeignMultipartConfiguration.class)
+        configuration = {AuthenticationRequestInterceptor.class,
+                FeignMultipartConfiguration.class})
 public interface FileClient {
 
     @PostMapping(

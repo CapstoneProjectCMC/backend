@@ -22,26 +22,6 @@ services:
       retries: 5
     networks: [ backend ]
 
-  post-db:
-    image: bitnami/postgresql:latest
-    container_name: post-db
-    restart: unless-stopped
-    environment:
-      - POSTGRESQL_USERNAME=${POST_USERNAME}
-      - POSTGRESQL_PASSWORD=${POST_DB_PASSWORD}
-      - POSTGRESQL_DATABASE=${POST_DATABASE}
-      - POSTGRESQL_POSTGRES_PASSWORD=${POST_DB_PASSWORD}
-    ports:
-      - "5439:5432"
-#    volumes:
-#      - post_pg_data:/bitnami/postgresql
-    healthcheck:
-      test: [ "CMD-SHELL","pg_isready -U postgres" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    networks: [ backend ]
-
   quiz-db:
     image: bitnami/postgresql:latest
     container_name: quiz-db
@@ -115,6 +95,26 @@ services:
       - "5436:5432"
     volumes:
       - ai_pg_data:/bitnami/postgresql
+    healthcheck:
+      test: [ "CMD-SHELL","pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: [ backend ]
+
+  post-db:
+    image: bitnami/postgresql:latest
+    container_name: post-db
+    restart: unless-stopped
+    environment:
+      - POSTGRESQL_USERNAME=${POST_USERNAME}
+      - POSTGRESQL_PASSWORD=${POST_DB_PASSWORD}
+      - POSTGRESQL_DATABASE=${POST_DATABASE}
+      - POSTGRESQL_POSTGRES_PASSWORD=${POST_DB_PASSWORD}
+    ports:
+      - "5437:5432"
+    volumes:
+      - post_pg_data:/bitnami/postgresql
     healthcheck:
       test: [ "CMD-SHELL","pg_isready -U postgres" ]
       interval: 10s
@@ -360,6 +360,7 @@ volumes:
   quiz_pg_data:
   coding_pg_data:
   ai_pg_data:
+  post_pg_data:
   kafka_data:
   neo4j_data:
   redis_data:

@@ -2,40 +2,61 @@ package com.codecampus.post.entity;
 
 import com.codecampus.post.entity.audit.AuditMetadata;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import java.util.List;
 
-@Entity
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@Entity
 @Table(name = "post")
+@SQLDelete(sql = "UPDATE post " +
+        "SET deleted_by = ? , deleted_at = now() " +
+        "WHERE id = ?")
+@Where(clause = "deleted_at IS NULL")
 public class Post extends AuditMetadata {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String postId;
+    String postId;
 
-    private String userId;
-    private String orgId;
-    private String postType; //global, organization, group, etc.
-    private String title;
-    private String content;
-    private Boolean isPublic;
-    private Boolean allowComment;
-    private String hashtag;
-    private String status;
-    private List<String> imagesUrls;
+    String userId;
+    String orgId;
+    String postType; //global, organization, group, etc.
+    String title;
+    String content;
+    Boolean isPublic;
+    Boolean allowComment;
+    String hashtag;
+    String status;
+    List<String> imagesUrls;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<PostComment> comments;
+    List<PostComment> comments;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    private List<PostReaction> reactions;
+    List<PostReaction> reactions;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    private List<PostAccess> accesses;
+    List<PostAccess> accesses;
 }
 

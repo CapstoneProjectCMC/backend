@@ -1,4 +1,4 @@
-package com.codecampus.post.config;
+package com.codecampus.post.config.FeignConfig;
 
 import feign.RequestInterceptor;
 import feign.RequestTemplate;

@@ -124,6 +124,16 @@ spring:
             - name: RateLimiter
               args:
                 routeId: chat_service
+        - id: post_service
+          #          uri: https://localhost:8090
+          uri: http://localhost:8090
+          predicates:
+            - Path=${app.api-prefix}/post/**
+          filters:
+            - StripPrefix=2
+            - name: RateLimiter
+              args:
+                routeId: post_service
 
 identity:
   service:
@@ -173,6 +183,10 @@ rate-limiter:
       refillTokens: 125
       refillDuration: 60
     chat_service:
+      capacity: 125
+      refillTokens: 125
+      refillDuration: 60
+    post_service:
       capacity: 125
       refillTokens: 125
       refillDuration: 60
