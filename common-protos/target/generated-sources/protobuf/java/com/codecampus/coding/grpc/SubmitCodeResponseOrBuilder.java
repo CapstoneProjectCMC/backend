@@ -62,4 +62,22 @@ public interface SubmitCodeResponseOrBuilder extends
    */
   com.codecampus.coding.grpc.TestCaseResultDtoOrBuilder getResultsOrBuilder(
       int index);
+
+  /**
+   * <code>int32 memoryMb = 6;</code>
+   * @return The memoryMb.
+   */
+  int getMemoryMb();
+
+  /**
+   * <code>float cpus = 7;</code>
+   * @return The cpus.
+   */
+  float getCpus();
+
+  /**
+   * <code>int32 peakMemoryKb = 8;</code>
+   * @return The peakMemoryKb.
+   */
+  int getPeakMemoryKb();
 }

@@ -14,6 +14,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.PosixFilePermission;
@@ -43,14 +44,12 @@ public class DockerSandboxService {
         // Đảm bảo thư mục RUNNER_ROOT tồn tại và có quyền
         if (!Files.exists(RUNNER_ROOT)) {
             Files.createDirectories(RUNNER_ROOT);
+            Files.setPosixFilePermissions(
+                    RUNNER_ROOT, PosixFilePermissions.fromString("rwxrwxrwx"));
         }
-
-        // Tạo thư mục work với quyền 777
         Path workDir = Files.createTempDirectory(RUNNER_ROOT, "pg_");
-        Set<PosixFilePermission> perms =
-                PosixFilePermissions.fromString("rwxrwxrwx");
-        Files.setPosixFilePermissions(workDir, perms);
-
+        Files.setPosixFilePermissions(
+                workDir, PosixFilePermissions.fromString("rwxrwxrwx"));
         return workDir;
     }
 
@@ -89,17 +88,18 @@ public class DockerSandboxService {
 
         // 3. Tên nhị phân / jar random để tránh trùng
         String binName = "bin_" + UUID.randomUUID();
-        String inPath = DockerHelper.inVolumePath(workDir);
+        final boolean inDocker = !DockerHelper.selfContainer().isBlank();
+        final String inPath = inDocker
+                ? DockerHelper.inVolumePath(workDir)
+                : workDir.toString();
 
-        List<String> runBase = DockerHelper.selfContainer().isBlank()
+        List<String> runBase = inDocker
                 ? DockerHelper.cmd("run", "--rm",
-                "-v", RUNNER_VOLUME + ":/work",
-                "-w", inPath,
-                SANDBOX_IMAGE)
-                : DockerHelper.cmd("run", "--rm",
                 "--volumes-from", DockerHelper.selfContainer(),
-                "-w", inPath,
-                SANDBOX_IMAGE);
+                "-w", inPath, SANDBOX_IMAGE)
+                : DockerHelper.cmd("run", "--rm",
+                "-v", RUNNER_ROOT + ":" + RUNNER_ROOT,
+                "-w", inPath, SANDBOX_IMAGE);
 
         ProcessBuilder compilePb = switch (language) {
             case "cpp" -> new ProcessBuilder(
@@ -130,16 +130,19 @@ public class DockerSandboxService {
             int memoryMb,
             float cpus) {
         String container = "judge_" + UUID.randomUUID();
-        String inPath = DockerHelper.inVolumePath(compiledArtifact.workDir());
+        boolean inDocker = !DockerHelper.selfContainer().isBlank();
+        String inPath = inDocker
+                ? DockerHelper.inVolumePath(compiledArtifact.workDir())
+                : compiledArtifact.workDir().toString();
 
         try {
-            /* 1. khởi tạo container rỗng, giới hạn RAM + CPU, network none */
-            List<String> startArgs = DockerHelper.selfContainer().isBlank()
+            // 1) khởi tạo container rỗng, giới hạn RAM + CPU, network none
+            List<String> startArgs = inDocker
                     ? DockerHelper.cmd("run", "-dit",
                     "--memory=%sm".formatted(memoryMb),
                     "--cpus=" + cpus,
                     "--network", "none",
-                    "-v", RUNNER_VOLUME + ":/work",
+                    "--volumes-from", DockerHelper.selfContainer(),
                     "-w", inPath,
                     "--name", container,
                     SANDBOX_IMAGE, "bash")
@@ -147,7 +150,7 @@ public class DockerSandboxService {
                     "--memory=%sm".formatted(memoryMb),
                     "--cpus=" + cpus,
                     "--network", "none",
-                    "--volumes-from", DockerHelper.selfContainer(),
+                    "-v", inPath + ":" + inPath,
                     "-w", inPath,
                     "--name", container,
                     SANDBOX_IMAGE, "bash");
@@ -161,7 +164,7 @@ public class DockerSandboxService {
                 default -> throw new IllegalStateException();
             };
 
-            /* Chạy */
+            // 2) run + feed input
             long startTime = System.nanoTime();
             Process run = new ProcessBuilder(
                     Stream.concat(
@@ -180,17 +183,28 @@ public class DockerSandboxService {
             int exitCode = run.waitFor();
             long endTime = System.nanoTime();
 
+            // 3) đo memory trước khi rm
+            int memoryKb = 0;
+            try {
+                memoryKb = readContainerMemKb(container);
+            } catch (Exception e) {
+                log.warn("Read memory usage failed: {}", e.toString());
+            }
+
             boolean passed =
                     exitCode == 0 && equal(out, testCase.getExpectedOutput());
 
             return new CodeResult(
                     passed,
                     (int) ((endTime - startTime) / 1_000_000),
-                    0, out.trim(), err.trim());
+                    memoryKb, out.trim(), err.trim());
 
         } catch (Exception ex) {
             log.error("Sandbox error", ex);
-            return new CodeResult(false, 0, 0, "", ex.getMessage());
+            return new CodeResult(
+                    false,
+                    0, 0,
+                    "", ex.getMessage());
         } finally {
             silent(DockerHelper.cmd("rm", "-f", container)
                     .toArray(new String[0]));
@@ -208,6 +222,20 @@ public class DockerSandboxService {
         if (code != 0) {
             throw new RuntimeException("docker run failed: " + log);
         }
+    }
+
+    int readContainerMemKb(String container)
+            throws IOException, InterruptedException {
+        Process process = new ProcessBuilder(
+                DockerHelper.cmd("exec", container, "bash", "-c",
+                        "cat /sys/fs/cgroup/memory.current || cat /sys/fs/cgroup/memory/memory.usage_in_bytes"))
+                .start();
+
+        String output = new String(process.getInputStream().readAllBytes(),
+                StandardCharsets.UTF_8).trim();
+        process.waitFor();
+        long bytes = Long.parseLong(output);
+        return (int) (bytes / 1024);
     }
 
     String read(InputStream inputStream)

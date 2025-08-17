@@ -58,19 +58,7 @@ public interface SubmitCodeRequestOrBuilder extends
       getSourceCodeBytes();
 
   /**
-   * <code>int32 memoryMb = 5;</code>
-   * @return The memoryMb.
-   */
-  int getMemoryMb();
-
-  /**
-   * <code>float cpus = 6;</code>
-   * @return The cpus.
-   */
-  float getCpus();
-
-  /**
-   * <code>int32 timeTakenSeconds = 7;</code>
+   * <code>int32 timeTakenSeconds = 5;</code>
    * @return The timeTakenSeconds.
    */
   int getTimeTakenSeconds();

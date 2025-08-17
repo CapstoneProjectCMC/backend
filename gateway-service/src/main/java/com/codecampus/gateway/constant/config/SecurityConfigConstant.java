@@ -12,10 +12,4 @@ public class SecurityConfigConstant {
     public static final String[] PUBLIC_ENDPOINTS = {
             "/identity/auth/.*",
     };
-
-    // CORS IDENTITY SERVICE ENDPOINT
-    public static final String IDENTITY_SERVICE_ENDPOINT =
-            //"https://localhost:8080/identity";
-            //"http://identity-service:8080/identity";
-            "http://localhost:8080/identity";
 }

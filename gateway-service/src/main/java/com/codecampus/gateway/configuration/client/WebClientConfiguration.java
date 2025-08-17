@@ -12,8 +12,6 @@ import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 
 import java.util.List;
 
-import static com.codecampus.gateway.constant.config.SecurityConfigConstant.IDENTITY_SERVICE_ENDPOINT;
-
 /**
  * Lớp cấu hình các bean liên quan đến WebClient và CORS cho Gateway.
  * Bao gồm:
@@ -32,9 +30,9 @@ public class WebClientConfiguration {
      * @return một đối tượng WebClient dùng để thực hiện các HTTP request đến Identity Service
      */
     @Bean
-    WebClient webClient() {
+    WebClient webClient(IdentityServiceProperties props) {
         return WebClient.builder()
-                .baseUrl(IDENTITY_SERVICE_ENDPOINT)
+                .baseUrl(props.getBaseUrl())
                 .build();
     }
 

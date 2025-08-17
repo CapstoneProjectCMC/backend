@@ -98,3 +98,7 @@ spring:
             - name: RateLimiter
               args:
                 routeId: chat_service
+
+identity:
+  service:
+    base-url: http://identity-service:8080/identity

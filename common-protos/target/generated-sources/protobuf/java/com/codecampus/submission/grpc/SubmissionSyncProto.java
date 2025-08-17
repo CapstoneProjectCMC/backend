@@ -75,28 +75,29 @@ public final class SubmissionSyncProto {
       "submittedAt\030\006 \001(\0132\032.google.protobuf.Time" +
       "stamp\0224\n\007answers\030\007 \003(\0132#.submission.Quiz" +
       "SubmissionAnswerDto\022\030\n\020timeTakenSeconds\030" +
-      "\010 \001(\005\"\217\002\n\021CodeSubmissionDto\022\n\n\002id\030\001 \001(\t\022" +
+      "\010 \001(\005\"\305\002\n\021CodeSubmissionDto\022\n\n\002id\030\001 \001(\t\022" +
       "\022\n\nexerciseId\030\002 \001(\t\022\021\n\tstudentId\030\003 \001(\t\022\r" +
       "\n\005score\030\004 \001(\005\022\023\n\013totalPoints\030\005 \001(\005\022\020\n\010la" +
       "nguage\030\006 \001(\t\022\022\n\nsourceCode\030\007 \001(\t\022/\n\013subm" +
       "ittedAt\030\010 \001(\0132\032.google.protobuf.Timestam" +
       "p\022\030\n\020timeTakenSeconds\030\t \001(\005\0222\n\007results\030\n" +
-      " \003(\0132!.submission.TestCaseResultSyncDto\"" +
-      "\206\001\n\025TestCaseResultSyncDto\022\022\n\ntestCaseId\030" +
-      "\001 \001(\t\022\016\n\006passed\030\002 \001(\010\022\021\n\truntimeMs\030\003 \001(\005" +
-      "\022\020\n\010memoryKb\030\004 \001(\005\022\016\n\006output\030\005 \001(\t\022\024\n\014er" +
-      "rorMessage\030\006 \001(\t\"P\n\033CreateQuizSubmission" +
-      "Request\0221\n\nsubmission\030\001 \001(\0132\035.submission" +
-      ".QuizSubmissionDto\"P\n\033CreateCodeSubmissi" +
-      "onRequest\0221\n\nsubmission\030\001 \001(\0132\035.submissi" +
-      "on.CodeSubmissionDto2\311\001\n\025SubmissionSyncS" +
-      "ervice\022W\n\024CreateQuizSubmission\022\'.submiss" +
-      "ion.CreateQuizSubmissionRequest\032\026.google" +
-      ".protobuf.Empty\022W\n\024CreateCodeSubmission\022" +
-      "\'.submission.CreateCodeSubmissionRequest" +
-      "\032\026.google.protobuf.EmptyB7\n\036com.codecamp" +
-      "us.submission.grpcB\023SubmissionSyncProtoP" +
-      "\001b\006proto3"
+      " \003(\0132!.submission.TestCaseResultSyncDto\022" +
+      "\024\n\014peakMemoryKb\030\013 \001(\005\022\014\n\004cpus\030\014 \001(\002\022\020\n\010m" +
+      "emoryMb\030\r \001(\005\"\206\001\n\025TestCaseResultSyncDto\022" +
+      "\022\n\ntestCaseId\030\001 \001(\t\022\016\n\006passed\030\002 \001(\010\022\021\n\tr" +
+      "untimeMs\030\003 \001(\005\022\020\n\010memoryKb\030\004 \001(\005\022\016\n\006outp" +
+      "ut\030\005 \001(\t\022\024\n\014errorMessage\030\006 \001(\t\"P\n\033Create" +
+      "QuizSubmissionRequest\0221\n\nsubmission\030\001 \001(" +
+      "\0132\035.submission.QuizSubmissionDto\"P\n\033Crea" +
+      "teCodeSubmissionRequest\0221\n\nsubmission\030\001 " +
+      "\001(\0132\035.submission.CodeSubmissionDto2\311\001\n\025S" +
+      "ubmissionSyncService\022W\n\024CreateQuizSubmis" +
+      "sion\022\'.submission.CreateQuizSubmissionRe" +
+      "quest\032\026.google.protobuf.Empty\022W\n\024CreateC" +
+      "odeSubmission\022\'.submission.CreateCodeSub" +
+      "missionRequest\032\026.google.protobuf.EmptyB7" +
+      "\n\036com.codecampus.submission.grpcB\023Submis" +
+      "sionSyncProtoP\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -121,7 +122,7 @@ public final class SubmissionSyncProto {
     internal_static_submission_CodeSubmissionDto_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_submission_CodeSubmissionDto_descriptor,
-        new java.lang.String[] { "Id", "ExerciseId", "StudentId", "Score", "TotalPoints", "Language", "SourceCode", "SubmittedAt", "TimeTakenSeconds", "Results", });
+        new java.lang.String[] { "Id", "ExerciseId", "StudentId", "Score", "TotalPoints", "Language", "SourceCode", "SubmittedAt", "TimeTakenSeconds", "Results", "PeakMemoryKb", "Cpus", "MemoryMb", });
     internal_static_submission_TestCaseResultSyncDto_descriptor =
       getDescriptor().getMessageTypes().get(3);
     internal_static_submission_TestCaseResultSyncDto_fieldAccessorTable = new

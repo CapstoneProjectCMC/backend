@@ -35,6 +35,9 @@ message CodeSubmissionDto {
   google.protobuf.Timestamp submittedAt = 8;
   int32 timeTakenSeconds = 9;
   repeated TestCaseResultSyncDto results = 10;
+  int32 peakMemoryKb = 11;
+  float cpus = 12;
+  int32 memoryMb = 13;
 }
 
 message TestCaseResultSyncDto {

@@ -182,6 +182,7 @@ public class ExerciseService {
                 .sourceCode(codeSubmissionDto.getSourceCode())
                 .timeTakenSeconds(codeSubmissionDto.getTimeTakenSeconds())
                 .score(codeSubmissionDto.getScore())
+                .memoryUsed(codeSubmissionDto.getPeakMemoryKb())
                 .status(codeSubmissionDto.getScore() ==
                         codeSubmissionDto.getTotalPoints()
                         ? SubmissionStatus.PASSED
@@ -213,8 +214,9 @@ public class ExerciseService {
 
         /* Side-effects */
         if (submission.getStatus() == SubmissionStatus.PASSED) {
-            assignmentService.markCompleted(exercise.getId(),
-                    submission.getId());
+            assignmentService.markCompleted(
+                    exercise.getId(),
+                    submission.getUserId());
         }
         contestService.updateRankingOnSubmission(submission);
     }
