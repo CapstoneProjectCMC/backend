@@ -27,13 +27,11 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Stream;
 
 @Service
@@ -56,12 +54,13 @@ public class CodeJudgeService {
         // Đảm bảo thư mục RUNNER_ROOT tồn tại và có quyền
         if (!Files.exists(RUNNER_ROOT)) {
             Files.createDirectories(RUNNER_ROOT);
-            Set<PosixFilePermission> rootPerms =
-                    PosixFilePermissions.fromString("rwxrwxrwx");
-            Files.setPosixFilePermissions(RUNNER_ROOT, rootPerms);
+            Files.setPosixFilePermissions(
+                    RUNNER_ROOT, PosixFilePermissions.fromString("rwxrwxrwx"));
         }
-
         Path workDir = Files.createTempDirectory(RUNNER_ROOT, "pg_");
+        Files.setPosixFilePermissions(
+                workDir, PosixFilePermissions.fromString(
+                        "rwxrwxrwx"));
         return workDir;
     }
 
@@ -82,7 +81,12 @@ public class CodeJudgeService {
                 .build();
         codeSubmissionRepository.saveAndFlush(codeSubmission);
 
+        final int memoryMbLimit = codingExercise.getMemoryLimit() > 0 ?
+                codingExercise.getMemoryLimit() : 256;
+        final float cpusLimit = 0.5f;
+
         int passedCount = 0;
+        int peakMemoryKb = 0;
         List<TestCaseResultSyncDto> testCaseResultSyncDtoList =
                 new ArrayList<>();
 
@@ -95,33 +99,23 @@ public class CodeJudgeService {
                     request.getLanguage(),
                     request.getSourceCode(),
                     workDir);
-        } catch (InterruptedException | IOException e) {
-            // compile failure từ DockerSandboxService.exec → log rồi rethrow
-            safeDeleteDir(workDir);
-            throw new RuntimeException(e);
-        } finally {
-            safeDeleteDir(workDir);
-        }
 
-        /* ====== Default limit khi client không set ====== */
-        int memoryMb = request.getMemoryMb() > 0 ? request.getMemoryMb() : 256;
-        float cpus = request.getCpus() > 0 ? request.getCpus() : 0.5f;
-
-        try {
             for (TestCase testCase : codingExercise.getTestCases()) {
                 CodeResult codeResult = dockerSandboxService.runTest(
                         bin,
                         testCase,
-                        memoryMb,
-                        cpus);
+                        memoryMbLimit,
+                        cpusLimit);
 
                 if (codeResult.isPassed()) {
                     passedCount++;
                 }
+                peakMemoryKb = Math.max(peakMemoryKb, codeResult.getMemoryKb());
 
                 CodeSubmissionResult codeSubmissionResult =
                         CodeSubmissionResult.builder()
-                                .submission(codeSubmission).testCase(testCase)
+                                .submission(codeSubmission)
+                                .testCase(testCase)
                                 .passed(codeResult.isPassed())
                                 .runtimeMs(codeResult.getRuntimeMs())
                                 .memoryKb(codeResult.getMemoryKb())
@@ -144,7 +138,8 @@ public class CodeJudgeService {
                                         codeResult.getError())
                         .build());
             }
-
+        } catch (InterruptedException | IOException e) {
+            throw new RuntimeException(e);
         } finally {
             safeDeleteDir(workDir);
         }
@@ -174,6 +169,9 @@ public class CodeJudgeService {
                                 .setTimeTakenSeconds(
                                         request.getTimeTakenSeconds())
                                 .addAllResults(testCaseResultSyncDtoList)
+                                .setPeakMemoryKb(peakMemoryKb)
+                                .setCpus(cpusLimit)
+                                .setMemoryMb(memoryMbLimit)
                                 .build())
                         .build());
 
@@ -193,6 +191,9 @@ public class CodeJudgeService {
                                 .setErrorMessage(r.getErrorMessage())
                                 .build())
                         .toList())
+                .setMemoryMb(memoryMbLimit)
+                .setCpus(cpusLimit)
+                .setPeakMemoryKb(peakMemoryKb)
                 .build();
     }
 

@@ -202,32 +202,10 @@ private static final long serialVersionUID = 0L;
     }
   }
 
-  public static final int MEMORYMB_FIELD_NUMBER = 5;
-  private int memoryMb_ = 0;
-  /**
-   * <code>int32 memoryMb = 5;</code>
-   * @return The memoryMb.
-   */
-  @java.lang.Override
-  public int getMemoryMb() {
-    return memoryMb_;
-  }
-
-  public static final int CPUS_FIELD_NUMBER = 6;
-  private float cpus_ = 0F;
-  /**
-   * <code>float cpus = 6;</code>
-   * @return The cpus.
-   */
-  @java.lang.Override
-  public float getCpus() {
-    return cpus_;
-  }
-
-  public static final int TIMETAKENSECONDS_FIELD_NUMBER = 7;
+  public static final int TIMETAKENSECONDS_FIELD_NUMBER = 5;
   private int timeTakenSeconds_ = 0;
   /**
-   * <code>int32 timeTakenSeconds = 7;</code>
+   * <code>int32 timeTakenSeconds = 5;</code>
    * @return The timeTakenSeconds.
    */
   @java.lang.Override
@@ -261,14 +239,8 @@ private static final long serialVersionUID = 0L;
     if (!com.google.protobuf.GeneratedMessage.isStringEmpty(sourceCode_)) {
       com.google.protobuf.GeneratedMessage.writeString(output, 4, sourceCode_);
     }
-    if (memoryMb_ != 0) {
-      output.writeInt32(5, memoryMb_);
-    }
-    if (java.lang.Float.floatToRawIntBits(cpus_) != 0) {
-      output.writeFloat(6, cpus_);
-    }
     if (timeTakenSeconds_ != 0) {
-      output.writeInt32(7, timeTakenSeconds_);
+      output.writeInt32(5, timeTakenSeconds_);
     }
     getUnknownFields().writeTo(output);
   }
@@ -291,17 +263,9 @@ private static final long serialVersionUID = 0L;
     if (!com.google.protobuf.GeneratedMessage.isStringEmpty(sourceCode_)) {
       size += com.google.protobuf.GeneratedMessage.computeStringSize(4, sourceCode_);
     }
-    if (memoryMb_ != 0) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(5, memoryMb_);
-    }
-    if (java.lang.Float.floatToRawIntBits(cpus_) != 0) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeFloatSize(6, cpus_);
-    }
     if (timeTakenSeconds_ != 0) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(7, timeTakenSeconds_);
+        .computeInt32Size(5, timeTakenSeconds_);
     }
     size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
@@ -326,11 +290,6 @@ private static final long serialVersionUID = 0L;
         .equals(other.getLanguage())) return false;
     if (!getSourceCode()
         .equals(other.getSourceCode())) return false;
-    if (getMemoryMb()
-        != other.getMemoryMb()) return false;
-    if (java.lang.Float.floatToIntBits(getCpus())
-        != java.lang.Float.floatToIntBits(
-            other.getCpus())) return false;
     if (getTimeTakenSeconds()
         != other.getTimeTakenSeconds()) return false;
     if (!getUnknownFields().equals(other.getUnknownFields())) return false;
@@ -352,11 +311,6 @@ private static final long serialVersionUID = 0L;
     hash = (53 * hash) + getLanguage().hashCode();
     hash = (37 * hash) + SOURCECODE_FIELD_NUMBER;
     hash = (53 * hash) + getSourceCode().hashCode();
-    hash = (37 * hash) + MEMORYMB_FIELD_NUMBER;
-    hash = (53 * hash) + getMemoryMb();
-    hash = (37 * hash) + CPUS_FIELD_NUMBER;
-    hash = (53 * hash) + java.lang.Float.floatToIntBits(
-        getCpus());
     hash = (37 * hash) + TIMETAKENSECONDS_FIELD_NUMBER;
     hash = (53 * hash) + getTimeTakenSeconds();
     hash = (29 * hash) + getUnknownFields().hashCode();
@@ -494,8 +448,6 @@ private static final long serialVersionUID = 0L;
       studentId_ = "";
       language_ = "";
       sourceCode_ = "";
-      memoryMb_ = 0;
-      cpus_ = 0F;
       timeTakenSeconds_ = 0;
       return this;
     }
@@ -543,12 +495,6 @@ private static final long serialVersionUID = 0L;
         result.sourceCode_ = sourceCode_;
       }
       if (((from_bitField0_ & 0x00000010) != 0)) {
-        result.memoryMb_ = memoryMb_;
-      }
-      if (((from_bitField0_ & 0x00000020) != 0)) {
-        result.cpus_ = cpus_;
-      }
-      if (((from_bitField0_ & 0x00000040) != 0)) {
         result.timeTakenSeconds_ = timeTakenSeconds_;
       }
     }
@@ -584,12 +530,6 @@ private static final long serialVersionUID = 0L;
         sourceCode_ = other.sourceCode_;
         bitField0_ |= 0x00000008;
         onChanged();
-      }
-      if (other.getMemoryMb() != 0) {
-        setMemoryMb(other.getMemoryMb());
-      }
-      if (java.lang.Float.floatToRawIntBits(other.getCpus()) != 0) {
-        setCpus(other.getCpus());
       }
       if (other.getTimeTakenSeconds() != 0) {
         setTimeTakenSeconds(other.getTimeTakenSeconds());
@@ -641,20 +581,10 @@ private static final long serialVersionUID = 0L;
               break;
             } // case 34
             case 40: {
-              memoryMb_ = input.readInt32();
+              timeTakenSeconds_ = input.readInt32();
               bitField0_ |= 0x00000010;
               break;
             } // case 40
-            case 53: {
-              cpus_ = input.readFloat();
-              bitField0_ |= 0x00000020;
-              break;
-            } // case 53
-            case 56: {
-              timeTakenSeconds_ = input.readInt32();
-              bitField0_ |= 0x00000040;
-              break;
-            } // case 56
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -960,73 +890,9 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private int memoryMb_ ;
-    /**
-     * <code>int32 memoryMb = 5;</code>
-     * @return The memoryMb.
-     */
-    @java.lang.Override
-    public int getMemoryMb() {
-      return memoryMb_;
-    }
-    /**
-     * <code>int32 memoryMb = 5;</code>
-     * @param value The memoryMb to set.
-     * @return This builder for chaining.
-     */
-    public Builder setMemoryMb(int value) {
-
-      memoryMb_ = value;
-      bitField0_ |= 0x00000010;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>int32 memoryMb = 5;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearMemoryMb() {
-      bitField0_ = (bitField0_ & ~0x00000010);
-      memoryMb_ = 0;
-      onChanged();
-      return this;
-    }
-
-    private float cpus_ ;
-    /**
-     * <code>float cpus = 6;</code>
-     * @return The cpus.
-     */
-    @java.lang.Override
-    public float getCpus() {
-      return cpus_;
-    }
-    /**
-     * <code>float cpus = 6;</code>
-     * @param value The cpus to set.
-     * @return This builder for chaining.
-     */
-    public Builder setCpus(float value) {
-
-      cpus_ = value;
-      bitField0_ |= 0x00000020;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>float cpus = 6;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearCpus() {
-      bitField0_ = (bitField0_ & ~0x00000020);
-      cpus_ = 0F;
-      onChanged();
-      return this;
-    }
-
     private int timeTakenSeconds_ ;
     /**
-     * <code>int32 timeTakenSeconds = 7;</code>
+     * <code>int32 timeTakenSeconds = 5;</code>
      * @return The timeTakenSeconds.
      */
     @java.lang.Override
@@ -1034,23 +900,23 @@ private static final long serialVersionUID = 0L;
       return timeTakenSeconds_;
     }
     /**
-     * <code>int32 timeTakenSeconds = 7;</code>
+     * <code>int32 timeTakenSeconds = 5;</code>
      * @param value The timeTakenSeconds to set.
      * @return This builder for chaining.
      */
     public Builder setTimeTakenSeconds(int value) {
 
       timeTakenSeconds_ = value;
-      bitField0_ |= 0x00000040;
+      bitField0_ |= 0x00000010;
       onChanged();
       return this;
     }
     /**
-     * <code>int32 timeTakenSeconds = 7;</code>
+     * <code>int32 timeTakenSeconds = 5;</code>
      * @return This builder for chaining.
      */
     public Builder clearTimeTakenSeconds() {
-      bitField0_ = (bitField0_ & ~0x00000040);
+      bitField0_ = (bitField0_ & ~0x00000010);
       timeTakenSeconds_ = 0;
       onChanged();
       return this;

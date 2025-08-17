@@ -1,8 +1,0 @@
-events\exercise\ExerciseEvent$ExerciseEventBuilder.class
-events\exercise\data\ExercisePayload$ExercisePayloadBuilder.class
-events\exercise\ExerciseEvent.class
-events\notification\NotificationEvent$NotificationEventBuilder.class
-events\notification\NotificationEvent.class
-com\codecampus\Main.class
-events\exercise\data\ExercisePayload.class
-events\exercise\ExerciseEvent$Type.class

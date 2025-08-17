@@ -125,18 +125,54 @@ spring:
               args:
                 routeId: chat_service
 
+identity:
+  service:
+    base-url: http://localhost:8080/identity
+
 # Cấu hình rate limiter
 rate-limiter:
   default:
-    capacity: 10
-    refillTokens: 10
+    capacity: 125
+    refillTokens: 125
     refillDuration: 60
   routes:
-    identity_service: # Khớp với routeId
-      capacity: 20
-      refillTokens: 20
+    identity_service:
+      capacity: 125
+      refillTokens: 125
       refillDuration: 60
-    profile_service: # Khớp với routeId
-      capacity: 20
-      refillTokens: 20
+    profile_service:
+      capacity: 125
+      refillTokens: 125
+      refillDuration: 60
+    file_service:
+      capacity: 125
+      refillTokens: 125
+      refillDuration: 60
+    submission_service:
+      capacity: 125
+      refillTokens: 125
+      refillDuration: 60
+    coding_service:
+      capacity: 125
+      refillTokens: 125
+      refillDuration: 60
+    quiz_service:
+      capacity: 125
+      refillTokens: 125
+      refillDuration: 60
+    ai_service:
+      capacity: 125
+      refillTokens: 125
+      refillDuration: 60
+    search_service:
+      capacity: 125
+      refillTokens: 125
+      refillDuration: 60
+    notification_service:
+      capacity: 125
+      refillTokens: 125
+      refillDuration: 60
+    chat_service:
+      capacity: 125
+      refillTokens: 125
       refillDuration: 60

@@ -131,4 +131,22 @@ public interface CodeSubmissionDtoOrBuilder extends
    */
   com.codecampus.submission.grpc.TestCaseResultSyncDtoOrBuilder getResultsOrBuilder(
       int index);
+
+  /**
+   * <code>int32 peakMemoryKb = 11;</code>
+   * @return The peakMemoryKb.
+   */
+  int getPeakMemoryKb();
+
+  /**
+   * <code>float cpus = 12;</code>
+   * @return The cpus.
+   */
+  float getCpus();
+
+  /**
+   * <code>int32 memoryMb = 13;</code>
+   * @return The memoryMb.
+   */
+  int getMemoryMb();
 }

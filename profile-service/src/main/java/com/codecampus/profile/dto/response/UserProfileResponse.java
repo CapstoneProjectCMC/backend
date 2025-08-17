@@ -14,9 +14,8 @@ import java.time.Instant;
 // Khi build thì KHÔNG response null
 //@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserProfileResponse {
-    String id;
     String userId;
-    
+
     String username;
     String email;
     boolean active;
