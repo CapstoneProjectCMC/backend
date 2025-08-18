@@ -124,7 +124,7 @@ services:
   file-service:
     image: ${DOCKERHUB_USER}/codecampus-file-service:${IMAGE_TAG:-latest}
     environment:
-      - ASPNETCORE_ENVIRONMENT=staging
+      - ASPNETCORE_ENVIRONMENT=Staging
       - MongoDbSettings__ConnectionStrings=mongodb://${FILE_USERNAME}:${FILE_PASSWORD}@file-db:27017/${FILE_DATABASE}?authSource=${FILE_DATABASE}
       - MongoDbSettings__DatabaseName=${FILE_DATABASE}
       - AppSettings__MinioConfig__Endpoint=minio
@@ -133,6 +133,9 @@ services:
       - AppSettings__MinioConfig__SecretKey=${MINIO_ROOT_PASSWORD}
       - AppSettings__MinioConfig__BucketName=codecampus2025
       - AppSettings__MinioConfig__Secure=false
+      - AppSettings__Jwt__Key=uifhjcnsqbhwbAMKXjdt123gdritocet
+      - AppSettings__Jwt__Issuer=http://localhost:38946
+      - AppSettings__Jwt__Audience=http://localhost:38946
     ports: [ "8082:8082" ]
     networks: [ backend ]
 

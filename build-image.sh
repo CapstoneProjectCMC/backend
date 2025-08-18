@@ -31,12 +31,12 @@ build_push_file_service() {
 main() {
   login
   echo "Building with DOCKER_GID=${DOCKER_GID}"
-
-  for svc in post-service profile-service; do
-    echo "Building $svc..."
-    build_push_java "$svc"
-  done
-#  build_push_file_service
+#
+#  for svc in post-service profile-service; do
+#    echo "Building $svc..."
+#    build_push_java "$svc"
+#  done
+  build_push_file_service
 }
 
 main "$@"
