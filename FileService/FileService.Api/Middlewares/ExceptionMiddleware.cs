@@ -1,9 +1,11 @@
 ﻿using FileService.Core.ApiModels;
+using FileService.Core.Enums;
 using FileService.Core.Exceptions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System.Data;
 using System.Net;
+using System.Security;
 using System.Text;
 
 namespace FileService.Api.Middlewares
@@ -31,6 +33,7 @@ namespace FileService.Api.Middlewares
                     // await LogResuest(httpContext);
                     await _next(httpContext);
 
+
                     // log the outgoing response
                     await LogResponse(httpContext);
                 }
@@ -38,7 +41,11 @@ namespace FileService.Api.Middlewares
                 {
                     await HandleCustomExceptionAsync(httpContext, ex);
                 }
-                catch(UnauthorizedAccessException ex)
+                catch (SecurityException ex) // Thêm cho 403
+                {
+                    await HandleForbiddenExceptionAsync(httpContext, ex);
+                }
+                catch (UnauthorizedAccessException ex)
                 {
                     await HandleUnauthorizedExceptionAsync(httpContext, ex);
                 }
@@ -53,6 +60,23 @@ namespace FileService.Api.Middlewares
                     await responseBodyStream.CopyToAsync(originalResponseBodyStream);
                 }
             }
+        }
+
+        private async Task HandleForbiddenExceptionAsync(HttpContext context, SecurityException exception)
+        {
+            context.Response.ContentType = "application/json";
+            context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
+            var apiResponse = new ApiResponseModel(StatusCodeEnum.Forbidden)
+            {
+                Message = "Access denied due to insufficient permissions.",
+                Result = null
+            };
+            var jsonResponse = JsonConvert.SerializeObject(apiResponse, new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            });
+            await context.Response.WriteAsync(jsonResponse);
+            _logger.LogWarning("Forbidden access - {Message}", exception.Message);
         }
 
 
