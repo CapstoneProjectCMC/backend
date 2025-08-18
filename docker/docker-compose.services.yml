@@ -153,6 +153,8 @@ services:
     environment:
       # cấu hình môi trường ASP.NET
       - ASPNETCORE_ENVIRONMENT=staging
+      - ASPNETCORE_URLS=http://+:8082;https://+:443
+      - ASPNETCORE_HTTPS_PORT=443
       # ---- MongoDB (file-db) ----
       - MongoDbSettings__ConnectionStrings="mongodb://${FILE_USERNAME}:${FILE_PASSWORD}@file-db:27017/${FILE_DATABASE}?authSource=${FILE_DATABASE}"
       - MongoDbSettings__DatabaseName=${FILE_DATABASE}
@@ -165,6 +167,8 @@ services:
       - AppSettings__MinioConfig__Secure=false
     ports:
       - "8082:8082"
+    volumes:
+    - C:\DockerVolumes\DataProtectionKeys:/root/.aspnet/DataProtection-Keys  
     networks: [ backend ]
   
   gateway-service:

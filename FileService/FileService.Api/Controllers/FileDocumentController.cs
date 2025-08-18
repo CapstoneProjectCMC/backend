@@ -7,9 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FileService.Api.Controllers
 {
-   // [Authorize]
-   // [Authorize(Policy = "Permission")]
-   // [Authorize(Roles = "ADMIN")]
+    // [Authorize]
+    // [Authorize(Policy = "AdminOnly")]
+    // [Authorize(Roles = "ADMIN")]
+   // [AllowAnonymous]
     [Route("file/api/[controller]")]
     [ApiController]
     public class FileDocumentController : BaseApiController
