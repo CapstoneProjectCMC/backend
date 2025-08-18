@@ -6,8 +6,6 @@ import com.codecampus.quiz.entity.QuizExercise;
 import com.codecampus.quiz.entity.QuizSubmission;
 import com.codecampus.quiz.entity.QuizSubmissionAnswer;
 import com.codecampus.quiz.entity.data.QuizSubmissionAnswerId;
-import com.codecampus.quiz.exception.AppException;
-import com.codecampus.quiz.exception.ErrorCode;
 import com.codecampus.quiz.grpc.AnswerDto;
 import com.codecampus.quiz.grpc.SubmitQuizRequest;
 import lombok.AccessLevel;
@@ -15,7 +13,9 @@ import lombok.NoArgsConstructor;
 
 import java.time.Instant;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toSet;
 
@@ -34,12 +34,17 @@ public class QuizScoringHelper {
                 .timeTakenSeconds(request.getTimeTakenSeconds())
                 .build();
 
+        Map<String, Question> activeQuestions =
+                quizExercise.getQuestions().stream()
+                        .filter(q -> !q.isDeleted())
+                        .collect(Collectors.toMap(Question::getId, q -> q));
+
         for (AnswerDto answerDto : request.getAnswersList()) {
-            Question question = quizExercise
-                    .findQuestionById(answerDto.getQuestionId())
-                    .orElseThrow(
-                            () -> new AppException(ErrorCode.QUESTION_NOT_FOUND)
-                    );
+            Question question = activeQuestions.get(answerDto.getQuestionId());
+            if (question == null) {
+                // Câu hỏi đã bị xoá hoặc không còn hợp lệ -> bỏ qua
+                continue;
+            }
 
             boolean correct = switch (question.getQuestionType()) {
                 case SINGLE_CHOICE -> checkSingleChoice(question, answerDto);
@@ -68,6 +73,7 @@ public class QuizScoringHelper {
     public static boolean checkSingleChoice(
             Question question, AnswerDto answerDto) {
         return question.getOptions().stream()
+                .filter(o -> !o.isDeleted())
                 .filter(Option::isCorrect)
                 .map(Option::getId)
                 .anyMatch(correctId -> correctId.equals(
@@ -76,7 +82,14 @@ public class QuizScoringHelper {
 
     public static boolean checkMultiChoice(
             Question question, AnswerDto answerDto) {
+
+        Set<String> activeOptionIds = question.getOptions().stream()
+                .filter(o -> !o.isDeleted())       // <---
+                .map(Option::getId)
+                .collect(toSet());
+
         Set<String> correctIds = question.getOptions().stream()
+                .filter(o -> !o.isDeleted())
                 .filter(Option::isCorrect)
                 .map(Option::getId)
                 .collect(toSet());
@@ -84,6 +97,7 @@ public class QuizScoringHelper {
         Set<String> selectedIds = Arrays
                 .stream(answerDto.getSelectedOptionId().split(","))
                 .map(String::trim)
+                .filter(activeOptionIds::contains) // bỏ id option đã xoá
                 .collect(toSet());
 
         return correctIds.equals(selectedIds);
@@ -94,6 +108,7 @@ public class QuizScoringHelper {
             AnswerDto answerDto) {
 
         return question.getOptions().stream()
+                .filter(o -> !o.isDeleted())
                 .filter(Option::isCorrect)
                 .flatMap(o -> Arrays.stream(o.getOptionText().split("\\|")))
                 .map(String::trim)
@@ -122,9 +137,16 @@ public class QuizScoringHelper {
     }
 
     public static void recalc(QuizExercise quiz) {
-        quiz.setNumQuestions(quiz.getQuestions().size());
-        quiz.setTotalPoints(
-                quiz.getQuestions().stream()
-                        .mapToInt(Question::getPoints).sum());
+        int num = (int) quiz.getQuestions().stream()
+                .filter(q -> !q.isDeleted())
+                .count();
+
+        int total = quiz.getQuestions().stream()
+                .filter(q -> !q.isDeleted())
+                .mapToInt(Question::getPoints)
+                .sum();
+
+        quiz.setNumQuestions(num);
+        quiz.setTotalPoints(total);
     }
 }

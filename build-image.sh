@@ -38,13 +38,13 @@ build_push_organization_service() {
 main() {
   login
   echo "Building with DOCKER_GID=${DOCKER_GID}"
-#
-#  for svc in post-service profile-service; do
+
+#  for svc in quiz-service submission-service; do
 #    echo "Building $svc..."
 #    build_push_java "$svc"
 #  done
- build_push_file_service
- build_push_organization_service
+  build_push_file_service
+#  build_push_organization_service
 }
 
 main "$@"

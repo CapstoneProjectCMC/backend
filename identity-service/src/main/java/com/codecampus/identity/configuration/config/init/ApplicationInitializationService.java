@@ -52,7 +52,7 @@ public class ApplicationInitializationService {
         Set<Role> roles = new HashSet<>();
         roles.add(adminRole);
 
-        User user = userRepository.save(User.builder()
+        User user = userRepository.saveAndFlush(User.builder()
                 .username(username)
                 .password(passwordEncoder.encode(password))
                 .email(email)

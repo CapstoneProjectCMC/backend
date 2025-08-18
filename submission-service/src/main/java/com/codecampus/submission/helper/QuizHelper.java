@@ -27,8 +27,16 @@ public class QuizHelper {
     QuestionRepository questionRepository;
 
     public void recalcQuiz(QuizDetail quizDetail) {
-        quizDetail.setTotalPoints(quizDetail.getQuestions().stream()
-                .mapToInt(Question::getPoints).sum());
+        int totalPoints = quizDetail.getQuestions().stream()
+                .filter(q -> !q.isDeleted())
+                .mapToInt(Question::getPoints)
+                .sum();
+
+        int numQuestions = (int) quizDetail.getQuestions().stream()
+                .filter(q -> !q.isDeleted())
+                .count();
+        quizDetail.setTotalPoints(totalPoints);
+        quizDetail.setNumQuestions(numQuestions);
     }
 
     public QuizDetailSliceDetailResponse buildQuizSliceWithOptions(

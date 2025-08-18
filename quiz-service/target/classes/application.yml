@@ -1,0 +1,49 @@
+server:
+  port: 8085
+  #  http:
+  #    port: 8005
+  servlet:
+    context-path: /quiz
+
+grpc:
+  server:
+    port: 9591
+
+submission:
+  grpc:
+    host: localhost
+    port: 9590
+
+spring:
+  application:
+    name: quiz-service
+  datasource:
+    url: jdbc:postgresql://localhost:5433/quiz_db
+    username: postgres_quiz
+    password: dinhanst2832004
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+  data:
+    redis:
+      host: localhost     # dịch vụ trong compose
+      port: 6379
+      password: dinhanst2832004
+      timeout: 3000ms
+#  kafka:
+#    bootstrap-servers: localhost:9094
+#    consumer:
+#      group-id: quiz-result-aggregator
+#      auto-offset-reset: earliest
+#      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+#      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+#      properties:
+#        spring.json.trusted.packages: "*"
+#    producer:
+#      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+#      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer

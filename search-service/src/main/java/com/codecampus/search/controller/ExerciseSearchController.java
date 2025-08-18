@@ -40,7 +40,7 @@ public class ExerciseSearchController {
             @RequestParam(required = false) Instant startAfter,
             @RequestParam(required = false) Instant endBefore,
             @RequestParam(required = false) Boolean allowAiQuestion,
-            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size) {
 
         ExerciseSearchRequest request = new ExerciseSearchRequest(

@@ -188,6 +188,10 @@ public class QuizService {
             question.getOptions()
                     .forEach(o -> o.markDeleted(question.getDeletedBy()));
         });
+
+        QuizScoringHelper.recalc(quizExercise);
+        quizExerciseRepository.save(quizExercise);
+        loadQuizCacheService.refresh(exerciseId);
     }
 
     @Transactional

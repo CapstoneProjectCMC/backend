@@ -9,6 +9,8 @@ namespace FileService.Core.Enums
 {
     public enum StatusCodeEnum
     {
+        [Description("Thành công.")]
+        Success = 2008200,
 
         [Description("Lỗi hệ thống.")]
         Error = 5008201,
@@ -49,29 +51,13 @@ namespace FileService.Core.Enums
         [Description("Download Interrupted. Please check your internet connection and try again.")]
         C05 = 5038214,
 
+        [Description("Bad request.")]
+        BadRequest = 4008215,
 
         [Description("Invalid filter option.")]
         InvalidOption = 4008216,
 
         [Description("Unmatched columns found.")]
         UnmatchedColumns = 4008217,
-
-        [Description("Success")]
-        Success = 200,
-
-        [Description("Bad Request")]
-        BadRequest = 400,
-
-        [Description("Unauthorized")]
-        Unauthorized = 401,
-
-        [Description("Forbidden")]
-        Forbidden = 403,
-
-        [Description("Not Found")]
-        NotFound = 404,
-
-        [Description("Internal Server Error")]
-        InternalServerError = 500
     }
 }

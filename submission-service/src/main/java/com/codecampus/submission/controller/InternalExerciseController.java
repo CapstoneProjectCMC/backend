@@ -2,6 +2,7 @@ package com.codecampus.submission.controller;
 
 import com.codecampus.submission.dto.common.ApiResponse;
 import com.codecampus.submission.dto.request.CreateExerciseRequest;
+import com.codecampus.submission.dto.request.coding.CreateCodingExerciseRequest;
 import com.codecampus.submission.dto.request.quiz.CreateQuizExerciseRequest;
 import com.codecampus.submission.entity.Exercise;
 import com.codecampus.submission.service.ExerciseService;
@@ -41,11 +42,21 @@ public class InternalExerciseController {
     ApiResponse<Exercise> internalCreateQuizExercise(
             @RequestBody @Valid CreateQuizExerciseRequest request) {
 
-
         return ApiResponse.<Exercise>builder()
                 .message("Tạo bài tập quiz thành công!")
                 .result(exerciseService
                         .createQuizExercise(request, true))
+                .build();
+    }
+
+    @PostMapping("/exercise/coding")
+    ApiResponse<Exercise> internalCreateCodingExercise(
+            @RequestBody @Valid CreateCodingExerciseRequest request) {
+
+        return ApiResponse.<Exercise>builder()
+                .message("Tạo bài tập coding thành công!")
+                .result(exerciseService
+                        .createCodingExercise(request, true))
                 .build();
     }
 }

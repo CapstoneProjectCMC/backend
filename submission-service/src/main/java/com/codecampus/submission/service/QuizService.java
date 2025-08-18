@@ -206,8 +206,10 @@ public class QuizService {
         }
 
         /* Tính lại quiz & sync */
-        quizHelper.recalcQuiz(exercise.getQuizDetail());
+        QuizDetail quizDetail = exercise.getQuizDetail();
+        quizHelper.recalcQuiz(quizDetail);
         questionRepository.saveAndFlush(question);
+        quizDetailRepository.saveAndFlush(quizDetail); //
 
         grpcQuizClient.pushQuestion(exerciseId, question);
     }
@@ -230,8 +232,10 @@ public class QuizService {
                 );
 
         questionMapper.patchUpdateQuestionRequestToQuestion(request, question);
-        quizHelper.recalcQuiz(exercise.getQuizDetail());
 
+        QuizDetail quizDetail = exercise.getQuizDetail();
+        quizHelper.recalcQuiz(exercise.getQuizDetail());
+        quizDetailRepository.saveAndFlush(quizDetail);
         grpcQuizClient.pushQuestion(exerciseId, question); // sync
     }
 
@@ -261,6 +265,11 @@ public class QuizService {
         question.getOptions()
                 .forEach(option ->
                         option.markDeleted(question.getDeletedBy()));
+
+        QuizDetail quizDetail = question.getQuizDetail();
+        quizHelper.recalcQuiz(quizDetail);
+        quizDetailRepository.saveAndFlush(quizDetail);
+
         grpcQuizClient.softDeleteQuestion(exerciseId, questionId);
     }
 

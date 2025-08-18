@@ -60,7 +60,9 @@ public class DockerSandboxService {
     public CompiledArtifact compile(
             String language,
             String source,
-            Path workDir
+            Path workDir,
+            int memoryMb,
+            float cpus
     ) throws IOException, InterruptedException {
 
         // Đảm bảo thư mục workDir có quyền ghi
@@ -95,9 +97,13 @@ public class DockerSandboxService {
 
         List<String> runBase = inDocker
                 ? DockerHelper.cmd("run", "--rm",
+                "--memory=%sm".formatted(Math.max(memoryMb, 512)),
+                "--cpus=" + Math.max(cpus, 0.25f),
                 "--volumes-from", DockerHelper.selfContainer(),
                 "-w", inPath, SANDBOX_IMAGE)
                 : DockerHelper.cmd("run", "--rm",
+                "--memory=%sm".formatted(Math.max(memoryMb, 512)),
+                "--cpus=" + Math.max(cpus, 0.25f),
                 "-v", RUNNER_ROOT + ":" + RUNNER_ROOT,
                 "-w", inPath, SANDBOX_IMAGE);
 

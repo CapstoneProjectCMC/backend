@@ -5,6 +5,7 @@ using FileService.Core.ApiModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Data;
 using System.Text;
 using System.Text.Json.Serialization;
 using FileService.DataAccess.Interfaces;
@@ -16,6 +17,7 @@ using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Bson.Serialization;
 using FileService.Service.Implementation;
 using FileService.Service.Interfaces;
+using Microsoft.Extensions.FileProviders;
 using System.Security.Claims;
 
 BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
@@ -38,6 +40,7 @@ builder.Services.AddHttpContextAccessor();
 
 var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 Console.WriteLine($"ASPNETCORE_ENVIRONMENT: {env}");
+//builder.Services.Configure<MinioConfig>(builder.Configuration.GetSection("MinioConfig"));
 
 builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection("MongoDbSettings"));
 builder.Services.Configure<FfmpegSettings>(builder.Configuration.GetSection("FfmpegSettings"));
@@ -81,8 +84,6 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Password.RequiredUniqueChars = 1;
 });
 
-
-//add authen
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -92,33 +93,18 @@ builder.Services.AddAuthentication(options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
     {
-        ValidateIssuer = false,
-        ValidateAudience = false,
-        ValidateLifetime = false,
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
         ValidIssuer = appSettings.Jwt.Issuer,
+        ValidAudience = appSettings.Jwt.Audience,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(appSettings.Jwt.Key)),
 
         // Cấu hình claim để nhận Role
-        RoleClaimType = ClaimTypes.Role,
-        NameClaimType = ClaimTypes.NameIdentifier
+        RoleClaimType = ClaimTypes.Role
+
     };
-});
-
-// Thêm MemoryCache để cache claims
-builder.Services.AddMemoryCache();
-
-
-//add author policies
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("AdminOnly", policy => policy.RequireRole("ADMIN"));
-    options.AddPolicy("TeacherOrAdmin", policy => policy.RequireRole("TEACHER", "SYS_ADMIN"));
-    options.AddPolicy("SysAdminOnly", policy => policy.RequireRole("SYS_ADMIN"));
-    options.AddPolicy("OrgAdminOnly", policy => policy.RequireRole("ORG_ADMIN"));
-    options.AddPolicy("TeacherOnly", policy => policy.RequireRole("TEACHER"));
-    options.AddPolicy("UserOnly", policy => policy.RequireRole("USER"));
-    options.AddPolicy("LoggedInUsers", policy => policy.RequireRole("USER", "TEACHER", "ORG_ADMIN", "SYS_ADMIN"));
 });
 
 builder.Services.AddCors(options =>
@@ -177,6 +163,7 @@ builder.WebHost.ConfigureKestrel(options =>
 {
     options.Limits.MaxRequestBodySize = 6L * 1024 * 1024 * 1024; // 6GB
 });
+
 
 var app = builder.Build();
 
