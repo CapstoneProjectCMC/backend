@@ -28,6 +28,13 @@ build_push_file_service() {
     --push .
 }
 
+build_push_organization_service() {
+  docker buildx build \
+    -f docker/file-service.Dockerfile \
+    -t "$DOCKERHUB_USER/codecampus-organization-service:$IMAGE_TAG" \
+    --push .
+}
+
 main() {
   login
   echo "Building with DOCKER_GID=${DOCKER_GID}"
@@ -36,7 +43,8 @@ main() {
 #    echo "Building $svc..."
 #    build_push_java "$svc"
 #  done
-  build_push_file_service
+#  build_push_file_service
+#  build_push_organization_service
 }
 
 main "$@"

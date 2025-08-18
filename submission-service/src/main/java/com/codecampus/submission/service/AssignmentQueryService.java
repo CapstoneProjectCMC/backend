@@ -1,17 +1,22 @@
 package com.codecampus.submission.service;
 
+import com.codecampus.submission.dto.common.PageResponse;
+import com.codecampus.submission.dto.response.assignment.AssignedStudentResponse;
 import com.codecampus.submission.dto.response.assignment.MyAssignmentResponse;
 import com.codecampus.submission.helper.AssignmentHelper;
 import com.codecampus.submission.helper.AuthenticationHelper;
+import com.codecampus.submission.helper.PageResponseHelper;
 import com.codecampus.submission.repository.AssignmentRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -24,16 +29,48 @@ public class AssignmentQueryService {
     AssignmentHelper assignmentHelper;
 
     @Transactional(readOnly = true)
-    public List<MyAssignmentResponse> getAssignmentsForStudent() {
+    public PageResponse<MyAssignmentResponse> getAssignmentsForStudent(
+            int page, int size) {
 
         String studentId = AuthenticationHelper.getMyUserId();
 
-        return assignmentRepository
-                .findByStudentId(studentId)
-                .stream()
+        // Sort mặc định: dueAt DESC rồi createdAt DESC
+        Pageable pageable = PageRequest.of(
+                Math.max(page - 1, 0),
+                Math.max(size, 1),
+                Sort.by(Sort.Order.desc("dueAt"), Sort.Order.desc("createdAt"))
+        );
+
+        Page<MyAssignmentResponse> pageData = assignmentRepository
+                .findByStudentId(studentId, pageable)
                 .map(assignment -> assignmentHelper.mapAssignmentToMyAssignmentResponse(
-                        assignment, studentId))
-                .toList();
+                        assignment, studentId));
+
+        return PageResponseHelper.toPageResponse(pageData, page);
+    }
+
+    @Transactional(readOnly = true)
+    public PageResponse<AssignedStudentResponse> getAssignedStudentsForExercise(
+            String exerciseId, Boolean completed,
+            int page, int size) {
+
+        // Sort mặc định: dueAt DESC rồi createdAt DESC
+        Pageable pageable = PageRequest.of(
+                Math.max(page - 1, 0),
+                Math.max(size, 1),
+                Sort.by(Sort.Order.desc("dueAt"), Sort.Order.desc("createdAt"))
+        );
+
+        Page<AssignedStudentResponse> pageData = (
+                completed == null
+                        ? assignmentRepository.findByExerciseId(exerciseId,
+                        pageable)
+                        : assignmentRepository.findByExerciseIdAndCompleted(
+                        exerciseId, completed, pageable))
+                .map(assignment -> assignmentHelper.mapAssignmentToAssignedStudentResponse(
+                        assignment, assignment.getStudentId()));
+
+        return PageResponseHelper.toPageResponse(pageData, page);
     }
 
 }

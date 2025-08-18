@@ -134,6 +134,16 @@ spring:
             - name: RateLimiter
               args:
                 routeId: post_service
+        - id: organization_service
+          #          uri: https://localhost:8091
+          uri: http://localhost:8091
+          predicates:
+            - Path=${app.api-prefix}/org/**
+          filters:
+            - StripPrefix=2
+            - name: RateLimiter
+              args:
+                routeId: organization_service
 
 identity:
   service:
