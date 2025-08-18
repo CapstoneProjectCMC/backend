@@ -1,10 +1,13 @@
 package com.codecampus.ai.controller;
 
 import com.codecampus.ai.dto.common.ApiResponse;
-import com.codecampus.ai.dto.request.exercise.GenerateQuizPromptIn;
-import com.codecampus.ai.dto.request.exercise.QuestionPromptIn;
+import com.codecampus.ai.dto.request.coding.GenerateCodingPromptIn;
+import com.codecampus.ai.dto.request.coding.GenerateTestCasesPromptIn;
+import com.codecampus.ai.dto.request.quiz.GenerateQuizPromptIn;
+import com.codecampus.ai.dto.request.quiz.QuestionPromptIn;
 import com.codecampus.ai.dto.response.ExerciseResponse;
 import com.codecampus.ai.dto.response.QuestionResponse;
+import com.codecampus.ai.dto.response.TestCaseResponse;
 import com.codecampus.ai.service.ExerciseGenerationService;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -15,6 +18,8 @@ import org.apache.coyote.BadRequestException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @Slf4j
 @Builder
@@ -46,6 +51,25 @@ public class AiGenerateController {
                         .generateQuestion(questionPromptIn)
                 )
                 .message("Gợi ý câu hỏi!")
+                .build();
+    }
+
+    @PostMapping("/generate/coding")
+    public ApiResponse<ExerciseResponse> generateCodingExercise(
+            @RequestBody GenerateCodingPromptIn in) {
+        return ApiResponse.<ExerciseResponse>builder()
+                .result(exerciseGenerationService.generateCodingExercise(in))
+                .message("Gợi ý bản nháp coding!")
+                .build();
+    }
+
+    @PostMapping("/generate/coding/test-cases")
+    public ApiResponse<List<TestCaseResponse>> generateMoreTestCases(
+            @RequestBody GenerateTestCasesPromptIn in)
+            throws BadRequestException {
+        return ApiResponse.<List<TestCaseResponse>>builder()
+                .result(exerciseGenerationService.generateTestCases(in))
+                .message("Đã sinh thêm testcases!")
                 .build();
     }
 }

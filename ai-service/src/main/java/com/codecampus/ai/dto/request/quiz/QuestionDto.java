@@ -1,4 +1,4 @@
-package com.codecampus.ai.dto.request.exercise;
+package com.codecampus.ai.dto.request.quiz;
 
 import com.codecampus.quiz.grpc.QuestionType;
 

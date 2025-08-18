@@ -43,58 +43,54 @@ public class ChatService {
                 .build();
     }
 
+    /* Backward-compat: giữ endpoint cũ (1 thread / user) */
+    public String chat(com.codecampus.ai.dto.request.ChatRequest chatRequest) {
+        String defaultThreadId = AuthenticationHelper.getMyUserId(); // cũ
+        return chat(defaultThreadId, chatRequest);
+    }
+
+    public String chatWithImage(MultipartFile file, String message) {
+        String defaultThreadId = AuthenticationHelper.getMyUserId(); // cũ
+        return chatWithImage(defaultThreadId, file, message);
+    }
+
+    public String chat(
+            String threadId,
+            ChatRequest chatRequest) {
+
+        SystemMessage sys = new SystemMessage("""
+                You are CodeCampus.AI
+                You should response with a formal voice
+                """);
+        UserMessage user = new UserMessage(chatRequest.message());
+        Prompt prompt = new Prompt(sys, user);
+
+        return chatClient
+                .prompt(prompt)
+                .options(ChatOptions.builder().temperature(0.3).build())
+                .advisors(
+                        adv -> adv.param(ChatMemory.CONVERSATION_ID, threadId))
+                .call()
+                .content();
+    }
+
     public String chatWithImage(
+            String threadId,
             MultipartFile file,
             String message) {
-        String conversationId = AuthenticationHelper.getMyUserId();
-
         Media media = Media.builder()
                 .mimeType(MimeTypeUtils.parseMimeType(
                         file.getContentType()))
                 .data(file.getResource())
                 .build();
 
-        ChatOptions chatOptions = ChatOptions.builder()
-                .temperature(0D)
-                .build();
-
-        return chatClient.prompt()
-                .options(chatOptions)
-                .system("You are CodeCampus.AI")
-                .user(promptUserSpec -> promptUserSpec.media(media)
-                        .text(message))
-                .advisors(advisorSpec -> {
-                    advisorSpec.param(
-                            ChatMemory.CONVERSATION_ID, conversationId
-                    );
-                })
-                .call()
-                .content();
-    }
-
-    public String chat(ChatRequest chatRequest) {
-
-        String conversationId = AuthenticationHelper.getMyUserId();
-        SystemMessage systemMessage = new SystemMessage(
-                """
-                        You are CodeCampus.AI
-                        You should response with a formal voice
-                        """
-        );
-
-        UserMessage userMessage = new UserMessage(
-                chatRequest.message()
-        );
-
-        Prompt prompt = new Prompt(systemMessage, userMessage);
-
         return chatClient
-                .prompt(prompt)
-                .advisors(advisorSpec -> {
-                    advisorSpec.param(
-                            ChatMemory.CONVERSATION_ID, conversationId
-                    );
-                })
+                .prompt()
+                .options(ChatOptions.builder().temperature(0.2).build())
+                .system("You are CodeCampus.AI")
+                .user(u -> u.media(media).text(message))
+                .advisors(
+                        adv -> adv.param(ChatMemory.CONVERSATION_ID, threadId))
                 .call()
                 .content();
     }
