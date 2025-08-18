@@ -19,6 +19,7 @@ using FileService.Service.Implementation;
 using FileService.Service.Interfaces;
 using Microsoft.Extensions.FileProviders;
 using System.Security.Claims;
+using Microsoft.AspNetCore.DataProtection;
 
 BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
 
@@ -40,7 +41,6 @@ builder.Services.AddHttpContextAccessor();
 
 var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 Console.WriteLine($"ASPNETCORE_ENVIRONMENT: {env}");
-//builder.Services.Configure<MinioConfig>(builder.Configuration.GetSection("MinioConfig"));
 
 builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection("MongoDbSettings"));
 builder.Services.Configure<FfmpegSettings>(builder.Configuration.GetSection("FfmpegSettings"));
@@ -84,6 +84,14 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Password.RequiredUniqueChars = 1;
 });
 
+// Add Data Protection with persistence and encryption
+builder.Services.AddDataProtection()
+    .PersistKeysToFileSystem(new DirectoryInfo("/root/.aspnet/DataProtection-Keys"))
+    .ProtectKeysWithDpapi() // Use DPAPI for Windows compatibility
+    .SetApplicationName("FileService");
+
+
+//add authen
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -93,18 +101,34 @@ builder.Services.AddAuthentication(options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
     {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        ValidateLifetime = false,
         ValidateIssuerSigningKey = true,
         ValidIssuer = appSettings.Jwt.Issuer,
-        ValidAudience = appSettings.Jwt.Audience,
+       // ValidAudience = appSettings.Jwt.Audience,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(appSettings.Jwt.Key)),
 
         // Cấu hình claim để nhận Role
-        RoleClaimType = ClaimTypes.Role
-
+       // RoleClaimType = "roles"
     };
+    options.TokenValidationParameters.RoleClaimType = "roles"; // Khớp với token
+});
+
+
+// Thêm MemoryCache để cache claims
+builder.Services.AddMemoryCache();
+
+//add author policies
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy => policy.RequireRole("ADMIN"));
+    options.AddPolicy("TeacherOrAdmin", policy => policy.RequireRole("TEACHER", "SYS_ADMIN"));
+    options.AddPolicy("SysAdminOnly", policy => policy.RequireRole("SYS_ADMIN"));
+    options.AddPolicy("OrgAdminOnly", policy => policy.RequireRole("ORG_ADMIN"));
+    options.AddPolicy("TeacherOnly", policy => policy.RequireRole("TEACHER"));
+    options.AddPolicy("UserOnly", policy => policy.RequireRole("USER"));
+    options.AddPolicy("LoggedInUsers", policy => policy.RequireRole("USER", "TEACHER", "ORG_ADMIN", "SYS_ADMIN"));
 });
 
 builder.Services.AddCors(options =>
@@ -164,6 +188,15 @@ builder.WebHost.ConfigureKestrel(options =>
     options.Limits.MaxRequestBodySize = 6L * 1024 * 1024 * 1024; // 6GB
 });
 
+// Configure HTTP client for MinIO with SSL handling
+builder.Services.AddHttpClient("MinioClient").ConfigurePrimaryHttpMessageHandler(() =>
+{
+    return new HttpClientHandler
+    {
+        ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true // Temporary for dev/staging, remove in production
+    };
+});
+
 
 var app = builder.Build();
 
@@ -183,10 +216,14 @@ app.UseCors(MyAllowSpecificOrigins);
 
 app.UseHttpsRedirection();
 app.UseAuthentication();
+// Middleware pipeline
+//app.UseRoleCheck();
 app.UseAuthorization();
 
-app.UseMiddleware<ExceptionMiddleware>();
+
 app.UseMiddleware<AuthenMiddleware>();
+app.UseMiddleware<ExceptionMiddleware>();
+//app.UseMiddleware<RoleCheckMiddleware>();
 app.UseMiddleware<UserContextMiddleware>();
 
 app.MapControllers();
