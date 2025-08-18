@@ -5,7 +5,6 @@ using FileService.Core.ApiModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System.Data;
 using System.Text;
 using System.Text.Json.Serialization;
 using FileService.DataAccess.Interfaces;
@@ -17,9 +16,7 @@ using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Bson.Serialization;
 using FileService.Service.Implementation;
 using FileService.Service.Interfaces;
-using Microsoft.Extensions.FileProviders;
 using System.Security.Claims;
-using Microsoft.AspNetCore.DataProtection;
 
 BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
 
@@ -84,12 +81,6 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Password.RequiredUniqueChars = 1;
 });
 
-// Add Data Protection with persistence and encryption
-builder.Services.AddDataProtection()
-    .PersistKeysToFileSystem(new DirectoryInfo("/root/.aspnet/DataProtection-Keys"))
-    .ProtectKeysWithDpapi() // Use DPAPI for Windows compatibility
-    .SetApplicationName("FileService");
-
 
 //add authen
 builder.Services.AddAuthentication(options =>
@@ -106,18 +97,17 @@ builder.Services.AddAuthentication(options =>
         ValidateLifetime = false,
         ValidateIssuerSigningKey = true,
         ValidIssuer = appSettings.Jwt.Issuer,
-       // ValidAudience = appSettings.Jwt.Audience,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(appSettings.Jwt.Key)),
 
         // Cấu hình claim để nhận Role
-       // RoleClaimType = "roles"
+        RoleClaimType = ClaimTypes.Role,
+        NameClaimType = ClaimTypes.NameIdentifier
     };
-    options.TokenValidationParameters.RoleClaimType = "roles"; // Khớp với token
 });
-
 
 // Thêm MemoryCache để cache claims
 builder.Services.AddMemoryCache();
+
 
 //add author policies
 builder.Services.AddAuthorization(options =>
@@ -188,16 +178,6 @@ builder.WebHost.ConfigureKestrel(options =>
     options.Limits.MaxRequestBodySize = 6L * 1024 * 1024 * 1024; // 6GB
 });
 
-// Configure HTTP client for MinIO with SSL handling
-builder.Services.AddHttpClient("MinioClient").ConfigurePrimaryHttpMessageHandler(() =>
-{
-    return new HttpClientHandler
-    {
-        ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true // Temporary for dev/staging, remove in production
-    };
-});
-
-
 var app = builder.Build();
 
 // Migrate MongoDB and seed data if necessary
@@ -216,14 +196,10 @@ app.UseCors(MyAllowSpecificOrigins);
 
 app.UseHttpsRedirection();
 app.UseAuthentication();
-// Middleware pipeline
-//app.UseRoleCheck();
 app.UseAuthorization();
 
-
-app.UseMiddleware<AuthenMiddleware>();
 app.UseMiddleware<ExceptionMiddleware>();
-//app.UseMiddleware<RoleCheckMiddleware>();
+app.UseMiddleware<AuthenMiddleware>();
 app.UseMiddleware<UserContextMiddleware>();
 
 app.MapControllers();

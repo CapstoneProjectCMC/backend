@@ -111,7 +111,6 @@ namespace FileService.Api.Middlewares
                 var requestBody = Encoding.UTF8.GetString(buffer);
                 builder.AppendLine($"Body: {requestBody}");
 
-
                 //context.Request.Body.Position = 0;
 
             }
@@ -152,7 +151,6 @@ namespace FileService.Api.Middlewares
                 var requestBody = Encoding.UTF8.GetString(buffer);
                 builder.AppendLine($"Body: {requestBody}");
 
-                //context.Request.Body.Position = 0;
             }
             builder.AppendLine("Outgoing Response:");
             builder.AppendLine($"Message: {exception.Message}");
@@ -165,9 +163,23 @@ namespace FileService.Api.Middlewares
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
+            var apiResponse = new ApiResponseModel
+            {
+                Code = (int)HttpStatusCode.InternalServerError,
+                Message = "Lỗi hệ thống. Vui lòng thử lại sau.",
+                Status = "fail",
+                Result = null
+            };
 
-            await context.Response.WriteAsync("An error occurred. Please contact CodeCampus support.");
-            await context.Response.WriteAsync(exception.Message + exception.StackTrace);
+            var jsonResponse = JsonConvert.SerializeObject(apiResponse, new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            });
+
+            // await context.Response.WriteAsync("An error occurred. Please contact CodeCampus support.");
+            // await context.Response.WriteAsync(exception.Message + exception.StackTrace);
+
+            await context.Response.WriteAsync(jsonResponse);
         }
 
         private async Task LogRequest(HttpContext context)

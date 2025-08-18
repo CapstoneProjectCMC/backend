@@ -16,7 +16,7 @@ namespace OrganizationService.Api.Utils
                 {
                     try
                     {
-                        context.Database.Migrate();
+                      //  context.Database.Migrate();
                        // context.SeedData(webHostEnvironment);
                     }
                     catch

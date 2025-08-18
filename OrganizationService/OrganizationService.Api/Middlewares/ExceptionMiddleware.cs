@@ -1,8 +1,10 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using OrganizationService.Core.ApiModels;
+using OrganizationService.Core.Enums;
 using OrganizationService.Core.Exceptions;
 using System.Net;
+using System.Security;
 using System.Text;
 
 namespace OrganizationService.Api.Middlewares
@@ -39,6 +41,10 @@ namespace OrganizationService.Api.Middlewares
                 {
                     await HandleCustomExceptionAsync(httpContext, ex);
                 }
+                catch (SecurityException ex) // Thêm cho 403
+                {
+                    await HandleForbiddenExceptionAsync(httpContext, ex);
+                }
                 catch (UnauthorizedAccessException ex)
                 {
                     await HandleUnauthorizedExceptionAsync(httpContext, ex);
@@ -56,7 +62,22 @@ namespace OrganizationService.Api.Middlewares
             }
         }
 
-
+        private async Task HandleForbiddenExceptionAsync(HttpContext context, SecurityException exception)
+        {
+            context.Response.ContentType = "application/json";
+            context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
+            var apiResponse = new ApiResponseModel(StatusCodeEnum.Forbidden)
+            {
+                Message = "Access denied due to insufficient permissions.",
+                Result = null
+            };
+            var jsonResponse = JsonConvert.SerializeObject(apiResponse, new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            });
+            await context.Response.WriteAsync(jsonResponse);
+            _logger.LogWarning("Forbidden access - {Message}", exception.Message);
+        }
 
         private async Task HandleCustomExceptionAsync(HttpContext context, ErrorException exception)
         {
@@ -89,7 +110,6 @@ namespace OrganizationService.Api.Middlewares
                 var requestBody = Encoding.UTF8.GetString(buffer);
                 builder.AppendLine($"Body: {requestBody}");
 
-                //context.Request.Body.Position = 0;
             }
             builder.AppendLine("Outgoing Response:");
             builder.AppendLine($"StatusCode: {exception.StatusCode}");
