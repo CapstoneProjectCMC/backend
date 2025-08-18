@@ -9,6 +9,8 @@ using OrganizationService.Service.Interfaces;
 
 namespace OrganizationService.Api.Controllers
 {
+    [Authorize]
+    [Authorize(Policy = "AdminOnly")]
     [Route("api/[controller]")]
     [ApiController]
     public class ClassController : BaseApiController

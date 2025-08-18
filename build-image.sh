@@ -43,8 +43,8 @@ main() {
 #    echo "Building $svc..."
 #    build_push_java "$svc"
 #  done
-#  build_push_file_service
-#  build_push_organization_service
+ build_push_file_service
+ build_push_organization_service
 }
 
 main "$@"

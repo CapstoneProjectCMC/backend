@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OrganizationService.Core.ApiModels;
 using OrganizationService.Service.ApiModels.Class;
@@ -9,6 +10,8 @@ using OrganizationService.Service.Interfaces;
 
 namespace OrganizationService.Api.Controllers
 {
+    [Authorize]
+    [Authorize(Policy = "AdminOnly")]
     [Route("api/[controller]")]
     [ApiController]
     public class GradeController : BaseApiController

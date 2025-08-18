@@ -8,8 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace FileService.Api.Controllers
 {
     // [Authorize]
-    // [Authorize(Policy = "AdminOnly")]
-    // [Authorize(Roles = "ADMIN")]
+     [Authorize(Policy = "AdminOnly")]
+   //  [Authorize(Roles = "ADMIN")]
    // [AllowAnonymous]
     [Route("file/api/[controller]")]
     [ApiController]
@@ -22,6 +22,14 @@ namespace FileService.Api.Controllers
             _fileDocumentService = fileDocumentService;
             _ffmpegService = ffmpegService;
         }
+
+        //[HttpGet("claims")]
+        //[Authorize]
+        //public IActionResult GetClaims()
+        //{
+        //    return Ok(User.Claims.Select(c => new { c.Type, c.Value }));
+        //}
+
 
         [HttpPost("public")]
         public async Task<IActionResult> GetViewModelsAsync([FromBody] FileDocumentDto pagingDto)
