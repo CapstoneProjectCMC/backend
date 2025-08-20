@@ -158,6 +158,7 @@ services:
       - MongoDbSettings__DatabaseName=${FILE_DATABASE}
       # ---- MinIO (nếu FileService dùng) ----
       - AppSettings__MinioConfig__Endpoint=minio
+      - AppSettings__MinioConfig__PublicEndpoint=localhost
       - AppSettings__MinioConfig__Port=9000
       - AppSettings__MinioConfig__AccessKey=${MINIO_ROOT_USER}
       - AppSettings__MinioConfig__SecretKey=${MINIO_ROOT_PASSWORD}
