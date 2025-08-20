@@ -62,6 +62,7 @@ namespace FileService.Core.ApiModels
     public class MinioConfig
     {
         public string Endpoint { get; set; }
+        public string PublicEndpoint { get; set; }
         public int Port { get; set; }
         public string AccessKey { get; set; }
         public string SecretKey { get; set; }

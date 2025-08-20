@@ -151,7 +151,10 @@ namespace FileService.Service.Implementation
                 throw new ArgumentException("Invalid object name", nameof(objectName));
             }
 
-            var url = $"{(_config.Secure ? "https" : "http")}://{_config.Endpoint}:{_config.Port}/{_config.BucketName}/{objectName}";
+            var endpoint = _config.PublicEndpoint ?? _config.Endpoint; // Ưu tiên PublicEndpoint
+
+            var url = $"{(_config.Secure ? "https" : "http")}://{endpoint}:{_config.Port}/{_config.BucketName}/{objectName}";
+            Console.WriteLine($"Generated URL: {url}");
             return Task.FromResult(url);
         }
 
