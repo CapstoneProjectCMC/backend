@@ -13,8 +13,10 @@ import com.codecampus.ai.dto.request.exercise.ExerciseGenDto;
 import com.codecampus.ai.dto.request.exercise.ExercisePromptIn;
 import com.codecampus.ai.dto.request.quiz.AddQuizDetailRequest;
 import com.codecampus.ai.dto.request.quiz.CreateQuizExerciseRequest;
+import com.codecampus.ai.dto.request.quiz.GenerateQuestionsPromptIn;
 import com.codecampus.ai.dto.request.quiz.GenerateQuizPromptIn;
 import com.codecampus.ai.dto.request.quiz.OptionDto;
+import com.codecampus.ai.dto.request.quiz.OptionGenDto;
 import com.codecampus.ai.dto.request.quiz.QuestionDto;
 import com.codecampus.ai.dto.request.quiz.QuestionGenDto;
 import com.codecampus.ai.dto.request.quiz.QuestionPromptIn;
@@ -36,6 +38,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -189,6 +192,108 @@ public class ExerciseGenerationService {
                 .internalAddQuestion(promptIn.exerciseId(), questionDto)
                 .getResult();
     }
+
+    public List<QuestionResponse> generateQuestions(
+            GenerateQuestionsPromptIn generateQuestionsPromptIn) {
+        int n = (generateQuestionsPromptIn.numQuestions() == null ||
+                generateQuestionsPromptIn.numQuestions() < 1)
+                ? 1 : generateQuestionsPromptIn.numQuestions();
+
+        ParameterizedTypeReference<QuizDetailGenDto> type =
+                new ParameterizedTypeReference<>() {
+                };
+
+        // Prompt: yêu cầu đúng N câu, có thể ép type/points nếu được truyền
+        QuizDetailGenDto suggestion = chatClient
+                .prompt()
+                .system("""
+                        Bạn là trợ lý sinh câu hỏi cho CodeCampus.
+                        - Sinh JSON QuizDetailGenDto gồm ĐÚNG %d câu (field 'questions').
+                        - Nếu client cung cấp questionType/points thì mọi câu đều dùng chúng.
+                        - Cấu trúc mỗi câu tuân thủ QuestionGenDto (có options nếu là dạng chọn).
+                        - Không sinh trường ngoài schema.
+                        """.formatted(n))
+                .user("""
+                        Bối cảnh bài tập:
+                        - title: %s
+                        - desc: %s
+                        - diff: %s
+                        - duration: %s
+                        - tags: %s
+                        
+                        Ràng buộc (tùy chọn):
+                        - questionType: %s
+                        - points: %s
+                        """.formatted(
+                        safeCheckNullString(generateQuestionsPromptIn.title()),
+                        safeCheckNullString(
+                                generateQuestionsPromptIn.description()),
+                        String.valueOf(generateQuestionsPromptIn.difficulty()),
+                        String.valueOf(generateQuestionsPromptIn.duration()),
+                        generateQuestionsPromptIn.tags() == null ? "" :
+                                String.join(", ",
+                                        generateQuestionsPromptIn.tags()),
+                        String.valueOf(
+                                generateQuestionsPromptIn.questionType()),
+                        String.valueOf(generateQuestionsPromptIn.points())))
+                .options(ChatOptions.builder().temperature(0.6).build())
+                .advisors(AIGenerationHelper.noMemory())
+                .call()
+                .entity(type);
+
+        List<QuestionGenDto> questionGenDtoList =
+                suggestion == null || suggestion.questions() == null
+                        ? List.of() : suggestion.questions();
+
+        // Map sang QuestionDto (ghi đè type/points nếu có trong input)
+        List<QuestionDto> questionDtoList =
+                new ArrayList<>(questionGenDtoList.size());
+        int idx = 1;
+        for (QuestionGenDto g : questionGenDtoList) {
+            var qType = (generateQuestionsPromptIn.questionType() != null) ?
+                    generateQuestionsPromptIn.questionType() :
+                    g.questionType();
+            var pts = (generateQuestionsPromptIn.points() != null) ?
+                    generateQuestionsPromptIn.points() : g.points();
+
+            List<OptionDto> options = g.options() == null ? List.of()
+                    : g.options().stream()
+                    .map((OptionGenDto og) ->
+                            new OptionDto(og.optionText(), og.correct(),
+                                    og.order()))
+                    .toList();
+
+            questionDtoList.add(new QuestionDto(
+                    g.text(),
+                    qType,
+                    pts,
+                    (g.orderInQuiz() == null || g.orderInQuiz() <= 0) ? idx :
+                            g.orderInQuiz(),
+                    options
+            ));
+            idx++;
+        }
+
+        // Đẩy từng câu vào submission-service (giống generateTestCases)
+        List<QuestionResponse> created =
+                new ArrayList<>(questionDtoList.size());
+        for (QuestionDto q : questionDtoList) {
+            try {
+                var resp = submissionClient
+                        .internalAddQuestion(
+                                generateQuestionsPromptIn.exerciseId(), q)
+                        .getResult();
+                if (resp != null) {
+                    created.add(resp);
+                }
+            } catch (BadRequestException e) {
+                // log rồi bỏ qua câu lỗi, tiếp tục các câu còn lại
+                log.warn("AddQuestion failed: {}", e.getMessage());
+            }
+        }
+        return created;
+    }
+
 
     public ExerciseResponse generateQuizExercise(
             GenerateQuizPromptIn generateQuizPromptIn) {

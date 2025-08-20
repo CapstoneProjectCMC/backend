@@ -32,7 +32,9 @@ public class UserProfileIndexListener {
         try {
             UserRegisteredEvent evt =
                     objectMapper.readValue(raw, UserRegisteredEvent.class);
-            UserProfileDocument doc = userProfileMapper.fromRegistered(evt);
+            UserProfileDocument doc =
+                    userProfileMapper.toUserProfileDocumentFromUserRegisteredEvent(
+                            evt);
             userProfileDocumentRepository.save(doc);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
@@ -50,7 +52,7 @@ public class UserProfileIndexListener {
                             userProfileDocumentRepository.findById(evt.getId())
                                     .orElseGet(
                                             () -> UserProfileDocument.builder()
-                                                    .id(evt.getId())
+                                                    .userId(evt.getId())
                                                     .createdAt(Instant.now())
                                                     .build());
                     userProfileMapper.updateUserPayloadToUserProfileDocument(
@@ -87,7 +89,7 @@ public class UserProfileIndexListener {
                             userProfileDocumentRepository.findById(evt.getId())
                                     .orElseGet(
                                             () -> UserProfileDocument.builder()
-                                                    .id(evt.getId())
+                                                    .userId(evt.getId())
                                                     .createdAt(Instant.now())
                                                     .build());
                     userProfileMapper.updateUserProfilePayloadToUserProfileDocument(

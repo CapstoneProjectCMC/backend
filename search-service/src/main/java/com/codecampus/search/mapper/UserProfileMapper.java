@@ -19,14 +19,14 @@ public interface UserProfileMapper {
     UserProfileResponse toUserProfileResponseFromUserProfileDocument(
             UserProfileDocument userProfileDocument);
 
-    default UserProfileDocument fromRegistered(
+    default UserProfileDocument toUserProfileDocumentFromUserRegisteredEvent(
             UserRegisteredEvent userRegisteredEvent) {
         UserPayload userPayload = userRegisteredEvent.getUser();
         UserProfileCreationPayload profilePayload =
                 userRegisteredEvent.getProfile();
 
         return UserProfileDocument.builder()
-                .id(userRegisteredEvent.getId())
+                .userId(userRegisteredEvent.getId())
                 .username(userPayload.getUsername())
                 .email(userPayload.getEmail())
                 .active(userPayload.isActive())

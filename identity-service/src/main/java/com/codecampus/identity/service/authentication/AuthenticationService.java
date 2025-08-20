@@ -192,7 +192,6 @@ public class AuthenticationService {
                                             .displayName(googleUser.getName())
                                             .build();
 
-                            userEventProducer.publishCreatedUserEvent(newUser);
                             UserProfileCreationPayload profilePayload =
                                     userPayloadMapper.toUserProfileCreationPayloadFromUserCreationRequest(
                                             googleRequest);

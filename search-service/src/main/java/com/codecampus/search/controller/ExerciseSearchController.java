@@ -26,7 +26,7 @@ public class ExerciseSearchController {
 
     ExerciseSearchService exerciseSearchService;
 
-    @GetMapping("/filter")
+    @GetMapping("/exercises/filter")
     ApiResponse<PageResponse<ExerciseSearchResponse>> search(
             @RequestParam(required = false) String q,
             @RequestParam(required = false) Set<String> tags,

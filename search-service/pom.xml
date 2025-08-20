@@ -32,10 +32,8 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
 
         <!-- Library versions -->
-        <grpc.version>1.72.0</grpc.version>
         <jacoco.version>0.8.13</jacoco.version>
         <lombok.mapstruct.binding.version>0.2.0</lombok.mapstruct.binding.version>
-        <grpc.server.starter.version>3.1.0.RELEASE</grpc.server.starter.version>
         <projectlombok-lombok.version>1.18.38</projectlombok-lombok.version>
         <elastic.search.version>9.0.3</elastic.search.version>
 
@@ -75,38 +73,6 @@
         <!--            <groupId>org.springframework</groupId>-->
         <!--            <artifactId>spring-core</artifactId>-->
         <!--        </dependency>-->
-
-        <!-- ===== gRPC & Protobuf ===== -->
-        <dependency>
-            <groupId>net.devh</groupId>
-            <artifactId>grpc-server-spring-boot-starter</artifactId>
-            <version>${grpc.server.starter.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.grpc</groupId>
-            <artifactId>grpc-services</artifactId>
-            <version>${grpc.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.grpc</groupId>
-            <artifactId>grpc-stub</artifactId>
-            <version>${grpc.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.grpc</groupId>
-            <artifactId>grpc-netty-shaded</artifactId>
-            <version>${grpc.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.grpc</groupId>
-            <artifactId>grpc-protobuf</artifactId>
-            <version>${grpc.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.grpc</groupId>
-            <artifactId>grpc-census</artifactId>
-            <version>${grpc.version}</version>
-        </dependency>
         <dependency>
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java</artifactId>

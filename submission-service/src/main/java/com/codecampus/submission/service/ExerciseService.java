@@ -40,9 +40,12 @@ import com.codecampus.submission.repository.QuestionRepository;
 import com.codecampus.submission.repository.SubmissionRepository;
 import com.codecampus.submission.repository.SubmissionResultRepository;
 import com.codecampus.submission.repository.TestCaseRepository;
+import com.codecampus.submission.service.cache.UserBulkLoader;
+import com.codecampus.submission.service.cache.UserSummaryCacheService;
 import com.codecampus.submission.service.grpc.GrpcCodingClient;
 import com.codecampus.submission.service.grpc.GrpcQuizClient;
 import com.codecampus.submission.service.kafka.ExerciseEventProducer;
+import dtos.UserSummary;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -54,7 +57,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -67,7 +73,9 @@ public class ExerciseService {
     AssignmentRepository assignmentRepository;
     TestCaseRepository testCaseRepository;
     SubmissionResultRepository submissionResultRepository;
+    UserBulkLoader userBulkLoader;
 
+    UserSummaryCacheService userSummaryCacheService;
     ContestService contestService;
     AssignmentService assignmentService;
     QuizService quizService;
@@ -288,11 +296,23 @@ public class ExerciseService {
                 size,
                 SortHelper.build(sortBy, asc));
 
-        Page<ExerciseQuizResponse> pageData = exerciseRepository
-                .findAll(pageable)
-                .map(exerciseMapper::toExerciseQuizResponseFromExercise);
+        Page<Exercise> pageData = exerciseRepository
+                .findAll(pageable);
+        // .map(exerciseMapper::toExerciseQuizResponseFromExercise);
 
-        return PageResponseHelper.toPageResponse(pageData, page);
+        // Bulk load user summaries
+        Set<String> userIds = pageData
+                .stream()
+                .map(Exercise::getUserId)
+                .collect(Collectors.toSet());
+        Map<String, UserSummary> summaries = userBulkLoader.loadAll(userIds);
+
+        Page<ExerciseQuizResponse> out = pageData
+                .map(e -> exerciseHelper.toExerciseQuizResponseFromExerciseAndUserSummary(
+                        e, summaries.get(e.getUserId())))
+                .map(a -> a); // no-op để giữ Page map
+
+        return PageResponseHelper.toPageResponse(out, page);
     }
 
     public PageResponse<ExerciseQuizResponse> getExercisesOf(
@@ -304,11 +324,19 @@ public class ExerciseService {
                 size,
                 SortHelper.build(sortBy, asc));
 
-        Page<ExerciseQuizResponse> pageData = exerciseRepository
-                .findByUserId(AuthenticationHelper.getMyUserId(), pageable)
-                .map(exerciseMapper::toExerciseQuizResponseFromExercise);
+        Page<Exercise> pageData = exerciseRepository
+                .findByUserId(AuthenticationHelper.getMyUserId(), pageable);
+        // .map(exerciseMapper::toExerciseQuizResponseFromExercise);
 
-        return PageResponseHelper.toPageResponse(pageData, page);
+        Set<String> userIds = pageData.stream().map(Exercise::getUserId)
+                .collect(java.util.stream.Collectors.toSet());
+        Map<String, UserSummary> summaries = userBulkLoader.loadAll(userIds);
+
+        Page<ExerciseQuizResponse> out = pageData
+                .map(e -> exerciseHelper.toExerciseQuizResponseFromExerciseAndUserSummary(
+                        e, summaries.get(e.getUserId())));
+
+        return PageResponseHelper.toPageResponse(out, page);
     }
 
     @Transactional(readOnly = true)
@@ -334,33 +362,11 @@ public class ExerciseService {
                         quizDetail, qPage, qSize, qSortBy, qAsc
                 );
 
-        return ExerciseQuizDetailResponse.builder()
-                .id(exercise.getId())
-                .userId(exercise.getUserId())
-                .title(exercise.getTitle())
-                .description(exercise.getDescription())
-                .exerciseType(exercise.getExerciseType())
-                .difficulty(exercise.getDifficulty())
-                .orgId(exercise.getOrgId())
-                .active(exercise.isActive())
-                .cost(exercise.getCost())
-                .freeForOrg(exercise.isFreeForOrg())
-                .startTime(exercise.getStartTime())
-                .endTime(exercise.getEndTime())
-                .duration(exercise.getDuration())
-                .allowDiscussionId(exercise.getAllowDiscussionId())
-                .resourceIds(exercise.getResourceIds())
-                .tags(exercise.getTags())
-                .allowAiQuestion(exercise.isAllowAiQuestion())
-                .quizDetail(qSlice)
-                .visibility(exercise.isVisibility())
-                .createdBy(exercise.getCreatedBy())
-                .createdAt(exercise.getCreatedAt())
-                .updatedBy(exercise.getUpdatedBy())
-                .updatedAt(exercise.getUpdatedAt())
-                .deletedBy(exercise.getDeletedBy())
-                .deletedAt(exercise.getDeletedAt())
-                .build();
+        UserSummary userSummary =
+                userSummaryCacheService.getOrLoad(exercise.getUserId());
+
+        return exerciseHelper.toExerciseQuizDetailResponseFromExerciseQuizDetailSliceDetailResponseAndUserSummary(
+                exercise, qSlice, userSummary);
     }
 
     @Transactional(readOnly = true)
@@ -384,32 +390,10 @@ public class ExerciseService {
         CodingDetailSliceDetailResponse slice = codingHelper.buildCodingSlice(
                 codingDetail, tcPage, tcSize, tcSortBy, tcAsc);
 
-        return ExerciseCodingDetailResponse.builder()
-                .id(exercise.getId())
-                .userId(exercise.getUserId())
-                .title(exercise.getTitle())
-                .description(exercise.getDescription())
-                .exerciseType(exercise.getExerciseType())
-                .difficulty(exercise.getDifficulty())
-                .orgId(exercise.getOrgId())
-                .active(exercise.isActive())
-                .cost(exercise.getCost())
-                .freeForOrg(exercise.isFreeForOrg())
-                .startTime(exercise.getStartTime())
-                .endTime(exercise.getEndTime())
-                .duration(exercise.getDuration())
-                .allowDiscussionId(exercise.getAllowDiscussionId())
-                .resourceIds(exercise.getResourceIds())
-                .tags(exercise.getTags())
-                .allowAiQuestion(exercise.isAllowAiQuestion())
-                .visibility(exercise.isVisibility())
-                .codingDetail(slice)
-                .createdBy(exercise.getCreatedBy())
-                .createdAt(exercise.getCreatedAt())
-                .updatedBy(exercise.getUpdatedBy())
-                .updatedAt(exercise.getUpdatedAt())
-                .deletedBy(exercise.getDeletedBy())
-                .deletedAt(exercise.getDeletedAt())
-                .build();
+        UserSummary userSummary =
+                userSummaryCacheService.getOrLoad(exercise.getUserId());
+
+        return exerciseHelper.toExerciseCodingDetailResponseFromExerciseCodingDetailSliceDetailResponseAndUserSummary(
+                exercise, slice, userSummary);
     }
 }

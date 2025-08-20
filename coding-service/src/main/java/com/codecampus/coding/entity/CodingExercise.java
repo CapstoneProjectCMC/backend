@@ -3,6 +3,7 @@ package com.codecampus.coding.entity;
 import com.codecampus.coding.entity.audit.AuditMetadata;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
@@ -38,20 +39,35 @@ public class CodingExercise extends AuditMetadata {
     @Id
     String id;
 
+    @Column(length = 100, nullable = false)
     String title;
+
+    @Column(columnDefinition = "text")
     String description;
+
+    @Column(length = 100)
     String topic;
+
+    @Column(name = "allowed_languages", columnDefinition = "text[]")
     Set<String> allowedLanguages;
 
+    @Column(columnDefinition = "text")
     String input;
+
+    @Column(columnDefinition = "text")
     String output;
 
+    @Column(name = "constraint_text", columnDefinition = "text")
     String constraintText;
+
     int timeLimit;
     int memoryLimit;
     int maxSubmissions;
 
+    @Column(name = "code_template", columnDefinition = "text")
     String codeTemplate;
+
+    @Column(columnDefinition = "text")
     String solution;
 
     boolean publicAccessible;

@@ -3,10 +3,13 @@ package com.codecampus.submission.service;
 import com.codecampus.submission.dto.common.PageResponse;
 import com.codecampus.submission.dto.response.assignment.AssignedStudentResponse;
 import com.codecampus.submission.dto.response.assignment.MyAssignmentResponse;
+import com.codecampus.submission.entity.Assignment;
 import com.codecampus.submission.helper.AssignmentHelper;
 import com.codecampus.submission.helper.AuthenticationHelper;
 import com.codecampus.submission.helper.PageResponseHelper;
 import com.codecampus.submission.repository.AssignmentRepository;
+import com.codecampus.submission.service.cache.UserBulkLoader;
+import dtos.UserSummary;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -18,6 +21,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -27,6 +34,7 @@ public class AssignmentQueryService {
     AssignmentRepository assignmentRepository;
 
     AssignmentHelper assignmentHelper;
+    UserBulkLoader userBulkLoader;
 
     @Transactional(readOnly = true)
     public PageResponse<MyAssignmentResponse> getAssignmentsForStudent(
@@ -61,14 +69,27 @@ public class AssignmentQueryService {
                 Sort.by(Sort.Order.desc("dueAt"), Sort.Order.desc("createdAt"))
         );
 
-        Page<AssignedStudentResponse> pageData = (
+        Page<Assignment> assignmentPage = (
                 completed == null
                         ? assignmentRepository.findByExerciseId(exerciseId,
                         pageable)
                         : assignmentRepository.findByExerciseIdAndCompleted(
-                        exerciseId, completed, pageable))
-                .map(assignment -> assignmentHelper.mapAssignmentToAssignedStudentResponse(
-                        assignment, assignment.getStudentId()));
+                        exerciseId, completed, pageable));
+        //.map(assignment -> assignmentHelper.mapAssignmentToAssignedStudentResponse(
+        //        assignment, assignment.getStudentId()));
+
+        // Bulk load UserSummary cho studentIds ở trang hiện tại
+        Set<String> studentIds = assignmentPage.getContent()
+                .stream()
+                .map(Assignment::getStudentId)
+                .collect(Collectors.toSet());
+
+        Map<String, UserSummary> summaries = userBulkLoader.loadAll(studentIds);
+
+        Page<AssignedStudentResponse> pageData = assignmentPage
+                .map(a -> assignmentHelper
+                        .mapAssignmentToAssignedStudentResponse(
+                                a, summaries.get(a.getStudentId())));
 
         return PageResponseHelper.toPageResponse(pageData, page);
     }

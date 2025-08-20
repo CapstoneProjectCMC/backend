@@ -9,7 +9,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Data
-@Builder
+@Builder(toBuilder = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 // Mặc định cho phép response cả null khi Dev
 // Khi build thì KHÔNG response null

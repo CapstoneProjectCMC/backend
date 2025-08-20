@@ -37,4 +37,4 @@ app:
   event:
     user-events: "user-events"
     user-registrations: "user-registrations"
-    profile-events: profile-events
+    profile-events: "profile-events"

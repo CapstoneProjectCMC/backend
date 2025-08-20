@@ -122,7 +122,7 @@ public class QuizService {
 
         });
         QuizScoringHelper.recalc(quiz);
-        quizExerciseRepository.save(quiz);
+        quizExerciseRepository.saveAndFlush(quiz);
         loadQuizCacheService.refresh(
                 addQuizRequest.getExerciseId());
     }
@@ -137,6 +137,7 @@ public class QuizService {
             question.getOptions().forEach(option -> option.markDeleted(by));
         });
         quizExerciseRepository.save(quizExercise);
+
         loadQuizCacheService.refresh(exerciseId);
     }
 

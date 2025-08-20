@@ -20,14 +20,14 @@ import java.util.Optional;
 @Mapper(componentModel = "spring")
 public interface CodingMapper {
 
+    private static String safeCheckNullString(String s) {
+        return s == null ? "" : s;
+    }
+
     @Mapping(target = "exercise", ignore = true)
     @Mapping(target = "testCases", ignore = true)
     CodingDetail toCodingDetailFromAddCodingRequest(
             AddCodingDetailRequest addCodingDetailRequest);
-
-    @Mapping(target = "exerciseId", source = "codingDetail.exercise.id")
-    TestCaseDto toTestCaseDtoFromTestCase(
-            TestCase testCase);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void patchCodingDetailDtoToCodingDetail(
@@ -69,6 +69,28 @@ public interface CodingMapper {
                         .map(this::toTestCaseDtoFromTestCase)
                         .toList()
                 )
+                .build();
+    }
+
+    default TestCaseDto toTestCaseDtoFromTestCase(
+            TestCase testCase) {
+        if (testCase == null) {
+            return TestCaseDto.getDefaultInstance();
+        }
+        CodingDetail codingDetail = testCase.getCodingDetail();
+        Exercise exercise =
+                (codingDetail == null) ? null : codingDetail.getExercise();
+
+        return TestCaseDto.newBuilder()
+                .setId(safeCheckNullString(testCase.getId()))
+                .setExerciseId(
+                        safeCheckNullString(
+                                exercise == null ? null : exercise.getId()))
+                .setInput(safeCheckNullString(testCase.getInput()))
+                .setExpectedOutput(
+                        safeCheckNullString(testCase.getExpectedOutput()))
+                .setSample(testCase.isSample())
+                .setNote(safeCheckNullString(testCase.getNote()))
                 .build();
     }
 

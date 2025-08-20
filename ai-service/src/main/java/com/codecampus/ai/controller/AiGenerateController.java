@@ -3,6 +3,7 @@ package com.codecampus.ai.controller;
 import com.codecampus.ai.dto.common.ApiResponse;
 import com.codecampus.ai.dto.request.coding.GenerateCodingPromptIn;
 import com.codecampus.ai.dto.request.coding.GenerateTestCasesPromptIn;
+import com.codecampus.ai.dto.request.quiz.GenerateQuestionsPromptIn;
 import com.codecampus.ai.dto.request.quiz.GenerateQuizPromptIn;
 import com.codecampus.ai.dto.request.quiz.QuestionPromptIn;
 import com.codecampus.ai.dto.response.ExerciseResponse;
@@ -54,6 +55,15 @@ public class AiGenerateController {
                 .build();
     }
 
+    @PostMapping("/generate/questions")
+    public ApiResponse<List<QuestionResponse>> generateQuestions(
+            @RequestBody GenerateQuestionsPromptIn in) {
+        return ApiResponse.<List<QuestionResponse>>builder()
+                .result(exerciseGenerationService.generateQuestions(in))
+                .message("Gợi ý câu hỏi!")
+                .build();
+    }
+
     @PostMapping("/generate/coding")
     public ApiResponse<ExerciseResponse> generateCodingExercise(
             @RequestBody GenerateCodingPromptIn in) {
@@ -64,9 +74,8 @@ public class AiGenerateController {
     }
 
     @PostMapping("/generate/coding/test-cases")
-    public ApiResponse<List<TestCaseResponse>> generateMoreTestCases(
-            @RequestBody GenerateTestCasesPromptIn in)
-            throws BadRequestException {
+    public ApiResponse<List<TestCaseResponse>> generateTestCases(
+            @RequestBody GenerateTestCasesPromptIn in) {
         return ApiResponse.<List<TestCaseResponse>>builder()
                 .result(exerciseGenerationService.generateTestCases(in))
                 .message("Đã sinh thêm testcases!")

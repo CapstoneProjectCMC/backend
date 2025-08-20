@@ -33,7 +33,7 @@ import static org.springframework.data.elasticsearch.annotations.FieldType.Text;
 public class UserProfileDocument {
 
     @Id
-    String id;
+    String userId;
 
     /* ---- identity fields ---- */
     @MultiField(

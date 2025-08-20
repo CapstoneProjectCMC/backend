@@ -25,6 +25,6 @@ spring:
 app:
   event:
     exercise-events: "exercise-events"
-    user-registrations: user-registrations
-    user-events: user-events
-    profile-events: profile-events
+    user-registrations: "user-registrations"
+    user-events: "user-events"
+    profile-events: "profile-events"

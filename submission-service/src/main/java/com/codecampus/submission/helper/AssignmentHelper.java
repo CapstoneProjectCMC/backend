@@ -1,14 +1,19 @@
 package com.codecampus.submission.helper;
 
+import com.codecampus.submission.constant.submission.SubmissionStatus;
 import com.codecampus.submission.dto.response.assignment.AssignedStudentResponse;
 import com.codecampus.submission.dto.response.assignment.MyAssignmentResponse;
 import com.codecampus.submission.entity.Assignment;
 import com.codecampus.submission.entity.Exercise;
+import com.codecampus.submission.entity.Submission;
 import com.codecampus.submission.repository.SubmissionRepository;
+import dtos.UserSummary;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
+
+import java.time.Instant;
 
 @Component
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -21,6 +26,8 @@ public class AssignmentHelper {
             Assignment assignment, String studentId) {
 
         Score result = getScore(assignment, studentId);
+        Instant completedAt =
+                getCompletionTimeIfCompleted(assignment, studentId);
 
         return new MyAssignmentResponse(
                 assignment.getId(),
@@ -28,28 +35,32 @@ public class AssignmentHelper {
                 result.exercise().getTitle(),
                 assignment.getDueAt(),
                 assignment.isCompleted(),
+                completedAt,
                 result.bestScore(),
-                result.totalPoints()
+                result.totalPoints(),
+                result.exercise().getExerciseType()
         );
 
     }
 
     public AssignedStudentResponse mapAssignmentToAssignedStudentResponse(
-            Assignment assignment, String studentId) {
+            Assignment assignment,
+            UserSummary studentSummary) {
 
-        Score result = getScore(assignment, studentId);
+        Score result = getScore(assignment, assignment.getStudentId());
 
         return new AssignedStudentResponse(
                 assignment.getId(),
-                assignment.getStudentId(),
+                studentSummary,
                 assignment.getDueAt(),
                 assignment.isCompleted(),
                 result.bestScore(),
-                result.totalPoints()
+                result.totalPoints(),
+                result.exercise().getExerciseType()
         );
     }
 
-    private Score getScore(Assignment assignment, String studentId) {
+    Score getScore(Assignment assignment, String studentId) {
         Exercise exercise = assignment.getExercise();
 
         Integer totalPoints = switch (exercise.getExerciseType()) {
@@ -64,6 +75,20 @@ public class AssignmentHelper {
                         exercise.getId(),
                         studentId);
         return new Score(exercise, totalPoints, bestScore);
+    }
+
+    Instant getCompletionTimeIfCompleted(
+            Assignment assignment, String studentId) {
+        if (!assignment.isCompleted()) {
+            return null;
+        }
+        return submissionRepository
+                .findFirstByExerciseIdAndUserIdAndStatusOrderBySubmittedAtAsc(
+                        assignment.getExercise().getId(),
+                        studentId,
+                        SubmissionStatus.PASSED)
+                .map(Submission::getSubmittedAt)
+                .orElse(null);
     }
 
     private record Score(Exercise exercise, Integer totalPoints,
