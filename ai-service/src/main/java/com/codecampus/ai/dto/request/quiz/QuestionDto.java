@@ -7,7 +7,7 @@ import java.util.List;
 public record QuestionDto(
         String text,
         QuestionType questionType,
-        int points,
-        int orderInQuiz,
+        Integer points,
+        Integer orderInQuiz,
         List<OptionDto> options) {
 }

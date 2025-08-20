@@ -43,28 +43,28 @@ public class ChatThreadController {
                 .build();
     }
 
-    @PostMapping("/threads")
-    ApiResponse<ThreadResponse> create(
+    @PostMapping("/thread")
+    ApiResponse<ThreadResponse> createThread(
             @RequestBody CreateThreadRequest req) {
         return ApiResponse.<ThreadResponse>builder()
-                .result(chatThreadService.create(
+                .result(chatThreadService.createThread(
                         req == null ? null : req.title()))
                 .message("Tạo thread thành công")
                 .build();
     }
 
-    @PatchMapping("/threads/{id}")
-    ApiResponse<ThreadResponse> rename(
+    @PatchMapping("/thread/{id}")
+    ApiResponse<ThreadResponse> renameThread(
             @PathVariable String id,
             @RequestBody RenameThreadRequest req) {
         return ApiResponse.<ThreadResponse>builder()
-                .result(chatThreadService.rename(id, req.title()))
+                .result(chatThreadService.renameThread(id, req.title()))
                 .message("Đổi tên thread thành công")
                 .build();
     }
 
-    @DeleteMapping("/threads/{id}")
-    ApiResponse<Void> delete(
+    @DeleteMapping("/thread/{id}")
+    ApiResponse<Void> deleteThread(
             @PathVariable String id) {
         chatThreadService.delete(id);
         return ApiResponse.<Void>builder()
@@ -73,25 +73,25 @@ public class ChatThreadController {
                 .build();
     }
 
-    @PostMapping("/threads/{id}/messages")
-    ApiResponse<String> send(
+    @PostMapping("/thread/{id}/messages")
+    ApiResponse<String> sendChat(
             @PathVariable String id,
             @RequestBody ChatRequest request) {
         String content = chatService.chat(id, request);
-        chatThreadService.touch(id);
+        chatThreadService.touchThread(id);
         return ApiResponse.<String>builder()
                 .result(content)
                 .message("Kết quả chat với AI (thread)")
                 .build();
     }
 
-    @PostMapping("/threads/{id}/messages-with-image")
-    ApiResponse<String> sendWithImage(
+    @PostMapping("/thread/{id}/messages-with-image")
+    ApiResponse<String> sendChatWithImage(
             @PathVariable String id,
             @RequestParam("file") MultipartFile file,
             @RequestParam("message") String message) {
         String content = chatService.chatWithImage(id, file, message);
-        chatThreadService.touch(id);
+        chatThreadService.touchThread(id);
         return ApiResponse.<String>builder()
                 .result(content)
                 .message("Kết quả chat với AI (thread, có ảnh)")

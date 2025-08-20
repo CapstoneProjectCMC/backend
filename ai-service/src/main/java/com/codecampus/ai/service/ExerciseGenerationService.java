@@ -255,9 +255,9 @@ public class ExerciseGenerationService {
                                         null ? List.of() :
                                         promptIn.createExerciseRequest()
                                                 .tags()),
-                        nullToStr(promptIn.timeLimitMs()),
-                        nullToStr(promptIn.memoryLimitMb()),
-                        nullToStr(promptIn.maxSubmissions()),
+                        nullToString(promptIn.timeLimitMs()),
+                        nullToString(promptIn.memoryLimitMb()),
+                        nullToString(promptIn.maxSubmissions()),
                         String.join(", ",
                                 promptIn.preferredLanguages() == null ?
                                         Set.of() :
@@ -267,11 +267,16 @@ public class ExerciseGenerationService {
                 .call()
                 .entity(type);
 
-        List<TestCaseDto> tcs = suggestion.testCases() == null ? List.of()
-                : suggestion.testCases().stream()
-                .map(t -> new TestCaseDto(t.input(), t.expectedOutput(),
-                        t.sample(), t.note()))
-                .toList();
+        List<TestCaseDto> testCaseDtoList =
+                suggestion.testCases() == null ? List.of()
+                        : suggestion.testCases().stream()
+                        .map(t -> new TestCaseDto(
+                                t.input(),
+                                t.expectedOutput(),
+                                t.sample(),
+                                t.note())
+                        )
+                        .toList();
 
         return new AddCodingDetailRequest(
                 suggestion.topic(),
@@ -283,27 +288,32 @@ public class ExerciseGenerationService {
                 suggestion.memoryLimit(),
                 suggestion.maxSubmissions(),
                 suggestion.codeTemplate(),
-                tcs,
+                testCaseDtoList,
                 suggestion.solution()
         );
     }
 
-    public ExerciseResponse generateCodingExercise(GenerateCodingPromptIn in) {
+    public ExerciseResponse generateCodingExercise(
+            GenerateCodingPromptIn codingPromptIn) {
         // 1) Sinh phần "khung" Exercise (type=CODING)
         CreateExerciseRequest createExercise =
-                generateExercise(in.exercisePromptIn(), ExerciseType.CODING);
+                generateExercise(
+                        codingPromptIn.exercisePromptIn(),
+                        ExerciseType.CODING
+                );
 
         // 2) Sinh CodingDetail + testcases theo mong muốn
-        CodingDetailPromptIn detailPrompt = new CodingDetailPromptIn(
+        CodingDetailPromptIn codingDetailPromptIn = new CodingDetailPromptIn(
                 createExercise,
-                in.numTestCases() == null ? 8 : in.numTestCases(),
-                in.allowedLanguages(),
-                in.timeLimit(),
-                in.memoryLimit(),
-                in.maxSubmissions()
+                codingPromptIn.numTestCases() == null ? 8 :
+                        codingPromptIn.numTestCases(),
+                codingPromptIn.allowedLanguages(),
+                codingPromptIn.timeLimit(),
+                codingPromptIn.memoryLimit(),
+                codingPromptIn.maxSubmissions()
         );
         AddCodingDetailRequest codingDetail =
-                generateCodingDetail(detailPrompt);
+                generateCodingDetail(codingDetailPromptIn);
 
         // 3) Gọi Submission để tạo đầy đủ
         CreateCodingExerciseRequest request =
@@ -314,8 +324,7 @@ public class ExerciseGenerationService {
     }
 
     public List<TestCaseResponse> generateTestCases(
-            GenerateTestCasesPromptIn in)
-            throws BadRequestException {
+            GenerateTestCasesPromptIn generateTestCasesPromptIn) {
 
         ParameterizedTypeReference<CodingDetailGenDto> type =
                 new ParameterizedTypeReference<>() {
@@ -324,10 +333,12 @@ public class ExerciseGenerationService {
         CodingDetailGenDto suggestion = chatClient
                 .prompt()
                 .system("""
+                        Bạn là trợ lý tạo bài CODE cho CodeCampus.
                         Sinh thêm testcases cho bài code hiện có.
                         Trả về CodingDetailGenDto nhưng chỉ dùng field testCases.
                         Tối thiểu %d testcases, cân bằng dễ/khó, bao phủ biên/edge cases.
-                        """.formatted(Math.max(1, in.numTestCases())))
+                        """.formatted(
+                        Math.max(1, generateTestCasesPromptIn.numTestCases())))
                 .user("""
                         title="%s"
                         description="%s"
@@ -337,27 +348,34 @@ public class ExerciseGenerationService {
                         constraint="%s"
                         timeLimit=%s, memoryLimit=%s
                         """.formatted(
-                        in.title(), in.description(),
-                        safe(in.input()), safe(in.output()),
-                        safe(in.constraintText()),
-                        nullToStr(in.timeLimit()), nullToStr(in.memoryLimit())))
+                        generateTestCasesPromptIn.title(),
+                        generateTestCasesPromptIn.description(),
+                        safeCheckNullString(generateTestCasesPromptIn.input()),
+                        safeCheckNullString(generateTestCasesPromptIn.output()),
+                        safeCheckNullString(
+                                generateTestCasesPromptIn.constraintText()),
+                        nullToString(generateTestCasesPromptIn.timeLimit()),
+                        nullToString(generateTestCasesPromptIn.memoryLimit())))
                 .options(ChatOptions.builder().temperature(0.5).build())
                 .advisors(AIGenerationHelper.noMemory())
                 .call()
                 .entity(type);
 
-        List<TestCaseDto> newOnes = suggestion.testCases() == null ? List.of()
-                : suggestion.testCases().stream()
-                .map(t -> new TestCaseDto(t.input(), t.expectedOutput(),
-                        t.sample(), t.note()))
-                .toList();
+        List<TestCaseDto> testCaseDtoList =
+                suggestion.testCases() == null ? List.of()
+                        : suggestion.testCases().stream()
+                        .map(t -> new TestCaseDto(t.input(), t.expectedOutput(),
+                                t.sample(), t.note()))
+                        .toList();
 
         // push từng testcase vào submission
-        return newOnes.stream()
-                .map(tc -> {
+        return testCaseDtoList.stream()
+                .map(testCaseDto -> {
                     try {
                         return submissionClient.internalAddTestCase(
-                                in.exerciseId(), tc).getResult();
+                                        generateTestCasesPromptIn.exerciseId(),
+                                        testCaseDto)
+                                .getResult();
                     } catch (BadRequestException e) {
                         throw new RuntimeException(e);
                     }
@@ -367,11 +385,11 @@ public class ExerciseGenerationService {
 
 
     /* helpers */
-    private String nullToStr(Object o) {
-        return o == null ? "null" : String.valueOf(o);
+    private String nullToString(Object object) {
+        return object == null ? "null" : String.valueOf(object);
     }
 
-    private String safe(String s) {
+    private String safeCheckNullString(String s) {
         return s == null ? "" : s;
     }
 }

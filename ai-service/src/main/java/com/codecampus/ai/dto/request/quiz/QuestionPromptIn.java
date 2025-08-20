@@ -10,9 +10,9 @@ public record QuestionPromptIn(
         String title,
         String description,
         Difficulty difficulty,
-        int duration,
+        Integer duration,
         Set<String> tags,
         QuestionType questionType,
-        int points
+        Integer points
 ) {
 }

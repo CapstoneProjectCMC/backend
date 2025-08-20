@@ -13,9 +13,9 @@ public class UserProfileUpdateRequest {
     String lastName;
     String dob;
     String bio;
-    boolean gender;
+    Boolean gender;
     String displayName;
-    int education;
+    Integer education;
     String[] links;
     String city;
 }

@@ -44,7 +44,7 @@ public class ChatService {
     }
 
     /* Backward-compat: giữ endpoint cũ (1 thread / user) */
-    public String chat(com.codecampus.ai.dto.request.ChatRequest chatRequest) {
+    public String chat(ChatRequest chatRequest) {
         String defaultThreadId = AuthenticationHelper.getMyUserId(); // cũ
         return chat(defaultThreadId, chatRequest);
     }

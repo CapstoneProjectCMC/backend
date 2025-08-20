@@ -1,15 +1,15 @@
 package com.codecampus.search.controller;
 
 import com.codecampus.search.dto.common.ApiResponse;
+import com.codecampus.search.dto.common.PageResponse;
 import com.codecampus.search.dto.request.ExerciseSearchRequest;
-import com.codecampus.search.entity.ExerciseDocument;
+import com.codecampus.search.dto.response.ExerciseSearchResponse;
 import com.codecampus.search.service.ExerciseSearchService;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,8 +26,8 @@ public class ExerciseSearchController {
 
     ExerciseSearchService exerciseSearchService;
 
-    @GetMapping
-    ApiResponse<Page<ExerciseDocument>> search(
+    @GetMapping("/filter")
+    ApiResponse<PageResponse<ExerciseSearchResponse>> search(
             @RequestParam(required = false) String q,
             @RequestParam(required = false) Set<String> tags,
             @RequestParam(required = false) Integer difficulty,
@@ -48,7 +48,7 @@ public class ExerciseSearchController {
                 freeForOrg, minCost, maxCost, startAfter, endBefore,
                 allowAiQuestion, page, size);
 
-        return ApiResponse.<Page<ExerciseDocument>>builder()
+        return ApiResponse.<PageResponse<ExerciseSearchResponse>>builder()
                 .result(exerciseSearchService.searchExercise(request))
                 .message("Tìm kiếm thành công!")
                 .build();

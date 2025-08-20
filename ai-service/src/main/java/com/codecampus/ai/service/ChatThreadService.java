@@ -2,9 +2,14 @@ package com.codecampus.ai.service;
 
 import com.codecampus.ai.dto.response.chat.ThreadResponse;
 import com.codecampus.ai.entity.ChatThread;
+import com.codecampus.ai.exception.AppException;
+import com.codecampus.ai.exception.ErrorCode;
 import com.codecampus.ai.helper.AuthenticationHelper;
+import com.codecampus.ai.mapper.ChatThreadMapper;
 import com.codecampus.ai.repository.ChatThreadRepository;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.ai.chat.memory.repository.jdbc.JdbcChatMemoryRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,58 +19,71 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ChatThreadService {
 
-    private final ChatThreadRepository repo;
-    private final JdbcChatMemoryRepository memoryRepo;
+    ChatThreadRepository chatThreadRepository;
+    JdbcChatMemoryRepository jdbcChatMemoryRepository;
+    ChatThreadMapper chatThreadMapper;
 
     public List<ThreadResponse> myThreads() {
-        String uid = AuthenticationHelper.getMyUserId();
-        return repo.findByUserIdOrderByUpdatedAtDesc(uid).stream()
-                .map(t -> new ThreadResponse(
-                        t.getId(), t.getTitle(), t.getLastMessageAt(),
-                        t.getCreatedAt(), t.getUpdatedAt()))
+        String userId = AuthenticationHelper.getMyUserId();
+        return chatThreadRepository
+                .findByUserIdOrderByUpdatedAtDesc(userId)
+                .stream()
+                .map(chatThreadMapper::toThreadResponseFromChatThread)
                 .toList();
     }
 
     @Transactional
-    public ThreadResponse create(String title) {
-        String uid = AuthenticationHelper.getMyUserId();
-        ChatThread t = ChatThread.builder()
-                .userId(uid)
+    public ThreadResponse createThread(String title) {
+        String userId = AuthenticationHelper.getMyUserId();
+        ChatThread chatThread = ChatThread.builder()
+                .userId(userId)
                 .title((title == null || title.isBlank()) ?
                         "Cuộc trò chuyện mới" : title.trim())
                 .build();
-        repo.save(t);
-        return new ThreadResponse(t.getId(), t.getTitle(), t.getLastMessageAt(),
-                t.getCreatedAt(), t.getUpdatedAt());
+        chatThreadRepository.save(chatThread);
+
+        return chatThreadMapper.toThreadResponseFromChatThread(chatThread);
     }
 
     @Transactional
-    public ThreadResponse rename(String id, String title) {
-        String uid = AuthenticationHelper.getMyUserId();
-        ChatThread t = repo.findByIdAndUserId(id, uid).orElseThrow();
-        t.setTitle((title == null || title.isBlank()) ? t.getTitle() :
-                title.trim());
-        repo.save(t);
-        return new ThreadResponse(t.getId(), t.getTitle(), t.getLastMessageAt(),
-                t.getCreatedAt(), t.getUpdatedAt());
+    public ThreadResponse renameThread(
+            String id, String title) {
+        String userId = AuthenticationHelper.getMyUserId();
+        ChatThread chatThread = chatThreadRepository
+                .findByIdAndUserId(id, userId)
+                .orElseThrow(
+                        () -> new AppException(ErrorCode.CHAT_THREAD_NOT_FOUND)
+                );
+        chatThread.setTitle(
+                (title == null || title.isBlank()) ? chatThread.getTitle() :
+                        title.trim());
+        chatThreadRepository.save(chatThread);
+        return chatThreadMapper.toThreadResponseFromChatThread(chatThread);
     }
 
     @Transactional
-    public void touch(String id) {
-        String uid = AuthenticationHelper.getMyUserId();
-        ChatThread t = repo.findByIdAndUserId(id, uid).orElseThrow();
-        t.setLastMessageAt(Instant.now());
-        repo.save(t);
+    public void touchThread(String id) {
+        String userId = AuthenticationHelper.getMyUserId();
+        ChatThread chatThread = chatThreadRepository
+                .findByIdAndUserId(id, userId)
+                .orElseThrow(
+                        () -> new AppException(ErrorCode.CHAT_THREAD_NOT_FOUND)
+                );
+        chatThread.setLastMessageAt(Instant.now());
+        chatThreadRepository.save(chatThread);
     }
 
     @Transactional
     public void delete(String id) {
-        String uid = AuthenticationHelper.getMyUserId();
-        ChatThread t = repo.findByIdAndUserId(id, uid).orElseThrow();
-        // xoá lịch sử hội thoại trong JDBC memory theo conversationId = threadId
-        memoryRepo.deleteByConversationId(id);
-        repo.delete(t);
+        String userId = AuthenticationHelper.getMyUserId();
+        ChatThread chatThread = chatThreadRepository
+                .findByIdAndUserId(id, userId)
+                .orElseThrow();
+        // Xoá lịch sử hội thoại trong JDBC memory theo conversationId = threadId
+        jdbcChatMemoryRepository.deleteByConversationId(id);
+        chatThreadRepository.delete(chatThread);
     }
 }

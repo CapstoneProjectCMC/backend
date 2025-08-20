@@ -4,6 +4,6 @@ import com.codecampus.ai.dto.request.exercise.CreateExerciseRequest;
 
 public record QuizDetailPromptIn(
         CreateExerciseRequest createExerciseRequest,
-        int numQuestions
+        Integer numQuestions
 ) {
 }

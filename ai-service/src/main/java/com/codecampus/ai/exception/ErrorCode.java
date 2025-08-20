@@ -56,6 +56,9 @@ public enum ErrorCode {
             NOT_FOUND),
     EXERCISE_NOT_FOUND(4048005, NOT_FOUND_STATUS, "Không tìm thấy bài tập!",
             NOT_FOUND),
+    CHAT_THREAD_NOT_FOUND(4048006, NOT_FOUND_STATUS,
+            "Không tìm thấy đoạn chat!",
+            NOT_FOUND),
 
 
     // 409 - Conflict

@@ -1,4 +1,4 @@
-package com.codecampus.profile.dto.response;
+package com.codecampus.search.dto.response;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -11,9 +11,6 @@ import java.util.Set;
 @Data
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-// Mặc định cho phép response cả null khi Dev
-// Khi build thì KHÔNG response null
-//@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserProfileResponse {
     String userId;
 
@@ -24,7 +21,7 @@ public class UserProfileResponse {
 
     String firstName;
     String lastName;
-    String dob;
+    String dob; // string dd/MM/yyyy (UTC)
     String bio;
     Boolean gender;
     String displayName;
@@ -34,5 +31,4 @@ public class UserProfileResponse {
     String avatarUrl;
     String backgroundUrl;
     Instant createdAt;
-    Instant updatedAt;
 }

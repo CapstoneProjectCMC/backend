@@ -4,5 +4,5 @@ import com.codecampus.ai.dto.request.exercise.ExercisePromptIn;
 
 public record GenerateQuizPromptIn(
         ExercisePromptIn exercisePromptIn,
-        int numQuestions) {
+        Integer numQuestions) {
 }

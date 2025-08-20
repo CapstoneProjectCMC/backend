@@ -1,38 +1,44 @@
-package com.codecampus.profile.dto.response;
+package events.user.data;
 
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 import java.time.Instant;
 import java.util.Set;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-// Mặc định cho phép response cả null khi Dev
-// Khi build thì KHÔNG response null
-//@JsonInclude(JsonInclude.Include.NON_NULL)
-public class UserProfileResponse {
+public class UserProfilePayload {
     String userId;
 
+    // Identity snapshot (tiện cho search doc cập nhật đồng bộ)
     String username;
     String email;
     boolean active;
     Set<String> roles;
 
+    // Profile fields
     String firstName;
     String lastName;
-    String dob;
+    Instant dob;
     String bio;
     Boolean gender;
     String displayName;
-    int education;
+    Integer education;
     String[] links;
     String city;
     String avatarUrl;
     String backgroundUrl;
+
     Instant createdAt;
     Instant updatedAt;
+    Instant deletedAt;
+    String deletedBy;
 }

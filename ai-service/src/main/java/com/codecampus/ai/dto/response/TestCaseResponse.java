@@ -7,7 +7,7 @@ public record TestCaseResponse(
         String id,
         String input,
         String expectedOutput,
-        boolean sample,
+        Boolean sample,
         String note
 ) {
 }
