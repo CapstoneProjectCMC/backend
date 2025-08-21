@@ -1,7 +1,9 @@
 package com.codecampus.post.entity;
 
 import com.codecampus.post.entity.audit.AuditMetadata;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -56,6 +58,7 @@ public class Post extends AuditMetadata {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     List<PostReaction> reactions;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     List<PostAccess> accesses;
 }

@@ -11,8 +11,9 @@ import java.util.List;
 @NoArgsConstructor
 public class CommentResponseDto {
     private String commentId;
-    private String userId;
+    private String parentCommentId; // null nếu là comment gốc
     private String content;
     private List<CommentResponseDto> replies;
+    private ProfileResponseDto user;
 }
 
