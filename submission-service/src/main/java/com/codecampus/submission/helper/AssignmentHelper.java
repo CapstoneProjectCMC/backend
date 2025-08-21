@@ -48,6 +48,9 @@ public class AssignmentHelper {
             UserSummary studentSummary) {
 
         Score result = getScore(assignment, assignment.getStudentId());
+        Instant completedAt =
+                getCompletionTimeIfCompleted(assignment,
+                        assignment.getStudentId());
 
         return new AssignedStudentResponse(
                 assignment.getId(),
@@ -56,7 +59,8 @@ public class AssignmentHelper {
                 assignment.isCompleted(),
                 result.bestScore(),
                 result.totalPoints(),
-                result.exercise().getExerciseType()
+                result.exercise().getExerciseType(),
+                completedAt
         );
     }
 

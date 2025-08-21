@@ -31,7 +31,10 @@ services:
       - SUBMISSION_DATABASE=${SUBMISSION_DATABASE}
       - SUBMISSION_USERNAME=${SUBMISSION_USERNAME}
       - SUBMISSION_DB_PASSWORD=${SUBMISSION_DB_PASSWORD}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
     ports: [ "8083:8083", "9590:9590" ]
+    depends_on:
+      - profile-service
     networks: [ backend ]
 
   coding-service:
@@ -95,7 +98,11 @@ services:
       - SPRING_PROFILES_ACTIVE=docker
       - ELASTIC_USERNAME=${ELASTIC_USERNAME}
       - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
     ports: [ "8087:8087" ]
+    depends_on:
+      - profile-service
+      - submission-service
     networks: [ backend ]
 
   notification-service:
@@ -135,11 +142,12 @@ services:
       - AppSettings__MinioConfig__Port=9000
       - AppSettings__MinioConfig__AccessKey=${MINIO_ROOT_USER}
       - AppSettings__MinioConfig__SecretKey=${MINIO_ROOT_PASSWORD}
-      - AppSettings__MinioConfig__BucketName=codecampus2025
+      - AppSettings__MinioConfig__BucketName=programmingcontest2025
       - AppSettings__MinioConfig__Secure=false
       - AppSettings__Jwt__Key=uifhjcnsqbhwbAMKXjdt123gdritocet
       - AppSettings__Jwt__Issuer=http://localhost:38946
       - AppSettings__Jwt__Audience=http://localhost:38946
+      - AppSettings__MinioConfig__PublicBaseUrl=http://localhost:9000
     ports: [ "8082:8082" ]
     networks: [ backend ]
 
