@@ -9,6 +9,7 @@ using FileService.Service.ApiModels.TagModels;
 using FileService.Service.Dtos.FileDocumentDtos;
 using FileService.Service.Interfaces;
 using MongoDB.Driver;
+using System.Diagnostics;
 
 namespace FileService.Service.Implementation
 {
@@ -96,6 +97,69 @@ namespace FileService.Service.Implementation
             return result;
 
         }
+
+        public async Task<List<FileDocumentModel>> GetVideosAsync()
+        {
+            var files = await _fileDocumentRepository.FilterAsync(f => f.Category == FileCategory.Video && !f.IsDeleted);
+
+            var result = new List<FileDocumentModel>();
+
+            foreach (var file in files)
+            {
+                result.Add(await ToModelAsync(file));
+            }
+
+            return result;
+        }
+
+        public async Task<List<FileDocumentModel>> GetRegularFilesAsync()
+        {
+            var files = await _fileDocumentRepository.FilterAsync(f => f.Category == FileCategory.RegularFile && !f.IsDeleted);
+            var result = new List<FileDocumentModel>();
+
+            foreach (var file in files)
+            {
+                result.Add(await ToModelAsync(file));
+            }
+            return result;
+        }
+
+        private async Task<FileDocumentModel> ToModelAsync(FileDocument entity)
+        {
+            var tags = entity.TagIds.Any()
+                ? await _tagRepository.FilterAsync(Builders<Tags>.Filter.In(t => t.Id, entity.TagIds))
+                : new List<Tags>();
+
+            var tagDict = tags.ToDictionary(t => t.Id, t => new TagModel { Id = t.Id, Name = t.Label });
+
+            var publicUrl = await _minioService.GetPublicFileUrlAsync(entity.Url.TrimStart('/'));
+
+            return new FileDocumentModel
+            {
+                Id = entity.Id,
+                FileName = entity.FileName,
+                FileType = entity.FileType,
+                Url = publicUrl,
+                Size = entity.Size,
+                Checksum = entity.Checksum,
+                Category = entity.Category,
+                IsActive = entity.IsActive,
+                Tags = entity.TagIds.Select(id => tagDict.ContainsKey(id) ? tagDict[id] : new TagModel { Id = id, Name = "[Unknown]" }).ToList(),
+                ViewCount = entity.ViewCount,
+                Rating = entity.Rating,
+                Description = entity.Description,
+                OrgId = entity.OrgId,
+                ThumbnailUrl = entity.ThumbnailUrl,
+                HlsUrl = entity.HlsUrl,
+                Duration = entity.Duration,
+                IsLectureVideo = entity.IsLectureVideo,
+                IsTextbook = entity.IsTextbook,
+                TranscodingStatus = entity.TranscodingStatus,
+                AssociatedResourceIds = entity.AssociatedResourceIds
+            };
+        }
+
+
 
         public async Task<FileDocumentModel> GetFileDetailById(Guid id)
         {

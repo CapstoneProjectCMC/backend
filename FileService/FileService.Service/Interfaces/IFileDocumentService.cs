@@ -1,4 +1,5 @@
 ﻿using FileService.Core.ApiModels;
+using FileService.Core.Enums;
 using FileService.DataAccess.Models;
 using FileService.Service.ApiModels.FileDocumentModels;
 using FileService.Service.Dtos.FileDocumentDtos;
@@ -11,6 +12,10 @@ namespace FileService.Service.Interfaces
         Task<string> AddFileAsync(AddFileDocumentDto addFileDto);
         Task<FileDocumentModel> GetFileDetailById(Guid id);
         Task<EditFileDocumentResponseModel> EditFileDetailAsync(Guid id, EditFileDocumentDto editFileDto);
-        Task DeleteAsync(Guid id); 
+        Task DeleteAsync(Guid id);
+        //Task<List<FileDocument>> GetFilesByCategoryAsync(FileCategory category);
+        Task<List<FileDocumentModel>> GetVideosAsync();
+        Task<List<FileDocumentModel>> GetRegularFilesAsync();
+
     }
 }

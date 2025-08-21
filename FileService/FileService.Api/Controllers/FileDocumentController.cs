@@ -7,9 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FileService.Api.Controllers
 {
-   // [Authorize]
-   // [Authorize(Policy = "Permission")]
-   // [Authorize(Roles = "ADMIN")]
+    [Authorize]
+    [Authorize(Policy = "AdminOnly")]
+    // [Authorize(Policy = "Permission")]
+    // [Authorize(Roles = "ADMIN")]
     [Route("file/api/[controller]")]
     [ApiController]
     public class FileDocumentController : BaseApiController
@@ -28,6 +29,20 @@ namespace FileService.Api.Controllers
             var result = await _fileDocumentService.GetViewModelsAsync(pagingDto);
             var listResult = new PaginatedList<FileDocumentModel>(result.ToList(), result.Count(), pagingDto.PageIndex, pagingDto.PageSize);
             return Success(listResult);
+        }
+
+        [HttpGet("videos")]
+        public async Task<IActionResult> GetVideos()
+        {
+            var files = await _fileDocumentService.GetVideosAsync();
+            return Success(files);
+        }
+
+        [HttpGet("regular-files")]
+        public async Task<IActionResult> GetRegularFiles()
+        {
+            var files = await _fileDocumentService.GetRegularFilesAsync();
+            return Success(files);
         }
 
         [HttpGet("{id}")]
