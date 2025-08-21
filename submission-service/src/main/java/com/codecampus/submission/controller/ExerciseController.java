@@ -5,6 +5,7 @@ import com.codecampus.submission.dto.common.ApiResponse;
 import com.codecampus.submission.dto.common.PageResponse;
 import com.codecampus.submission.dto.request.CreateExerciseRequest;
 import com.codecampus.submission.dto.request.UpdateExerciseRequest;
+import com.codecampus.submission.dto.request.coding.CreateCodingExerciseRequest;
 import com.codecampus.submission.dto.request.quiz.CreateQuizExerciseRequest;
 import com.codecampus.submission.dto.response.coding.coding_detail.ExerciseCodingDetailResponse;
 import com.codecampus.submission.dto.response.quiz.ExerciseQuizResponse;
@@ -56,7 +57,17 @@ public class ExerciseController {
                 .build();
     }
 
+    @PostMapping("/exercise/coding")
+    ApiResponse<Void> createCodingExercise(
+            @RequestBody @Valid CreateCodingExerciseRequest request) {
 
+        exerciseService.createCodingExercise(request, false);
+
+        return ApiResponse.<Void>builder()
+                .message("Tạo bài tập coding thành công!")
+                .build();
+    }
+    
     @PatchMapping("/exercise/{id}")
     ApiResponse<Void> updateExercise(
             @PathVariable String id,

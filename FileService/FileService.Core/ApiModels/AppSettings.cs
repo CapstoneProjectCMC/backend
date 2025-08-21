@@ -21,7 +21,7 @@ namespace FileService.Core.ApiModels
     {
         public string Key { get; set; }
         public string Issuer { get; set; }
-      //  public string Audience { get; set; }
+        public string Audience { get; set; }
         public int AccessTokenExpiresTime { get; set; }
         public int RefreshTokenExpiresTime { get; set; }
     }
@@ -62,6 +62,7 @@ namespace FileService.Core.ApiModels
     public class MinioConfig
     {
         public string Endpoint { get; set; }
+        public string PublicEndpoint { get; set; }
         public int Port { get; set; }
         public string AccessKey { get; set; }
         public string SecretKey { get; set; }

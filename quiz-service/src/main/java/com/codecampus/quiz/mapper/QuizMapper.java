@@ -75,6 +75,7 @@ public interface QuizMapper {
         return LoadQuizResponse.newBuilder()
                 .setExercise(toQuizExerciseDtoFromQuizExercise(quiz))
                 .addAllQuestions(quiz.getQuestions().stream()
+                        .filter(q -> !q.isDeleted())
                         .map(this::toQuestionDtoLoadResponseFromQuestionHideCorrect)
                         .collect(toSet()))
                 .build();
@@ -93,6 +94,7 @@ public interface QuizMapper {
                         .setOrderInQuiz(question.getOrderInQuiz());
 
         question.getOptions().stream()
+                .filter(o -> !o.isDeleted())
                 .sorted(Comparator.comparing(Option::getOrder))
                 .forEach(
                         option -> builder.addOptions(

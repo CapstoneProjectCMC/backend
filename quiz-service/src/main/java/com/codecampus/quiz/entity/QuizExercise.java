@@ -56,6 +56,7 @@ public class QuizExercise extends AuditMetadata {
 
     public Optional<Question> findQuestionById(String questionId) {
         return questions.stream()
+                .filter(q -> !q.isDeleted())
                 .filter(q -> q.getId().equals(questionId))
                 .findFirst();
     }

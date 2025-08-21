@@ -6,6 +6,7 @@ import com.codecampus.submission.constant.submission.SubmissionStatus;
 import com.codecampus.submission.dto.common.PageResponse;
 import com.codecampus.submission.dto.request.CreateExerciseRequest;
 import com.codecampus.submission.dto.request.UpdateExerciseRequest;
+import com.codecampus.submission.dto.request.coding.CreateCodingExerciseRequest;
 import com.codecampus.submission.dto.request.quiz.CreateQuizExerciseRequest;
 import com.codecampus.submission.dto.response.coding.coding_detail.CodingDetailSliceDetailResponse;
 import com.codecampus.submission.dto.response.coding.coding_detail.ExerciseCodingDetailResponse;
@@ -70,6 +71,7 @@ public class ExerciseService {
     ContestService contestService;
     AssignmentService assignmentService;
     QuizService quizService;
+    CodingService codingService;
 
     GrpcQuizClient grpcQuizClient;
     GrpcCodingClient grpcCodingClient;
@@ -118,6 +120,29 @@ public class ExerciseService {
         quizService.addQuizDetail(
                 exercise.getId(),
                 request.addQuizDetailRequest(),
+                false);
+
+        if (returnExercise) {
+            return exercise;
+        }
+        return null;
+    }
+
+    /**
+     * Tạo CODING exercise + coding detail trong 1 call
+     */
+    @Transactional
+    public Exercise createCodingExercise(
+            CreateCodingExerciseRequest request,
+            boolean returnExercise) {
+        Exercise exercise = createExercise(
+                request.createExerciseRequest(), true);
+        exerciseRepository.saveAndFlush(exercise);
+
+        // đẩy coding detail
+        codingService.addCodingDetail(
+                exercise.getId(),
+                request.addCodingDetailRequest(),
                 false);
 
         if (returnExercise) {

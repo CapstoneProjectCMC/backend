@@ -89,7 +89,7 @@ namespace OrganizationService.Service.Implementation
         {
             var existingOrg = await _organizationRepository.FindAsync(o => o.Name.ToLower() == request.Name.ToLower());
             if (existingOrg != null)
-                throw new ErrorException(Core.Enums.StatusCodeEnum.A03, "Organization with this name already exists");
+                throw new ErrorException(Core.Enums.StatusCodeEnum.A02, "Organization with this name already exists");
 
 
             var entity = new Organization

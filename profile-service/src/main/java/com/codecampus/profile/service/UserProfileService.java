@@ -100,7 +100,7 @@ public class UserProfileService {
      */
     public UserProfileResponse getUserProfileById(String id) {
         return userProfileRepository
-                .findById(id)
+                .findByUserId(id)
                 .map(userProfileMapper::toUserProfileResponseFromUserProfile)
                 .orElseThrow(
                         () -> new AppException(ErrorCode.USER_NOT_FOUND)

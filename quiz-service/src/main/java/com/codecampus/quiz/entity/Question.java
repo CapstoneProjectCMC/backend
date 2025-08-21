@@ -66,7 +66,8 @@ public class Question extends AuditMetadata {
 
     public Optional<Option> findOptionById(String optionId) {
         return options.stream()
-                .filter(option -> option.getId().equals(optionId))
+                .filter(o -> !o.isDeleted())
+                .filter(o -> o.getId().equals(optionId))
                 .findFirst();
     }
 }

@@ -84,6 +84,7 @@ public class CodeJudgeService {
         final int memoryMbLimit = codingExercise.getMemoryLimit() > 0 ?
                 codingExercise.getMemoryLimit() : 256;
         final float cpusLimit = 0.5f;
+        final int compileMemoryMb = Math.max(memoryMbLimit, 512);
 
         int passedCount = 0;
         int peakMemoryKb = 0;
@@ -98,7 +99,9 @@ public class CodeJudgeService {
             bin = dockerSandboxService.compile(
                     request.getLanguage(),
                     request.getSourceCode(),
-                    workDir);
+                    workDir,
+                    compileMemoryMb,
+                    cpusLimit);
 
             for (TestCase testCase : codingExercise.getTestCases()) {
                 CodeResult codeResult = dockerSandboxService.runTest(

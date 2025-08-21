@@ -51,7 +51,8 @@ public class ExerciseSearchService {
         NativeQuery query = new NativeQueryBuilder()
                 .withQuery(
                         q -> q.bool(builder -> buildQuery(request, builder)))
-                .withPageable(PageRequest.of(request.page(), request.size()))
+                .withPageable(
+                        PageRequest.of(request.page() - 1, request.size()))
                 .withHighlightQuery(highlightQuery)
                 .build();
 

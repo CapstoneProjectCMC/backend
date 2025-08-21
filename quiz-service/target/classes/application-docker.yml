@@ -1,0 +1,25 @@
+server:
+  port: 8085
+  servlet:
+    context-path: /quiz
+
+grpc:
+  server:
+    port: 9591
+
+submission:
+  grpc:
+    host: submission-service
+    port: 9590
+
+spring:
+  datasource:
+    url: jdbc:postgresql://quiz-db:5432/${QUIZ_DATABASE}
+    username: ${QUIZ_USERNAME}
+    password: ${QUIZ_DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  data:
+    redis:
+      host: redis     # dịch vụ trong compose
+      port: 6379
+      password: ${REDIS_PASSWORD}
