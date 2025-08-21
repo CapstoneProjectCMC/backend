@@ -4,6 +4,9 @@ server:
     context-path: /ai
 
 spring:
+  web:
+    resources:
+      static-locations: classpath:/static/, file:/data/ai-uploads/
   datasource:
     url: jdbc:postgresql://ai-db:5432/${AI_DATABASE}
     username: ${AI_USERNAME}
@@ -13,3 +16,5 @@ spring:
 app:
   services:
     submission: http://submission-service:8083/submission
+  file:
+    upload-dir: /data/ai-uploads

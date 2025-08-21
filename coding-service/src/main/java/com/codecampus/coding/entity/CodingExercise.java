@@ -3,9 +3,13 @@ package com.codecampus.coding.entity;
 import com.codecampus.coding.entity.audit.AuditMetadata;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
@@ -19,6 +23,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -48,8 +53,13 @@ public class CodingExercise extends AuditMetadata {
     @Column(length = 100)
     String topic;
 
-    @Column(name = "allowed_languages", columnDefinition = "text[]")
-    Set<String> allowedLanguages;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(
+            name = "coding_exercise_allowed_language",
+            joinColumns = @JoinColumn(name = "coding_exercise_id"))
+    @Column(name = "languages", length = 50)
+    @Builder.Default
+    Set<String> allowedLanguages = new HashSet<>();
 
     @Column(columnDefinition = "text")
     String input;

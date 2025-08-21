@@ -36,6 +36,7 @@
         <lombok.mapstruct.binding.version>0.2.0</lombok.mapstruct.binding.version>
         <projectlombok-lombok.version>1.18.38</projectlombok-lombok.version>
         <elastic.search.version>9.0.3</elastic.search.version>
+        <redisson.version>3.50.0</redisson.version>
 
         <!-- Plugin versions -->
         <protobuf.plugin.version>0.6.1</protobuf.plugin.version> <!-- xolstice/protobuf -->
@@ -53,6 +54,10 @@
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
@@ -67,6 +72,10 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
         <!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.springframework/spring-core &ndash;&gt;-->
         <!--        <dependency>-->
@@ -87,6 +96,19 @@
             <groupId>com.codecampus</groupId>
             <artifactId>common-events</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codecampus</groupId>
+            <artifactId>common-dtos</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- ===== Redisson ===== -->
+        <!-- https://mvnrepository.com/artifact/org.redisson/redisson -->
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson</artifactId>
+            <version>${redisson.version}</version>
         </dependency>
 
         <!-- ========== Kafka ========= -->

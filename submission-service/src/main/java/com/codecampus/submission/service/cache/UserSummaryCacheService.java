@@ -18,11 +18,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
@@ -45,29 +40,6 @@ public class UserSummaryCacheService {
 
     public UserSummary get(String userId) {
         return redis.opsForValue().get(KEY_PREFIX + userId);
-    }
-
-    public Map<String, UserSummary> mapGet(Collection<String> userIds) {
-        if (userIds == null || userIds.isEmpty()) {
-            return Map.of();
-        }
-
-        List<String> keys = userIds.stream()
-                .map(id -> KEY_PREFIX + id).toList();
-        List<UserSummary> vals = redis.opsForValue().multiGet(keys);
-        Map<String, UserSummary> out = new HashMap<>();
-        int i = 0;
-        for (String id : userIds) {
-            UserSummary userSummary =
-                    (vals != null && i < Objects.requireNonNull(keys).size()) ?
-                            vals.get(i) : null;
-            if (userSummary != null) {
-                out.put(id, userSummary);
-            }
-            i++;
-        }
-        return out;
-
     }
 
     public void put(String userId, UserSummary userSummary) {

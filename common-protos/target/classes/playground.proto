@@ -36,7 +36,7 @@ message RunUpdate {
   string chunk = 2; // 1 dòng/1 mẩu log/1 block stdout
   int32  exit_code = 3; // set khi FINISHED/ERROR
   int32  runtime_ms = 4; // set khi FINISHED
-  int32  memory_kb = 5; // optional, nếu đo được
+  int32  memory_mb = 5; // optional, nếu đo được
   google.protobuf.Timestamp ts = 6;
 }
 

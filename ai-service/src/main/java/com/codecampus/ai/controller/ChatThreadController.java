@@ -4,9 +4,13 @@ import com.codecampus.ai.dto.common.ApiResponse;
 import com.codecampus.ai.dto.request.ChatRequest;
 import com.codecampus.ai.dto.request.chat.CreateThreadRequest;
 import com.codecampus.ai.dto.request.chat.RenameThreadRequest;
+import com.codecampus.ai.dto.response.StoredFile;
+import com.codecampus.ai.dto.response.chat.ThreadDetailResponse;
 import com.codecampus.ai.dto.response.chat.ThreadResponse;
+import com.codecampus.ai.service.ChatMessageService;
 import com.codecampus.ai.service.ChatService;
 import com.codecampus.ai.service.ChatThreadService;
+import com.codecampus.ai.service.FileStorageService;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
@@ -33,13 +37,24 @@ import java.util.List;
 @RequestMapping("/chat")
 public class ChatThreadController {
     ChatThreadService chatThreadService;
+    ChatMessageService chatMessageService;
     ChatService chatService;
+    FileStorageService fileStorageService;
 
     @GetMapping("/threads")
     ApiResponse<List<ThreadResponse>> myThreads() {
         return ApiResponse.<List<ThreadResponse>>builder()
                 .result(chatThreadService.myThreads())
                 .message("Danh sách threads của bạn")
+                .build();
+    }
+
+    @GetMapping("/thread/{id}")
+    ApiResponse<ThreadDetailResponse> getThread(
+            @PathVariable String id) {
+        return ApiResponse.<ThreadDetailResponse>builder()
+                .result(chatThreadService.getThread(id))
+                .message("Thông tin thread + lịch sử messages")
                 .build();
     }
 
@@ -77,7 +92,16 @@ public class ChatThreadController {
     ApiResponse<String> sendChat(
             @PathVariable String id,
             @RequestBody ChatRequest request) {
+        // Lưu message USER
+        chatMessageService.addUserMessage(id, request.message());
+
+        // Gọi AI
         String content = chatService.chat(id, request);
+
+        // Lưu message ASSISTANT
+        chatMessageService.addAssistantMessage(id, content);
+
+        // Cập nhật lastMessageAt
         chatThreadService.touchThread(id);
         return ApiResponse.<String>builder()
                 .result(content)
@@ -90,8 +114,33 @@ public class ChatThreadController {
             @PathVariable String id,
             @RequestParam("file") MultipartFile file,
             @RequestParam("message") String message) {
-        String content = chatService.chatWithImage(id, file, message);
+
+        // 1) Lưu file vật lý + tạo URL public
+        StoredFile stored = fileStorageService.store(file);
+
+        // 2) Lưu message USER + metadata ảnh (bao gồm imageUrl)
+        chatMessageService.addUserMessageWithImage(
+                id,
+                message,
+                stored.originalName(),
+                stored.contentType(),
+                stored.publicUrl()
+        );
+
+        // 3) Gọi AI với ảnh từ file đã lưu
+        String content = chatService.chatWithImage(
+                id,
+                stored.absolutePath(),
+                stored.contentType(),
+                message
+        );
+
+        // 4) Lưu message ASSISTANT
+        chatMessageService.addAssistantMessage(id, content);
+
+        // 5) Update lastMessageAt
         chatThreadService.touchThread(id);
+        
         return ApiResponse.<String>builder()
                 .result(content)
                 .message("Kết quả chat với AI (thread, có ảnh)")

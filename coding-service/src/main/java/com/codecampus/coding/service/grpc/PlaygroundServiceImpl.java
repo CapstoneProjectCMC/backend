@@ -247,9 +247,9 @@ public class PlaygroundServiceImpl
             long endTime = System.nanoTime();
 
             // Đo memory (bytes → KB) trước khi rm
-            int memoryKb = -1;
+            int memoryMbCal = -1;
             try {
-                memoryKb = readContainerMemKb(container);
+                memoryMbCal = readContainerMemMb(container);
             } catch (Exception e) {
                 log.warn("Read memory usage failed: {}", e.toString());
             }
@@ -272,7 +272,7 @@ public class PlaygroundServiceImpl
                     RunUpdate.Phase.FINISHED,
                     msg,
                     exit,
-                    (int) ((endTime - startTime) / 1_000_000), memoryKb);
+                    (int) ((endTime - startTime) / 1_000_000), memoryMbCal);
             streamObserver.onCompleted();
 
         } catch (Exception e) {
@@ -390,13 +390,13 @@ public class PlaygroundServiceImpl
             StreamObserver<RunUpdate> streamObserver,
             RunUpdate.Phase phase,
             String chunk,
-            int exit, int runtimeMs, int memoryKb) {
+            int exit, int runtimeMs, int memoryMb) {
         streamObserver.onNext(RunUpdate.newBuilder()
                 .setPhase(phase)
                 .setChunk(chunk == null ? "" : chunk)
                 .setExitCode(exit)
                 .setRuntimeMs(runtimeMs)
-                .setMemoryKb(memoryKb)
+                .setMemoryMb(memoryMb)
                 .setTs(Timestamp.newBuilder()
                         .setSeconds(Instant.now().getEpochSecond())
                         .setNanos(Instant.now().getNano())
@@ -405,7 +405,7 @@ public class PlaygroundServiceImpl
         );
     }
 
-    private int readContainerMemKb(String container)
+    private int readContainerMemMb(String container)
             throws IOException, InterruptedException {
         Process process = new ProcessBuilder(
                 DockerHelper.cmd("exec", container, "bash", "-c",
@@ -418,7 +418,7 @@ public class PlaygroundServiceImpl
         ).trim();
         process.waitFor(1, TimeUnit.SECONDS);
         long bytes = Long.parseLong(output);
-        return (int) (bytes / 1_024);
+        return (int) Math.ceil(bytes / (1024.0 * 1024.0));
     }
 
     private void safeComplete(

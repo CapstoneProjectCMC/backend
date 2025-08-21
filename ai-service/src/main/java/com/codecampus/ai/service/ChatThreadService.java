@@ -1,5 +1,7 @@
 package com.codecampus.ai.service;
 
+import com.codecampus.ai.dto.response.chat.MessageResponse;
+import com.codecampus.ai.dto.response.chat.ThreadDetailResponse;
 import com.codecampus.ai.dto.response.chat.ThreadResponse;
 import com.codecampus.ai.entity.ChatThread;
 import com.codecampus.ai.exception.AppException;
@@ -25,6 +27,7 @@ public class ChatThreadService {
     ChatThreadRepository chatThreadRepository;
     JdbcChatMemoryRepository jdbcChatMemoryRepository;
     ChatThreadMapper chatThreadMapper;
+    ChatMessageService chatMessageService;
 
     public List<ThreadResponse> myThreads() {
         String userId = AuthenticationHelper.getMyUserId();
@@ -33,6 +36,21 @@ public class ChatThreadService {
                 .stream()
                 .map(chatThreadMapper::toThreadResponseFromChatThread)
                 .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public ThreadDetailResponse getThread(
+            String id) {
+        String userId = AuthenticationHelper.getMyUserId();
+        ChatThread chatThread = chatThreadRepository
+                .findByIdAndUserId(id, userId)
+                .orElseThrow(() -> new AppException(
+                        ErrorCode.CHAT_THREAD_NOT_FOUND));
+
+        List<MessageResponse> messages = chatMessageService.listMessages(id);
+        return chatThreadMapper.toThreadDetailResponseFromChatThreadAndMessageResponseList(
+                chatThread,
+                messages);
     }
 
     @Transactional

@@ -8,6 +8,8 @@ import com.codecampus.search.dto.response.ExerciseSearchResponse;
 import com.codecampus.search.entity.ExerciseDocument;
 import com.codecampus.search.helper.SearchHelper;
 import com.codecampus.search.mapper.ExerciseMapper;
+import com.codecampus.search.service.cache.UserBulkLoader;
+import dtos.UserSummary;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -27,6 +29,9 @@ import org.springframework.data.elasticsearch.core.query.highlight.HighlightFiel
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -36,6 +41,7 @@ public class ExerciseSearchService {
 
     ElasticsearchOperations elasticsearchOperations;
     ExerciseMapper exerciseMapper;
+    UserBulkLoader userBulkLoader;
 
     public PageResponse<ExerciseSearchResponse> searchExercise(
             ExerciseSearchRequest request) {
@@ -68,16 +74,30 @@ public class ExerciseSearchService {
         // Nếu không muốn dùng SearchPage mà muốn dùng Page thì như này
         // var docPage = SearchHitSupport.unwrapSearchHits(page);
 
-        List<ExerciseSearchResponse> data =
-                page.getContent().stream()
-                        .map(SearchHit::getContent)
-                        .map(exerciseMapper::toExerciseSearchResponseFromExerciseDocument)
-                        .toList();
+        /* ==== Bulk load UserSummary ==== */
+        Set<String> userIds = page.getContent().stream()
+                .map(SearchHit::getContent)
+                .map(ExerciseDocument::getUserId)
+                .collect(Collectors.toSet());
+
+        Map<String, UserSummary> summaries = userBulkLoader.loadAll(userIds);
+
+        List<ExerciseSearchResponse> data = page.getContent().stream()
+                .map(SearchHit::getContent)
+                .map(doc -> {
+                    ExerciseSearchResponse base =
+                            exerciseMapper.toExerciseSearchResponseFromExerciseDocument(
+                                    doc);
+                    return base.toBuilder()
+                            .user(summaries.get(doc.getUserId()))
+                            .build();
+                })
+                .toList();
 
 //        return SearchHitSupport.searchPageFor(hits, query.getPageable())
 //                .map(SearchHit::getContent);
 
-        return PageResponse.<com.codecampus.search.dto.response.ExerciseSearchResponse>builder()
+        return PageResponse.<ExerciseSearchResponse>builder()
                 .currentPage(request.page())
                 .pageSize(page.getSize())
                 .totalPages(page.getTotalPages())

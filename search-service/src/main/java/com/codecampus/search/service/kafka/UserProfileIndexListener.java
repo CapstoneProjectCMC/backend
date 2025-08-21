@@ -3,6 +3,7 @@ package com.codecampus.search.service.kafka;
 import com.codecampus.search.entity.UserProfileDocument;
 import com.codecampus.search.mapper.UserProfileMapper;
 import com.codecampus.search.repository.UserProfileDocumentRepository;
+import com.codecampus.search.service.cache.UserSummaryCacheService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import events.user.UserEvent;
@@ -25,9 +26,12 @@ public class UserProfileIndexListener {
     UserProfileDocumentRepository userProfileDocumentRepository;
     ObjectMapper objectMapper;
     UserProfileMapper userProfileMapper;
+    UserSummaryCacheService userSummaryCacheService;
 
     /* 1) Tạo doc ban đầu khi user được register (identity đã publish) */
-    @KafkaListener(topics = "${app.event.user-registrations}", groupId = "search-service")
+    @KafkaListener(
+            topics = "${app.event.user-registrations}", groupId = "search-service"
+    )
     public void onUserRegistered(String raw) {
         try {
             UserRegisteredEvent evt =
@@ -42,13 +46,16 @@ public class UserProfileIndexListener {
     }
 
     /* 2) Đồng bộ các thay đổi từ identity (username/email/roles/active, soft delete/restore) */
-    @KafkaListener(topics = "${app.event.user-events}", groupId = "search-service")
+    @KafkaListener(
+            topics = "${app.event.user-events}",
+            groupId = "search-service"
+    )
     public void onUserEvent(String raw) {
         try {
             UserEvent evt = objectMapper.readValue(raw, UserEvent.class);
             switch (evt.getType()) {
                 case CREATED, UPDATED, RESTORED -> {
-                    var doc =
+                    UserProfileDocument doc =
                             userProfileDocumentRepository.findById(evt.getId())
                                     .orElseGet(
                                             () -> UserProfileDocument.builder()
@@ -64,13 +71,14 @@ public class UserProfileIndexListener {
                     }
                     userProfileDocumentRepository.save(doc);
                 }
-                case DELETED ->
-                        userProfileDocumentRepository.findById(evt.getId())
-                                .ifPresent(doc -> {
-                                    doc.setDeletedAt(Instant.now());
-                                    doc.setDeletedBy("identity-service");
-                                    userProfileDocumentRepository.save(doc);
-                                });
+                case DELETED -> {
+                    userProfileDocumentRepository.findById(evt.getId())
+                            .ifPresent(doc -> {
+                                doc.setDeletedAt(Instant.now());
+                                doc.setDeletedBy("identity-service");
+                                userProfileDocumentRepository.save(doc);
+                            });
+                }
             }
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
@@ -83,6 +91,7 @@ public class UserProfileIndexListener {
         try {
             UserProfileEvent evt =
                     objectMapper.readValue(raw, UserProfileEvent.class);
+            String userId = evt.getId();
             switch (evt.getType()) {
                 case UPDATED -> {
                     var doc =
@@ -95,6 +104,9 @@ public class UserProfileIndexListener {
                     userProfileMapper.updateUserProfilePayloadToUserProfileDocument(
                             evt.getPayload(), doc);
                     userProfileDocumentRepository.save(doc);
+
+                    // Làm mới cache ngay, tránh data stale
+                    userSummaryCacheService.refresh(userId);
                 }
                 case DELETED ->
                         userProfileDocumentRepository.findById(evt.getId())
@@ -103,13 +115,17 @@ public class UserProfileIndexListener {
                                     doc.setDeletedBy("profile-service");
                                     userProfileDocumentRepository.save(doc);
                                 });
-                case RESTORED ->
-                        userProfileDocumentRepository.findById(evt.getId())
-                                .ifPresent(doc -> {
-                                    doc.setDeletedAt(null);
-                                    doc.setDeletedBy(null);
-                                    userProfileDocumentRepository.save(doc);
-                                });
+                case RESTORED -> {
+                    userProfileDocumentRepository.findById(evt.getId())
+                            .ifPresent(doc -> {
+                                doc.setDeletedAt(null);
+                                doc.setDeletedBy(null);
+                                userProfileDocumentRepository.save(doc);
+                            });
+                    
+                    // User bị xoá mềm: xoá cache để tránh leak
+                    userSummaryCacheService.evictTwice(userId);
+                }
             }
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);

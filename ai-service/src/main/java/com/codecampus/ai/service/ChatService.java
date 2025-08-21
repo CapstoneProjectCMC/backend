@@ -1,7 +1,6 @@
 package com.codecampus.ai.service;
 
 import com.codecampus.ai.dto.request.ChatRequest;
-import com.codecampus.ai.helper.AuthenticationHelper;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
@@ -15,9 +14,9 @@ import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.prompt.ChatOptions;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.content.Media;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MimeTypeUtils;
-import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @Slf4j
@@ -43,17 +42,6 @@ public class ChatService {
                 .build();
     }
 
-    /* Backward-compat: giữ endpoint cũ (1 thread / user) */
-    public String chat(ChatRequest chatRequest) {
-        String defaultThreadId = AuthenticationHelper.getMyUserId(); // cũ
-        return chat(defaultThreadId, chatRequest);
-    }
-
-    public String chatWithImage(MultipartFile file, String message) {
-        String defaultThreadId = AuthenticationHelper.getMyUserId(); // cũ
-        return chatWithImage(defaultThreadId, file, message);
-    }
-
     public String chat(
             String threadId,
             ChatRequest chatRequest) {
@@ -76,12 +64,14 @@ public class ChatService {
 
     public String chatWithImage(
             String threadId,
-            MultipartFile file,
+            String absolutePath,
+            String contentType,
             String message) {
         Media media = Media.builder()
                 .mimeType(MimeTypeUtils.parseMimeType(
-                        file.getContentType()))
-                .data(file.getResource())
+                        contentType != null ? contentType :
+                                "application/octet-stream"))
+                .data(new FileSystemResource(absolutePath))
                 .build();
 
         return chatClient

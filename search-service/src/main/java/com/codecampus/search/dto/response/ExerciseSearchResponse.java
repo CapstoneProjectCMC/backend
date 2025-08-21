@@ -2,16 +2,17 @@ package com.codecampus.search.dto.response;
 
 import com.codecampus.search.constant.submission.Difficulty;
 import com.codecampus.search.constant.submission.ExerciseType;
+import dtos.UserSummary;
 import lombok.Builder;
 
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Set;
 
-@Builder
+@Builder(toBuilder = true)
 public record ExerciseSearchResponse(
         String id,
-        String userId,
+        UserSummary user,
         String title,
         String description,
         Difficulty difficulty,

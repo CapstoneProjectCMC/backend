@@ -82,7 +82,11 @@ services:
       - AI_USERNAME=${AI_USERNAME}
       - AI_DB_PASSWORD=${AI_DB_PASSWORD}
       - SPRING_AI_OPENAI_API_KEY=${OPENAI_API_KEY}
+      - APP_FILE_UPLOAD_DIR=/data/ai-uploads
+      - SPRING_WEB_RESOURCES_STATIC_LOCATIONS=file:/data/ai-uploads/,classpath:/static/
     ports: [ "8086:8086" ]
+    volumes:
+      - ai_uploads:/data/ai-uploads
     networks: [ backend ]
 
   search-service:
@@ -167,3 +171,4 @@ networks:
 
 volumes:
   runner_data:
+  ai_uploads:
