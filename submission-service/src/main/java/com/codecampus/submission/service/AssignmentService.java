@@ -116,7 +116,11 @@ public class AssignmentService {
             String exerciseId,
             String studentId) {
         assignmentRepository.findByExerciseIdAndStudentId(exerciseId, studentId)
-                .ifPresent(a -> a.setCompleted(true));
+                .ifPresent(a -> {
+                    a.setCompleted(true);
+                    // Đẩy trạng thái mới sang service con để đồng bộ (idempotent)
+                    pushAssignmentToChildService(a.getExercise(), a);
+                });
     }
 
 

@@ -190,9 +190,9 @@ public class DockerSandboxService {
             long endTime = System.nanoTime();
 
             // 3) đo memory trước khi rm
-            int memoryKb = 0;
+            int memoryMbCal = 0;
             try {
-                memoryKb = readContainerMemKb(container);
+                memoryMbCal = readContainerMemMb(container);
             } catch (Exception e) {
                 log.warn("Read memory usage failed: {}", e.toString());
             }
@@ -203,7 +203,7 @@ public class DockerSandboxService {
             return new CodeResult(
                     passed,
                     (int) ((endTime - startTime) / 1_000_000),
-                    memoryKb, out.trim(), err.trim());
+                    memoryMbCal, out.trim(), err.trim());
 
         } catch (Exception ex) {
             log.error("Sandbox error", ex);
@@ -230,7 +230,7 @@ public class DockerSandboxService {
         }
     }
 
-    int readContainerMemKb(String container)
+    int readContainerMemMb(String container)
             throws IOException, InterruptedException {
         Process process = new ProcessBuilder(
                 DockerHelper.cmd("exec", container, "bash", "-c",
@@ -241,7 +241,7 @@ public class DockerSandboxService {
                 StandardCharsets.UTF_8).trim();
         process.waitFor();
         long bytes = Long.parseLong(output);
-        return (int) (bytes / 1024);
+        return (int) Math.ceil(bytes / (1024.0 * 1024.0));
     }
 
     String read(InputStream inputStream)

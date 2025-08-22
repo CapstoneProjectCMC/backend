@@ -5,6 +5,7 @@ import com.codecampus.quiz.entity.audit.AuditMetadata;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -46,6 +47,8 @@ public class Question extends AuditMetadata {
     @JsonBackReference
     @ManyToOne
     QuizExercise quiz;
+
+    @Column(columnDefinition = "text")
     String text;
 
     @Enumerated(EnumType.ORDINAL)

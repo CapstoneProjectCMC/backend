@@ -32,11 +32,11 @@ public class UserProfileController {
     UserProfileService userProfileService;
     ProfileImageService profileImageService;
 
-    @GetMapping("/user/{profileId}")
-    ApiResponse<UserProfileResponse> getUserProfileById(
-            @PathVariable("profileId") String profileId) {
+    @GetMapping("/user/{userId}")
+    ApiResponse<UserProfileResponse> getUserProfileByUserId(
+            @PathVariable("userId") String userId) {
         return ApiResponse.<UserProfileResponse>builder()
-                .result(userProfileService.getUserProfileById(profileId))
+                .result(userProfileService.getUserProfileByUserId(userId))
                 .message("Get thành công profile!")
                 .build();
     }

@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public record OptionResponse(
         String id,
         String optionText,
-        boolean correct,
+        Boolean correct,
         String order
 ) {
 }

@@ -3,10 +3,13 @@ package com.codecampus.ai.repository.httpClient;
 import com.codecampus.ai.config.AuthenticationRequestInterceptor;
 import com.codecampus.ai.config.FeignConfig;
 import com.codecampus.ai.dto.common.ApiResponse;
-import com.codecampus.ai.dto.request.exercise.CreateQuizExerciseRequest;
-import com.codecampus.ai.dto.request.exercise.QuestionDto;
+import com.codecampus.ai.dto.request.coding.CreateCodingExerciseRequest;
+import com.codecampus.ai.dto.request.coding.TestCaseDto;
+import com.codecampus.ai.dto.request.quiz.CreateQuizExerciseRequest;
+import com.codecampus.ai.dto.request.quiz.QuestionDto;
 import com.codecampus.ai.dto.response.ExerciseResponse;
 import com.codecampus.ai.dto.response.QuestionResponse;
+import com.codecampus.ai.dto.response.TestCaseResponse;
 import org.apache.coyote.BadRequestException;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
@@ -61,4 +64,20 @@ public interface SubmissionClient {
 //    ApiResponse<OptionResponse> internalAddOption(
 //            @PathVariable String questionId,
 //            @RequestBody @Valid OptionDto request);
+
+    @PostMapping(
+            value = "/exercise/coding",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    ApiResponse<ExerciseResponse> internalCreateCodingExercise(
+            @RequestBody CreateCodingExerciseRequest request);
+
+    @PostMapping(
+            value = "/coding/{exerciseId}/test-case",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    ApiResponse<TestCaseResponse> internalAddTestCase(
+            @PathVariable("exerciseId") String exerciseId,
+            @RequestBody TestCaseDto testCaseDto)
+            throws BadRequestException;
 }

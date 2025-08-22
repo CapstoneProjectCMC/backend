@@ -106,15 +106,15 @@ private static final long serialVersionUID = 0L;
     return runtimeMs_;
   }
 
-  public static final int MEMORYKB_FIELD_NUMBER = 4;
-  private int memoryKb_ = 0;
+  public static final int MEMORYMB_FIELD_NUMBER = 4;
+  private int memoryMb_ = 0;
   /**
-   * <code>int32 memoryKb = 4;</code>
-   * @return The memoryKb.
+   * <code>int32 memoryMb = 4;</code>
+   * @return The memoryMb.
    */
   @java.lang.Override
-  public int getMemoryKb() {
-    return memoryKb_;
+  public int getMemoryMb() {
+    return memoryMb_;
   }
 
   public static final int OUTPUT_FIELD_NUMBER = 5;
@@ -218,8 +218,8 @@ private static final long serialVersionUID = 0L;
     if (runtimeMs_ != 0) {
       output.writeInt32(3, runtimeMs_);
     }
-    if (memoryKb_ != 0) {
-      output.writeInt32(4, memoryKb_);
+    if (memoryMb_ != 0) {
+      output.writeInt32(4, memoryMb_);
     }
     if (!com.google.protobuf.GeneratedMessage.isStringEmpty(output_)) {
       com.google.protobuf.GeneratedMessage.writeString(output, 5, output_);
@@ -247,9 +247,9 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeInt32Size(3, runtimeMs_);
     }
-    if (memoryKb_ != 0) {
+    if (memoryMb_ != 0) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(4, memoryKb_);
+        .computeInt32Size(4, memoryMb_);
     }
     if (!com.google.protobuf.GeneratedMessage.isStringEmpty(output_)) {
       size += com.google.protobuf.GeneratedMessage.computeStringSize(5, output_);
@@ -278,8 +278,8 @@ private static final long serialVersionUID = 0L;
         != other.getPassed()) return false;
     if (getRuntimeMs()
         != other.getRuntimeMs()) return false;
-    if (getMemoryKb()
-        != other.getMemoryKb()) return false;
+    if (getMemoryMb()
+        != other.getMemoryMb()) return false;
     if (!getOutput()
         .equals(other.getOutput())) return false;
     if (!getErrorMessage()
@@ -302,8 +302,8 @@ private static final long serialVersionUID = 0L;
         getPassed());
     hash = (37 * hash) + RUNTIMEMS_FIELD_NUMBER;
     hash = (53 * hash) + getRuntimeMs();
-    hash = (37 * hash) + MEMORYKB_FIELD_NUMBER;
-    hash = (53 * hash) + getMemoryKb();
+    hash = (37 * hash) + MEMORYMB_FIELD_NUMBER;
+    hash = (53 * hash) + getMemoryMb();
     hash = (37 * hash) + OUTPUT_FIELD_NUMBER;
     hash = (53 * hash) + getOutput().hashCode();
     hash = (37 * hash) + ERRORMESSAGE_FIELD_NUMBER;
@@ -442,7 +442,7 @@ private static final long serialVersionUID = 0L;
       testCaseId_ = "";
       passed_ = false;
       runtimeMs_ = 0;
-      memoryKb_ = 0;
+      memoryMb_ = 0;
       output_ = "";
       errorMessage_ = "";
       return this;
@@ -488,7 +488,7 @@ private static final long serialVersionUID = 0L;
         result.runtimeMs_ = runtimeMs_;
       }
       if (((from_bitField0_ & 0x00000008) != 0)) {
-        result.memoryKb_ = memoryKb_;
+        result.memoryMb_ = memoryMb_;
       }
       if (((from_bitField0_ & 0x00000010) != 0)) {
         result.output_ = output_;
@@ -521,8 +521,8 @@ private static final long serialVersionUID = 0L;
       if (other.getRuntimeMs() != 0) {
         setRuntimeMs(other.getRuntimeMs());
       }
-      if (other.getMemoryKb() != 0) {
-        setMemoryKb(other.getMemoryKb());
+      if (other.getMemoryMb() != 0) {
+        setMemoryMb(other.getMemoryMb());
       }
       if (!other.getOutput().isEmpty()) {
         output_ = other.output_;
@@ -576,7 +576,7 @@ private static final long serialVersionUID = 0L;
               break;
             } // case 24
             case 32: {
-              memoryKb_ = input.readInt32();
+              memoryMb_ = input.readInt32();
               bitField0_ |= 0x00000008;
               break;
             } // case 32
@@ -743,34 +743,34 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private int memoryKb_ ;
+    private int memoryMb_ ;
     /**
-     * <code>int32 memoryKb = 4;</code>
-     * @return The memoryKb.
+     * <code>int32 memoryMb = 4;</code>
+     * @return The memoryMb.
      */
     @java.lang.Override
-    public int getMemoryKb() {
-      return memoryKb_;
+    public int getMemoryMb() {
+      return memoryMb_;
     }
     /**
-     * <code>int32 memoryKb = 4;</code>
-     * @param value The memoryKb to set.
+     * <code>int32 memoryMb = 4;</code>
+     * @param value The memoryMb to set.
      * @return This builder for chaining.
      */
-    public Builder setMemoryKb(int value) {
+    public Builder setMemoryMb(int value) {
 
-      memoryKb_ = value;
+      memoryMb_ = value;
       bitField0_ |= 0x00000008;
       onChanged();
       return this;
     }
     /**
-     * <code>int32 memoryKb = 4;</code>
+     * <code>int32 memoryMb = 4;</code>
      * @return This builder for chaining.
      */
-    public Builder clearMemoryKb() {
+    public Builder clearMemoryMb() {
       bitField0_ = (bitField0_ & ~0x00000008);
-      memoryKb_ = 0;
+      memoryMb_ = 0;
       onChanged();
       return this;
     }

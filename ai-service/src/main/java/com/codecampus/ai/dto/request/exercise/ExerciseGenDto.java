@@ -8,7 +8,7 @@ public record ExerciseGenDto(
         String title,
         String description,
         Difficulty difficulty,
-        int duration,
+        Integer duration,
         Set<String> tags
 ) {
 }

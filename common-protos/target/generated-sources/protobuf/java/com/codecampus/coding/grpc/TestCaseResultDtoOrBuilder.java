@@ -34,10 +34,10 @@ public interface TestCaseResultDtoOrBuilder extends
   int getRuntimeMs();
 
   /**
-   * <code>int32 memoryKb = 4;</code>
-   * @return The memoryKb.
+   * <code>int32 memoryMb = 4;</code>
+   * @return The memoryMb.
    */
-  int getMemoryKb();
+  int getMemoryMb();
 
   /**
    * <code>string output = 5;</code>

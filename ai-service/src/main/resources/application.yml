@@ -4,6 +4,9 @@ server:
   #    port: 8006
   servlet:
     context-path: /ai
+  tomcat:
+    # Ngăn Tomcat chặn nuốt request lớn (giữ nguyên dữ liệu lớn)
+    max-swallow-size: -1
 #  ssl:
 #    enabled: true
 #    key-alias: ai-https
@@ -15,6 +18,14 @@ server:
 spring:
   application:
     name: ai-service
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+  web:
+    resources:
+      # Cho phép Spring Boot phục vụ cả classpath:/static/ và thư mục ngoài ./uploads/
+      static-locations: classpath:/static/, file:./uploads/
   datasource:
     url: jdbc:postgresql://localhost:5436/ai_db
     username: postgres_ai
@@ -30,7 +41,7 @@ spring:
   ai:
     openai:
       # Hard code để test
-      api-key: AIzaSyDeZ3rEpzrleMCvvwLK3xHnqXYyTdxVhFs
+      api-key: AIzaSyB70AASubd5jiecmWY5NFnfPaGwe0nauUk
       chat:
         base-url: https://generativelanguage.googleapis.com
         completions-path: /v1beta/openai/chat/completions
@@ -52,3 +63,7 @@ spring:
 app:
   services:
     submission: http://localhost:8083/submission
+  file:
+    upload-dir: ./uploads
+  public-base-url: http://localhost:8888/api/v1/ai
+

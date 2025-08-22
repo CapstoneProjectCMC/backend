@@ -8,7 +8,7 @@ import java.util.List;
 public record QuestionResponse(
         String id,
         String text,
-        int points,
+        Integer points,
         List<OptionResponse> options
 ) {
 }

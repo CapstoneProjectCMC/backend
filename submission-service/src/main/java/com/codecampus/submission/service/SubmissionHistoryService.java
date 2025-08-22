@@ -1,6 +1,7 @@
 package com.codecampus.submission.service;
 
 import com.codecampus.submission.dto.response.AllSubmissionHistoryResponse;
+import com.codecampus.submission.dto.response.coding.CodingAttemptHistoryResponse;
 import com.codecampus.submission.dto.response.quiz.QuizAttemptHistoryResponse;
 import com.codecampus.submission.entity.Submission;
 import com.codecampus.submission.helper.AuthenticationHelper;
@@ -24,7 +25,6 @@ import java.util.Optional;
 public class SubmissionHistoryService {
 
     SubmissionRepository submissionRepository;
-
     SubmissionMapper submissionMapper;
 
     @Transactional(readOnly = true)
@@ -41,6 +41,30 @@ public class SubmissionHistoryService {
                                 s.getTimeTakenSeconds()).orElse(
                                 Integer.MAX_VALUE)))
                 .map(submissionMapper::mapSubmissionToQuizAttemptHistoryResponse)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<CodingAttemptHistoryResponse> getCodingAttemptHistoriesForStudent() {
+        String studentId = AuthenticationHelper.getMyUserId();
+        List<Submission> list =
+                submissionRepository.findCodingSubmissionsByStudent(studentId);
+
+        return list.stream()
+                .sorted(
+                        Comparator
+                                .comparing(Submission::getScore,
+                                        Comparator.nullsFirst(
+                                                Integer::compareTo))
+                                .reversed()
+                                .thenComparing(s -> Optional.ofNullable(
+                                                s.getTimeTakenSeconds())
+                                        .orElse(Integer.MAX_VALUE))
+                                .thenComparing(Submission::getSubmittedAt,
+                                        Comparator.nullsLast(
+                                                Comparator.reverseOrder()))
+                )
+                .map(submissionMapper::mapSubmissionToCodingAttemptHistoryResponse)
                 .toList();
     }
 

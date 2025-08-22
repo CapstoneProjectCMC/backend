@@ -24,7 +24,7 @@ public class ExerciseEventListener {
     ObjectMapper objectMapper;
 
     @KafkaListener(
-            topics = "exercise-events",
+            topics = "${app.event.exercise-events}",
             groupId = "search-service")
     public void onMessageExercise(String raw) {
         try {

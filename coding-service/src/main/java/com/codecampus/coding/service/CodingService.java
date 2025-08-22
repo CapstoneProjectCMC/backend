@@ -97,7 +97,9 @@ public class CodingService {
                             testCaseDto, testCase);
                 });
 
-        codingExerciseRepository.save(coding);
+        codingExerciseRepository.saveAndFlush(coding);
+
+        loadCodingCacheService.refresh(coding.getId());
     }
 
     @Transactional
@@ -110,6 +112,8 @@ public class CodingService {
             tc.markDeleted(by);
         });
         codingExerciseRepository.save(codingExercise);
+
+        loadCodingCacheService.refresh(exerciseId);
     }
 
     @Transactional
@@ -132,6 +136,8 @@ public class CodingService {
         codingMapper.patchTestCaseDtoToTestCase(testCaseDto, testCase);
 
         codingExerciseRepository.save(coding);
+
+        loadCodingCacheService.refresh(addTestCaseRequest.getExerciseId());
     }
 
     @Transactional
@@ -144,6 +150,8 @@ public class CodingService {
         codingExercise.findTestCaseById(testCaseId).ifPresent(testCase -> {
             testCase.markDeleted(AuthenticationHelper.getMyUsername());
         });
+
+        loadCodingCacheService.refresh(exerciseId);
     }
 
     @Transactional(readOnly = true)

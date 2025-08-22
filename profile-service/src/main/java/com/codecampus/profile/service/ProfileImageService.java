@@ -6,6 +6,7 @@ import com.codecampus.profile.entity.UserProfile;
 import com.codecampus.profile.mapper.UserProfileMapper;
 import com.codecampus.profile.repository.UserProfileRepository;
 import com.codecampus.profile.repository.client.FileClient;
+import com.codecampus.profile.service.kafka.ProfileEventProducer;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -13,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.Instant;
 import java.util.List;
 
 @Service
@@ -25,6 +27,7 @@ public class ProfileImageService {
     UserProfileRepository userProfileRepository;
     UserProfileService userProfileService;
     UserProfileMapper userProfileMapper;
+    ProfileEventProducer profileEventProducer;
 
     public void uploadAvatar(MultipartFile file) {
         List<String> tags = List.of("avatar");
@@ -75,12 +78,16 @@ public class ProfileImageService {
     void setAvatarUrl(String url) {
         UserProfile userProfile = userProfileService.getUserProfile();
         userProfile.setAvatarUrl(url);
-        userProfileRepository.save(userProfile);
+        userProfile.setUpdatedAt(Instant.now());
+        userProfile = userProfileRepository.save(userProfile);
+        profileEventProducer.publishUpdated(userProfile);
     }
 
     void setBackgroundUrl(String url) {
         UserProfile userProfile = userProfileService.getUserProfile();
         userProfile.setBackgroundUrl(url);
-        userProfileRepository.save(userProfile);
+        userProfile.setUpdatedAt(Instant.now());
+        userProfile = userProfileRepository.save(userProfile);
+        profileEventProducer.publishUpdated(userProfile);
     }
 }

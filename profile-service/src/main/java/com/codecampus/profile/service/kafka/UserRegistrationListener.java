@@ -54,6 +54,9 @@ public class UserRegistrationListener {
         profile.setUsername(u.getUsername());
         profile.setEmail(u.getEmail());
         profile.setActive(u.isActive());
+        profile.setRoles(u.getRoles());
+        profile.setUpdatedAt(u.getUpdatedAt() != null ? u.getUpdatedAt() :
+                Instant.now());
 
         // fields profile chi tiết
         profile.setFirstName(p.getFirstName());

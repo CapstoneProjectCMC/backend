@@ -11,7 +11,7 @@ import lombok.experimental.FieldDefaults;
 public class CodeResult {
     boolean passed;
     int runtimeMs;
-    int memoryKb;
+    int memoryMb;
     String output;
     String error;
 }

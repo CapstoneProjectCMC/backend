@@ -329,19 +329,19 @@ private static final long serialVersionUID = 0L;
     return runtimeMs_;
   }
 
-  public static final int MEMORY_KB_FIELD_NUMBER = 5;
-  private int memoryKb_ = 0;
+  public static final int MEMORY_MB_FIELD_NUMBER = 5;
+  private int memoryMb_ = 0;
   /**
    * <pre>
    * optional, nếu đo được
    * </pre>
    *
-   * <code>int32 memory_kb = 5;</code>
-   * @return The memoryKb.
+   * <code>int32 memory_mb = 5;</code>
+   * @return The memoryMb.
    */
   @java.lang.Override
-  public int getMemoryKb() {
-    return memoryKb_;
+  public int getMemoryMb() {
+    return memoryMb_;
   }
 
   public static final int TS_FIELD_NUMBER = 6;
@@ -396,8 +396,8 @@ private static final long serialVersionUID = 0L;
     if (runtimeMs_ != 0) {
       output.writeInt32(4, runtimeMs_);
     }
-    if (memoryKb_ != 0) {
-      output.writeInt32(5, memoryKb_);
+    if (memoryMb_ != 0) {
+      output.writeInt32(5, memoryMb_);
     }
     if (((bitField0_ & 0x00000001) != 0)) {
       output.writeMessage(6, getTs());
@@ -426,9 +426,9 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeInt32Size(4, runtimeMs_);
     }
-    if (memoryKb_ != 0) {
+    if (memoryMb_ != 0) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(5, memoryKb_);
+        .computeInt32Size(5, memoryMb_);
     }
     if (((bitField0_ & 0x00000001) != 0)) {
       size += com.google.protobuf.CodedOutputStream
@@ -456,8 +456,8 @@ private static final long serialVersionUID = 0L;
         != other.getExitCode()) return false;
     if (getRuntimeMs()
         != other.getRuntimeMs()) return false;
-    if (getMemoryKb()
-        != other.getMemoryKb()) return false;
+    if (getMemoryMb()
+        != other.getMemoryMb()) return false;
     if (hasTs() != other.hasTs()) return false;
     if (hasTs()) {
       if (!getTs()
@@ -482,8 +482,8 @@ private static final long serialVersionUID = 0L;
     hash = (53 * hash) + getExitCode();
     hash = (37 * hash) + RUNTIME_MS_FIELD_NUMBER;
     hash = (53 * hash) + getRuntimeMs();
-    hash = (37 * hash) + MEMORY_KB_FIELD_NUMBER;
-    hash = (53 * hash) + getMemoryKb();
+    hash = (37 * hash) + MEMORY_MB_FIELD_NUMBER;
+    hash = (53 * hash) + getMemoryMb();
     if (hasTs()) {
       hash = (37 * hash) + TS_FIELD_NUMBER;
       hash = (53 * hash) + getTs().hashCode();
@@ -629,7 +629,7 @@ private static final long serialVersionUID = 0L;
       chunk_ = "";
       exitCode_ = 0;
       runtimeMs_ = 0;
-      memoryKb_ = 0;
+      memoryMb_ = 0;
       ts_ = null;
       if (tsBuilder_ != null) {
         tsBuilder_.dispose();
@@ -681,7 +681,7 @@ private static final long serialVersionUID = 0L;
         result.runtimeMs_ = runtimeMs_;
       }
       if (((from_bitField0_ & 0x00000010) != 0)) {
-        result.memoryKb_ = memoryKb_;
+        result.memoryMb_ = memoryMb_;
       }
       int to_bitField0_ = 0;
       if (((from_bitField0_ & 0x00000020) != 0)) {
@@ -719,8 +719,8 @@ private static final long serialVersionUID = 0L;
       if (other.getRuntimeMs() != 0) {
         setRuntimeMs(other.getRuntimeMs());
       }
-      if (other.getMemoryKb() != 0) {
-        setMemoryKb(other.getMemoryKb());
+      if (other.getMemoryMb() != 0) {
+        setMemoryMb(other.getMemoryMb());
       }
       if (other.hasTs()) {
         mergeTs(other.getTs());
@@ -772,7 +772,7 @@ private static final long serialVersionUID = 0L;
               break;
             } // case 32
             case 40: {
-              memoryKb_ = input.readInt32();
+              memoryMb_ = input.readInt32();
               bitField0_ |= 0x00000010;
               break;
             } // case 40
@@ -1033,31 +1033,31 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private int memoryKb_ ;
+    private int memoryMb_ ;
     /**
      * <pre>
      * optional, nếu đo được
      * </pre>
      *
-     * <code>int32 memory_kb = 5;</code>
-     * @return The memoryKb.
+     * <code>int32 memory_mb = 5;</code>
+     * @return The memoryMb.
      */
     @java.lang.Override
-    public int getMemoryKb() {
-      return memoryKb_;
+    public int getMemoryMb() {
+      return memoryMb_;
     }
     /**
      * <pre>
      * optional, nếu đo được
      * </pre>
      *
-     * <code>int32 memory_kb = 5;</code>
-     * @param value The memoryKb to set.
+     * <code>int32 memory_mb = 5;</code>
+     * @param value The memoryMb to set.
      * @return This builder for chaining.
      */
-    public Builder setMemoryKb(int value) {
+    public Builder setMemoryMb(int value) {
 
-      memoryKb_ = value;
+      memoryMb_ = value;
       bitField0_ |= 0x00000010;
       onChanged();
       return this;
@@ -1067,12 +1067,12 @@ private static final long serialVersionUID = 0L;
      * optional, nếu đo được
      * </pre>
      *
-     * <code>int32 memory_kb = 5;</code>
+     * <code>int32 memory_mb = 5;</code>
      * @return This builder for chaining.
      */
-    public Builder clearMemoryKb() {
+    public Builder clearMemoryMb() {
       bitField0_ = (bitField0_ & ~0x00000010);
-      memoryKb_ = 0;
+      memoryMb_ = 0;
       onChanged();
       return this;
     }

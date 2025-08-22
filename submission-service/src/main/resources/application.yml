@@ -62,3 +62,6 @@ spring:
 app:
   event:
     exercise-events: "exercise-events"
+    profile-events: "profile-events"
+  services:
+    profile: http://localhost:8081/profile
