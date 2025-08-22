@@ -65,3 +65,5 @@ app:
     submission: http://localhost:8083/submission
   file:
     upload-dir: ./uploads
+  public-base-url: http://localhost:8888/api/v1/ai
+

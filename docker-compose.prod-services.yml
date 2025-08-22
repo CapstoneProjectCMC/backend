@@ -87,6 +87,7 @@ services:
       - SPRING_AI_OPENAI_API_KEY=${OPENAI_API_KEY}
       - APP_FILE_UPLOAD_DIR=/data/ai-uploads
       - SPRING_WEB_RESOURCES_STATIC_LOCATIONS=file:/data/ai-uploads/,classpath:/static/
+      - APP_PUBLIC_BASE_URL=http://localhost:8888/api/v1/ai
     ports: [ "8086:8086" ]
     volumes:
       - ai_uploads:/data/ai-uploads

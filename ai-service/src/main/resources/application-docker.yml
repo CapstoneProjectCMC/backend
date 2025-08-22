@@ -18,3 +18,4 @@ app:
     submission: http://submission-service:8083/submission
   file:
     upload-dir: /data/ai-uploads
+  public-base-url: ${APP_PUBLIC_BASE_URL}
