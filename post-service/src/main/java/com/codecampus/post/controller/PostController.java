@@ -33,13 +33,13 @@ public class PostController {
                 .build());
     }
 
-//    @GetMapping("/getPostByIdIfAccessible/{postId}")
-//    public ResponseEntity<?> getPostByIdIfAccessible(@PathVariable("postId") String postId, HttpServletRequest request) {
-//        return ResponseEntity.ok(ApiResponse.builder()
-//                .message("Success")
-//                .result(postService.getPostByIdIfAccessible(postId, request))
-//                .build());
-//    }
+    @GetMapping("/getPostByIdIfAccessible/{postId}")
+    public ResponseEntity<?> getPostByIdIfAccessible(@PathVariable("postId") String postId, HttpServletRequest request) {
+        return ResponseEntity.ok(ApiResponse.builder()
+                .message("Success")
+                .result(postService.getPostByIdIfAccessible(postId, request))
+                .build());
+    }
 
     @PostMapping("/createPost")
     public ResponseEntity<?> createPost(

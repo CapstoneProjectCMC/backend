@@ -17,5 +17,5 @@ public class AddFileDocumentDto {
     private List<String> tags;
     private boolean isLectureVideo = false;
     private boolean isTextbook = false;
-    private UUID orgId;
+    private String orgId;
 }

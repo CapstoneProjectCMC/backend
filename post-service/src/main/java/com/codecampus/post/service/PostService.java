@@ -6,12 +6,15 @@ import com.codecampus.post.dto.common.PageRequestDto;
 import com.codecampus.post.dto.common.PageResponse;
 import com.codecampus.post.dto.request.PostRequestDto;
 import com.codecampus.post.dto.response.AddFileResponseDto;
+import com.codecampus.post.dto.response.PostResponseDto;
+import com.codecampus.post.dto.response.ProfileResponseDto;
 import com.codecampus.post.entity.Post;
 import com.codecampus.post.exception.AppException;
 import com.codecampus.post.exception.ErrorCode;
 import com.codecampus.post.mapper.PostMapper;
 import com.codecampus.post.repository.PostRepository;
 import com.codecampus.post.repository.httpClient.FileServiceClient;
+import com.codecampus.post.repository.httpClient.ProfileServiceClient;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -36,8 +39,9 @@ public class PostService {
     private final PostRepository postRepository;
     private final PostMapper postMapper;
     private final FileServiceClient fileServiceClient;
+    private final ProfileServiceClient profileServiceClient;
 
-    public PageResponse<Post> getAllAccessiblePosts(HttpServletRequest request,
+    public PageResponse<?> getAllAccessiblePosts(HttpServletRequest request,
                                                     PageRequestDto pageRequestDto) {
         String token = request.getHeader("Authorization");
         String userId = customJwtDecoder.decode(token.substring(7)).getClaims()
@@ -47,12 +51,36 @@ public class PostService {
         Page<Post> postPage =
                 postRepository.findAllVisiblePosts(userId, pageable);
 
-        return PageResponse.<Post>builder()
+        // Map Post -> PostResponseDto
+        List<PostResponseDto> postResponses = postPage.getContent().stream()
+                .map(post -> {
+                    ProfileResponseDto profile = profileServiceClient
+                            .getUserProfileById(post.getUserId()).getResult();
+
+                    return PostResponseDto.builder()
+                            .postId(post.getPostId())
+                            .userId(post.getUserId())
+                            .username(profile.getUsername())
+                            .avatarUrl(profile.getAvatarUrl())
+                            .orgId(post.getOrgId())
+                            .postType(post.getPostType())
+                            .title(post.getTitle())
+                            .content(post.getContent())
+                            .allowComment(post.getAllowComment())
+                            .hashtag(post.getHashtag())
+                            .status(post.getStatus())
+                            .accesses(post.getAccesses())
+                            .createdAt(post.getCreatedAt().toString())
+                            .build();
+                })
+                .toList();
+
+        return PageResponse.<PostResponseDto>builder()
                 .currentPage(postPage.getNumber())
                 .totalPages(postPage.getTotalPages())
                 .pageSize(postPage.getSize())
                 .totalElements(postPage.getTotalElements())
-                .data(postPage.getContent())
+                .data(postResponses)
                 .build();
     }
 
@@ -76,13 +104,38 @@ public class PostService {
                 .build();
     }
 
-//    public Optional<PostRequestDto> getPostByIdIfAccessible(String postId, HttpServletRequest request) {
-//        String token = request.getHeader("Authorization");
-//        String userId = customJwtDecoder.decode(token.substring(7)).getClaims().get("userId").toString();
-//        return postRepository.findAccessiblePostById(postId, userId)
-//                .filter(post -> !post.isDeleted())
-//                .map(postMapper::toDto);
-//    }
+    public PostResponseDto getPostByIdIfAccessible(String postId, HttpServletRequest request) {
+        String token = request.getHeader("Authorization");
+        String userId = customJwtDecoder.decode(token.substring(7))
+                .getClaims()
+                .get("userId").toString();
+
+        Optional<Post> optionalPost = postRepository.findById(postId);
+        if (optionalPost.isEmpty()) {
+            throw new AppException(ErrorCode.POST_NOT_FOUND);
+        }
+        if (optionalPost.get().getAccesses().contains(userId)) {
+            throw new AppException(ErrorCode.POST_NOT_AUTHORIZED);
+        }
+
+        ProfileResponseDto profile = profileServiceClient.getUserProfileById(optionalPost.get().getUserId()).getResult();
+
+        return PostResponseDto.builder()
+                .postId(optionalPost.get().getPostId())
+                .userId(optionalPost.get().getUserId())
+                .username(profile.getUsername())
+                .avatarUrl(profile.getAvatarUrl())
+                .orgId(optionalPost.get().getOrgId())
+                .postType(optionalPost.get().getPostType())
+                .title(optionalPost.get().getTitle())
+                .content(optionalPost.get().getContent())
+                .allowComment(optionalPost.get().getAllowComment())
+                .hashtag(optionalPost.get().getHashtag())
+                .status(optionalPost.get().getStatus())
+                .accesses(optionalPost.get().getAccesses())
+                .createdAt(optionalPost.get().getCreatedAt().toString())
+                .build();
+    }
 
     public void createPost(PostRequestDto postRequestDto,
                            HttpServletRequest request) {

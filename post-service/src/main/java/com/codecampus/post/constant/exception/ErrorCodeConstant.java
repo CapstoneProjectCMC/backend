@@ -17,4 +17,5 @@ public class ErrorCodeConstant {
     public static final String NOT_FOUND_STATUS = NOT_FOUND.toString();
     public static final String CONFLICT_STATUS = CONFLICT.toString();
     public static final String AUTHOR_STATUS = AUTHOR.toString();
+    public static final String NOT_ACCEPTABLE_STATUS = NOT_ACCEPTABLE.toString();
 }

@@ -1,6 +1,7 @@
 package com.codecampus.post.entity;
 
 import com.codecampus.post.entity.audit.AuditMetadata;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -36,6 +37,7 @@ public class PostAccess extends AuditMetadata {
     @GeneratedValue(strategy = GenerationType.UUID)
     String postAccessId;
 
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", nullable = false)
     Post post;

@@ -112,7 +112,7 @@ services:
       - POSTGRESQL_DATABASE=${POST_DATABASE}
       - POSTGRESQL_POSTGRES_PASSWORD=${POST_DB_PASSWORD}
     ports:
-      - "5437:5432"
+      - "5439:5432"
     volumes:
       - post_pg_data:/bitnami/postgresql
     healthcheck:

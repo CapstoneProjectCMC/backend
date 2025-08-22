@@ -4,10 +4,12 @@ import com.codecampus.post.config.CustomJwtDecoder;
 import com.codecampus.post.dto.request.CommentRequestDto;
 import com.codecampus.post.dto.request.UpdateCommentDto;
 import com.codecampus.post.dto.response.CommentResponseDto;
+import com.codecampus.post.dto.response.ProfileResponseDto;
 import com.codecampus.post.entity.Post;
 import com.codecampus.post.entity.PostComment;
 import com.codecampus.post.repository.PostCommentRepository;
 import com.codecampus.post.repository.PostRepository;
+import com.codecampus.post.repository.httpClient.ProfileServiceClient;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,7 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class PostCommentService {
 
+    private final ProfileServiceClient profileServiceClient;
     private final PostCommentRepository postCommentRepository;
     private final PostRepository postRepository;
     private final CustomJwtDecoder customJwtDecoder;
@@ -64,31 +67,31 @@ public class PostCommentService {
         List<CommentResponseDto> replyDtos;
 
         if (depth < 2) {
-            // cấp 1 -> cho phép lấy reply
             replyDtos = comment.getReplies() != null
                     ? comment.getReplies().stream()
                     .filter(r -> !r.isDeleted())
                     .flatMap(r -> {
                         if (depth + 1 < 2) {
-                            // vẫn còn trong giới hạn, tiếp tục đệ quy
                             return Stream.of(mapWithLimitDepth(r, depth + 1));
                         } else {
-                            // cấp 2 rồi, gom hết con/cháu thành cấp 2 luôn
                             return flattenReplies(r).stream();
                         }
                     })
                     .toList()
                     : List.of();
         } else {
-            // depth >= 2 thì không bao giờ xảy ra vì ta dừng ở depth=1 rồi flatten
             replyDtos = List.of();
         }
 
+        // Gọi profile service để lấy thông tin user
+        ProfileResponseDto userProfile = profileServiceClient.getUserProfileById(comment.getUserId()).getResult();
+
         return new CommentResponseDto(
                 comment.getCommentId(),
-                comment.getUserId(),
+                comment.getParentComment() != null ? comment.getParentComment().getCommentId() : null,
                 comment.getContent(),
-                replyDtos
+                replyDtos,
+                userProfile
         );
     }
 
@@ -99,27 +102,25 @@ public class PostCommentService {
         List<CommentResponseDto> flatList = new ArrayList<>();
 
         if (!comment.isDeleted()) {
+            ProfileResponseDto userProfile = profileServiceClient.getUserProfileById(comment.getUserId()).getResult();
+
             flatList.add(new CommentResponseDto(
                     comment.getCommentId(),
-                    comment.getUserId(),
+                    comment.getParentComment() != null ? comment.getParentComment().getCommentId() : null,
                     comment.getContent(),
-                    List.of() // ép thành cấp 2 -> không còn replies
+                    List.of(),
+                    userProfile
             ));
         }
 
         if (comment.getReplies() != null) {
             for (PostComment child : comment.getReplies()) {
-                flatList.addAll(flattenReplies(child)); // đệ quy gom vào 1 list
+                flatList.addAll(flattenReplies(child));
             }
         }
 
         return flatList;
     }
-
-
-
-
-
 
     @Transactional
     public void updateComment(UpdateCommentDto requestDto, HttpServletRequest request) {
