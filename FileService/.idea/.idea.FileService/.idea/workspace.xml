@@ -13,32 +13,32 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b5542390-86ea-4e7c-8261-890d4e9fdf28" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../.idea/dictionaries/project.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../coding-service/src/main/java/com/codecampus/coding/controller/CodeController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../coding-service/src/main/java/com/codecampus/coding/dto/response/CompiledArtifact.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../coding-service/src/main/java/com/codecampus/coding/dto/response/SubmitCodeResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../submission-service/src/main/java/com/codecampus/submission/helper/CodingHelper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../OrganizationService/OrganizationService.Core/Constants/KafkaOptions.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../OrganizationService/OrganizationService.Service/ApiModels/OrganizationMember/AddMemberRequest.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../OrganizationService/OrganizationService.Service/Dtos/OrganizationMember/PrimaryOrgDto.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../OrganizationService/OrganizationService.Service/Implementation/OrgEventPublisher.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../OrganizationService/OrganizationService.Service/Implementation/OrgMemberEventPublisher.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../OrganizationService/OrganizationService.Service/Interfaces/IOrgEventPublisher.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../OrganizationService/OrganizationService.Service/Interfaces/IOrgMemberEventPublisher.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.FileService/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.FileService/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../build-service.sh" beforeDir="false" afterPath="$PROJECT_DIR$/../build-service.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../coding-service/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/../coding-service/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../coding-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../coding-service/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../coding-service/src/main/java/com/codecampus/coding/controller/CodeControler.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../coding-service/src/main/java/com/codecampus/coding/dto/request/SubmissionRequestDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/../coding-service/src/main/java/com/codecampus/coding/dto/request/SubmissionRequestDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../coding-service/src/main/java/com/codecampus/coding/dto/response/SubmissionResponseDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/../coding-service/src/main/java/com/codecampus/coding/dto/response/SubmissionResponseDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../coding-service/src/main/java/com/codecampus/coding/dto/response/SubmissionTestCaseResultDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/../coding-service/src/main/java/com/codecampus/coding/dto/response/SubmissionTestCaseResultDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../coding-service/src/main/java/com/codecampus/coding/entity/CodingExercise.java" beforeDir="false" afterPath="$PROJECT_DIR$/../coding-service/src/main/java/com/codecampus/coding/entity/CodingExercise.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../coding-service/src/main/java/com/codecampus/coding/mapper/CodingMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/../coding-service/src/main/java/com/codecampus/coding/mapper/CodingMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../coding-service/src/main/java/com/codecampus/coding/mapper/SubmissionMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/../coding-service/src/main/java/com/codecampus/coding/mapper/SubmissionMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../coding-service/src/main/java/com/codecampus/coding/service/CodeJudgeService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../coding-service/src/main/java/com/codecampus/coding/service/CodeJudgeService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../coding-service/src/main/java/com/codecampus/coding/service/DockerSandboxService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../coding-service/src/main/java/com/codecampus/coding/service/DockerSandboxService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../coding-service/src/main/java/com/codecampus/coding/service/grpc/CodingPlayServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/../coding-service/src/main/java/com/codecampus/coding/service/grpc/CodingPlayServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../coding-service/src/main/java/com/codecampus/coding/service/grpc/CodingSyncServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/../coding-service/src/main/java/com/codecampus/coding/service/grpc/CodingSyncServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../common-protos/src/main/proto/coding.proto" beforeDir="false" afterPath="$PROJECT_DIR$/../common-protos/src/main/proto/coding.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../common-protos/src/main/proto/submission_sync.proto" beforeDir="false" afterPath="$PROJECT_DIR$/../common-protos/src/main/proto/submission_sync.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../common-protos/target/classes/submission_sync.proto" beforeDir="false" afterPath="$PROJECT_DIR$/../common-protos/target/classes/submission_sync.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../common-protos/target/generated-sources/protobuf/java/com/codecampus/submission/grpc/CodeSubmissionDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/../common-protos/target/generated-sources/protobuf/java/com/codecampus/submission/grpc/CodeSubmissionDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../common-protos/target/generated-sources/protobuf/java/com/codecampus/submission/grpc/CodeSubmissionDtoOrBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/../common-protos/target/generated-sources/protobuf/java/com/codecampus/submission/grpc/CodeSubmissionDtoOrBuilder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../submission-service/src/main/java/com/codecampus/submission/controller/CodingController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../submission-service/src/main/java/com/codecampus/submission/controller/CodingController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FileService.Api/appsettings.Staging.json" beforeDir="false" afterPath="$PROJECT_DIR$/FileService.Api/appsettings.Staging.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../OrganizationService/OrganizationService.Api/Controllers/OrganizationMemberController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../OrganizationService/OrganizationService.Api/Controllers/OrganizationMemberController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../OrganizationService/OrganizationService.Api/OrganizationService.Api.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../OrganizationService/OrganizationService.Api/OrganizationService.Api.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../OrganizationService/OrganizationService.Api/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../OrganizationService/OrganizationService.Api/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../OrganizationService/OrganizationService.Api/appsettings.Development.json" beforeDir="false" afterPath="$PROJECT_DIR$/../OrganizationService/OrganizationService.Api/appsettings.Development.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../OrganizationService/OrganizationService.Api/appsettings.Staging.json" beforeDir="false" afterPath="$PROJECT_DIR$/../OrganizationService/OrganizationService.Api/appsettings.Staging.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../OrganizationService/OrganizationService.Api/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/../OrganizationService/OrganizationService.Api/appsettings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../OrganizationService/OrganizationService.Core/OrganizationService.Core.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../OrganizationService/OrganizationService.Core/OrganizationService.Core.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../OrganizationService/OrganizationService.DataAccess/OrganizationService.DataAccess.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../OrganizationService/OrganizationService.DataAccess/OrganizationService.DataAccess.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../OrganizationService/OrganizationService.Service/Implementation/ClassService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../OrganizationService/OrganizationService.Service/Implementation/ClassService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../OrganizationService/OrganizationService.Service/Implementation/GradeService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../OrganizationService/OrganizationService.Service/Implementation/GradeService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../OrganizationService/OrganizationService.Service/Implementation/OrganizationMemberService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../OrganizationService/OrganizationService.Service/Implementation/OrganizationMemberService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../OrganizationService/OrganizationService.Service/Implementation/OrganizationService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../OrganizationService/OrganizationService.Service/Implementation/OrganizationService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../OrganizationService/OrganizationService.Service/Interfaces/IOrganizationMemberService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../OrganizationService/OrganizationService.Service/Interfaces/IOrganizationMemberService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../OrganizationService/OrganizationService.Service/OrganizationService.Service.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../OrganizationService/OrganizationService.Service/OrganizationService.Service.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../build-image.sh" beforeDir="false" afterPath="$PROJECT_DIR$/../build-image.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../docker-compose.prod-services.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../docker-compose.prod-services.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../profile-service/src/main/java/com/codecampus/profile/repository/client/OrganizationClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/../profile-service/src/main/java/com/codecampus/profile/repository/client/OrganizationClient.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -205,6 +205,9 @@
       <workItem from="1754312416247" duration="3816000" />
       <workItem from="1754381621192" duration="4223000" />
       <workItem from="1754487966744" duration="508000" />
+      <workItem from="1755941810793" duration="2669000" />
+      <workItem from="1755945729996" duration="127000" />
+      <workItem from="1755945872388" duration="635000" />
     </task>
     <servers />
   </component>

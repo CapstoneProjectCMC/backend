@@ -14,7 +14,7 @@ import java.util.List;
 
 @FeignClient(
         name = "organization-service",
-        url = "${app.services.org}",
+        url = "${app.services.organization}",
         configuration = {AuthenticationRequestInterceptor.class},
         path = "/api/OrganizationMember"
 )

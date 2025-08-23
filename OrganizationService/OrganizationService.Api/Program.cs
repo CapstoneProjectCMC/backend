@@ -1,6 +1,5 @@
 ﻿
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -14,9 +13,10 @@ using OrganizationService.DataAccess.Interfaces;
 using OrganizationService.Service.Implementation;
 using OrganizationService.Service.Interfaces;
 using System.Data;
-using System.Security.Claims;
 using System.Text;
 using System.Text.Json.Serialization;
+using Confluent.Kafka;
+using OrganizationService.Core.Constants;
 
 var builder = WebApplication.CreateBuilder(args);
 //builder.Logging.AddAzureWebAppDiagnostics();
@@ -45,6 +45,8 @@ builder.Services.AddScoped<IClassService, ClassService>();
 builder.Services.AddScoped<IGradeService, GradeService>();
 builder.Services.AddScoped<IOrganizationService, OrganizationService.Service.Implementation.OrganizationService>();
 builder.Services.AddScoped<IOrganizationMemberService, OrganizationMemberService>();
+builder.Services.AddScoped<IOrgEventPublisher, OrgEventPublisher>();
+builder.Services.AddScoped<IOrgMemberEventPublisher, OrgMemberEventPublisher>();
 
 
 builder.Services.Configure<IdentityOptions>(options =>
@@ -57,7 +59,6 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Password.RequiredUniqueChars = 1;
 });
 
-
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -67,15 +68,12 @@ builder.Services.AddAuthentication(options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
     {
-        ValidateIssuer = false,
-        ValidateAudience = false,
-        ValidateLifetime = false,
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
         ValidIssuer = appSettings.Jwt.Issuer,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(appSettings.Jwt.Key)),
-
-        RoleClaimType = ClaimTypes.Role,
-        NameClaimType = ClaimTypes.NameIdentifier
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(appSettings.Jwt.Key))
     };
 });
 
@@ -149,8 +147,17 @@ builder.Services.AddSwaggerGen(c =>
 builder.WebHost.ConfigureKestrel(options =>
 {
     options.Limits.MaxRequestBodySize = 6L * 1024 * 1024 * 1024; // 6GB
+        BootstrapServers = cfg.BootstrapServers,
+        Acks = Acks.All,
+        EnableIdempotence = true,
+        LingerMs = 5,
+        BatchSize = 32 * 1024
+    }).Build();
 });
 
+builder.Services.AddSingleton<KafkaOptions>(builder.Configuration.GetSection("Kafka").Get<KafkaOptions>() ?? new());
+builder.Services.AddScoped<IOrgEventPublisher, OrgEventPublisher>();
+builder.Services.AddScoped<IOrgMemberEventPublisher, OrgMemberEventPublisher>();
 
 var app = builder.Build();
 
@@ -162,6 +169,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UsePathBase("/org");
 
 app.UseCors(MyAllowSpecificOrigins);
 
