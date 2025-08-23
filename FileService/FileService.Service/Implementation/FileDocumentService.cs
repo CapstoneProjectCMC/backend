@@ -104,12 +104,15 @@ namespace FileService.Service.Implementation
 
             var result = new List<FileDocumentModel>();
 
-            foreach (var file in files)
-            {
-                result.Add(await ToModelAsync(file));
-            }
+            //foreach (var file in files)
+            //{
+            //    result.Add(await ToModelAsync(file));
+            //}
 
-            return result;
+            //return result;
+            //Cách 2 truy xuất nhanh hơn
+            var tasks = files.Select(file => ToModelAsync(file));
+            return (await Task.WhenAll(tasks)).ToList();
         }
 
         public async Task<List<FileDocumentModel>> GetRegularFilesAsync()
@@ -117,11 +120,14 @@ namespace FileService.Service.Implementation
             var files = await _fileDocumentRepository.FilterAsync(f => f.Category == FileCategory.RegularFile && !f.IsDeleted);
             var result = new List<FileDocumentModel>();
 
-            foreach (var file in files)
-            {
-                result.Add(await ToModelAsync(file));
-            }
-            return result;
+            //foreach (var file in files)
+            //{
+            //    result.Add(await ToModelAsync(file));
+            //}
+            //return result;
+            // Cách 2 truy xuất nhanh hơn
+            var tasks = files.Select(file => ToModelAsync(file));
+            return (await Task.WhenAll(tasks)).ToList();
         }
 
         private async Task<FileDocumentModel> ToModelAsync(FileDocument entity)
@@ -158,8 +164,6 @@ namespace FileService.Service.Implementation
                 AssociatedResourceIds = entity.AssociatedResourceIds
             };
         }
-
-
 
         public async Task<FileDocumentModel> GetFileDetailById(Guid id)
         {
@@ -446,7 +450,9 @@ namespace FileService.Service.Implementation
                 ViewCount = file.ViewCount,
                 Rating = file.Rating,
                 Duration = file.Duration,
-                HlsUrl = file.HlsUrl
+                HlsUrl = file.HlsUrl,
+                UpdatedAt = file.UpdatedAt,
+                UpdatedBy = file.UpdatedBy
             };
         }
 

@@ -51,5 +51,7 @@ namespace FileService.Service.ApiModels.FileDocumentModels
 
         // field dùng để phân loại theo tổ chức hoặc trường học, nếu là video bài giảng hoặc giáo trình
         public Guid? OrgId { get; set; }
+        public DateTime? UpdatedAt { get; set; } = DateTime.UtcNow;
+        public Guid? UpdatedBy { get; set; }
     }
 }

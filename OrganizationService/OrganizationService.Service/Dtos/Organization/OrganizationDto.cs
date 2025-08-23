@@ -1,4 +1,5 @@
-﻿using OrganizationService.Core.Constants;
+﻿using Microsoft.AspNetCore.Http;
+using OrganizationService.Core.Constants;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,7 @@ namespace OrganizationService.Service.Dtos.Organization
         public string? Address { get; set; }
         public string? Email { get; set; }
         public string? Phone { get; set; }
-        public Guid? Logo { get; set; }
+       // public Guid? Logo { get; set; }
         public string? LogoUrl { get; set; }
         public OrganizationStatus Status { get; set; }
     }

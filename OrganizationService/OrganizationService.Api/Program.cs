@@ -20,6 +20,7 @@ using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 //builder.Logging.AddAzureWebAppDiagnostics();
+//builder.Services.AddTransient<GrpcClient>(); // Add gRPC client service
 
 var config = builder.Configuration;
 
@@ -45,6 +46,35 @@ builder.Services.AddScoped<IClassService, ClassService>();
 builder.Services.AddScoped<IGradeService, GradeService>();
 builder.Services.AddScoped<IOrganizationService, OrganizationService.Service.Implementation.OrganizationService>();
 builder.Services.AddScoped<IOrganizationMemberService, OrganizationMemberService>();
+
+
+// Cấu hình HttpClient và FileServiceClient
+builder.Services.AddHttpClient("FileService", client =>
+{
+    var baseUrl = builder.Configuration["FileService:BaseUrl"];
+    if (string.IsNullOrEmpty(baseUrl))
+    {
+        throw new InvalidOperationException("FileService:BaseUrl is not configured in appsettings.json");
+    }
+    client.BaseAddress = new Uri(baseUrl);
+});
+
+// Đăng ký FileServiceClient với factory để cung cấp fileServiceBaseUrl
+builder.Services.AddScoped<FileServiceClient>(sp =>
+{
+    var httpClient = sp.GetRequiredService<IHttpClientFactory>().CreateClient("FileService");
+    var configuration = sp.GetRequiredService<IConfiguration>();
+    var logger = sp.GetRequiredService<ILogger<FileServiceClient>>();
+    var fileServiceBaseUrl = configuration["FileService:BaseUrl"];
+
+    if (string.IsNullOrEmpty(fileServiceBaseUrl))
+    {
+        logger.LogError("FileService:BaseUrl is not configured in appsettings.json");
+        throw new InvalidOperationException("FileService:BaseUrl is not configured in appsettings.json");
+    }
+
+    return new FileServiceClient(httpClient, fileServiceBaseUrl);
+});
 
 
 builder.Services.Configure<IdentityOptions>(options =>
@@ -153,6 +183,8 @@ builder.WebHost.ConfigureKestrel(options =>
 
 
 var app = builder.Build();
+//var client = app.Services.GetRequiredService<GrpcClient>();
+//client.GetFilesAsync("pdf").Wait(); // Test với filter
 
 app.MigrateDatabase();
 

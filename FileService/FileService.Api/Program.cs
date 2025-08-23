@@ -19,10 +19,12 @@ using FileService.Service.Implementation;
 using FileService.Service.Interfaces;
 using Microsoft.Extensions.FileProviders;
 using System.Security.Claims;
+using FileService.Api.Application;
 
 BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
 
 var builder = WebApplication.CreateBuilder(args);
+//builder.Services.AddTransient<GrpcClient>();  // Add gRPC client service
 
 var config = builder.Configuration;
 
@@ -182,6 +184,9 @@ builder.WebHost.ConfigureKestrel(options =>
 
 
 var app = builder.Build();
+
+//var client = app.Services.GetRequiredService<GrpcClient>(); // Call gRPC client service to test connection
+//client.GetFilesAsync("pdf").Wait(); // test với filter là "pdf"
 
 // Migrate MongoDB and seed data if necessary
 app.MigrateMongoDb();

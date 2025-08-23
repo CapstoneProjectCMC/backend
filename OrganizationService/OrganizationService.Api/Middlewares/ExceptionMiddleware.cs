@@ -174,7 +174,7 @@ namespace OrganizationService.Api.Middlewares
             });
 
           //  await context.Response.WriteAsync("An error occurred. Please contact CodeCampus support.");
-           // await context.Response.WriteAsync(exception.Message + exception.StackTrace);
+            await context.Response.WriteAsync(exception.Message + exception.StackTrace);
 
             await context.Response.WriteAsync(jsonResponse);
         }
