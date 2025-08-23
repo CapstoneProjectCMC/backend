@@ -9,6 +9,7 @@ import com.codecampus.identity.dto.response.authentication.AuthenticationRespons
 import com.codecampus.identity.dto.response.authentication.ExchangeTokenResponse;
 import com.codecampus.identity.dto.response.authentication.IntrospectResponse;
 import com.codecampus.identity.dto.response.authentication.OutboundUserResponse;
+import com.codecampus.identity.dto.response.org.PrimaryOrgResponse;
 import com.codecampus.identity.entity.account.InvalidatedToken;
 import com.codecampus.identity.entity.account.Permission;
 import com.codecampus.identity.entity.account.Role;
@@ -16,6 +17,7 @@ import com.codecampus.identity.entity.account.User;
 import com.codecampus.identity.exception.AppException;
 import com.codecampus.identity.exception.ErrorCode;
 import com.codecampus.identity.helper.AuthenticationHelper;
+import com.codecampus.identity.helper.OrganizationHelper;
 import com.codecampus.identity.mapper.authentication.UserMapper;
 import com.codecampus.identity.mapper.kafka.UserPayloadMapper;
 import com.codecampus.identity.repository.account.InvalidatedTokenRepository;
@@ -89,6 +91,7 @@ public class AuthenticationService {
     UserPayloadMapper userPayloadMapper;
 
     PasswordEncoder passwordEncoder;
+    OrganizationHelper organizationHelper;
 
     OutboundGoogleIdentityClient outboundGoogleIdentityClient;
     OutboundGoogleUserClient outboundGoogleUserClient;
@@ -372,7 +375,14 @@ public class AuthenticationService {
         Instant expiryInstant = Instant.now()
                 .plus(duration, ChronoUnit.SECONDS);
 
-        return new JWTClaimsSet.Builder()
+        PrimaryOrgResponse primaryOrg = organizationHelper
+                .getPrimaryOrg(user.getId());
+        String orgId = primaryOrg != null
+                ? primaryOrg.getOrganizationId() : null;
+        String orgRole = primaryOrg != null
+                ? primaryOrg.getRole() : null;
+
+        JWTClaimsSet.Builder builder = new JWTClaimsSet.Builder()
                 .subject(user.getEmail())
                 .issuer("Code Campus")
                 .issueTime(new Date())
@@ -396,7 +406,9 @@ public class AuthenticationService {
                 )
                 .claim("active", user.isEnabled())
                 .claim("token_type", type)
-                .build();
+                .claim("orgId", orgId);
+
+        return builder.build();
     }
 
     /**

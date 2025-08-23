@@ -8,9 +8,13 @@ import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface OrgRepository
         extends Neo4jRepository<Org, String> {
+
+    Optional<Org> findByOrgId(String orgId);
 
     @Query(value = """
             MATCH (o:Organization {orgId:$orgId})-[a:ASSIGNED_ORG_EXERCISE]->(e:Exercise)

@@ -34,7 +34,10 @@ spring:
 app:
   services:
     file: http://localhost:8082/file
+    organization: http://localhost:8091/org
   event:
     user-events: "user-events"
     user-registrations: "user-registrations"
     profile-events: "profile-events"
+    organization-events: "organization-events"
+    org-member-events: "org-member-events"
