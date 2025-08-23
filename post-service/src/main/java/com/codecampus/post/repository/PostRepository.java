@@ -20,12 +20,7 @@ public interface PostRepository extends JpaRepository<Post, String> {
 """)
     List<Post> findAccessiblePosts(String userId);
 
-    @Query("""
-    SELECT p FROM Post p
-    LEFT JOIN p.accesses a
-    WHERE p.postId = :postId AND (p.isPublic = true OR a.userId = :userId)
-""")
-    Optional<Post> findAccessiblePostById(String postId, String userId);
+    Optional<Post> findPostByPostId(String postId);
 
     @Query("""
     SELECT DISTINCT p FROM Post p

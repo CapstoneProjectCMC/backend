@@ -76,7 +76,7 @@ public class LoadCodingCacheService {
 
         evictTwice(exerciseId);          // lần xoá thứ 1 ngay lập tức
 
-        String lockName = "lock:coding" + exerciseId;
+        String lockName = "lock:coding:" + exerciseId;
         RLock lock = redisson.getLock(lockName);
 
         try {

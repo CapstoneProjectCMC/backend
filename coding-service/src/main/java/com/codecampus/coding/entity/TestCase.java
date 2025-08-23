@@ -2,6 +2,7 @@ package com.codecampus.coding.entity;
 
 import com.codecampus.coding.entity.audit.AuditMetadata;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
@@ -40,8 +41,14 @@ public class TestCase extends AuditMetadata {
     @JsonBackReference
     CodingExercise coding;
 
+    @Column(columnDefinition = "text")
     String input;
+
+    @Column(columnDefinition = "text")
     String expectedOutput;
+
     boolean sample;
+
+    @Column(columnDefinition = "text")
     String note;
 }

@@ -76,8 +76,8 @@ public interface SubmitCodeResponseOrBuilder extends
   float getCpus();
 
   /**
-   * <code>int32 peakMemoryKb = 8;</code>
-   * @return The peakMemoryKb.
+   * <code>int32 peakMemoryMb = 8;</code>
+   * @return The peakMemoryMb.
    */
-  int getPeakMemoryKb();
+  int getPeakMemoryMb();
 }

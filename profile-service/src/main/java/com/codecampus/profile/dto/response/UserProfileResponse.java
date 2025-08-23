@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
 import java.time.Instant;
+import java.util.Set;
 
 @Data
 @Builder
@@ -19,12 +20,13 @@ public class UserProfileResponse {
     String username;
     String email;
     boolean active;
+    Set<String> roles;
 
     String firstName;
     String lastName;
     String dob;
     String bio;
-    boolean gender;
+    Boolean gender;
     String displayName;
     int education;
     String[] links;
@@ -32,4 +34,5 @@ public class UserProfileResponse {
     String avatarUrl;
     String backgroundUrl;
     Instant createdAt;
+    Instant updatedAt;
 }

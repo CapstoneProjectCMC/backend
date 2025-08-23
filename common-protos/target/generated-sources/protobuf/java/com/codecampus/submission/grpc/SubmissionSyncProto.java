@@ -82,10 +82,10 @@ public final class SubmissionSyncProto {
       "ittedAt\030\010 \001(\0132\032.google.protobuf.Timestam" +
       "p\022\030\n\020timeTakenSeconds\030\t \001(\005\0222\n\007results\030\n" +
       " \003(\0132!.submission.TestCaseResultSyncDto\022" +
-      "\024\n\014peakMemoryKb\030\013 \001(\005\022\014\n\004cpus\030\014 \001(\002\022\020\n\010m" +
+      "\024\n\014peakMemoryMb\030\013 \001(\005\022\014\n\004cpus\030\014 \001(\002\022\020\n\010m" +
       "emoryMb\030\r \001(\005\"\206\001\n\025TestCaseResultSyncDto\022" +
       "\022\n\ntestCaseId\030\001 \001(\t\022\016\n\006passed\030\002 \001(\010\022\021\n\tr" +
-      "untimeMs\030\003 \001(\005\022\020\n\010memoryKb\030\004 \001(\005\022\016\n\006outp" +
+      "untimeMs\030\003 \001(\005\022\020\n\010memoryMb\030\004 \001(\005\022\016\n\006outp" +
       "ut\030\005 \001(\t\022\024\n\014errorMessage\030\006 \001(\t\"P\n\033Create" +
       "QuizSubmissionRequest\0221\n\nsubmission\030\001 \001(" +
       "\0132\035.submission.QuizSubmissionDto\"P\n\033Crea" +
@@ -122,13 +122,13 @@ public final class SubmissionSyncProto {
     internal_static_submission_CodeSubmissionDto_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_submission_CodeSubmissionDto_descriptor,
-        new java.lang.String[] { "Id", "ExerciseId", "StudentId", "Score", "TotalPoints", "Language", "SourceCode", "SubmittedAt", "TimeTakenSeconds", "Results", "PeakMemoryKb", "Cpus", "MemoryMb", });
+        new java.lang.String[] { "Id", "ExerciseId", "StudentId", "Score", "TotalPoints", "Language", "SourceCode", "SubmittedAt", "TimeTakenSeconds", "Results", "PeakMemoryMb", "Cpus", "MemoryMb", });
     internal_static_submission_TestCaseResultSyncDto_descriptor =
       getDescriptor().getMessageTypes().get(3);
     internal_static_submission_TestCaseResultSyncDto_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_submission_TestCaseResultSyncDto_descriptor,
-        new java.lang.String[] { "TestCaseId", "Passed", "RuntimeMs", "MemoryKb", "Output", "ErrorMessage", });
+        new java.lang.String[] { "TestCaseId", "Passed", "RuntimeMs", "MemoryMb", "Output", "ErrorMessage", });
     internal_static_submission_CreateQuizSubmissionRequest_descriptor =
       getDescriptor().getMessageTypes().get(4);
     internal_static_submission_CreateQuizSubmissionRequest_fieldAccessorTable = new

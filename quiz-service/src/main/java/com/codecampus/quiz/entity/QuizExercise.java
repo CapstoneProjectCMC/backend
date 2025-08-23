@@ -3,6 +3,7 @@ package com.codecampus.quiz.entity;
 import com.codecampus.quiz.entity.audit.AuditMetadata;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
@@ -37,8 +38,12 @@ public class QuizExercise extends AuditMetadata {
     @Id
     String id;
 
+    @Column(length = 100, nullable = false)
     String title;
+
+    @Column(columnDefinition = "text")
     String description;
+
     int totalPoints;
     int numQuestions;
 

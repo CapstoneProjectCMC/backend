@@ -4,18 +4,19 @@ import com.codecampus.identity.dto.common.PageResponse;
 import com.codecampus.identity.dto.request.authentication.PasswordCreationRequest;
 import com.codecampus.identity.dto.request.authentication.UserCreationRequest;
 import com.codecampus.identity.dto.request.authentication.UserUpdateRequest;
+import com.codecampus.identity.dto.request.org.CreateOrganizationMemberRequest;
 import com.codecampus.identity.dto.response.authentication.UserResponse;
 import com.codecampus.identity.entity.account.Role;
 import com.codecampus.identity.entity.account.User;
 import com.codecampus.identity.exception.AppException;
 import com.codecampus.identity.exception.ErrorCode;
 import com.codecampus.identity.helper.AuthenticationHelper;
-import com.codecampus.identity.helper.ProfileSyncHelper;
 import com.codecampus.identity.mapper.authentication.UserMapper;
 import com.codecampus.identity.mapper.client.UserProfileMapper;
 import com.codecampus.identity.mapper.kafka.UserPayloadMapper;
 import com.codecampus.identity.repository.account.RoleRepository;
 import com.codecampus.identity.repository.account.UserRepository;
+import com.codecampus.identity.repository.httpclient.org.OrganizationClient;
 import com.codecampus.identity.repository.httpclient.profile.ProfileClient;
 import com.codecampus.identity.service.authentication.OtpService;
 import com.codecampus.identity.service.kafka.UserEventProducer;
@@ -69,8 +70,8 @@ public class UserService {
 
     PasswordEncoder passwordEncoder;
     ProfileClient profileClient;
+    OrganizationClient organizationClient;
     AuthenticationHelper authenticationHelper;
-    ProfileSyncHelper profileSyncHelper;
     UserEventProducer userEventProducer;
 
     /**
@@ -104,6 +105,21 @@ public class UserService {
 
         try {
             user = userRepository.save(user);
+            if (StringUtils.hasText(request.getOrganizationId())) {
+                CreateOrganizationMemberRequest
+                        createOrganizationMemberRequest =
+                        new CreateOrganizationMemberRequest();
+                createOrganizationMemberRequest.setUserId(user.getId());
+                createOrganizationMemberRequest.setScopeId(
+                        request.getOrganizationId());
+                createOrganizationMemberRequest.setRole(
+                        StringUtils.hasText(request.getOrganizationMemberRole())
+                                ? request.getOrganizationMemberRole()
+                                : "Student"
+                );
+                organizationClient.createMembership(
+                        createOrganizationMemberRequest);
+            }
             UserProfileCreationPayload profilePayload =
                     userPayloadMapper.toUserProfileCreationPayloadFromUserCreationRequest(
                             request);

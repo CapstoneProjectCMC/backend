@@ -10,6 +10,7 @@ import com.codecampus.profile.exception.ErrorCode;
 import com.codecampus.profile.helper.AuthenticationHelper;
 import com.codecampus.profile.mapper.UserProfileMapper;
 import com.codecampus.profile.repository.UserProfileRepository;
+import com.codecampus.profile.service.kafka.ProfileEventProducer;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -44,6 +45,7 @@ import static com.codecampus.profile.helper.PageResponseHelper.toPageResponse;
 public class UserProfileService {
     UserProfileRepository userProfileRepository;
     UserProfileMapper userProfileMapper;
+    ProfileEventProducer profileEventProducer;
     AuthenticationHelper authenticationHelper;
 
     /**
@@ -68,7 +70,9 @@ public class UserProfileService {
         UserProfile userProfile =
                 userProfileMapper.toUserProfileFromUserProfileCreationRequest(
                         request);
-        userProfile.setCreatedAt(Instant.now());
+        Instant now = Instant.now();
+        userProfile.setCreatedAt(now);
+        userProfile.setUpdatedAt(now);
         userProfile = userProfileRepository.save(userProfile);
 
         return userProfileMapper.toUserProfileResponseFromUserProfile(
@@ -115,8 +119,8 @@ public class UserProfileService {
      * @return PageResponse chứa danh sách UserProfileResponse và thông tin phân trang
      */
     @PreAuthorize("hasRole('ADMIN')")
-    public PageResponse<UserProfileResponse> getAllUserProfiles(int page,
-                                                                int size) {
+    public PageResponse<UserProfileResponse> getAllUserProfiles(
+            int page, int size) {
         Pageable pageable = PageRequest.of(page - 1, size);
         var pageData = userProfileRepository
                 .findAll(pageable)
@@ -154,7 +158,7 @@ public class UserProfileService {
      */
     public UserProfile getUserProfile() {
         return userProfileRepository
-                .findByUserId(AuthenticationHelper.getMyUserId())
+                .findActiveByUserId(AuthenticationHelper.getMyUserId())
                 .orElseThrow(
                         () -> new AppException(ErrorCode.USER_NOT_FOUND)
                 );
@@ -179,47 +183,46 @@ public class UserProfileService {
             UserProfileUpdateRequest request) {
 
         UserProfile profile = getUserProfile();
-
         userProfileMapper.updateUserProfileUpdateRequestToUserProfile(profile,
                 request);
-        userProfileMapper.toUserProfileResponseFromUserProfile(
-                userProfileRepository.save(profile)
-        );
+        profile.setUpdatedAt(Instant.now());
+        profile = userProfileRepository.save(profile);
+        profileEventProducer.publishUpdated(profile);
     }
 
     public void updateUserProfileById(
             String userId,
             UserProfileUpdateRequest request) {
-        UserProfile profile = userProfileRepository
-                .findActiveByUserId(userId)
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        UserProfile profile = getUserProfile(userId);
         userProfileMapper.updateUserProfileUpdateRequestToUserProfile(profile,
                 request);
-        userProfileRepository.save(profile);
+        profile.setUpdatedAt(Instant.now());
+        profile = userProfileRepository.save(profile);
+        profileEventProducer.publishUpdated(profile);
     }
 
     public void softDeleteUserProfileByUserId(
             String userId,
             String deletedBy) {
-        UserProfile profile = userProfileRepository
-                .findByUserId(userId) // Lấy tất cả userId
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        UserProfile profile = getUserProfile(userId);
         if (profile.getDeletedAt() == null) {
             profile.setDeletedAt(Instant.now());
             profile.setDeletedBy(deletedBy);
-            userProfileRepository.save(profile);
+            profile.setUpdatedAt(Instant.now());
+            profile = userProfileRepository.save(profile);
+            profileEventProducer.publishDeleted(profile);
         }
     }
 
     public void restoreByUserId(
             String userId) {
-        UserProfile profile = userProfileRepository
-                .findByUserId(userId)
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        UserProfile profile = getUserProfile(userId);
         if (profile.getDeletedAt() != null) {
             profile.setDeletedAt(null);
             profile.setDeletedBy(null);
-            userProfileRepository.save(profile);
+            profile.setUpdatedAt(Instant.now());
+            profile = userProfileRepository.save(profile);
+            profileEventProducer.publishRestored(profile);
         }
     }
 }

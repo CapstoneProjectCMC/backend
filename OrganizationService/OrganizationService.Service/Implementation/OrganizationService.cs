@@ -21,6 +21,7 @@ namespace OrganizationService.Service.Implementation
     {
         private readonly IRepository<Organization> _organizationRepository;
         private readonly FileServiceClient _fileServiceClient;
+        private readonly IOrgEventPublisher _orgEventPublisher;
 
         public OrganizationService(
             AppSettings appSettings,
@@ -28,10 +29,13 @@ namespace OrganizationService.Service.Implementation
             UserContext userContext,
             IRepository<Organization> organizationRepository,
             FileServiceClient fileServiceClient
+            IRepository<Organization> organizationRepository,
+            IOrgEventPublisher orgEventPublisher
         ) : base(appSettings, unitOfWork, userContext)
         {
             _organizationRepository = organizationRepository;
             _fileServiceClient = fileServiceClient;
+            _orgEventPublisher = orgEventPublisher;
         }
 
         private void ValidatePagingModel(OrganizationModel orgModel)
@@ -136,6 +140,22 @@ namespace OrganizationService.Service.Implementation
                 }
             }
 
+            await _orgEventPublisher.PublishAsync(new {
+                type = "CREATED",
+                id = entity.Id,
+                scopeType = "ORGANIZATION",
+                payload = new {
+                    name = entity.Name,
+                    description = entity.Description,
+                    logoUrl = entity.LogoUrl,
+                    email = entity.Email,
+                    phone = entity.Phone,
+                    address = entity.Address,
+                    status = entity.Status.ToString(),
+                    updatedAt = DateTime.UtcNow
+                }
+            });
+            
             return new OrganizationDto
             {
                 Id = entity.Id,
@@ -170,6 +190,22 @@ namespace OrganizationService.Service.Implementation
             _organizationRepository.Update(entity);
             await _unitOfWork.SaveChangesAsync();
 
+            await _orgEventPublisher.PublishAsync(new {
+                type = "UPDATED",
+                id = entity.Id,
+                scopeType = "ORGANIZATION",
+                payload = new { 
+                    name = entity.Name,
+                    description = entity.Description,
+                    logoUrl = entity.LogoUrl,
+                    email = entity.Email,
+                    phone = entity.Phone,
+                    address = entity.Address,
+                    status = entity.Status.ToString(),
+                    updatedAt = DateTime.UtcNow
+                }
+            });
+            
             return new OrganizationDto
             {
                 Id = entity.Id,
@@ -196,6 +232,13 @@ namespace OrganizationService.Service.Implementation
 
             _organizationRepository.Update(entity);
             await _unitOfWork.SaveChangesAsync();
+            
+            await _orgEventPublisher.PublishAsync(new {
+                type = "DELETED",
+                id = entity.Id,
+                scopeType = "ORGANIZATION",
+                payload = (object)null
+            });
             return true;
         }
     }

@@ -141,13 +141,13 @@ public final class CodingProto {
       "language\030\003 \001(\t\022\022\n\nsourceCode\030\004 \001(\t\022\030\n\020ti" +
       "meTakenSeconds\030\005 \001(\005\"\202\001\n\021TestCaseResultD" +
       "to\022\022\n\ntestCaseId\030\001 \001(\t\022\016\n\006passed\030\002 \001(\010\022\021" +
-      "\n\truntimeMs\030\003 \001(\005\022\020\n\010memoryKb\030\004 \001(\005\022\016\n\006o" +
+      "\n\truntimeMs\030\003 \001(\005\022\020\n\010memoryMb\030\004 \001(\005\022\016\n\006o" +
       "utput\030\005 \001(\t\022\024\n\014errorMessage\030\006 \001(\t\"\300\001\n\022Su" +
       "bmitCodeResponse\022\024\n\014submissionId\030\001 \001(\t\022\r" +
       "\n\005score\030\002 \001(\005\022\023\n\013totalPoints\030\003 \001(\005\022\016\n\006pa" +
       "ssed\030\004 \001(\010\022*\n\007results\030\005 \003(\0132\031.coding.Tes" +
       "tCaseResultDto\022\020\n\010memoryMb\030\006 \001(\005\022\014\n\004cpus" +
-      "\030\007 \001(\002\022\024\n\014peakMemoryKb\030\010 \001(\005\":\n\021LoadCodi" +
+      "\030\007 \001(\002\022\024\n\014peakMemoryMb\030\010 \001(\005\":\n\021LoadCodi" +
       "ngRequest\022\022\n\nexerciseId\030\001 \001(\t\022\021\n\tstudent" +
       "Id\030\002 \001(\t\"\204\002\n\030CodingDetailLoadResponse\022\r\n" +
       "\005topic\030\001 \001(\t\022\030\n\020allowedLanguages\030\002 \003(\t\022\r" +
@@ -238,13 +238,13 @@ public final class CodingProto {
     internal_static_coding_TestCaseResultDto_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_coding_TestCaseResultDto_descriptor,
-        new java.lang.String[] { "TestCaseId", "Passed", "RuntimeMs", "MemoryKb", "Output", "ErrorMessage", });
+        new java.lang.String[] { "TestCaseId", "Passed", "RuntimeMs", "MemoryMb", "Output", "ErrorMessage", });
     internal_static_coding_SubmitCodeResponse_descriptor =
       getDescriptor().getMessageTypes().get(7);
     internal_static_coding_SubmitCodeResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_coding_SubmitCodeResponse_descriptor,
-        new java.lang.String[] { "SubmissionId", "Score", "TotalPoints", "Passed", "Results", "MemoryMb", "Cpus", "PeakMemoryKb", });
+        new java.lang.String[] { "SubmissionId", "Score", "TotalPoints", "Passed", "Results", "MemoryMb", "Cpus", "PeakMemoryMb", });
     internal_static_coding_LoadCodingRequest_descriptor =
       getDescriptor().getMessageTypes().get(8);
     internal_static_coding_LoadCodingRequest_fieldAccessorTable = new

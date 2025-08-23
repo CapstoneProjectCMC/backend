@@ -17,7 +17,7 @@ public record CreateExerciseRequest(
         Boolean freeForOrg,
         Instant startTime,
         Instant endTime,
-        int duration, //Cần cho input AI
+        Integer duration, //Cần cho input AI
         String allowDiscussionId,
         Set<String> resourceIds,
         Set<String> tags, //Cần cho input AI

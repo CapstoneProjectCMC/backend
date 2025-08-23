@@ -179,15 +179,15 @@ private static final long serialVersionUID = 0L;
     return cpus_;
   }
 
-  public static final int PEAKMEMORYKB_FIELD_NUMBER = 8;
-  private int peakMemoryKb_ = 0;
+  public static final int PEAKMEMORYMB_FIELD_NUMBER = 8;
+  private int peakMemoryMb_ = 0;
   /**
-   * <code>int32 peakMemoryKb = 8;</code>
-   * @return The peakMemoryKb.
+   * <code>int32 peakMemoryMb = 8;</code>
+   * @return The peakMemoryMb.
    */
   @java.lang.Override
-  public int getPeakMemoryKb() {
-    return peakMemoryKb_;
+  public int getPeakMemoryMb() {
+    return peakMemoryMb_;
   }
 
   private byte memoizedIsInitialized = -1;
@@ -225,8 +225,8 @@ private static final long serialVersionUID = 0L;
     if (java.lang.Float.floatToRawIntBits(cpus_) != 0) {
       output.writeFloat(7, cpus_);
     }
-    if (peakMemoryKb_ != 0) {
-      output.writeInt32(8, peakMemoryKb_);
+    if (peakMemoryMb_ != 0) {
+      output.writeInt32(8, peakMemoryMb_);
     }
     getUnknownFields().writeTo(output);
   }
@@ -264,9 +264,9 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeFloatSize(7, cpus_);
     }
-    if (peakMemoryKb_ != 0) {
+    if (peakMemoryMb_ != 0) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(8, peakMemoryKb_);
+        .computeInt32Size(8, peakMemoryMb_);
     }
     size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
@@ -298,8 +298,8 @@ private static final long serialVersionUID = 0L;
     if (java.lang.Float.floatToIntBits(getCpus())
         != java.lang.Float.floatToIntBits(
             other.getCpus())) return false;
-    if (getPeakMemoryKb()
-        != other.getPeakMemoryKb()) return false;
+    if (getPeakMemoryMb()
+        != other.getPeakMemoryMb()) return false;
     if (!getUnknownFields().equals(other.getUnknownFields())) return false;
     return true;
   }
@@ -329,8 +329,8 @@ private static final long serialVersionUID = 0L;
     hash = (37 * hash) + CPUS_FIELD_NUMBER;
     hash = (53 * hash) + java.lang.Float.floatToIntBits(
         getCpus());
-    hash = (37 * hash) + PEAKMEMORYKB_FIELD_NUMBER;
-    hash = (53 * hash) + getPeakMemoryKb();
+    hash = (37 * hash) + PEAKMEMORYMB_FIELD_NUMBER;
+    hash = (53 * hash) + getPeakMemoryMb();
     hash = (29 * hash) + getUnknownFields().hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -475,7 +475,7 @@ private static final long serialVersionUID = 0L;
       bitField0_ = (bitField0_ & ~0x00000010);
       memoryMb_ = 0;
       cpus_ = 0F;
-      peakMemoryKb_ = 0;
+      peakMemoryMb_ = 0;
       return this;
     }
 
@@ -541,7 +541,7 @@ private static final long serialVersionUID = 0L;
         result.cpus_ = cpus_;
       }
       if (((from_bitField0_ & 0x00000080) != 0)) {
-        result.peakMemoryKb_ = peakMemoryKb_;
+        result.peakMemoryMb_ = peakMemoryMb_;
       }
     }
 
@@ -603,8 +603,8 @@ private static final long serialVersionUID = 0L;
       if (java.lang.Float.floatToRawIntBits(other.getCpus()) != 0) {
         setCpus(other.getCpus());
       }
-      if (other.getPeakMemoryKb() != 0) {
-        setPeakMemoryKb(other.getPeakMemoryKb());
+      if (other.getPeakMemoryMb() != 0) {
+        setPeakMemoryMb(other.getPeakMemoryMb());
       }
       this.mergeUnknownFields(other.getUnknownFields());
       onChanged();
@@ -676,7 +676,7 @@ private static final long serialVersionUID = 0L;
               break;
             } // case 61
             case 64: {
-              peakMemoryKb_ = input.readInt32();
+              peakMemoryMb_ = input.readInt32();
               bitField0_ |= 0x00000080;
               break;
             } // case 64
@@ -1169,34 +1169,34 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private int peakMemoryKb_ ;
+    private int peakMemoryMb_ ;
     /**
-     * <code>int32 peakMemoryKb = 8;</code>
-     * @return The peakMemoryKb.
+     * <code>int32 peakMemoryMb = 8;</code>
+     * @return The peakMemoryMb.
      */
     @java.lang.Override
-    public int getPeakMemoryKb() {
-      return peakMemoryKb_;
+    public int getPeakMemoryMb() {
+      return peakMemoryMb_;
     }
     /**
-     * <code>int32 peakMemoryKb = 8;</code>
-     * @param value The peakMemoryKb to set.
+     * <code>int32 peakMemoryMb = 8;</code>
+     * @param value The peakMemoryMb to set.
      * @return This builder for chaining.
      */
-    public Builder setPeakMemoryKb(int value) {
+    public Builder setPeakMemoryMb(int value) {
 
-      peakMemoryKb_ = value;
+      peakMemoryMb_ = value;
       bitField0_ |= 0x00000080;
       onChanged();
       return this;
     }
     /**
-     * <code>int32 peakMemoryKb = 8;</code>
+     * <code>int32 peakMemoryMb = 8;</code>
      * @return This builder for chaining.
      */
-    public Builder clearPeakMemoryKb() {
+    public Builder clearPeakMemoryMb() {
       bitField0_ = (bitField0_ & ~0x00000080);
-      peakMemoryKb_ = 0;
+      peakMemoryMb_ = 0;
       onChanged();
       return this;
     }

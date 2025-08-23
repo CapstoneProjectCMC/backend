@@ -2,6 +2,7 @@ package com.codecampus.submission.dto.response.quiz;
 
 import com.codecampus.submission.constant.submission.Difficulty;
 import com.codecampus.submission.constant.submission.ExerciseType;
+import dtos.UserSummary;
 import lombok.Builder;
 
 import java.math.BigDecimal;
@@ -14,7 +15,7 @@ import java.util.Set;
 // @JsonInclude(JsonInclude.Include.NON_NULL)
 public record ExerciseQuizResponse(
         String id,
-        String userId,
+        UserSummary user,
         String title,
         String description,
         Difficulty difficulty,

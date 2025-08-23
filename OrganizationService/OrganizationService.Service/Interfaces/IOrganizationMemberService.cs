@@ -16,5 +16,9 @@ namespace OrganizationService.Service.Interfaces
         Task<OrganizationMemberDto> CreateAsync(CreateOrganizationMemberRequest request);
         Task<OrganizationMemberDto> UpdateAsync(Guid id, UpdateOrganizationMemberRequest request);
         Task<bool> DeleteAsync(Guid id);
+        
+        Task<PrimaryOrgDto?> GetPrimaryOrgForUser(Guid userId);
+        Task<OrganizationMemberDto> JoinOrganizationForCurrentUser(Guid organizationId);
+        Task<OrganizationMemberDto> GrantAdmin(Guid organizationId, Guid userId);
     }
 }

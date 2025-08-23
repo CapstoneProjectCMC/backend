@@ -1,5 +1,6 @@
 package com.codecampus.submission.repository;
 
+import com.codecampus.submission.constant.submission.SubmissionStatus;
 import com.codecampus.submission.entity.Submission;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -87,5 +88,11 @@ public interface SubmissionRepository
             """)
     Integer findBestScoreFromExercise(
             String exerciseId, String studentId);
+
+    Optional<Submission> findFirstByExerciseIdAndUserIdAndStatusOrderBySubmittedAtAsc(
+            String exerciseId,
+            String userId,
+            SubmissionStatus status
+    );
 }
 

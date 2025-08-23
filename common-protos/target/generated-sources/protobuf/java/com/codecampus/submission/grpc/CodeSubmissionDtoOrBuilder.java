@@ -133,10 +133,10 @@ public interface CodeSubmissionDtoOrBuilder extends
       int index);
 
   /**
-   * <code>int32 peakMemoryKb = 11;</code>
-   * @return The peakMemoryKb.
+   * <code>int32 peakMemoryMb = 11;</code>
+   * @return The peakMemoryMb.
    */
-  int getPeakMemoryKb();
+  int getPeakMemoryMb();
 
   /**
    * <code>float cpus = 12;</code>

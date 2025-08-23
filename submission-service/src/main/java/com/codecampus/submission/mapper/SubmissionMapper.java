@@ -3,6 +3,7 @@ package com.codecampus.submission.mapper;
 import com.codecampus.submission.constant.submission.ExerciseType;
 import com.codecampus.submission.constant.submission.SubmissionStatus;
 import com.codecampus.submission.dto.response.AllSubmissionHistoryResponse;
+import com.codecampus.submission.dto.response.coding.CodingAttemptHistoryResponse;
 import com.codecampus.submission.dto.response.quiz.QuizAttemptHistoryResponse;
 import com.codecampus.submission.entity.Exercise;
 import com.codecampus.submission.entity.Question;
@@ -84,6 +85,29 @@ public interface SubmissionMapper {
                         : submission.getExercise().getQuizDetail()
                         .getTotalPoints(),
                 submission.getTimeTakenSeconds(),
+                submission.getSubmittedAt()
+        );
+    }
+
+    default CodingAttemptHistoryResponse mapSubmissionToCodingAttemptHistoryResponse(
+            Submission submission) {
+        Integer totalPoints = null;
+        if (submission.getExercise() != null &&
+                submission.getExercise().getCodingDetail() != null) {
+            totalPoints =
+                    submission.getExercise().getCodingDetail().getTestCases()
+                            .size();
+        }
+        return new CodingAttemptHistoryResponse(
+                submission.getId(),
+                submission.getExercise().getId(),
+                submission.getExercise().getTitle(),
+                submission.getScore(), // #passed
+                totalPoints, // #testcases
+                submission.getTimeTakenSeconds(),
+                submission.getLanguage(),
+                submission.getMemoryUsed(), // peakMemoryMb được set khi sync
+                submission.getStatus(),
                 submission.getSubmittedAt()
         );
     }

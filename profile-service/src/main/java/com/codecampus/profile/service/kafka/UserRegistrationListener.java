@@ -1,6 +1,10 @@
 package com.codecampus.profile.service.kafka;
 
+import com.codecampus.profile.constant.social.OrgRole;
+import com.codecampus.profile.entity.Org;
 import com.codecampus.profile.entity.UserProfile;
+import com.codecampus.profile.entity.properties.organization.MemberOrg;
+import com.codecampus.profile.repository.OrgRepository;
 import com.codecampus.profile.repository.UserProfileRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,6 +19,7 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.Locale;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +28,7 @@ import java.time.Instant;
 public class UserRegistrationListener {
 
     UserProfileRepository userProfileRepository;
+    OrgRepository orgRepository;
     ObjectMapper objectMapper;
 
     @KafkaListener(
@@ -54,6 +60,9 @@ public class UserRegistrationListener {
         profile.setUsername(u.getUsername());
         profile.setEmail(u.getEmail());
         profile.setActive(u.isActive());
+        profile.setRoles(u.getRoles());
+        profile.setUpdatedAt(u.getUpdatedAt() != null ? u.getUpdatedAt() :
+                Instant.now());
 
         // fields profile chi tiết
         profile.setFirstName(p.getFirstName());
@@ -65,6 +74,50 @@ public class UserRegistrationListener {
         profile.setEducation(p.getEducation());
         profile.setLinks(p.getLinks());
         profile.setCity(p.getCity());
+
+        if (p.getOrganizationId() != null && !p.getOrganizationId().isBlank()) {
+
+            // Upsert Organization node (nếu chưa có)
+            Org org = orgRepository
+                    .findByOrgId(p.getOrganizationId())
+                    .orElseGet(() -> orgRepository.save(
+                            Org.builder()
+                                    .orgId(p.getOrganizationId())
+                                    .build()
+                    ));
+
+            // Tránh tạo trùng quan hệ nếu message bị replay
+            boolean exists = profile
+                    .getMemberOrgs()
+                    .stream()
+                    .anyMatch(m ->
+                            m.getOrganization() != null
+                                    && p.getOrganizationId()
+                                    .equals(m.getOrganization().getOrgId())
+                    );
+
+            if (!exists) {
+                MemberOrg member = MemberOrg.builder()
+                        .joinAt(Instant.now())
+                        .build();
+
+                // set role nếu có (không có thì giữ default STUDENT trong entity)
+                String roleRaw = p.getOrganizationMemberRole();
+                if (roleRaw != null && !roleRaw.isBlank()) {
+                    try {
+                        OrgRole parsed =
+                                OrgRole.valueOf(roleRaw.trim()
+                                        .toUpperCase(Locale.ROOT));
+                        member.setMemberRole(parsed);
+                    } catch (IllegalArgumentException ignored) {
+                        // fallback giữ default STUDENT
+                    }
+                }
+
+                member.setOrganization(org);
+                profile.getMemberOrgs().add(member);
+            }
+        }
 
         // nếu đang bị soft-delete mà nhận được registration (enabled=true) -> auto-restore
         if (profile.getDeletedAt() != null &&

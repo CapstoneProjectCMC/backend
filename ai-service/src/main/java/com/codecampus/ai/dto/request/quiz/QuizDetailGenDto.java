@@ -1,0 +1,8 @@
+package com.codecampus.ai.dto.request.quiz;
+
+import java.util.List;
+
+public record QuizDetailGenDto(
+        List<QuestionGenDto> questions
+) {
+}

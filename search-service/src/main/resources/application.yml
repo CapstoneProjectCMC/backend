@@ -21,7 +21,18 @@ spring:
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       properties:
         spring.json.trusted.packages: "*"
+  data:
+    redis:
+      host: localhost # dịch vụ trong compose
+      port: 6379
+      password: dinhanst2832004
+      timeout: 3000ms
 
 app:
   event:
     exercise-events: "exercise-events"
+    user-registrations: "user-registrations"
+    user-events: "user-events"
+    profile-events: "profile-events"
+  services:
+    profile: http://localhost:8081/profile

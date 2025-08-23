@@ -22,6 +22,7 @@ public class ExercisePayload {
     String description;
     Set<String> tags;
     Integer difficulty;
+    String userId;
     String createdBy;
     Double cost;
     String orgId;
@@ -31,6 +32,7 @@ public class ExercisePayload {
     Integer duration;
     Set<String> resourceIds;
     Boolean allowAiQuestion;
+    Boolean visibility;
     Instant createdAt;
     Instant updatedAt;
     Instant deletedAt;

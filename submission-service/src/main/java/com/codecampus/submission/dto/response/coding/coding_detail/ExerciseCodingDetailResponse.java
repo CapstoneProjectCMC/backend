@@ -2,6 +2,7 @@ package com.codecampus.submission.dto.response.coding.coding_detail;
 
 import com.codecampus.submission.constant.submission.Difficulty;
 import com.codecampus.submission.constant.submission.ExerciseType;
+import dtos.UserSummary;
 import lombok.Builder;
 
 import java.math.BigDecimal;
@@ -11,7 +12,7 @@ import java.util.Set;
 @Builder
 public record ExerciseCodingDetailResponse(
         String id,
-        String userId,
+        UserSummary user,
         String title,
         String description,
         ExerciseType exerciseType,

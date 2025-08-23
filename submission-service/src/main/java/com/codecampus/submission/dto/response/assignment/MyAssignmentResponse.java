@@ -1,5 +1,7 @@
 package com.codecampus.submission.dto.response.assignment;
 
+import com.codecampus.submission.constant.submission.ExerciseType;
+
 import java.time.Instant;
 
 public record MyAssignmentResponse(
@@ -8,7 +10,9 @@ public record MyAssignmentResponse(
         String exerciseTitle,
         Instant dueAt,
         boolean completed,
+        Instant completedAt,
         Integer myBestScore,
-        Integer totalPoints
+        Integer totalPoints,
+        ExerciseType exerciseType
 ) {
 }

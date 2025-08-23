@@ -13,18 +13,21 @@ namespace OrganizationService.Service.Implementation
     {
         private readonly IRepository<Grade> _gradeRepository;
         private readonly IRepository<Organization> _organizationRepository;
+        private readonly IOrgEventPublisher _orgEventPublisher;
 
         public GradeService(
             AppSettings appSettings,
             IUnitOfWork unitOfWork,
             UserContext userContext,
             IRepository<Organization> organizationRepository,
-            IRepository<Grade> gradeRepository
+            IRepository<Grade> gradeRepository,
+            IOrgEventPublisher orgEventPublisher
             )
             : base(appSettings, unitOfWork, userContext)
         {
             _organizationRepository = organizationRepository;
             _gradeRepository = gradeRepository;
+            _orgEventPublisher = orgEventPublisher;
         }
 
         private void ValidatePagingModel(GradeModel gradeModel)
@@ -96,6 +99,18 @@ namespace OrganizationService.Service.Implementation
                 .Where(o => o.Id == grade.OrganizationId)
                 .Select(o => o.Name)
                 .FirstOrDefaultAsync() ?? string.Empty;
+            
+            await _orgEventPublisher.PublishAsync(new {
+                type = "UPDATED",
+                id = grade.Id,
+                scopeType = "GRADE",
+                payload = new
+                {
+                    name = grade.Name, 
+                    description = grade.Description, 
+                    updatedAt = DateTime.UtcNow
+                }
+            });
 
             return new GradeDto
             {
@@ -126,6 +141,18 @@ namespace OrganizationService.Service.Implementation
                 .Select(o => o.Name)
                 .FirstOrDefaultAsync() ?? string.Empty;
 
+            await _orgEventPublisher.PublishAsync(new {
+                type = "UPDATED",
+                id = grade.Id,
+                scopeType = "GRADE",
+                payload = new
+                {
+                    name = grade.Name, 
+                    description = grade.Description, 
+                    updatedAt = DateTime.UtcNow
+                }
+            });
+            
             return new GradeDto
             {
                 Id = grade.Id,
@@ -150,6 +177,12 @@ namespace OrganizationService.Service.Implementation
             _gradeRepository.Update(grade);
             await _unitOfWork.SaveChangesAsync();
 
+            await _orgEventPublisher.PublishAsync(new {
+                type = "DELETED",
+                id = grade.Id,
+                scopeType = "GRADE",
+                payload = (object)null
+            });
             return true;
         }
     }

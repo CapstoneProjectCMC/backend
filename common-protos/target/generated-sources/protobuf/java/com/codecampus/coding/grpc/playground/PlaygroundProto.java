@@ -52,7 +52,7 @@ public final class PlaygroundProto {
       "\022\026\n\016time_limit_sec\030\006 \001(\005\"\314\002\n\tRunUpdate\0221" +
       "\n\005phase\030\001 \001(\0162\".coding.playground.RunUpd" +
       "ate.Phase\022\r\n\005chunk\030\002 \001(\t\022\021\n\texit_code\030\003 " +
-      "\001(\005\022\022\n\nruntime_ms\030\004 \001(\005\022\021\n\tmemory_kb\030\005 \001" +
+      "\001(\005\022\022\n\nruntime_ms\030\004 \001(\005\022\021\n\tmemory_mb\030\005 \001" +
       "(\005\022&\n\002ts\030\006 \001(\0132\032.google.protobuf.Timesta" +
       "mp\"\232\001\n\005Phase\022\025\n\021PHASE_UNSPECIFIED\020\000\022\013\n\007S" +
       "TARTED\020\001\022\r\n\tCOMPILING\020\002\022\017\n\013COMPILE_OUT\020\003" +
@@ -82,7 +82,7 @@ public final class PlaygroundProto {
     internal_static_coding_playground_RunUpdate_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_coding_playground_RunUpdate_descriptor,
-        new java.lang.String[] { "Phase", "Chunk", "ExitCode", "RuntimeMs", "MemoryKb", "Ts", });
+        new java.lang.String[] { "Phase", "Chunk", "ExitCode", "RuntimeMs", "MemoryMb", "Ts", });
     descriptor.resolveAllFeaturesImmutable();
     com.google.protobuf.TimestampProto.getDescriptor();
     com.google.protobuf.EmptyProto.getDescriptor();

@@ -350,15 +350,15 @@ private static final long serialVersionUID = 0L;
     return results_.get(index);
   }
 
-  public static final int PEAKMEMORYKB_FIELD_NUMBER = 11;
-  private int peakMemoryKb_ = 0;
+  public static final int PEAKMEMORYMB_FIELD_NUMBER = 11;
+  private int peakMemoryMb_ = 0;
   /**
-   * <code>int32 peakMemoryKb = 11;</code>
-   * @return The peakMemoryKb.
+   * <code>int32 peakMemoryMb = 11;</code>
+   * @return The peakMemoryMb.
    */
   @java.lang.Override
-  public int getPeakMemoryKb() {
-    return peakMemoryKb_;
+  public int getPeakMemoryMb() {
+    return peakMemoryMb_;
   }
 
   public static final int CPUS_FIELD_NUMBER = 12;
@@ -427,8 +427,8 @@ private static final long serialVersionUID = 0L;
     for (int i = 0; i < results_.size(); i++) {
       output.writeMessage(10, results_.get(i));
     }
-    if (peakMemoryKb_ != 0) {
-      output.writeInt32(11, peakMemoryKb_);
+    if (peakMemoryMb_ != 0) {
+      output.writeInt32(11, peakMemoryMb_);
     }
     if (java.lang.Float.floatToRawIntBits(cpus_) != 0) {
       output.writeFloat(12, cpus_);
@@ -480,9 +480,9 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(10, results_.get(i));
     }
-    if (peakMemoryKb_ != 0) {
+    if (peakMemoryMb_ != 0) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(11, peakMemoryKb_);
+        .computeInt32Size(11, peakMemoryMb_);
     }
     if (java.lang.Float.floatToRawIntBits(cpus_) != 0) {
       size += com.google.protobuf.CodedOutputStream
@@ -530,8 +530,8 @@ private static final long serialVersionUID = 0L;
         != other.getTimeTakenSeconds()) return false;
     if (!getResultsList()
         .equals(other.getResultsList())) return false;
-    if (getPeakMemoryKb()
-        != other.getPeakMemoryKb()) return false;
+    if (getPeakMemoryMb()
+        != other.getPeakMemoryMb()) return false;
     if (java.lang.Float.floatToIntBits(getCpus())
         != java.lang.Float.floatToIntBits(
             other.getCpus())) return false;
@@ -572,8 +572,8 @@ private static final long serialVersionUID = 0L;
       hash = (37 * hash) + RESULTS_FIELD_NUMBER;
       hash = (53 * hash) + getResultsList().hashCode();
     }
-    hash = (37 * hash) + PEAKMEMORYKB_FIELD_NUMBER;
-    hash = (53 * hash) + getPeakMemoryKb();
+    hash = (37 * hash) + PEAKMEMORYMB_FIELD_NUMBER;
+    hash = (53 * hash) + getPeakMemoryMb();
     hash = (37 * hash) + CPUS_FIELD_NUMBER;
     hash = (53 * hash) + java.lang.Float.floatToIntBits(
         getCpus());
@@ -737,7 +737,7 @@ private static final long serialVersionUID = 0L;
         resultsBuilder_.clear();
       }
       bitField0_ = (bitField0_ & ~0x00000200);
-      peakMemoryKb_ = 0;
+      peakMemoryMb_ = 0;
       cpus_ = 0F;
       memoryMb_ = 0;
       return this;
@@ -818,7 +818,7 @@ private static final long serialVersionUID = 0L;
         result.timeTakenSeconds_ = timeTakenSeconds_;
       }
       if (((from_bitField0_ & 0x00000400) != 0)) {
-        result.peakMemoryKb_ = peakMemoryKb_;
+        result.peakMemoryMb_ = peakMemoryMb_;
       }
       if (((from_bitField0_ & 0x00000800) != 0)) {
         result.cpus_ = cpus_;
@@ -904,8 +904,8 @@ private static final long serialVersionUID = 0L;
           }
         }
       }
-      if (other.getPeakMemoryKb() != 0) {
-        setPeakMemoryKb(other.getPeakMemoryKb());
+      if (other.getPeakMemoryMb() != 0) {
+        setPeakMemoryMb(other.getPeakMemoryMb());
       }
       if (java.lang.Float.floatToRawIntBits(other.getCpus()) != 0) {
         setCpus(other.getCpus());
@@ -1000,7 +1000,7 @@ private static final long serialVersionUID = 0L;
               break;
             } // case 82
             case 88: {
-              peakMemoryKb_ = input.readInt32();
+              peakMemoryMb_ = input.readInt32();
               bitField0_ |= 0x00000400;
               break;
             } // case 88
@@ -1866,34 +1866,34 @@ private static final long serialVersionUID = 0L;
       return resultsBuilder_;
     }
 
-    private int peakMemoryKb_ ;
+    private int peakMemoryMb_ ;
     /**
-     * <code>int32 peakMemoryKb = 11;</code>
-     * @return The peakMemoryKb.
+     * <code>int32 peakMemoryMb = 11;</code>
+     * @return The peakMemoryMb.
      */
     @java.lang.Override
-    public int getPeakMemoryKb() {
-      return peakMemoryKb_;
+    public int getPeakMemoryMb() {
+      return peakMemoryMb_;
     }
     /**
-     * <code>int32 peakMemoryKb = 11;</code>
-     * @param value The peakMemoryKb to set.
+     * <code>int32 peakMemoryMb = 11;</code>
+     * @param value The peakMemoryMb to set.
      * @return This builder for chaining.
      */
-    public Builder setPeakMemoryKb(int value) {
+    public Builder setPeakMemoryMb(int value) {
 
-      peakMemoryKb_ = value;
+      peakMemoryMb_ = value;
       bitField0_ |= 0x00000400;
       onChanged();
       return this;
     }
     /**
-     * <code>int32 peakMemoryKb = 11;</code>
+     * <code>int32 peakMemoryMb = 11;</code>
      * @return This builder for chaining.
      */
-    public Builder clearPeakMemoryKb() {
+    public Builder clearPeakMemoryMb() {
       bitField0_ = (bitField0_ & ~0x00000400);
-      peakMemoryKb_ = 0;
+      peakMemoryMb_ = 0;
       onChanged();
       return this;
     }

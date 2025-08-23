@@ -65,10 +65,10 @@ public interface RunUpdateOrBuilder extends
    * optional, nếu đo được
    * </pre>
    *
-   * <code>int32 memory_kb = 5;</code>
-   * @return The memoryKb.
+   * <code>int32 memory_mb = 5;</code>
+   * @return The memoryMb.
    */
-  int getMemoryKb();
+  int getMemoryMb();
 
   /**
    * <code>.google.protobuf.Timestamp ts = 6;</code>

@@ -36,6 +36,10 @@ public enum ErrorCode {
     ORG_NOT_FOUND(4049004, NOT_FOUND_STATUS, "Không tìm thấy tổ chức!",
             NOT_FOUND),
 
+    //406 - Post Error
+    POST_NOT_AUTHORIZED(4069001, NOT_ACCEPTABLE_STATUS, "Bạn không có quyền truy cập vào bài đăng này!",
+            NOT_ACCEPTABLE),
+
 
     // 409 - Conflict
     USER_ALREADY_EXISTS(4099001, CONFLICT_STATUS, "Người dùng đã tồn tại!",

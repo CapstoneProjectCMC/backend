@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OrganizationService.Core.ApiModels;
 using OrganizationService.Service.ApiModels.Class;
@@ -10,8 +9,6 @@ using OrganizationService.Service.Interfaces;
 
 namespace OrganizationService.Api.Controllers
 {
-    [Authorize]
-    [Authorize(Policy = "AdminOnly")]
     [Route("api/[controller]")]
     [ApiController]
     public class OrganizationMemberController : BaseApiController
@@ -63,6 +60,27 @@ namespace OrganizationService.Api.Controllers
         {
             await _orgMemberService.DeleteAsync(id);
             return Success();
+        }
+        
+        [HttpGet("user/{userId:guid}/primary")]
+        public async Task<IActionResult> GetPrimaryOrg(Guid userId)
+        {
+            var result = await _orgMemberService.GetPrimaryOrgForUser(userId);
+            return Success(result);
+        }
+
+        [HttpPost("join/{organizationId:guid}")]
+        public async Task<IActionResult> JoinOrganization(Guid organizationId)
+        {
+            var result = await _orgMemberService.JoinOrganizationForCurrentUser(organizationId);
+            return Success(result);
+        }
+
+        [HttpPost("{organizationId:guid}/admin/grant/{userId:guid}")]
+        public async Task<IActionResult> GrantAdmin(Guid organizationId, Guid userId)
+        {
+            var result = await _orgMemberService.GrantAdmin(organizationId, userId);
+            return Success(result);
         }
     }
 }
