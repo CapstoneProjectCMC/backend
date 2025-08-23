@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using OrganizationService.Core.ApiModels;
 using OrganizationService.Core.Exceptions;
 using OrganizationService.DataAccess.Interfaces;
@@ -11,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace OrganizationService.Service.Implementation
@@ -18,6 +20,7 @@ namespace OrganizationService.Service.Implementation
     public class OrganizationService : BaseService, IOrganizationService
     {
         private readonly IRepository<Organization> _organizationRepository;
+        private readonly FileServiceClient _fileServiceClient;
         private readonly IOrgEventPublisher _orgEventPublisher;
 
         public OrganizationService(
@@ -25,10 +28,13 @@ namespace OrganizationService.Service.Implementation
             IUnitOfWork unitOfWork,
             UserContext userContext,
             IRepository<Organization> organizationRepository,
+            FileServiceClient fileServiceClient
+            IRepository<Organization> organizationRepository,
             IOrgEventPublisher orgEventPublisher
         ) : base(appSettings, unitOfWork, userContext)
         {
             _organizationRepository = organizationRepository;
+            _fileServiceClient = fileServiceClient;
             _orgEventPublisher = orgEventPublisher;
         }
 
@@ -57,7 +63,7 @@ namespace OrganizationService.Service.Implementation
                     Address = o.Address,
                     Email = o.Email,
                     Phone = o.Phone,
-                    Logo = o.Logo,
+                 //   Logo = o.Logo,
                     LogoUrl = o.LogoUrl,
                     Status = o.Status
                 });
@@ -82,7 +88,7 @@ namespace OrganizationService.Service.Implementation
                 Address = org.Address,
                 Email = org.Email,
                 Phone = org.Phone,
-                Logo = org.Logo,
+              //  Logo = org.Logo,
                 LogoUrl = org.LogoUrl,
                 Status = org.Status
             };
@@ -103,8 +109,8 @@ namespace OrganizationService.Service.Implementation
                 Address = request.Address,
                 Email = request.Email,
                 Phone = request.Phone,
-                Logo = request?.Logo,
-                LogoUrl = request?.LogoUrl,
+              //  Logo = request?.Logo,
+               // LogoUrl = request?.LogoUrl,
                 Status = request.Status,
                 CreatedAt = DateTime.UtcNow,
                 CreatedBy = _userContext.UserId
@@ -112,6 +118,27 @@ namespace OrganizationService.Service.Implementation
 
             await _organizationRepository.CreateAsync(entity);
             await _unitOfWork.SaveChangesAsync();
+
+            // Nếu có logo file, upload lên File service
+            if (request.LogoUrl != null && request.LogoUrl.Length > 0)
+            {
+                try
+                {
+                    var logoUrl = await _fileServiceClient.UploadLogoAsync(request.LogoUrl, entity.Id);
+                    entity.LogoUrl = logoUrl;
+
+                    _organizationRepository.Update(entity);
+                    await _unitOfWork.SaveChangesAsync();
+                }
+                catch (ErrorException ex)
+                {
+                    throw new ErrorException(ex.StatusCode, $"Failed to upload logo: {ex.Message}");
+                }
+                catch (Exception ex)
+                {
+                    throw new ErrorException(Core.Enums.StatusCodeEnum.A01, $"Failed to upload logo: {ex.Message}");
+                }
+            }
 
             await _orgEventPublisher.PublishAsync(new {
                 type = "CREATED",
@@ -137,7 +164,7 @@ namespace OrganizationService.Service.Implementation
                 Address = entity.Address,
                 Email = entity.Email,
                 Phone = entity.Phone,
-                Logo = entity.Logo,
+                //Logo = entity.Logo,
                 LogoUrl = entity.LogoUrl,
                 Status = entity.Status
             };
@@ -187,7 +214,7 @@ namespace OrganizationService.Service.Implementation
                 Address = entity.Address,
                 Email = entity.Email,
                 Phone = entity.Phone,
-                Logo = entity.Logo,
+               // Logo = entity.Logo,
                 LogoUrl = entity.LogoUrl,
                 Status = entity.Status
             };
@@ -215,5 +242,4 @@ namespace OrganizationService.Service.Implementation
             return true;
         }
     }
-
 }

@@ -56,5 +56,8 @@ namespace FileService.Service.ApiModels.FileDocumentModels
 
         // đường dẫn .m3u8 cho video HLS
         public string? HlsUrl { get; set; }
+
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public Guid? CreatedBy { get; set; }
     }
 }

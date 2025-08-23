@@ -26,7 +26,7 @@ namespace FileService.Service.Implementation
         {
             _config = options.Value ?? throw new ArgumentNullException(nameof(options.Value));
 
-            Console.WriteLine($"MinioConfig: Endpoint={_config.Endpoint}, Port={_config.Port}, AccessKey length={_config.AccessKey?.Length ?? 0}, Secure={_config.Secure}");
+            Console.WriteLine($"MinioConfig: Endpoint={_config.Endpoint}, PublicEndpoint={_config.PublicEndpoint}, Port={_config.Port}, AccessKey length={_config.AccessKey?.Length ?? 0}, Secure={_config.Secure}");
 
             if (string.IsNullOrWhiteSpace(_config.Endpoint) || _config.Port <= 0 || string.IsNullOrWhiteSpace(_config.AccessKey) || string.IsNullOrWhiteSpace(_config.SecretKey))
             {
@@ -151,7 +151,7 @@ namespace FileService.Service.Implementation
                 throw new ArgumentException("Invalid object name", nameof(objectName));
             }
 
-            var endpoint = _config.PublicEndpoint ?? _config.Endpoint; // Ưu tiên PublicEndpoint
+            var endpoint = !string.IsNullOrWhiteSpace(_config.PublicEndpoint) ? _config.PublicEndpoint : _config.Endpoint;// Ưu tiên PublicEndpoint
 
             var url = $"{(_config.Secure ? "https" : "http")}://{endpoint}:{_config.Port}/{_config.BucketName}/{objectName}";
             Console.WriteLine($"Generated URL: {url}");

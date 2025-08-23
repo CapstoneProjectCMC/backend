@@ -19,10 +19,12 @@ using FileService.Service.Implementation;
 using FileService.Service.Interfaces;
 using Microsoft.Extensions.FileProviders;
 using System.Security.Claims;
+using FileService.Api.Application;
 
 BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
 
 var builder = WebApplication.CreateBuilder(args);
+//builder.Services.AddTransient<GrpcClient>();  // Add gRPC client service
 
 var config = builder.Configuration;
 
@@ -84,6 +86,8 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Password.RequiredUniqueChars = 1;
 });
 
+
+//add authen
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -93,18 +97,32 @@ builder.Services.AddAuthentication(options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
     {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        ValidateLifetime = false,
         ValidateIssuerSigningKey = true,
         ValidIssuer = appSettings.Jwt.Issuer,
-        ValidAudience = appSettings.Jwt.Audience,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(appSettings.Jwt.Key)),
 
         // Cấu hình claim để nhận Role
-        RoleClaimType = ClaimTypes.Role
-
+        RoleClaimType = ClaimTypes.Role,
+        NameClaimType = ClaimTypes.NameIdentifier
     };
+});
+
+// Thêm MemoryCache để cache claims
+builder.Services.AddMemoryCache();
+
+//add author policies
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy => policy.RequireRole("ADMIN"));
+    options.AddPolicy("TeacherOrAdmin", policy => policy.RequireRole("TEACHER", "SYS_ADMIN"));
+    options.AddPolicy("SysAdminOnly", policy => policy.RequireRole("SYS_ADMIN"));
+    options.AddPolicy("OrgAdminOnly", policy => policy.RequireRole("ORG_ADMIN"));
+    options.AddPolicy("TeacherOnly", policy => policy.RequireRole("TEACHER"));
+    options.AddPolicy("UserOnly", policy => policy.RequireRole("USER"));
+    options.AddPolicy("LoggedInUsers", policy => policy.RequireRole("USER", "TEACHER", "ORG_ADMIN", "SYS_ADMIN"));
 });
 
 builder.Services.AddCors(options =>
@@ -112,7 +130,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: MyAllowSpecificOrigins,
                       policy =>
                       {
-                          policy.WithOrigins("*")
+                          policy.AllowAnyOrigin()
                           .AllowAnyHeader()
                           .AllowAnyMethod();
                       });
@@ -166,6 +184,9 @@ builder.WebHost.ConfigureKestrel(options =>
 
 
 var app = builder.Build();
+
+//var client = app.Services.GetRequiredService<GrpcClient>(); // Call gRPC client service to test connection
+//client.GetFilesAsync("pdf").Wait(); // test với filter là "pdf"
 
 // Migrate MongoDB and seed data if necessary
 app.MigrateMongoDb();
