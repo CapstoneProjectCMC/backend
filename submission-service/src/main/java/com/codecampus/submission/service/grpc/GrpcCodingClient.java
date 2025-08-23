@@ -4,6 +4,7 @@ import com.codecampus.coding.grpc.AddCodingDetailRequest;
 import com.codecampus.coding.grpc.AddTestCaseRequest;
 import com.codecampus.coding.grpc.CodingSyncServiceGrpc;
 import com.codecampus.coding.grpc.CreateCodingExerciseRequest;
+import com.codecampus.coding.grpc.SoftDeleteAssignmentRequest;
 import com.codecampus.coding.grpc.SoftDeleteRequest;
 import com.codecampus.coding.grpc.SoftDeleteTestCaseRequest;
 import com.codecampus.coding.grpc.UpsertAssignmentRequest;
@@ -105,5 +106,13 @@ public class GrpcCodingClient {
                 .build();
 
         stub.upsertAssignment(request);
+    }
+
+    @Transactional
+    public void softDeleteAssignment(String assignmentId) {
+        stub.softDeleteAssignment(
+                SoftDeleteAssignmentRequest.newBuilder()
+                        .setId(assignmentId)
+                        .build());
     }
 }

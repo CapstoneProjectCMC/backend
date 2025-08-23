@@ -177,19 +177,16 @@ public class ExerciseService {
         submissionRepository.save(submission);
 
         // Set Complete
-        if (quizSubmissionDto.getScore() >=
-                quizSubmissionDto.getTotalPoints()) {
-            assignmentRepository
-                    .findByExerciseIdAndStudentId(
-                            quizSubmissionDto.getExerciseId(),
-                            quizSubmissionDto.getStudentId())
-                    .ifPresent(a -> a.setCompleted(true));
+        assignmentRepository
+                .findByExerciseIdAndStudentId(
+                        quizSubmissionDto.getExerciseId(),
+                        quizSubmissionDto.getStudentId())
+                .ifPresent(a -> a.setCompleted(true));
 
-            assignmentService.markCompleted(
-                    quizSubmissionDto.getExerciseId(),
-                    quizSubmissionDto.getStudentId()
-            );
-        }
+        assignmentService.markCompleted(
+                quizSubmissionDto.getExerciseId(),
+                quizSubmissionDto.getStudentId()
+        );
 
         // Cập nhật xếp hạng contest
         contestService.updateRankingOnSubmission(submission);

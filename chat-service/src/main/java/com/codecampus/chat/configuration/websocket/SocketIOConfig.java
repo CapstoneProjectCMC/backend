@@ -1,4 +1,4 @@
-package com.codecampus.chat.configuration.config;
+package com.codecampus.chat.configuration.websocket;
 
 import com.corundumstudio.socketio.SocketIOServer;
 import org.springframework.context.annotation.Bean;

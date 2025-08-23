@@ -8,6 +8,12 @@ spring:
     mongodb:
       uri: mongodb://${CHAT_USERNAME}:${CHAT_PASSWORD}@chat-db:27017/${CHAT_DATABASE}?authSource=${CHAT_DATABASE}
       auto-index-creation: true
+    redis:
+      host: redis     # dịch vụ trong compose
+      port: 6379
+      password: ${REDIS_PASSWORD}
+  kafka:
+    bootstrap-servers: http://kafka:9092
 
 app:
   services:

@@ -10,9 +10,10 @@ public record AssignedStudentResponse(
         UserSummary student,
         Instant dueAt,
         boolean completed,
+        Instant completedAt,
         Integer bestScore,  // best score của HS cho exercise này
         Integer totalPoints, // tổng điểm tối đa (quiz) / số testcases (coding)
         ExerciseType exerciseType,
-        Instant completedAt
+        Boolean pass
 ) {
 }

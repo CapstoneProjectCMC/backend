@@ -4,6 +4,7 @@ import com.codecampus.submission.constant.submission.ExerciseType;
 import com.codecampus.submission.dto.request.assignment.BulkAssignExerciseRequest;
 import com.codecampus.submission.entity.Assignment;
 import com.codecampus.submission.entity.Exercise;
+import com.codecampus.submission.helper.AuthenticationHelper;
 import com.codecampus.submission.helper.ExerciseHelper;
 import com.codecampus.submission.repository.AssignmentRepository;
 import com.codecampus.submission.service.grpc.GrpcCodingClient;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -60,6 +62,45 @@ public class AssignmentService {
         }
         return assignment;
     }
+
+    @Transactional
+    public void softDeleteAssignment(
+            String exerciseId,
+            String studentId) {
+        String by = AuthenticationHelper.getMyUsername();
+
+        assignmentRepository.findByExerciseIdAndStudentId(exerciseId, studentId)
+                .ifPresent(a -> {
+                    a.markDeleted(by);
+                    assignmentRepository.save(a);
+                    pushAssignmentDeleteToChildService(a);
+                });
+    }
+
+    @Transactional
+    public void bulkSoftDeleteAssignments(
+            String exerciseId, Set<String> studentIds) {
+
+        String by = AuthenticationHelper.getMyUsername();
+
+        if (studentIds == null || studentIds.isEmpty()) {
+            return;
+        }
+
+        List<Assignment> assigmentList = assignmentRepository
+                .findByExerciseIdAndStudentIdIn(exerciseId,
+                        studentIds.stream()
+                                .filter(Objects::nonNull)
+                                .map(String::trim)
+                                .filter(s -> !s.isEmpty()).distinct().toList()
+                );
+
+        assigmentList.forEach(assignment -> {
+            assignment.markDeleted(by);
+            pushAssignmentDeleteToChildService(assignment);
+        });
+    }
+
 
     @Transactional
     public List<Assignment> assignExerciseToMany(
@@ -131,6 +172,15 @@ public class AssignmentService {
             grpcQuizClient.pushAssignment(assignment);
         } else if (exercise.getExerciseType() == ExerciseType.CODING) {
             grpcCodingClient.pushAssignment(assignment);
+        }
+    }
+
+    public void pushAssignmentDeleteToChildService(Assignment assignment) {
+        Exercise e = assignment.getExercise();
+        if (e.getExerciseType() == ExerciseType.QUIZ) {
+            grpcQuizClient.softDeleteAssignment(assignment.getId());
+        } else if (e.getExerciseType() == ExerciseType.CODING) {
+            grpcCodingClient.softDeleteAssignment(assignment.getId());
         }
     }
 }

@@ -263,6 +263,37 @@ public final class QuizSyncServiceGrpc {
     return getSoftDeleteOptionMethod;
   }
 
+  private static volatile io.grpc.MethodDescriptor<com.codecampus.quiz.grpc.SoftDeleteAssignmentRequest,
+      com.google.protobuf.Empty> getSoftDeleteAssignmentMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "SoftDeleteAssignment",
+      requestType = com.codecampus.quiz.grpc.SoftDeleteAssignmentRequest.class,
+      responseType = com.google.protobuf.Empty.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<com.codecampus.quiz.grpc.SoftDeleteAssignmentRequest,
+      com.google.protobuf.Empty> getSoftDeleteAssignmentMethod() {
+    io.grpc.MethodDescriptor<com.codecampus.quiz.grpc.SoftDeleteAssignmentRequest, com.google.protobuf.Empty> getSoftDeleteAssignmentMethod;
+    if ((getSoftDeleteAssignmentMethod = QuizSyncServiceGrpc.getSoftDeleteAssignmentMethod) == null) {
+      synchronized (QuizSyncServiceGrpc.class) {
+        if ((getSoftDeleteAssignmentMethod = QuizSyncServiceGrpc.getSoftDeleteAssignmentMethod) == null) {
+          QuizSyncServiceGrpc.getSoftDeleteAssignmentMethod = getSoftDeleteAssignmentMethod =
+              io.grpc.MethodDescriptor.<com.codecampus.quiz.grpc.SoftDeleteAssignmentRequest, com.google.protobuf.Empty>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "SoftDeleteAssignment"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.codecampus.quiz.grpc.SoftDeleteAssignmentRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.google.protobuf.Empty.getDefaultInstance()))
+              .setSchemaDescriptor(new QuizSyncServiceMethodDescriptorSupplier("SoftDeleteAssignment"))
+              .build();
+        }
+      }
+    }
+    return getSoftDeleteAssignmentMethod;
+  }
+
   /**
    * Creates a new async stub that supports all call types for the service
    */
@@ -381,6 +412,13 @@ public final class QuizSyncServiceGrpc {
         io.grpc.stub.StreamObserver<com.google.protobuf.Empty> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getSoftDeleteOptionMethod(), responseObserver);
     }
+
+    /**
+     */
+    default void softDeleteAssignment(com.codecampus.quiz.grpc.SoftDeleteAssignmentRequest request,
+        io.grpc.stub.StreamObserver<com.google.protobuf.Empty> responseObserver) {
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getSoftDeleteAssignmentMethod(), responseObserver);
+    }
   }
 
   /**
@@ -473,6 +511,14 @@ public final class QuizSyncServiceGrpc {
       io.grpc.stub.ClientCalls.asyncUnaryCall(
           getChannel().newCall(getSoftDeleteOptionMethod(), getCallOptions()), request, responseObserver);
     }
+
+    /**
+     */
+    public void softDeleteAssignment(com.codecampus.quiz.grpc.SoftDeleteAssignmentRequest request,
+        io.grpc.stub.StreamObserver<com.google.protobuf.Empty> responseObserver) {
+      io.grpc.stub.ClientCalls.asyncUnaryCall(
+          getChannel().newCall(getSoftDeleteAssignmentMethod(), getCallOptions()), request, responseObserver);
+    }
   }
 
   /**
@@ -546,6 +592,13 @@ public final class QuizSyncServiceGrpc {
       return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getSoftDeleteOptionMethod(), getCallOptions(), request);
     }
+
+    /**
+     */
+    public com.google.protobuf.Empty softDeleteAssignment(com.codecampus.quiz.grpc.SoftDeleteAssignmentRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getSoftDeleteAssignmentMethod(), getCallOptions(), request);
+    }
   }
 
   /**
@@ -618,6 +671,13 @@ public final class QuizSyncServiceGrpc {
     public com.google.protobuf.Empty softDeleteOption(com.codecampus.quiz.grpc.SoftDeleteOptionRequest request) {
       return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getSoftDeleteOptionMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public com.google.protobuf.Empty softDeleteAssignment(com.codecampus.quiz.grpc.SoftDeleteAssignmentRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getSoftDeleteAssignmentMethod(), getCallOptions(), request);
     }
   }
 
@@ -700,6 +760,14 @@ public final class QuizSyncServiceGrpc {
       return io.grpc.stub.ClientCalls.futureUnaryCall(
           getChannel().newCall(getSoftDeleteOptionMethod(), getCallOptions()), request);
     }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<com.google.protobuf.Empty> softDeleteAssignment(
+        com.codecampus.quiz.grpc.SoftDeleteAssignmentRequest request) {
+      return io.grpc.stub.ClientCalls.futureUnaryCall(
+          getChannel().newCall(getSoftDeleteAssignmentMethod(), getCallOptions()), request);
+    }
   }
 
   private static final int METHODID_CREATE_QUIZ_EXERCISE = 0;
@@ -710,6 +778,7 @@ public final class QuizSyncServiceGrpc {
   private static final int METHODID_SOFT_DELETE_EXERCISE = 5;
   private static final int METHODID_SOFT_DELETE_QUESTION = 6;
   private static final int METHODID_SOFT_DELETE_OPTION = 7;
+  private static final int METHODID_SOFT_DELETE_ASSIGNMENT = 8;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -758,6 +827,10 @@ public final class QuizSyncServiceGrpc {
           break;
         case METHODID_SOFT_DELETE_OPTION:
           serviceImpl.softDeleteOption((com.codecampus.quiz.grpc.SoftDeleteOptionRequest) request,
+              (io.grpc.stub.StreamObserver<com.google.protobuf.Empty>) responseObserver);
+          break;
+        case METHODID_SOFT_DELETE_ASSIGNMENT:
+          serviceImpl.softDeleteAssignment((com.codecampus.quiz.grpc.SoftDeleteAssignmentRequest) request,
               (io.grpc.stub.StreamObserver<com.google.protobuf.Empty>) responseObserver);
           break;
         default:
@@ -834,6 +907,13 @@ public final class QuizSyncServiceGrpc {
               com.codecampus.quiz.grpc.SoftDeleteOptionRequest,
               com.google.protobuf.Empty>(
                 service, METHODID_SOFT_DELETE_OPTION)))
+        .addMethod(
+          getSoftDeleteAssignmentMethod(),
+          io.grpc.stub.ServerCalls.asyncUnaryCall(
+            new MethodHandlers<
+              com.codecampus.quiz.grpc.SoftDeleteAssignmentRequest,
+              com.google.protobuf.Empty>(
+                service, METHODID_SOFT_DELETE_ASSIGNMENT)))
         .build();
   }
 
@@ -890,6 +970,7 @@ public final class QuizSyncServiceGrpc {
               .addMethod(getSoftDeleteExerciseMethod())
               .addMethod(getSoftDeleteQuestionMethod())
               .addMethod(getSoftDeleteOptionMethod())
+              .addMethod(getSoftDeleteAssignmentMethod())
               .build();
         }
       }

@@ -61,6 +61,8 @@ public enum ErrorCode {
             NOT_FOUND),
     QUESTION_NOT_FOUND(4048406, NOT_FOUND_STATUS, "Không tìm thấy câu hỏi!",
             NOT_FOUND),
+    ASSIGNMENT_NOT_FOUND(4048407, NOT_FOUND_STATUS,
+            "Không tìm thấy bài được giao!", NOT_FOUND),
 
 
     // 409 - Conflict

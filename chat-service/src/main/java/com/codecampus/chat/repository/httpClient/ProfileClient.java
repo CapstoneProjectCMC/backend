@@ -1,6 +1,5 @@
 package com.codecampus.chat.repository.httpClient;
 
-import com.codecampus.chat.configuration.config.AuthenticationRequestInterceptor;
 import com.codecampus.chat.configuration.config.FeignConfig;
 import com.codecampus.chat.dto.common.ApiResponse;
 import com.codecampus.chat.dto.response.UserProfileResponse;
@@ -13,8 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
         name = "profile-service",
         url = "${app.services.profile}",
         path = "/internal",
-        configuration = {
-                AuthenticationRequestInterceptor.class, FeignConfig.class}
+        configuration = {FeignConfig.class}
 )
 public interface ProfileClient {
 

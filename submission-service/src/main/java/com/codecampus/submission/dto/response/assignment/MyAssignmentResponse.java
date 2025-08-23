@@ -13,6 +13,7 @@ public record MyAssignmentResponse(
         Instant completedAt,
         Integer myBestScore,
         Integer totalPoints,
-        ExerciseType exerciseType
+        ExerciseType exerciseType,
+        Boolean pass
 ) {
 }

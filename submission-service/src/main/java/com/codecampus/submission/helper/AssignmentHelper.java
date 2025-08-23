@@ -1,6 +1,5 @@
 package com.codecampus.submission.helper;
 
-import com.codecampus.submission.constant.submission.SubmissionStatus;
 import com.codecampus.submission.dto.response.assignment.AssignedStudentResponse;
 import com.codecampus.submission.dto.response.assignment.MyAssignmentResponse;
 import com.codecampus.submission.entity.Assignment;
@@ -28,6 +27,7 @@ public class AssignmentHelper {
         Score result = getScore(assignment, studentId);
         Instant completedAt =
                 getCompletionTimeIfCompleted(assignment, studentId);
+        Boolean pass = computePass(assignment, result);
 
         return new MyAssignmentResponse(
                 assignment.getId(),
@@ -38,7 +38,8 @@ public class AssignmentHelper {
                 completedAt,
                 result.bestScore(),
                 result.totalPoints(),
-                result.exercise().getExerciseType()
+                result.exercise().getExerciseType(),
+                pass
         );
 
     }
@@ -51,16 +52,18 @@ public class AssignmentHelper {
         Instant completedAt =
                 getCompletionTimeIfCompleted(assignment,
                         assignment.getStudentId());
+        Boolean pass = computePass(assignment, result);
 
         return new AssignedStudentResponse(
                 assignment.getId(),
                 studentSummary,
                 assignment.getDueAt(),
                 assignment.isCompleted(),
+                completedAt,
                 result.bestScore(),
                 result.totalPoints(),
                 result.exercise().getExerciseType(),
-                completedAt
+                pass
         );
     }
 
@@ -87,15 +90,25 @@ public class AssignmentHelper {
             return null;
         }
         return submissionRepository
-                .findFirstByExerciseIdAndUserIdAndStatusOrderBySubmittedAtAsc(
+                .findFirstByExerciseIdAndUserIdOrderBySubmittedAtAsc(
                         assignment.getExercise().getId(),
-                        studentId,
-                        SubmissionStatus.PASSED)
+                        studentId)
                 .map(Submission::getSubmittedAt)
                 .orElse(null);
     }
 
-    private record Score(Exercise exercise, Integer totalPoints,
-                         Integer bestScore) {
+    Boolean computePass(Assignment a, Score s) {
+        if (s.bestScore() == null || s.totalPoints() == null ||
+                s.totalPoints() <= 0) {
+            return null; // chưa có dữ liệu
+        }
+        return switch (a.getExercise().getExerciseType()) {
+            case QUIZ -> (s.bestScore() * 100.0 / s.totalPoints()) >= 85.0;
+            case CODING -> s.bestScore().equals(s.totalPoints());
+        };
+    }
+
+    record Score(Exercise exercise, Integer totalPoints,
+                 Integer bestScore) {
     }
 }

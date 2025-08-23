@@ -14,6 +14,7 @@ public record CodingAttemptHistoryResponse(
         String language,
         Integer peakMemoryMb,      // map từ Submission.memoryUsed
         SubmissionStatus status,
-        Instant submittedAt
+        Instant submittedAt,
+        Boolean passed
 ) {
 }

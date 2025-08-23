@@ -237,4 +237,16 @@ public class CodingService {
         assignmentRepository.save(assignment);
     }
 
+    @Transactional
+    public void softDeleteAssignment(
+            String assignmentId) {
+        Assignment assignment = assignmentRepository
+                .findById(assignmentId)
+                .orElseThrow(
+                        () -> new AppException(ErrorCode.ASSIGNMENT_NOT_FOUND));
+        String by = AuthenticationHelper.getMyUsername();
+        assignment.markDeleted(by);
+        assignmentRepository.save(assignment);
+    }
+
 }

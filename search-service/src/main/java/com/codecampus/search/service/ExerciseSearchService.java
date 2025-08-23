@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.elasticsearch.client.elc.NativeQuery;
 import org.springframework.data.elasticsearch.client.elc.NativeQueryBuilder;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
@@ -62,7 +63,11 @@ public class ExerciseSearchService {
                 .withQuery(
                         q -> q.bool(builder -> buildQuery(request, builder)))
                 .withPageable(
-                        PageRequest.of(request.page() - 1, request.size()))
+                        PageRequest.of(
+                                request.page() - 1,
+                                request.size(),
+                                Sort.by(Sort.Order.desc("createdAt"))
+                        ))
                 .withHighlightQuery(highlightQuery)
                 .build();
 

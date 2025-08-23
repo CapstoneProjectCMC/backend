@@ -26,6 +26,7 @@ com\codecampus\coding\grpc\CodingPlayServiceGrpc$AsyncService.class
 com\codecampus\quiz\grpc\QuestionDtoLoadResponseOrBuilder.class
 com\codecampus\quiz\grpc\SubmitQuizRequest$Builder.class
 com\codecampus\quiz\grpc\LoadQuizResponse.class
+com\codecampus\quiz\grpc\SoftDeleteAssignmentRequest$1.class
 com\codecampus\coding\grpc\TestCaseResultDto$1.class
 com\codecampus\coding\grpc\TestCaseResultDto$Builder.class
 com\codecampus\quiz\grpc\QuizExerciseDto.class
@@ -106,6 +107,7 @@ com\codecampus\coding\grpc\LoadCodingRequest$Builder.class
 com\codecampus\coding\grpc\playground\PlaygroundServiceGrpc$1.class
 com\codecampus\quiz\grpc\SubmitQuizResponse.class
 com\codecampus\coding\grpc\playground\PlaygroundServiceGrpc.class
+com\codecampus\quiz\grpc\SoftDeleteAssignmentRequest$Builder.class
 com\codecampus\quiz\grpc\SoftDeleteQuestionRequest$1.class
 com\codecampus\coding\grpc\playground\PlaygroundServiceGrpc$2.class
 com\codecampus\quiz\grpc\SoftDeleteOptionRequest$1.class
@@ -137,6 +139,7 @@ com\codecampus\submission\grpc\TestCaseResultSyncDto$Builder.class
 com\codecampus\coding\grpc\playground\RunUpdate.class
 com\codecampus\submission\grpc\SubmissionSyncServiceGrpc$MethodHandlers.class
 com\codecampus\quiz\grpc\LoadQuizRequest$Builder.class
+com\codecampus\quiz\grpc\SoftDeleteAssignmentRequest.class
 com\codecampus\submission\grpc\CreateQuizSubmissionRequest.class
 com\codecampus\quiz\grpc\QuizSyncServiceGrpc$MethodHandlers.class
 com\codecampus\submission\grpc\CreateCodeSubmissionRequest.class
@@ -164,6 +167,7 @@ com\codecampus\coding\grpc\playground\PlaygroundServiceGrpc$AsyncService.class
 com\codecampus\quiz\grpc\QuestionDto$1.class
 com\codecampus\coding\grpc\CodingSyncServiceGrpc$CodingSyncServiceStub.class
 com\codecampus\quiz\grpc\SubmitQuizRequest.class
+com\codecampus\coding\grpc\SoftDeleteAssignmentRequest.class
 com\codecampus\coding\grpc\TestCaseDtoLoadResponse$Builder.class
 com\codecampus\coding\grpc\AddTestCaseRequest$1.class
 com\codecampus\submission\grpc\SubmissionSyncServiceGrpc.class
@@ -195,8 +199,10 @@ com\codecampus\quiz\grpc\CreateQuizExerciseRequest$1.class
 com\codecampus\quiz\grpc\QuizExerciseDto$Builder.class
 com\codecampus\quiz\grpc\QuizPlayServiceGrpc$MethodHandlers.class
 com\codecampus\submission\grpc\CodeSubmissionDto.class
+com\codecampus\coding\grpc\SoftDeleteAssignmentRequest$1.class
 com\codecampus\quiz\grpc\QuizSyncServiceGrpc$QuizSyncServiceMethodDescriptorSupplier.class
 com\codecampus\coding\grpc\CodingDetailDto.class
+com\codecampus\coding\grpc\SoftDeleteAssignmentRequestOrBuilder.class
 com\codecampus\quiz\grpc\QuizSyncServiceGrpc$QuizSyncServiceFileDescriptorSupplier.class
 com\codecampus\quiz\grpc\AssignmentDto$1.class
 com\codecampus\coding\grpc\CodingPlayServiceGrpc$1.class
@@ -235,6 +241,7 @@ com\codecampus\coding\grpc\playground\RunRequestOrBuilder.class
 com\codecampus\quiz\grpc\QuizPlayServiceGrpc$QuizPlayServiceFileDescriptorSupplier.class
 com\codecampus\coding\grpc\playground\RunUpdate$1.class
 com\codecampus\coding\grpc\SoftDeleteRequest$Builder.class
+com\codecampus\coding\grpc\SoftDeleteAssignmentRequest$Builder.class
 com\codecampus\quiz\grpc\AssignmentDto$Builder.class
 com\codecampus\submission\grpc\SubmissionSyncServiceGrpc$4.class
 com\codecampus\coding\grpc\playground\RunUpdate$Builder.class
@@ -246,6 +253,7 @@ com\codecampus\coding\grpc\CodingDetailDtoOrBuilder.class
 com\codecampus\coding\grpc\CodingSyncServiceGrpc$CodingSyncServiceMethodDescriptorSupplier.class
 com\codecampus\coding\grpc\CodingSyncServiceGrpc.class
 com\codecampus\coding\grpc\CodingPlayServiceGrpc$MethodHandlers.class
+com\codecampus\quiz\grpc\SoftDeleteAssignmentRequestOrBuilder.class
 com\codecampus\submission\grpc\CodeSubmissionDtoOrBuilder.class
 com\codecampus\submission\grpc\SubmissionSyncServiceGrpc$3.class
 com\codecampus\coding\grpc\CodingPlayServiceGrpc$3.class

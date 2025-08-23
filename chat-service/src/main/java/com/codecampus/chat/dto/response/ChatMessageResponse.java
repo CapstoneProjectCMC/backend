@@ -17,7 +17,7 @@ import java.time.Instant;
 public class ChatMessageResponse {
     String id;
     String conversationId;
-    boolean me;
+    boolean me; //
     String message;
     ParticipantInfo sender;
     Instant createdDate;

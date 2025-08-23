@@ -308,6 +308,10 @@ public class QuizService {
         QuizSubmission quizSubmission = QuizScoringHelper.score(
                 quizExercise, request);
 
+        boolean passed = quizSubmission.getTotalPoints() > 0
+                && (quizSubmission.getScore() * 100) >=
+                (85 * quizSubmission.getTotalPoints());
+
         quizSubmissionRepository.save(quizSubmission);
 
         // Sync sang submission-service
@@ -322,8 +326,7 @@ public class QuizService {
         return SubmitQuizResponse.newBuilder()
                 .setScore(quizSubmission.getScore())
                 .setTotalPoints(quizSubmission.getTotalPoints())
-                .setPassed(quizSubmission.getScore() ==
-                        quizSubmission.getTotalPoints())
+                .setPassed(passed)
                 .setTimeTakenSeconds(quizSubmission.getTimeTakenSeconds())
                 .build();
     }
@@ -340,6 +343,18 @@ public class QuizService {
                 assignmentDto,
                 assignment
         );
+        assignmentRepository.save(assignment);
+    }
+
+    @Transactional
+    public void softDeleteAssignment(String assignmentId) {
+        Assignment assignment = assignmentRepository
+                .findById(assignmentId)
+                .orElseThrow(
+                        () -> new AppException(ErrorCode.ASSIGNMENT_NOT_FOUND));
+
+        String by = AuthenticationHelper.getMyUsername();
+        assignment.markDeleted(by);
         assignmentRepository.save(assignment);
     }
 }

@@ -107,7 +107,7 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-// Thêm MemoryCache để cache claims
+
 builder.Services.AddMemoryCache();
 
 //add author policies
@@ -174,9 +174,9 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-builder.WebHost.ConfigureKestrel(options =>
-{
-    options.Limits.MaxRequestBodySize = 6L * 1024 * 1024 * 1024; // 6GB
+builder.Services.AddSingleton(sp => {
+    var cfg = builder.Configuration.GetSection("Kafka").Get<KafkaOptions>();
+    return new ProducerBuilder<string, string>(new ProducerConfig {
         BootstrapServers = cfg.BootstrapServers,
         Acks = Acks.All,
         EnableIdempotence = true,

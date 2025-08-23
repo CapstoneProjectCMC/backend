@@ -5,6 +5,7 @@ import com.codecampus.quiz.grpc.AddQuestionRequest;
 import com.codecampus.quiz.grpc.AddQuizDetailRequest;
 import com.codecampus.quiz.grpc.CreateQuizExerciseRequest;
 import com.codecampus.quiz.grpc.QuizSyncServiceGrpc;
+import com.codecampus.quiz.grpc.SoftDeleteAssignmentRequest;
 import com.codecampus.quiz.grpc.SoftDeleteOptionRequest;
 import com.codecampus.quiz.grpc.SoftDeleteQuestionRequest;
 import com.codecampus.quiz.grpc.SoftDeleteRequest;
@@ -144,5 +145,13 @@ public class GrpcQuizClient {
                 .build();
 
         stub.upsertAssignment(request);
+    }
+
+    @Transactional
+    public void softDeleteAssignment(String assignmentId) {
+        stub.softDeleteAssignment(
+                SoftDeleteAssignmentRequest.newBuilder()
+                        .setId(assignmentId)
+                        .build());
     }
 }

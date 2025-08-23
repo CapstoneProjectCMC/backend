@@ -406,7 +406,8 @@ public class AuthenticationService {
                 )
                 .claim("active", user.isEnabled())
                 .claim("token_type", type)
-                .claim("orgId", orgId);
+                .claim("org_role", orgRole != null ? orgRole : "")
+                .claim("org_id", orgId != null ? orgId : "");
 
         return builder.build();
     }

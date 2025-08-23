@@ -120,6 +120,10 @@ message UpsertAssignmentRequest {
   AssignmentDto assignment = 1;
 }
 
+message SoftDeleteAssignmentRequest {
+  string id = 1;
+}
+
 service CodingSyncService {
   rpc CreateCodingExercise(CreateCodingExerciseRequest)
       returns (google.protobuf.Empty);
@@ -132,6 +136,8 @@ service CodingSyncService {
   rpc SoftDeleteTestCase (SoftDeleteTestCaseRequest)
       returns (google.protobuf.Empty);
   rpc UpsertAssignment(UpsertAssignmentRequest)
+      returns (google.protobuf.Empty);
+  rpc SoftDeleteAssignment (SoftDeleteAssignmentRequest)
       returns (google.protobuf.Empty);
 }
 

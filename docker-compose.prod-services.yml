@@ -120,6 +120,7 @@ services:
       - CHAT_USERNAME=${CHAT_USERNAME}
       - CHAT_PASSWORD=${CHAT_PASSWORD}
       - CHAT_DATABASE=${CHAT_DATABASE}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
     ports: [ "8089:8089" ]
     networks: [ backend ]
 
