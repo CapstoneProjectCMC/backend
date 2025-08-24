@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 @FeignClient(
         name = "file-service",
-        url = "${file.service.file-url}",
+        url = "http://file-service-1:8082",
         configuration = {FeignMultipartSupportConfig.class,
                 AuthenticationRequestInterceptor.class})
 public interface FileServiceClient {
