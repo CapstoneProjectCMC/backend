@@ -52,5 +52,5 @@ public interface PostRepository extends JpaRepository<Post, String> {
       Pageable pageable
   );
 
-
+  Page<Post> findByUserId(String userId, Pageable pageable);
 }

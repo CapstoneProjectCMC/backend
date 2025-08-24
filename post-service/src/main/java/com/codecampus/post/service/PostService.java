@@ -40,13 +40,53 @@ public class PostService {
   private final FileServiceClient fileServiceClient;
   private final ProfileServiceClient profileServiceClient;
 
-  public PageResponse<?> getAllAccessiblePosts(HttpServletRequest request,
-                                               PageRequestDto pageRequestDto) {
+  public PageResponse<?> getAllPostsByUserId(HttpServletRequest request, int page, int size) {
     String token = request.getHeader("Authorization");
     String userId = customJwtDecoder.decode(token.substring(7)).getClaims()
         .get("userId").toString();
-    Pageable pageable = PageRequest.of(pageRequestDto.getPage(),
-        pageRequestDto.getSize(), Sort.by("createdAt").descending());
+    Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+    Page<Post> postPage = postRepository.findByUserId(userId, pageable);
+
+    // Map Post -> PostResponseDto
+    List<PostResponseDto> postResponses = postPage.getContent().stream()
+        .map(post -> {
+          ProfileResponseDto profile = profileServiceClient
+              .getUserProfileById(post.getUserId()).getResult();
+
+          return PostResponseDto.builder()
+              .postId(post.getPostId())
+              .userId(post.getUserId())
+              .username(profile.getUsername())
+              .avatarUrl(profile.getAvatarUrl())
+              .orgId(post.getOrgId())
+              .postType(post.getPostType())
+              .title(post.getTitle())
+              .content(post.getContent())
+              .allowComment(post.getAllowComment())
+              .hashtag(post.getHashtag())
+              .status(post.getStatus())
+              .accesses(post.getAccesses())
+              .createdAt(post.getCreatedAt().toString())
+              .build();
+        })
+        .toList();
+
+    return PageResponse.<PostResponseDto>builder()
+        .currentPage(postPage.getNumber())
+        .totalPages(postPage.getTotalPages())
+        .pageSize(postPage.getSize())
+        .totalElements(postPage.getTotalElements())
+        .data(postResponses)
+        .build();
+  }
+
+  public PageResponse<?> getAllAccessiblePosts(HttpServletRequest request,
+                                               int page, int size) {
+    String token = request.getHeader("Authorization");
+    String userId = customJwtDecoder.decode(token.substring(7)).getClaims()
+        .get("userId").toString();
+    Pageable pageable = PageRequest.of(page,
+        size, Sort.by("createdAt").descending());
     Page<Post> postPage =
         postRepository.findAllVisiblePosts(userId, pageable);
 
@@ -85,12 +125,13 @@ public class PostService {
 
   public PageResponse<?> SeachPosts(String searchText,
                                     HttpServletRequest request,
-                                    PageRequestDto pageRequestDto) {
+                                    int page,
+                                    int size) {
     String token = request.getHeader("Authorization");
     String userId = customJwtDecoder.decode(token.substring(7)).getClaims()
         .get("userId").toString();
-    Pageable pageable = PageRequest.of(pageRequestDto.getPage(),
-        pageRequestDto.getSize(), Sort.by("created_at").descending());
+    Pageable pageable = PageRequest.of(page,
+        size, Sort.by("created_at").descending());
     Page<Post> postPage =
         postRepository.searchVisiblePosts(searchText, userId, pageable);
 
