@@ -1,6 +1,5 @@
 ﻿
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -14,12 +13,14 @@ using OrganizationService.DataAccess.Interfaces;
 using OrganizationService.Service.Implementation;
 using OrganizationService.Service.Interfaces;
 using System.Data;
-using System.Security.Claims;
 using System.Text;
 using System.Text.Json.Serialization;
+using Confluent.Kafka;
+using OrganizationService.Core.Constants;
 
 var builder = WebApplication.CreateBuilder(args);
 //builder.Logging.AddAzureWebAppDiagnostics();
+//builder.Services.AddTransient<GrpcClient>(); // Add gRPC client service
 
 var config = builder.Configuration;
 
@@ -45,6 +46,37 @@ builder.Services.AddScoped<IClassService, ClassService>();
 builder.Services.AddScoped<IGradeService, GradeService>();
 builder.Services.AddScoped<IOrganizationService, OrganizationService.Service.Implementation.OrganizationService>();
 builder.Services.AddScoped<IOrganizationMemberService, OrganizationMemberService>();
+builder.Services.AddScoped<IOrgEventPublisher, OrgEventPublisher>();
+builder.Services.AddScoped<IOrgMemberEventPublisher, OrgMemberEventPublisher>();
+
+
+// Cấu hình HttpClient và FileServiceClient
+builder.Services.AddHttpClient("FileService", client =>
+{
+    var baseUrl = builder.Configuration["FileService:BaseUrl"];
+    if (string.IsNullOrEmpty(baseUrl))
+    {
+        throw new InvalidOperationException("FileService:BaseUrl is not configured in appsettings.json");
+    }
+    client.BaseAddress = new Uri(baseUrl);
+});
+
+// Đăng ký FileServiceClient với factory để cung cấp fileServiceBaseUrl
+builder.Services.AddScoped<FileServiceClient>(sp =>
+{
+    var httpClient = sp.GetRequiredService<IHttpClientFactory>().CreateClient("FileService");
+    var configuration = sp.GetRequiredService<IConfiguration>();
+    var logger = sp.GetRequiredService<ILogger<FileServiceClient>>();
+    var fileServiceBaseUrl = configuration["FileService:BaseUrl"];
+
+    if (string.IsNullOrEmpty(fileServiceBaseUrl))
+    {
+        logger.LogError("FileService:BaseUrl is not configured in appsettings.json");
+        throw new InvalidOperationException("FileService:BaseUrl is not configured in appsettings.json");
+    }
+
+    return new FileServiceClient(httpClient, fileServiceBaseUrl);
+});
 
 
 builder.Services.Configure<IdentityOptions>(options =>
@@ -57,7 +89,6 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Password.RequiredUniqueChars = 1;
 });
 
-
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -67,19 +98,16 @@ builder.Services.AddAuthentication(options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
     {
-        ValidateIssuer = false,
-        ValidateAudience = false,
-        ValidateLifetime = false,
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
         ValidIssuer = appSettings.Jwt.Issuer,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(appSettings.Jwt.Key)),
-
-        RoleClaimType = ClaimTypes.Role,
-        NameClaimType = ClaimTypes.NameIdentifier
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(appSettings.Jwt.Key))
     };
 });
 
-// Thêm MemoryCache để cache claims
+
 builder.Services.AddMemoryCache();
 
 //add author policies
@@ -99,7 +127,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: MyAllowSpecificOrigins,
                       policy =>
                       {
-                          policy.WithOrigins("*")
+                          policy.AllowAnyOrigin()
                           .AllowAnyHeader()
                           .AllowAnyMethod();
                       });
@@ -146,13 +174,24 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-builder.WebHost.ConfigureKestrel(options =>
-{
-    options.Limits.MaxRequestBodySize = 6L * 1024 * 1024 * 1024; // 6GB
+builder.Services.AddSingleton(sp => {
+    var cfg = builder.Configuration.GetSection("Kafka").Get<KafkaOptions>();
+    return new ProducerBuilder<string, string>(new ProducerConfig {
+        BootstrapServers = cfg.BootstrapServers,
+        Acks = Acks.All,
+        EnableIdempotence = true,
+        LingerMs = 5,
+        BatchSize = 32 * 1024
+    }).Build();
 });
 
+builder.Services.AddSingleton<KafkaOptions>(builder.Configuration.GetSection("Kafka").Get<KafkaOptions>() ?? new());
+builder.Services.AddScoped<IOrgEventPublisher, OrgEventPublisher>();
+builder.Services.AddScoped<IOrgMemberEventPublisher, OrgMemberEventPublisher>();
 
 var app = builder.Build();
+//var client = app.Services.GetRequiredService<GrpcClient>();
+//client.GetFilesAsync("pdf").Wait(); // Test với filter
 
 app.MigrateDatabase();
 
@@ -162,6 +201,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UsePathBase("/org");
 
 app.UseCors(MyAllowSpecificOrigins);
 

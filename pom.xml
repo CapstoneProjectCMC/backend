@@ -21,6 +21,7 @@
     <modules>
         <module>common-protos</module>
         <module>common-events</module>
+        <module>common-dtos</module>
         <module>gateway-service</module>
         <module>identity-service</module>
         <module>profile-service</module>

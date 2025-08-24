@@ -12,8 +12,20 @@ spring:
     mongodb:
       uri: mongodb://mongodb_chat:dinhanst2832004@localhost:27019/chat_db?authSource=chat_db
       auto-index-creation: true
+    redis:
+      host: localhost # dịch vụ trong compose
+      port: 6379
+      password: dinhanst2832004
+      timeout: 3000ms
+  kafka:
+    bootstrap-servers: localhost:9094
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
 
 app:
+  event:
+    profile-events: "profile-events"
   services:
     profile: http://localhost:8081/profile
     identity: http://localhost:8080/identity

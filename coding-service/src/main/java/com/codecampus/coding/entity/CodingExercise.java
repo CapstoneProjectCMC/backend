@@ -3,8 +3,13 @@ package com.codecampus.coding.entity;
 import com.codecampus.coding.entity.audit.AuditMetadata;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
@@ -18,6 +23,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -38,20 +44,40 @@ public class CodingExercise extends AuditMetadata {
     @Id
     String id;
 
+    @Column(length = 100, nullable = false)
     String title;
-    String description;
-    String topic;
-    Set<String> allowedLanguages;
 
+    @Column(columnDefinition = "text")
+    String description;
+
+    @Column(length = 100)
+    String topic;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(
+            name = "coding_exercise_allowed_language",
+            joinColumns = @JoinColumn(name = "coding_exercise_id"))
+    @Column(name = "languages", length = 50)
+    @Builder.Default
+    Set<String> allowedLanguages = new HashSet<>();
+
+    @Column(columnDefinition = "text")
     String input;
+
+    @Column(columnDefinition = "text")
     String output;
 
+    @Column(name = "constraint_text", columnDefinition = "text")
     String constraintText;
+
     int timeLimit;
     int memoryLimit;
     int maxSubmissions;
 
+    @Column(name = "code_template", columnDefinition = "text")
     String codeTemplate;
+
+    @Column(columnDefinition = "text")
     String solution;
 
     boolean publicAccessible;

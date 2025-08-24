@@ -77,7 +77,7 @@ public class LoadQuizCacheService {
 
         evictTwice(exerciseId);          // lần xoá thứ 1 ngay lập tức
 
-        String lockName = "lock:quiz" + exerciseId;
+        String lockName = "lock:quiz:" + exerciseId;
         RLock lock = redisson.getLock(lockName);
 
         try {

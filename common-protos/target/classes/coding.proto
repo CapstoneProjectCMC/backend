@@ -61,7 +61,7 @@ message TestCaseResultDto {
   string testCaseId = 1;
   bool passed = 2;
   int32 runtimeMs = 3;
-  int32 memoryKb = 4;
+  int32 memoryMb = 4;
   string output = 5;
   string errorMessage = 6;
 }
@@ -72,9 +72,9 @@ message SubmitCodeResponse {
   int32 totalPoints = 3;
   bool passed = 4;
   repeated TestCaseResultDto results = 5;
-  int32 memoryMb     = 6;
-  float cpus         = 7;
-  int32 peakMemoryKb = 8;
+  int32 memoryMb = 6;
+  float cpus = 7;
+  int32 peakMemoryMb = 8;
 }
 
 message LoadCodingRequest {
@@ -120,6 +120,10 @@ message UpsertAssignmentRequest {
   AssignmentDto assignment = 1;
 }
 
+message SoftDeleteAssignmentRequest {
+  string id = 1;
+}
+
 service CodingSyncService {
   rpc CreateCodingExercise(CreateCodingExerciseRequest)
       returns (google.protobuf.Empty);
@@ -132,6 +136,8 @@ service CodingSyncService {
   rpc SoftDeleteTestCase (SoftDeleteTestCaseRequest)
       returns (google.protobuf.Empty);
   rpc UpsertAssignment(UpsertAssignmentRequest)
+      returns (google.protobuf.Empty);
+  rpc SoftDeleteAssignment (SoftDeleteAssignmentRequest)
       returns (google.protobuf.Empty);
 }
 

@@ -19,11 +19,13 @@ namespace OrganizationService.Api.Controllers
     {
         public IOrganizationService _organizationService { get; set; }
         private readonly IConfiguration _configuration;
+        private readonly FileServiceClient _fileServiceClient;
 
-        public OrganizationController(IServiceProvider serviceProvider, IOrganizationService organizationService, IConfiguration configuration) : base(serviceProvider)
+        public OrganizationController(IServiceProvider serviceProvider, IOrganizationService organizationService, FileServiceClient fileServiceClient, IConfiguration configuration) : base(serviceProvider)
         {
             _configuration = configuration;
             _organizationService = organizationService;
+            _fileServiceClient = fileServiceClient;
         }
 
         [HttpPost("public")]
@@ -44,7 +46,7 @@ namespace OrganizationService.Api.Controllers
 
         //add project
         [HttpPost("add")]
-        public async Task<IActionResult> AddOrganization([FromBody] CreateOrganizationRequest addOrgModel)
+        public async Task<IActionResult> AddOrganization([FromForm] CreateOrganizationRequest addOrgModel)
         {
             await _organizationService.CreateAsync(addOrgModel);
             return Success();
@@ -64,6 +66,14 @@ namespace OrganizationService.Api.Controllers
         {
             var result = await _organizationService.DeleteAsync(id);
             return Success(result);
+        }
+
+        [HttpPost("org/upload-logo")]
+        public async Task<IActionResult> UploadLogo(IFormFile logoFile, Guid orgId)
+        {
+            var url = await _fileServiceClient.UploadLogoAsync(logoFile, orgId);
+
+            return Success(new { LogoUrl = url });
         }
     }
 }

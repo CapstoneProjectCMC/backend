@@ -44,8 +44,12 @@ public class UserProfile {
 
     String username;
     String email;
+
     @Builder.Default
     Boolean active = true;
+
+    @Builder.Default
+    Set<String> roles = new HashSet<>();
 
     String firstName;
     String lastName;
@@ -59,6 +63,8 @@ public class UserProfile {
     Integer education;
     String[] links;
     String city;
+
+    Instant updatedAt;
 
     // --- SOFT DELETE ---
     Instant deletedAt;

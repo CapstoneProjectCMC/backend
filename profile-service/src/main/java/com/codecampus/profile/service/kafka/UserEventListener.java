@@ -14,7 +14,6 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -45,20 +44,25 @@ public class UserEventListener {
     }
 
     void upsert(UserPayload userPayload) {
-        Optional<UserProfile> userProfile =
-                userProfileRepository.findByUserId(
-                        userPayload.getUserId());
-
-        UserProfile profile = userProfile.orElseGet(() -> UserProfile.builder()
-                .userId(userPayload.getUserId())
-                .createdAt(Instant.now())
-                .build());
+        UserProfile profile =
+                userProfileRepository.findByUserId(userPayload.getUserId())
+                        .orElseGet(() -> UserProfile.builder()
+                                .userId(userPayload.getUserId())
+                                .createdAt(userPayload.getCreatedAt() != null ?
+                                        userPayload.getCreatedAt() :
+                                        Instant.now())
+                                .build());
 
         profile.setUsername(userPayload.getUsername());
         profile.setEmail(userPayload.getEmail());
         profile.setActive(userPayload.isActive());
+        profile.setRoles(userPayload.getRoles());
+        profile.setUpdatedAt(userPayload.getUpdatedAt() != null ?
+                userPayload.getUpdatedAt() :
+                Instant.now());
+
         if (profile.getDeletedAt() != null && userPayload.isActive()) {
-            // nếu muốn auto-restore khi nhận RESTORED/UPDATED active=true
+            // auto-restore khi nhận RESTORED/UPDATED active=true
             profile.setDeletedAt(null);
             profile.setDeletedBy(null);
         }
@@ -70,6 +74,7 @@ public class UserEventListener {
             if (p.getDeletedAt() == null) {
                 p.setDeletedAt(Instant.now());
                 p.setDeletedBy("identity-service");
+                p.setUpdatedAt(Instant.now());
                 userProfileRepository.save(p);
             }
         });

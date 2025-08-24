@@ -32,10 +32,29 @@ public class ExerciseDocument {
     @Id
     String id;
 
-    @Field(type = Text, analyzer = "icu_analyzer", searchAnalyzer = "icu_analyzer")
+    @MultiField(
+            mainField = @Field(
+                    type = Text,
+                    analyzer = "icu_analyzer",
+                    searchAnalyzer = "icu_analyzer"
+            ),
+            otherFields = {@InnerField(
+                    suffix = "keyword",
+                    type = Keyword
+            )}
+    )
     String title;
 
-    @Field(type = Text, analyzer = "icu_analyzer", searchAnalyzer = "icu_analyzer")
+    @MultiField(
+            mainField = @Field(
+                    type = Text,
+                    analyzer = "icu_analyzer",
+                    searchAnalyzer = "icu_analyzer"),
+            otherFields = {@InnerField(
+                    suffix = "keyword",
+                    type = Keyword
+            )}
+    )
     String description;
 
     @MultiField(
@@ -45,25 +64,31 @@ public class ExerciseDocument {
                             suffix = "search",
                             type = Text,
                             analyzer = "icu_analyzer",
-                            searchAnalyzer = "icu_analyzer")
+                            searchAnalyzer = "icu_analyzer"
+                    )
             }
     )
     String exerciseType;
 
     @MultiField(
             mainField = @Field(type = Keyword),
-            otherFields = {
-                    @InnerField(
-                            suffix = "search",
-                            type = Text,
-                            analyzer = "icu_analyzer",
-                            searchAnalyzer = "icu_analyzer")
+            otherFields = {@InnerField(
+                    suffix = "search",
+                    type = Text,
+                    analyzer = "icu_analyzer",
+                    searchAnalyzer = "icu_analyzer")
             }
     )
     Set<String> tags;
 
+    @Field(type = FieldType.Boolean)
+    Boolean visibility;
+
     @Field(type = FieldType.Integer)
     Integer difficulty;
+
+    @Field(type = Keyword)
+    String userId;
 
     @Field(type = Keyword)
     String createdBy;
@@ -79,10 +104,8 @@ public class ExerciseDocument {
 
     @Field(type = FieldType.Date)
     Instant startTime;
-
     @Field(type = FieldType.Date)
     Instant endTime;
-
     @Field(type = FieldType.Integer)
     Integer duration;
 
@@ -92,19 +115,14 @@ public class ExerciseDocument {
     @Field(type = FieldType.Boolean)
     Boolean allowAiQuestion;
 
-    // audit
     @Field(type = FieldType.Date)
     Instant createdAt;
-
     @Field(type = FieldType.Date)
     Instant updatedAt;
-
     @Field(type = FieldType.Date)
     Instant deletedAt;
-
     @Field(type = Keyword)
     String updatedBy;
-
     @Field(type = Keyword)
     String deletedBy;
 }

@@ -31,7 +31,10 @@ services:
       - SUBMISSION_DATABASE=${SUBMISSION_DATABASE}
       - SUBMISSION_USERNAME=${SUBMISSION_USERNAME}
       - SUBMISSION_DB_PASSWORD=${SUBMISSION_DB_PASSWORD}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
     ports: [ "8083:8083", "9590:9590" ]
+    depends_on:
+      - profile-service
     networks: [ backend ]
 
   coding-service:
@@ -82,7 +85,12 @@ services:
       - AI_USERNAME=${AI_USERNAME}
       - AI_DB_PASSWORD=${AI_DB_PASSWORD}
       - SPRING_AI_OPENAI_API_KEY=${OPENAI_API_KEY}
+      - APP_FILE_UPLOAD_DIR=/data/ai-uploads
+      - SPRING_WEB_RESOURCES_STATIC_LOCATIONS=file:/data/ai-uploads/,classpath:/static/
+      - APP_PUBLIC_BASE_URL=http://localhost:8888/api/v1/ai
     ports: [ "8086:8086" ]
+    volumes:
+      - ai_uploads:/data/ai-uploads
     networks: [ backend ]
 
   search-service:
@@ -91,7 +99,11 @@ services:
       - SPRING_PROFILES_ACTIVE=docker
       - ELASTIC_USERNAME=${ELASTIC_USERNAME}
       - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
     ports: [ "8087:8087" ]
+    depends_on:
+      - profile-service
+      - submission-service
     networks: [ backend ]
 
   notification-service:
@@ -108,6 +120,7 @@ services:
       - CHAT_USERNAME=${CHAT_USERNAME}
       - CHAT_PASSWORD=${CHAT_PASSWORD}
       - CHAT_DATABASE=${CHAT_DATABASE}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
     ports: [ "8089:8089" ]
     networks: [ backend ]
 
@@ -132,11 +145,11 @@ services:
       - AppSettings__MinioConfig__Port=9000
       - AppSettings__MinioConfig__AccessKey=${MINIO_ROOT_USER}
       - AppSettings__MinioConfig__SecretKey=${MINIO_ROOT_PASSWORD}
-      - AppSettings__MinioConfig__BucketName=codecampus2025
+      - AppSettings__MinioConfig__BucketName=programmingcontest2025
       - AppSettings__MinioConfig__Secure=false
       - AppSettings__Jwt__Key=uifhjcnsqbhwbAMKXjdt123gdritocet
-      - AppSettings__Jwt__Issuer=http://localhost:38946
-      - AppSettings__Jwt__Audience=http://localhost:38946
+      - AppSettings__Jwt__Issuer=Code Campus
+      - AppSettings__Jwt__Audience=Code Campus
     ports: [ "8082:8082" ]
     networks: [ backend ]
 
@@ -168,3 +181,4 @@ networks:
 
 volumes:
   runner_data:
+  ai_uploads:

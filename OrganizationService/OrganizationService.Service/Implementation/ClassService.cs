@@ -14,17 +14,21 @@ namespace OrganizationService.Service.Implementation
     {
         private readonly IRepository<Class> _classRepository;
         private readonly IRepository<Grade> _gradeRepository;
+        private readonly IOrgEventPublisher _orgEventPublisher;
 
         public ClassService(
             AppSettings appSettings,
             IUnitOfWork unitOfWork,
             UserContext userContext,
             IRepository<Class> classRepository,
-            IRepository<Grade> gradeRepository)
+            IRepository<Grade> gradeRepository,
+            IOrgEventPublisher orgEventPublisher
+            )
             : base(appSettings, unitOfWork, userContext)
         {
             _classRepository = classRepository;
             _gradeRepository = gradeRepository;
+            _orgEventPublisher = orgEventPublisher;
         }
 
         private void ValidatePagingModel(ClassModel classModel)
@@ -89,7 +93,20 @@ namespace OrganizationService.Service.Implementation
 
             await _classRepository.CreateAsync(entity);
             await _unitOfWork.SaveChangesAsync();
+            
+            await _orgEventPublisher.PublishAsync(new {
+                type = "CREATED",
+                id = grade.Id,
+                scopeType = "CLASS",
+                payload = new
+                {
+                    name = grade.Name, 
+                    description = grade.Description, 
+                    updatedAt = DateTime.UtcNow
+                }
+            });
 
+            
             return new ClassDto
             {
                 Id = entity.Id,
@@ -114,6 +131,19 @@ namespace OrganizationService.Service.Implementation
             entity.UpdatedAt = DateTime.UtcNow;
 
             await _unitOfWork.SaveChangesAsync();
+            
+            await _orgEventPublisher.PublishAsync(new {
+                type = "UPDATED",
+                id = entity.Id,
+                scopeType = "CLASS",
+                payload = new
+                {
+                    name = entity.Name, 
+                    description = entity.Description, 
+                    updatedAt = DateTime.UtcNow
+                }
+            });
+            
             return true;
         }
 
@@ -129,6 +159,14 @@ namespace OrganizationService.Service.Implementation
 
             _classRepository.Delete(entity);
             await _unitOfWork.SaveChangesAsync();
+            
+            await _orgEventPublisher.PublishAsync(new {
+                type = "DELETED",
+                id = entity.Id,
+                scopeType = "CLASS",
+                payload = (object)null
+            });
+            
             return true;
         }
     }

@@ -1,26 +1,30 @@
 package com.codecampus.chat.service;
 
-import com.codecampus.chat.dto.common.ApiResponse;
+import com.codecampus.chat.dto.common.PageResponse;
 import com.codecampus.chat.dto.request.ConversationRequest;
 import com.codecampus.chat.dto.response.ConversationResponse;
-import com.codecampus.chat.dto.response.UserProfileResponse;
 import com.codecampus.chat.entity.Conversation;
 import com.codecampus.chat.entity.ParticipantInfo;
 import com.codecampus.chat.exception.AppException;
 import com.codecampus.chat.exception.ErrorCode;
 import com.codecampus.chat.helper.AuthenticationHelper;
 import com.codecampus.chat.helper.ChatMessageHelper;
-import com.codecampus.chat.mapper.ConversationMapper;
+import com.codecampus.chat.helper.PageResponseHelper;
 import com.codecampus.chat.repository.ConversationRepository;
-import com.codecampus.chat.repository.httpClient.ProfileClient;
+import com.codecampus.chat.service.cache.UserSummaryCacheService;
+import dtos.UserProfileSummary;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -31,88 +35,67 @@ import java.util.Objects;
 public class ConversationService {
 
     ConversationRepository conversationRepository;
-    ProfileClient profileClient;
-
-    ConversationMapper conversationMapper;
-
     ChatMessageHelper chatMessageHelper;
+    UserSummaryCacheService cache;
 
-    public List<ConversationResponse> getMyConversations() {
+    public PageResponse<ConversationResponse> getMyConversations(
+            int page, int size) {
         String userId = AuthenticationHelper.getMyUserId();
-        List<Conversation> conversations =
-                conversationRepository
-                        .findAllByParticipantIdsContains(userId);
+        Pageable pageable = PageRequest.of(page - 1, size,
+                Sort.by(Sort.Direction.DESC, "modifiedDate"));
 
-        return conversations.stream()
-                .map(chatMessageHelper::toConversationResponseFromConversation)
-                .toList();
+        Page<Conversation> pageData =
+                conversationRepository
+                        .findAllByParticipantIdsContains(userId, pageable);
+        Page<ConversationResponse> out = pageData.map(
+                chatMessageHelper::toConversationResponseFromConversation);
+
+        return PageResponseHelper.toPageResponse(out, page);
     }
 
     public ConversationResponse createConversation(
             ConversationRequest conversationRequest) {
 
         // Fetch user infos
-        String userId = AuthenticationHelper.getMyUserId();
-        ApiResponse<UserProfileResponse> userInfoResponse =
-                profileClient.getUserProfileByUserId(userId);
+        String me = AuthenticationHelper.getMyUserId();
+        String you = conversationRequest.participantIds().getFirst();
 
-        ApiResponse<UserProfileResponse> participantInfoResponse =
-                profileClient.getUserProfileByUserId(
-                        conversationRequest.participantIds().getFirst());
+        UserProfileSummary meS = cache.getOrLoad(me);
+        UserProfileSummary youS = cache.getOrLoad(you);
 
-        if (Objects.isNull(userInfoResponse) ||
-                Objects.isNull(participantInfoResponse)) {
+        if (Objects.isNull(meS) || Objects.isNull(youS)) {
             throw new AppException(ErrorCode.UNCATEGORIZED_EXCEPTION);
         }
 
-        UserProfileResponse userInfo = userInfoResponse.getResult();
-        UserProfileResponse participantInfo =
-                participantInfoResponse.getResult();
+        List<String> sortedIds =
+                Arrays.asList(meS.userId(), youS.userId())
+                        .stream()
+                        .sorted()
+                        .toList();
 
-        List<String> userIds = new ArrayList<>();
-        userIds.add(userId);
-        userIds.add(participantInfo.getUserId());
-
-        List<String> sortedIds = userIds.stream()
-                .sorted()
-                .toList();
-        String userIdHash =
+        String participantsHash =
                 chatMessageHelper.generateParticipantHash(sortedIds);
 
         Conversation conversation = conversationRepository
-                .findByParticipantsHash(userIdHash)
+                .findByParticipantsHash(participantsHash)
                 .orElseGet(() -> {
-                    List<ParticipantInfo> participantInfos =
-                            List.of(ParticipantInfo.builder()
-                                            .userId(userInfo.getUserId())
-                                            .displayName(userInfo.getDisplayName())
-                                            .firstName(userInfo.getFirstName())
-                                            .lastName(userInfo.getLastName())
-                                            .avatarUrl(userInfo.getAvatarUrl())
-                                            .backgroundUrl(userInfo.getBackgroundUrl())
-                                            .build(),
-                                    ParticipantInfo.builder()
-                                            .userId(userInfo.getUserId())
-                                            .displayName(
-                                                    userInfo.getDisplayName())
-                                            .firstName(userInfo.getFirstName())
-                                            .lastName(userInfo.getLastName())
-                                            .avatarUrl(userInfo.getAvatarUrl())
-                                            .backgroundUrl(
-                                                    userInfo.getBackgroundUrl())
-                                            .build());
-                    // Build conversation info
-                    Conversation newConversation = Conversation.builder()
-                            .type(conversationRequest.type())
-                            .participantsHash(userIdHash)
-                            .createdDate(Instant.now())
-                            .modifiedDate(Instant.now())
-                            .participants(participantInfos)
-                            .build();
-
-                    return conversationRepository.save(newConversation);
+                    List<ParticipantInfo> participants =
+                            List.of(chatMessageHelper.toParticipantInfoFromUserProfileSummary(
+                                            meS),
+                                    chatMessageHelper.toParticipantInfoFromUserProfileSummary(
+                                            youS));
+                    return conversationRepository.save(
+                            Conversation.builder()
+                                    .type(conversationRequest.type())
+                                    .participantsHash(participantsHash)
+                                    .createdDate(Instant.now())
+                                    .modifiedDate(Instant.now())
+                                    .participants(participants)
+                                    .build()
+                    );
                 });
-        return chatMessageHelper
-                .toConversationResponseFromConversation(conversation);
+
+        return chatMessageHelper.toConversationResponseFromConversation(
+                conversation);
     }
 }

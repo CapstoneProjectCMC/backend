@@ -33,8 +33,11 @@ public class AuthenticationRequestInterceptor
     public void apply(RequestTemplate requestTemplate) {
         ServletRequestAttributes attributes =
                 (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        if (attributes == null) {
+            return;
+        }
 
-        var authHeader = attributes.getRequest().getHeader("Authorization");
+        String authHeader = attributes.getRequest().getHeader("Authorization");
 
         log.info("Header: {}", authHeader);
         if (StringUtils.hasText(authHeader)) {

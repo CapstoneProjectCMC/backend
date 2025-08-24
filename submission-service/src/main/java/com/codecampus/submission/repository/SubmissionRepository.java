@@ -1,6 +1,9 @@
 package com.codecampus.submission.repository;
 
+import com.codecampus.submission.constant.submission.SubmissionStatus;
 import com.codecampus.submission.entity.Submission;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -16,8 +19,9 @@ public interface SubmissionRepository
     List<Submission> findByUserIdOrderBySubmittedAtDesc(
             String userId);
 
-    List<Submission> findByUserId(
-            String userId);
+    Page<Submission> findByUserId(
+            String userId,
+            Pageable pageable);
 
     Optional<Submission> findByExerciseIdAndUserId(
             String exerciseId,
@@ -30,7 +34,19 @@ public interface SubmissionRepository
             where s.userId = :studentId
                 and e.exerciseType = com.codecampus.submission.constant.submission.ExerciseType.QUIZ
             """)
-    List<Submission> findQuizSubmissionsByStudent(String studentId);
+    Page<Submission> findQuizSubmissionsByStudent(
+            String studentId,
+            Pageable pageable);
+
+    @Query("""
+            select s
+                from Submission s
+                join fetch s.exercise e
+            where s.userId = :studentId
+                and e.exerciseType = com.codecampus.submission.constant.submission.ExerciseType.QUIZ
+            """)
+    List<Submission> findQuizSubmissionsByStudent(
+            String studentId);
 
     @Query("""
             select s
@@ -39,7 +55,9 @@ public interface SubmissionRepository
             where s.userId = :studentId
                 and e.exerciseType = com.codecampus.submission.constant.submission.ExerciseType.CODING
             """)
-    List<Submission> findCodingSubmissionsByStudent(String studentId);
+    Page<Submission> findCodingSubmissionsByStudent(
+            String studentId,
+            Pageable pageable);
 
     @Query("""
                  select s
@@ -87,5 +105,16 @@ public interface SubmissionRepository
             """)
     Integer findBestScoreFromExercise(
             String exerciseId, String studentId);
+
+    Optional<Submission> findFirstByExerciseIdAndUserIdAndStatusOrderBySubmittedAtAsc(
+            String exerciseId,
+            String userId,
+            SubmissionStatus status
+    );
+
+    Optional<Submission> findFirstByExerciseIdAndUserIdOrderBySubmittedAtAsc(
+            String exerciseId,
+            String userId
+    );
 }
 

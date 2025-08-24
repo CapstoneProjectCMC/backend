@@ -5,6 +5,7 @@ import com.codecampus.quiz.grpc.AddQuestionRequest;
 import com.codecampus.quiz.grpc.AddQuizDetailRequest;
 import com.codecampus.quiz.grpc.CreateQuizExerciseRequest;
 import com.codecampus.quiz.grpc.QuizSyncServiceGrpc;
+import com.codecampus.quiz.grpc.SoftDeleteAssignmentRequest;
 import com.codecampus.quiz.grpc.SoftDeleteOptionRequest;
 import com.codecampus.quiz.grpc.SoftDeleteQuestionRequest;
 import com.codecampus.quiz.grpc.SoftDeleteRequest;
@@ -129,5 +130,17 @@ public class QuizSyncServiceImpl
         responseObserver.onNext(Empty.getDefaultInstance());
         responseObserver.onCompleted();
     }
+
+    @Override
+    public void softDeleteAssignment(
+            SoftDeleteAssignmentRequest request,
+            StreamObserver<Empty> responseObserver) {
+
+        quizService.softDeleteAssignment(request.getId());
+        responseObserver.onNext(Empty.getDefaultInstance());
+        responseObserver.onCompleted();
+    }
+
+
 }
 

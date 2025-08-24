@@ -8,7 +8,7 @@ public record ExercisePromptIn(
         String title,
         String description,
         Difficulty difficulty,
-        int duration,
+        Integer duration,
         Set<String> tags
 ) {
 }

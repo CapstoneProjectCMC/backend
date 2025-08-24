@@ -24,4 +24,7 @@ public class UserProfileCreationPayload {
     Integer education;
     String[] links;
     String city;
+
+    String organizationId;
+    String organizationMemberRole;
 }

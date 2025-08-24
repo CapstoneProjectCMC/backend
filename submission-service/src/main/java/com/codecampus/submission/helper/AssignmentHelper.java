@@ -4,11 +4,15 @@ import com.codecampus.submission.dto.response.assignment.AssignedStudentResponse
 import com.codecampus.submission.dto.response.assignment.MyAssignmentResponse;
 import com.codecampus.submission.entity.Assignment;
 import com.codecampus.submission.entity.Exercise;
+import com.codecampus.submission.entity.Submission;
 import com.codecampus.submission.repository.SubmissionRepository;
+import dtos.UserSummary;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
+
+import java.time.Instant;
 
 @Component
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -21,6 +25,9 @@ public class AssignmentHelper {
             Assignment assignment, String studentId) {
 
         Score result = getScore(assignment, studentId);
+        Instant completedAt =
+                getCompletionTimeIfCompleted(assignment, studentId);
+        Boolean pass = computePass(assignment, result);
 
         return new MyAssignmentResponse(
                 assignment.getId(),
@@ -28,28 +35,39 @@ public class AssignmentHelper {
                 result.exercise().getTitle(),
                 assignment.getDueAt(),
                 assignment.isCompleted(),
+                completedAt,
                 result.bestScore(),
-                result.totalPoints()
+                result.totalPoints(),
+                result.exercise().getExerciseType(),
+                pass
         );
 
     }
 
     public AssignedStudentResponse mapAssignmentToAssignedStudentResponse(
-            Assignment assignment, String studentId) {
+            Assignment assignment,
+            UserSummary studentSummary) {
 
-        Score result = getScore(assignment, studentId);
+        Score result = getScore(assignment, assignment.getStudentId());
+        Instant completedAt =
+                getCompletionTimeIfCompleted(assignment,
+                        assignment.getStudentId());
+        Boolean pass = computePass(assignment, result);
 
         return new AssignedStudentResponse(
                 assignment.getId(),
-                assignment.getStudentId(),
+                studentSummary,
                 assignment.getDueAt(),
                 assignment.isCompleted(),
+                completedAt,
                 result.bestScore(),
-                result.totalPoints()
+                result.totalPoints(),
+                result.exercise().getExerciseType(),
+                pass
         );
     }
 
-    private Score getScore(Assignment assignment, String studentId) {
+    Score getScore(Assignment assignment, String studentId) {
         Exercise exercise = assignment.getExercise();
 
         Integer totalPoints = switch (exercise.getExerciseType()) {
@@ -66,7 +84,31 @@ public class AssignmentHelper {
         return new Score(exercise, totalPoints, bestScore);
     }
 
-    private record Score(Exercise exercise, Integer totalPoints,
-                         Integer bestScore) {
+    Instant getCompletionTimeIfCompleted(
+            Assignment assignment, String studentId) {
+        if (!assignment.isCompleted()) {
+            return null;
+        }
+        return submissionRepository
+                .findFirstByExerciseIdAndUserIdOrderBySubmittedAtAsc(
+                        assignment.getExercise().getId(),
+                        studentId)
+                .map(Submission::getSubmittedAt)
+                .orElse(null);
+    }
+
+    Boolean computePass(Assignment a, Score s) {
+        if (s.bestScore() == null || s.totalPoints() == null ||
+                s.totalPoints() <= 0) {
+            return null; // chưa có dữ liệu
+        }
+        return switch (a.getExercise().getExerciseType()) {
+            case QUIZ -> (s.bestScore() * 100.0 / s.totalPoints()) >= 85.0;
+            case CODING -> s.bestScore().equals(s.totalPoints());
+        };
+    }
+
+    record Score(Exercise exercise, Integer totalPoints,
+                 Integer bestScore) {
     }
 }

@@ -87,7 +87,7 @@ public class CodeJudgeService {
         final int compileMemoryMb = Math.max(memoryMbLimit, 512);
 
         int passedCount = 0;
-        int peakMemoryKb = 0;
+        int peakMemoryMb = 0;
         List<TestCaseResultSyncDto> testCaseResultSyncDtoList =
                 new ArrayList<>();
 
@@ -113,7 +113,7 @@ public class CodeJudgeService {
                 if (codeResult.isPassed()) {
                     passedCount++;
                 }
-                peakMemoryKb = Math.max(peakMemoryKb, codeResult.getMemoryKb());
+                peakMemoryMb = Math.max(peakMemoryMb, codeResult.getMemoryMb());
 
                 CodeSubmissionResult codeSubmissionResult =
                         CodeSubmissionResult.builder()
@@ -121,7 +121,7 @@ public class CodeJudgeService {
                                 .testCase(testCase)
                                 .passed(codeResult.isPassed())
                                 .runtimeMs(codeResult.getRuntimeMs())
-                                .memoryKb(codeResult.getMemoryKb())
+                                .memoryKb(codeResult.getMemoryMb())
                                 .output(codeResult.getOutput())
                                 .errorMessage(codeResult.getError())
                                 .build();
@@ -132,7 +132,7 @@ public class CodeJudgeService {
                         .setTestCaseId(testCase.getId())
                         .setPassed(codeResult.isPassed())
                         .setRuntimeMs(codeResult.getRuntimeMs())
-                        .setMemoryKb(codeResult.getMemoryKb())
+                        .setMemoryMb(codeResult.getMemoryMb())
                         .setOutput(
                                 codeResult.getOutput() == null ? "" :
                                         codeResult.getOutput())
@@ -149,8 +149,8 @@ public class CodeJudgeService {
 
         codeSubmission.setScore(passedCount);
         codeSubmission.setTotalPoints(codingExercise.getTestCases().size());
-        codeSubmission.setPassed(
-                passedCount == codeSubmission.getTotalPoints());
+        boolean allPassed = (passedCount == codeSubmission.getTotalPoints());
+        codeSubmission.setPassed(allPassed);
 
 
         /* Sync tới submission service */
@@ -172,7 +172,7 @@ public class CodeJudgeService {
                                 .setTimeTakenSeconds(
                                         request.getTimeTakenSeconds())
                                 .addAllResults(testCaseResultSyncDtoList)
-                                .setPeakMemoryKb(peakMemoryKb)
+                                .setPeakMemoryMb(peakMemoryMb)
                                 .setCpus(cpusLimit)
                                 .setMemoryMb(memoryMbLimit)
                                 .build())
@@ -183,20 +183,20 @@ public class CodeJudgeService {
                 .setSubmissionId(codeSubmission.getId())
                 .setScore(passedCount)
                 .setTotalPoints(codeSubmission.getTotalPoints())
-                .setPassed(codeSubmission.isPassed())
+                .setPassed(allPassed)
                 .addAllResults(testCaseResultSyncDtoList.stream()
                         .map(r -> TestCaseResultDto.newBuilder()
                                 .setTestCaseId(r.getTestCaseId())
                                 .setPassed(r.getPassed())
                                 .setRuntimeMs(r.getRuntimeMs())
-                                .setMemoryKb(r.getMemoryKb())
+                                .setMemoryMb(r.getMemoryMb())
                                 .setOutput(r.getOutput())
                                 .setErrorMessage(r.getErrorMessage())
                                 .build())
                         .toList())
                 .setMemoryMb(memoryMbLimit)
                 .setCpus(cpusLimit)
-                .setPeakMemoryKb(peakMemoryKb)
+                .setPeakMemoryMb(peakMemoryMb)
                 .build();
     }
 

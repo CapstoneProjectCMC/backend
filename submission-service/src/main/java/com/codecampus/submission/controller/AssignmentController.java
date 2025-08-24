@@ -2,6 +2,7 @@ package com.codecampus.submission.controller;
 
 import com.codecampus.submission.dto.common.ApiResponse;
 import com.codecampus.submission.dto.request.assignment.BulkAssignExerciseRequest;
+import com.codecampus.submission.dto.request.assignment.BulkDeleteAssignExerciseRequest;
 import com.codecampus.submission.dto.response.assignment.BulkAssignExerciseResponse;
 import com.codecampus.submission.entity.Assignment;
 import com.codecampus.submission.service.AssignmentService;
@@ -11,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -65,6 +67,33 @@ public class AssignmentController {
         return ApiResponse.<BulkAssignExerciseResponse>builder()
                 .result(bulkAssignExerciseResponse)
                 .message("Giao bài thành công!")
+                .build();
+    }
+
+    @DeleteMapping("/assignment")
+    ApiResponse<Void> softDeleteAssignment(
+            @RequestParam String exerciseId,
+            @RequestParam String studentId) {
+
+        assignmentService.softDeleteAssignment(exerciseId, studentId);
+
+        return ApiResponse.<Void>builder()
+                .message("Huỷ giao bài thành công!")
+                .build();
+    }
+
+    @DeleteMapping("/assignment-bulk")
+    ApiResponse<Void> bulkSoftDeleteAssignments(
+            @RequestParam String exerciseId,
+            @RequestBody
+            BulkDeleteAssignExerciseRequest bulkDeleteAssignExerciseRequest) {
+
+        assignmentService.bulkSoftDeleteAssignments(
+                exerciseId,
+                bulkDeleteAssignExerciseRequest.studentIds());
+
+        return ApiResponse.<Void>builder()
+                .message("Huỷ giao bài thành công!")
                 .build();
     }
 }

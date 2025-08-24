@@ -3,6 +3,7 @@ package com.codecampus.submission.mapper;
 import com.codecampus.submission.constant.submission.ExerciseType;
 import com.codecampus.submission.constant.submission.SubmissionStatus;
 import com.codecampus.submission.dto.response.AllSubmissionHistoryResponse;
+import com.codecampus.submission.dto.response.coding.CodingAttemptHistoryResponse;
 import com.codecampus.submission.dto.response.quiz.QuizAttemptHistoryResponse;
 import com.codecampus.submission.entity.Exercise;
 import com.codecampus.submission.entity.Question;
@@ -44,13 +45,16 @@ public interface SubmissionMapper {
         /* ---- GÁN STATUS ---- */
         int score = quizSubmissionDto.getScore();
         int totalPoints = quizSubmissionDto.getTotalPoints();
+        double ratio = (totalPoints > 0) ? (score * 1.0 / totalPoints) : 0.0;
 
-        SubmissionStatus status = switch (score) {
-            case 0 -> SubmissionStatus.FAILED;
-            default -> (score >= totalPoints)
-                    ? SubmissionStatus.PASSED
-                    : SubmissionStatus.PARTIAL;
-        };
+        SubmissionStatus status;
+        if (score == 0) {
+            status = SubmissionStatus.FAILED;
+        } else if (ratio >= 0.85) {
+            status = SubmissionStatus.PASSED; // >=85% là pass
+        } else {
+            status = SubmissionStatus.PARTIAL;
+        }
         submission.setStatus(status);
 
         quizSubmissionDto.getAnswersList().forEach(answerDto -> {
@@ -74,6 +78,17 @@ public interface SubmissionMapper {
 
     default QuizAttemptHistoryResponse mapSubmissionToQuizAttemptHistoryResponse(
             Submission submission) {
+
+        Integer totalPoints = (submission.getExercise() != null
+                && submission.getExercise().getQuizDetail() != null)
+                ? submission.getExercise().getQuizDetail().getTotalPoints()
+                : null;
+
+        Integer score = submission.getScore();
+        boolean pass = totalPoints != null && totalPoints > 0
+                && score != null
+                && (score * 100) >= (85 * totalPoints); // ≥85%
+
         return new QuizAttemptHistoryResponse(
                 submission.getId(),
                 submission.getExercise().getId(),
@@ -84,7 +99,37 @@ public interface SubmissionMapper {
                         : submission.getExercise().getQuizDetail()
                         .getTotalPoints(),
                 submission.getTimeTakenSeconds(),
-                submission.getSubmittedAt()
+                submission.getSubmittedAt(),
+                pass
+        );
+    }
+
+    default CodingAttemptHistoryResponse mapSubmissionToCodingAttemptHistoryResponse(
+            Submission submission) {
+        Integer totalPoints = null;
+        if (submission.getExercise() != null &&
+                submission.getExercise().getCodingDetail() != null) {
+            totalPoints =
+                    submission.getExercise().getCodingDetail().getTestCases()
+                            .size();
+        }
+
+        Integer score = submission.getScore(); // #testcase passed
+        boolean pass = score != null
+                && score.equals(totalPoints); // pass hết testcase
+
+        return new CodingAttemptHistoryResponse(
+                submission.getId(),
+                submission.getExercise().getId(),
+                submission.getExercise().getTitle(),
+                submission.getScore(), // #passed
+                totalPoints, // #testcases
+                submission.getTimeTakenSeconds(),
+                submission.getLanguage(),
+                submission.getMemoryUsed(), // peakMemoryMb được set khi sync
+                submission.getStatus(),
+                submission.getSubmittedAt(),
+                pass
         );
     }
 
@@ -101,6 +146,17 @@ public interface SubmissionMapper {
             totalPoints = exercise.getCodingDetail().getTestCases().size();
         }
 
+        Integer score = submission.getScore();
+        boolean passed;
+        if (exercise.getExerciseType() == ExerciseType.QUIZ) {
+            passed = totalPoints != null && totalPoints > 0
+                    && score != null
+                    && (score * 100) >= (85 * totalPoints); // ≥85%
+        } else { // CODING
+            passed = score != null
+                    && score.equals(totalPoints);           // pass hết testcase
+        }
+
         return new AllSubmissionHistoryResponse(
                 submission.getId(),
                 exercise.getId(),
@@ -109,7 +165,8 @@ public interface SubmissionMapper {
                 submission.getScore(),
                 totalPoints,
                 submission.getTimeTakenSeconds(),
-                submission.getSubmittedAt()
+                submission.getSubmittedAt(),
+                passed
         );
     }
 }

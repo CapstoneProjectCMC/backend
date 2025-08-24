@@ -201,6 +201,37 @@ public final class CodingSyncServiceGrpc {
     return getUpsertAssignmentMethod;
   }
 
+  private static volatile io.grpc.MethodDescriptor<com.codecampus.coding.grpc.SoftDeleteAssignmentRequest,
+      com.google.protobuf.Empty> getSoftDeleteAssignmentMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "SoftDeleteAssignment",
+      requestType = com.codecampus.coding.grpc.SoftDeleteAssignmentRequest.class,
+      responseType = com.google.protobuf.Empty.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<com.codecampus.coding.grpc.SoftDeleteAssignmentRequest,
+      com.google.protobuf.Empty> getSoftDeleteAssignmentMethod() {
+    io.grpc.MethodDescriptor<com.codecampus.coding.grpc.SoftDeleteAssignmentRequest, com.google.protobuf.Empty> getSoftDeleteAssignmentMethod;
+    if ((getSoftDeleteAssignmentMethod = CodingSyncServiceGrpc.getSoftDeleteAssignmentMethod) == null) {
+      synchronized (CodingSyncServiceGrpc.class) {
+        if ((getSoftDeleteAssignmentMethod = CodingSyncServiceGrpc.getSoftDeleteAssignmentMethod) == null) {
+          CodingSyncServiceGrpc.getSoftDeleteAssignmentMethod = getSoftDeleteAssignmentMethod =
+              io.grpc.MethodDescriptor.<com.codecampus.coding.grpc.SoftDeleteAssignmentRequest, com.google.protobuf.Empty>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "SoftDeleteAssignment"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.codecampus.coding.grpc.SoftDeleteAssignmentRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.google.protobuf.Empty.getDefaultInstance()))
+              .setSchemaDescriptor(new CodingSyncServiceMethodDescriptorSupplier("SoftDeleteAssignment"))
+              .build();
+        }
+      }
+    }
+    return getSoftDeleteAssignmentMethod;
+  }
+
   /**
    * Creates a new async stub that supports all call types for the service
    */
@@ -305,6 +336,13 @@ public final class CodingSyncServiceGrpc {
         io.grpc.stub.StreamObserver<com.google.protobuf.Empty> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getUpsertAssignmentMethod(), responseObserver);
     }
+
+    /**
+     */
+    default void softDeleteAssignment(com.codecampus.coding.grpc.SoftDeleteAssignmentRequest request,
+        io.grpc.stub.StreamObserver<com.google.protobuf.Empty> responseObserver) {
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getSoftDeleteAssignmentMethod(), responseObserver);
+    }
   }
 
   /**
@@ -381,6 +419,14 @@ public final class CodingSyncServiceGrpc {
       io.grpc.stub.ClientCalls.asyncUnaryCall(
           getChannel().newCall(getUpsertAssignmentMethod(), getCallOptions()), request, responseObserver);
     }
+
+    /**
+     */
+    public void softDeleteAssignment(com.codecampus.coding.grpc.SoftDeleteAssignmentRequest request,
+        io.grpc.stub.StreamObserver<com.google.protobuf.Empty> responseObserver) {
+      io.grpc.stub.ClientCalls.asyncUnaryCall(
+          getChannel().newCall(getSoftDeleteAssignmentMethod(), getCallOptions()), request, responseObserver);
+    }
   }
 
   /**
@@ -440,6 +486,13 @@ public final class CodingSyncServiceGrpc {
       return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getUpsertAssignmentMethod(), getCallOptions(), request);
     }
+
+    /**
+     */
+    public com.google.protobuf.Empty softDeleteAssignment(com.codecampus.coding.grpc.SoftDeleteAssignmentRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getSoftDeleteAssignmentMethod(), getCallOptions(), request);
+    }
   }
 
   /**
@@ -498,6 +551,13 @@ public final class CodingSyncServiceGrpc {
     public com.google.protobuf.Empty upsertAssignment(com.codecampus.coding.grpc.UpsertAssignmentRequest request) {
       return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getUpsertAssignmentMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public com.google.protobuf.Empty softDeleteAssignment(com.codecampus.coding.grpc.SoftDeleteAssignmentRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getSoftDeleteAssignmentMethod(), getCallOptions(), request);
     }
   }
 
@@ -564,6 +624,14 @@ public final class CodingSyncServiceGrpc {
       return io.grpc.stub.ClientCalls.futureUnaryCall(
           getChannel().newCall(getUpsertAssignmentMethod(), getCallOptions()), request);
     }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<com.google.protobuf.Empty> softDeleteAssignment(
+        com.codecampus.coding.grpc.SoftDeleteAssignmentRequest request) {
+      return io.grpc.stub.ClientCalls.futureUnaryCall(
+          getChannel().newCall(getSoftDeleteAssignmentMethod(), getCallOptions()), request);
+    }
   }
 
   private static final int METHODID_CREATE_CODING_EXERCISE = 0;
@@ -572,6 +640,7 @@ public final class CodingSyncServiceGrpc {
   private static final int METHODID_SOFT_DELETE_EXERCISE = 3;
   private static final int METHODID_SOFT_DELETE_TEST_CASE = 4;
   private static final int METHODID_UPSERT_ASSIGNMENT = 5;
+  private static final int METHODID_SOFT_DELETE_ASSIGNMENT = 6;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -612,6 +681,10 @@ public final class CodingSyncServiceGrpc {
           break;
         case METHODID_UPSERT_ASSIGNMENT:
           serviceImpl.upsertAssignment((com.codecampus.coding.grpc.UpsertAssignmentRequest) request,
+              (io.grpc.stub.StreamObserver<com.google.protobuf.Empty>) responseObserver);
+          break;
+        case METHODID_SOFT_DELETE_ASSIGNMENT:
+          serviceImpl.softDeleteAssignment((com.codecampus.coding.grpc.SoftDeleteAssignmentRequest) request,
               (io.grpc.stub.StreamObserver<com.google.protobuf.Empty>) responseObserver);
           break;
         default:
@@ -674,6 +747,13 @@ public final class CodingSyncServiceGrpc {
               com.codecampus.coding.grpc.UpsertAssignmentRequest,
               com.google.protobuf.Empty>(
                 service, METHODID_UPSERT_ASSIGNMENT)))
+        .addMethod(
+          getSoftDeleteAssignmentMethod(),
+          io.grpc.stub.ServerCalls.asyncUnaryCall(
+            new MethodHandlers<
+              com.codecampus.coding.grpc.SoftDeleteAssignmentRequest,
+              com.google.protobuf.Empty>(
+                service, METHODID_SOFT_DELETE_ASSIGNMENT)))
         .build();
   }
 
@@ -728,6 +808,7 @@ public final class CodingSyncServiceGrpc {
               .addMethod(getSoftDeleteExerciseMethod())
               .addMethod(getSoftDeleteTestCaseMethod())
               .addMethod(getUpsertAssignmentMethod())
+              .addMethod(getSoftDeleteAssignmentMethod())
               .build();
         }
       }

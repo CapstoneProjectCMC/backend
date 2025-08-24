@@ -13,9 +13,13 @@ import lombok.experimental.FieldDefaults;
 //@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserProfileResponse {
     String userId;
+    String username;
+    String email;
     String displayName;
-    String firstName;
-    String lastName;
     String avatarUrl;
     String backgroundUrl;
+    Boolean active;
+    String firstName;
+    String lastName;
+    Boolean gender;
 }

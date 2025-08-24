@@ -40,8 +40,10 @@ public enum ErrorCode {
             "Không tìm thấy người dùng mục tiêu!", NOT_FOUND),
     POST_NOT_FOUND(4048104, NOT_FOUND_STATUS, "Không tìm thấy bài đăng!",
             NOT_FOUND),
-    ORG_NOT_FOUND(4048104, NOT_FOUND_STATUS, "Không tìm thấy tổ chức!",
+    ORG_NOT_FOUND(4048105, NOT_FOUND_STATUS, "Không tìm thấy tổ chức!",
             NOT_FOUND),
+    ASSIGNMENT_NOT_FOUND(4048106, NOT_FOUND_STATUS,
+            "Không tìm thấy bài được giao!", NOT_FOUND),
 
 
     // 409 - Conflict

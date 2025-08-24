@@ -1,6 +1,7 @@
 package com.codecampus.chat.service;
 
 import com.codecampus.chat.dto.common.ApiResponse;
+import com.codecampus.chat.dto.common.PageResponse;
 import com.codecampus.chat.dto.request.ChatMessageRequest;
 import com.codecampus.chat.dto.response.ChatMessageResponse;
 import com.codecampus.chat.dto.response.UserProfileResponse;
@@ -12,18 +13,25 @@ import com.codecampus.chat.exception.AppException;
 import com.codecampus.chat.exception.ErrorCode;
 import com.codecampus.chat.helper.AuthenticationHelper;
 import com.codecampus.chat.helper.ChatMessageHelper;
+import com.codecampus.chat.helper.PageResponseHelper;
 import com.codecampus.chat.mapper.ChatMessageMapper;
 import com.codecampus.chat.repository.ChatMessageRepository;
 import com.codecampus.chat.repository.ConversationRepository;
 import com.codecampus.chat.repository.WebSocketSessionRepository;
 import com.codecampus.chat.repository.httpClient.ProfileClient;
+import com.codecampus.chat.service.cache.UserSummaryCacheService;
 import com.corundumstudio.socketio.SocketIOServer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dtos.UserProfileSummary;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -50,9 +58,11 @@ public class ChatMessageService {
     ChatMessageMapper chatMessageMapper;
 
     ChatMessageHelper chatMessageHelper;
+    UserSummaryCacheService cache;
 
-    public List<ChatMessageResponse> getChatMessages(
-            String conversationId) {
+    public PageResponse<ChatMessageResponse> getChatMessages(
+            String conversationId,
+            int page, int size) {
 
         // Validate conversationId
         String userId = AuthenticationHelper.getMyUserId();
@@ -74,13 +84,16 @@ public class ChatMessageService {
                                 ErrorCode.CONVERSATION_NOT_FOUND)
                 );
 
-        List<ChatMessage> chatMessages =
+        Pageable pageable = PageRequest.of(page - 1, size,
+                Sort.by(Sort.Direction.DESC, "createdDate"));
+        Page<ChatMessage> pageData =
                 chatMessageRepository.findAllByConversationIdOrderByCreatedDateDesc(
-                        conversationId);
+                        conversationId,
+                        pageable);
 
-        return chatMessages.stream()
-                .map(chatMessageHelper::toChatMessageResponseFromChatMessage)
-                .toList();
+        Page<ChatMessageResponse> out = pageData.map(
+                chatMessageHelper::toChatMessageResponseFromChatMessage);
+        return PageResponseHelper.toPageResponse(out, page);
     }
 
     public ChatMessageResponse createChatMessage(
@@ -105,32 +118,50 @@ public class ChatMessageService {
                         () -> new AppException(ErrorCode.CONVERSATION_NOT_FOUND)
                 );
 
-        // Get UserInfo from Profile Service
-        ApiResponse<UserProfileResponse> userResponse =
-                profileClient.getUserProfileByUserId(userId);
-
-        if (Objects.isNull(userResponse)) {
-            throw new AppException(ErrorCode.USER_PROFILE_NULL);
+        UserProfileSummary userProfileSummary = cache.getOrLoad(userId);
+        if (userProfileSummary == null) {
+            // fallback an toàn (hiếm khi vào đây)
+            ApiResponse<UserProfileResponse> api =
+                    profileClient.getUserProfileByUserId(userId);
+            UserProfileResponse response =
+                    (api == null) ? null : api.getResult();
+            if (response == null) {
+                throw new AppException(ErrorCode.USER_PROFILE_NULL);
+            }
+            userProfileSummary = UserProfileSummary.builder()
+                    .userId(response.getUserId())
+                    .username(response.getUsername())
+                    .email(response.getEmail())
+                    .active(response.getActive())
+                    .displayName(response.getDisplayName())
+                    .firstName(response.getFirstName())
+                    .lastName(response.getLastName())
+                    .avatarUrl(response.getAvatarUrl())
+                    .build();
         }
-
-        UserProfileResponse userInfo = userResponse.getResult();
 
         // Build Chat message Info
         ChatMessage chatMessage =
                 chatMessageMapper.toChatMessageFromChatMessageRequest(
                         chatMessageRequest);
+
         chatMessage.setSender(ParticipantInfo.builder()
-                .userId(userInfo.getUserId())
-                .displayName(userInfo.getDisplayName())
-                .firstName(userInfo.getFirstName())
-                .lastName(userInfo.getLastName())
-                .avatarUrl(userInfo.getAvatarUrl())
-                .backgroundUrl(userInfo.getBackgroundUrl())
+                .userId(userProfileSummary.userId())
+                .username(userProfileSummary.username())
+                .email(userProfileSummary.email())
+                .active(userProfileSummary.active())
+                .displayName(userProfileSummary.displayName())
+                .firstName(userProfileSummary.firstName())
+                .lastName(userProfileSummary.lastName())
+                .avatarUrl(userProfileSummary.avatarUrl())
                 .build());
         chatMessage.setCreatedDate(Instant.now());
 
         // Create chat message
         chatMessage = chatMessageRepository.save(chatMessage);
+
+        conversation.setModifiedDate(chatMessage.getCreatedDate());
+        conversationRepository.save(conversation);
 
         // Publish socket event to clients is conversation
         // Get participants userIds;

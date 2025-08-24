@@ -91,6 +91,10 @@ message SubmitQuizResponse {
   int32 timeTakenSeconds = 4;
 }
 
+message SoftDeleteAssignmentRequest {
+  string id = 1;
+}
+
 service QuizSyncService {
   rpc CreateQuizExercise(CreateQuizExerciseRequest) returns (.google.protobuf.Empty);
   rpc AddQuizDetail (AddQuizDetailRequest) returns (.google.protobuf.Empty);
@@ -100,6 +104,7 @@ service QuizSyncService {
   rpc SoftDeleteExercise (SoftDeleteRequest) returns (.google.protobuf.Empty);
   rpc SoftDeleteQuestion (SoftDeleteQuestionRequest) returns (.google.protobuf.Empty);
   rpc SoftDeleteOption (SoftDeleteOptionRequest) returns (.google.protobuf.Empty);
+  rpc SoftDeleteAssignment (SoftDeleteAssignmentRequest) returns (.google.protobuf.Empty);
 }
 
 message CreateQuizExerciseRequest {

@@ -4,19 +4,23 @@ import com.codecampus.chat.dto.response.ChatMessageResponse;
 import com.codecampus.chat.dto.response.ConversationResponse;
 import com.codecampus.chat.entity.ChatMessage;
 import com.codecampus.chat.entity.Conversation;
+import com.codecampus.chat.entity.ParticipantInfo;
 import com.codecampus.chat.mapper.ChatMessageMapper;
 import com.codecampus.chat.mapper.ConversationMapper;
+import dtos.UserProfileSummary;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
-import java.util.StringJoiner;
 
 @Component
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+@RequiredArgsConstructor
 public class ChatMessageHelper {
 
     ChatMessageMapper chatMessageMapper;
@@ -36,7 +40,6 @@ public class ChatMessageHelper {
 
         return chatMessageResponse;
     }
-
 
     public ConversationResponse toConversationResponseFromConversation(
             Conversation conversation) {
@@ -62,10 +65,33 @@ public class ChatMessageHelper {
     }
 
     public String generateParticipantHash(List<String> ids) {
-        StringJoiner stringJoiner = new StringJoiner("_");
-        ids.forEach(stringJoiner::add);
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            String stringJoiner = String.join("_", ids);
+            byte[] digest =
+                    md.digest(stringJoiner.getBytes(StandardCharsets.UTF_8));
+            StringBuilder hex = new StringBuilder();
+            for (byte b : digest) {
+                hex.append(String.format("%02x", b));
+            }
+            return hex.toString();
+        } catch (NoSuchAlgorithmException e) {
+            // fallback an toàn
+            return String.join("_", ids);
+        }
+    }
 
-        // SHA 256
-        return stringJoiner.toString();
+    public ParticipantInfo toParticipantInfoFromUserProfileSummary(
+            UserProfileSummary userProfileSummary) {
+        return ParticipantInfo.builder()
+                .userId(userProfileSummary.userId())
+                .username(userProfileSummary.username())
+                .email(userProfileSummary.email())
+                .active(userProfileSummary.active())
+                .displayName(userProfileSummary.displayName())
+                .firstName(userProfileSummary.firstName())
+                .lastName(userProfileSummary.lastName())
+                .avatarUrl(userProfileSummary.avatarUrl())
+                .build();
     }
 }

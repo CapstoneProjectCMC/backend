@@ -29,4 +29,7 @@ public class UserCreationRequest {
     int education;
     String[] links;
     String city;
+
+    String organizationId; // nếu truyền, identity sẽ tạo membership
+    String organizationMemberRole; // ví dụ: "Admin", "Teacher", "Student"
 }

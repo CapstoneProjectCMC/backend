@@ -1,8 +1,8 @@
 package com.codecampus.ai.mapper;
 
-import com.codecampus.ai.dto.request.exercise.OptionDto;
-import com.codecampus.ai.dto.request.exercise.QuestionDto;
-import com.codecampus.ai.dto.request.exercise.QuestionGenDto;
+import com.codecampus.ai.dto.request.quiz.OptionDto;
+import com.codecampus.ai.dto.request.quiz.QuestionDto;
+import com.codecampus.ai.dto.request.quiz.QuestionGenDto;
 import org.mapstruct.Mapper;
 
 import java.util.stream.Collectors;

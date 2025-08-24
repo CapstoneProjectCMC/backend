@@ -12,6 +12,7 @@ public record AllSubmissionHistoryResponse(
         Integer score,
         Integer totalPoints,
         Integer timeTakenSeconds,
-        Instant submittedAt
+        Instant submittedAt,
+        Boolean passed
 ) {
 }

@@ -15,4 +15,5 @@ spring:
 app:
   services:
     file: http://file-service:8082/file
+    organization: http://organization-service:8091/org
 

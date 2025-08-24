@@ -8,6 +8,7 @@ WORKDIR /workspace
 COPY pom.xml .
 COPY common-protos/pom.xml common-protos/pom.xml
 COPY common-events/pom.xml common-events/pom.xml
+COPY common-dtos/pom.xml common-dtos/pom.xml
 COPY gateway-service/pom.xml gateway-service/pom.xml
 COPY identity-service/pom.xml identity-service/pom.xml
 COPY profile-service/pom.xml profile-service/pom.xml
