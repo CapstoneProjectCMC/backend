@@ -8,8 +8,9 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-@FeignClient(name = "profile-service",
-            url = "http://localhost:8081",
+@FeignClient(
+        name = "profile-service",
+            url = "http://profile-service-1:8081",
             configuration = {FeignMultipartSupportConfig.class,
                     AuthenticationRequestInterceptor.class})
 public interface ProfileServiceClient {

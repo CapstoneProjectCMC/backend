@@ -39,6 +39,11 @@ main() {
   login
   echo "Building with DOCKER_GID=${DOCKER_GID}"
 
+
+#  for svc in quiz-service submission-service; do
+#    echo "Building $svc..."
+#    build_push_java "$svc"
+#  done
   for svc in submission-service quiz-service search-service post-service gateway-service ai-service; do
     echo "Building $svc..."
     build_push_java "$svc"
