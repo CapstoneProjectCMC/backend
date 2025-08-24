@@ -28,3 +28,8 @@ spring:
     openfeign:
       multipart:
         enabled: true
+
+app:
+  services:
+    profile: http://localhost:8081/profile
+    file: http://localhost:8082/file

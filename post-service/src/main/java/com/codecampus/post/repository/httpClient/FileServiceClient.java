@@ -10,15 +10,16 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 @FeignClient(
-        name = "file-service",
-        url = "http://file-service-1:8082",
-        configuration = {FeignMultipartSupportConfig.class,
-                AuthenticationRequestInterceptor.class})
+    name = "file-service",
+    url = "${app.services.file}",
+    configuration = {FeignMultipartSupportConfig.class,
+        AuthenticationRequestInterceptor.class})
 public interface FileServiceClient {
 
   @PostMapping(
-      value = "/file/api/FileDocument/add",
+      value = "/api/FileDocument/add",
       consumes = MediaType.MULTIPART_FORM_DATA_VALUE
   )
-  AddFileResponseDto uploadFile(@ModelAttribute AddFileDocumentDto dto);
+  AddFileResponseDto uploadFile(
+      @ModelAttribute AddFileDocumentDto dto);
 }
