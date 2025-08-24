@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 @FeignClient(
-    name = "file-service",
-    url = "${file.service.file-url}",
-    configuration = {FeignMultipartSupportConfig.class,
-        AuthenticationRequestInterceptor.class})
+        name = "file-service",
+        url = "http://file-service-1:8082",
+        configuration = {FeignMultipartSupportConfig.class,
+                AuthenticationRequestInterceptor.class})
 public interface FileServiceClient {
 
   @PostMapping(
