@@ -7,13 +7,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 @FeignClient(
-        name = "profile-service",
-        url = "${app.services.profile}",
-        path = "/internal"
+    name = "profile-service",
+    url = "${app.services.profile}",
+    path = "/internal"
 )
 public interface ProfileClient {
 
-    @GetMapping("/user/{userId}")
-    ApiResponse<UserProfileResponse> internalGetUserProfileByUserId(
-            @PathVariable("userId") String userId);
+  @GetMapping("/user/{userId}")
+  ApiResponse<UserProfileResponse> internalGetUserProfileByUserId(
+      @PathVariable("userId") String userId);
 }

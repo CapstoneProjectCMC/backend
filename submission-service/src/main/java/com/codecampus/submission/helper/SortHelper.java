@@ -7,8 +7,8 @@ import org.springframework.data.domain.Sort;
 @UtilityClass
 public class SortHelper {
 
-    public Sort build(SortField field, boolean asc) {
-        return asc ? Sort.by(field.getColumn()).ascending()
-                : Sort.by(field.getColumn()).descending();
-    }
+  public Sort build(SortField field, boolean asc) {
+    return asc ? Sort.by(field.getColumn()).ascending()
+        : Sort.by(field.getColumn()).descending();
+  }
 }

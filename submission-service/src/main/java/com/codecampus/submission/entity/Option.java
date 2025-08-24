@@ -30,27 +30,27 @@ import org.hibernate.annotations.Where;
 @Entity
 @Table(name = "question_option")
 @SQLDelete(sql = """
-        UPDATE question_option
-           SET deleted_by = ?, deleted_at = now()
-         WHERE id = ?
-        """)
+    UPDATE question_option
+       SET deleted_by = ?, deleted_at = now()
+     WHERE id = ?
+    """)
 @Where(clause = "deleted_at IS NULL")
 public class Option extends AuditMetadata {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    String id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
+  String id;
 
-    @JsonBackReference
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "question_id", nullable = false)
-    Question question;
+  @JsonBackReference
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "question_id", nullable = false)
+  Question question;
 
-    @Column(name = "option_text", nullable = false, columnDefinition = "text")
-    String optionText;
+  @Column(name = "option_text", nullable = false, columnDefinition = "text")
+  String optionText;
 
-    @Column(name = "is_correct", nullable = false)
-    boolean correct;
+  @Column(name = "is_correct", nullable = false)
+  boolean correct;
 
-    @Column(name = "display_order", length = 1)
-    String order;
+  @Column(name = "display_order", length = 1)
+  String order;
 }

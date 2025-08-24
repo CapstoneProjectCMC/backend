@@ -15,10 +15,10 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class OrganizationEvent {
-    Type type;
-    String id;             // GUID
-    ScopeType scopeType;
-    OrganizationPayload payload; // null nếu DELETED
-    
-    public enum Type { CREATED, UPDATED, DELETED, RESTORED }
+  Type type;
+  String id;             // GUID
+  ScopeType scopeType;
+  OrganizationPayload payload; // null nếu DELETED
+
+  public enum Type { CREATED, UPDATED, DELETED, RESTORED }
 }

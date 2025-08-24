@@ -9,10 +9,10 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface ChatMessageMapper {
 
-    @Mapping(target = "me", ignore = true)
-    ChatMessageResponse toChatMessageResponseFromChatMessage(
-            ChatMessage chatMessage);
+  @Mapping(target = "me", ignore = true)
+  ChatMessageResponse toChatMessageResponseFromChatMessage(
+      ChatMessage chatMessage);
 
-    ChatMessage toChatMessageFromChatMessageRequest(
-            ChatMessageRequest request);
+  ChatMessage toChatMessageFromChatMessageRequest(
+      ChatMessageRequest request);
 }

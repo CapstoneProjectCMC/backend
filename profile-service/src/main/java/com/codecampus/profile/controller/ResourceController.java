@@ -26,43 +26,43 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/resource")
 public class ResourceController {
 
-    ResourceService resourceService;
+  ResourceService resourceService;
 
-    @PostMapping("/{fileId}/save")
-    ApiResponse<Void> saveResource(
-            @PathVariable String fileId) {
-        resourceService.saveResource(fileId);
-        return ApiResponse.<Void>builder()
-                .message("Đã lưu tài nguyên")
-                .build();
-    }
+  @PostMapping("/{fileId}/save")
+  ApiResponse<Void> saveResource(
+      @PathVariable String fileId) {
+    resourceService.saveResource(fileId);
+    return ApiResponse.<Void>builder()
+        .message("Đã lưu tài nguyên")
+        .build();
+  }
 
-    @PostMapping("/{fileId}/report")
-    ApiResponse<Void> reportResource(@PathVariable String fileId,
-                                     @RequestBody ReportRequest body) {
-        resourceService.reportResource(fileId, body.reason());
-        return ApiResponse.<Void>builder()
-                .message("Đã báo cáo tài nguyên")
-                .build();
-    }
+  @PostMapping("/{fileId}/report")
+  ApiResponse<Void> reportResource(@PathVariable String fileId,
+                                   @RequestBody ReportRequest body) {
+    resourceService.reportResource(fileId, body.reason());
+    return ApiResponse.<Void>builder()
+        .message("Đã báo cáo tài nguyên")
+        .build();
+  }
 
-    @GetMapping("/saved/lectures")
-    ApiResponse<PageResponse<SavedResource>> getSavedLectures(
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        return ApiResponse.<PageResponse<SavedResource>>builder()
-                .message("Bài giảng đã lưu")
-                .result(resourceService.getSavedLectures(page, size))
-                .build();
-    }
+  @GetMapping("/saved/lectures")
+  ApiResponse<PageResponse<SavedResource>> getSavedLectures(
+      @RequestParam(defaultValue = "1") int page,
+      @RequestParam(defaultValue = "10") int size) {
+    return ApiResponse.<PageResponse<SavedResource>>builder()
+        .message("Bài giảng đã lưu")
+        .result(resourceService.getSavedLectures(page, size))
+        .build();
+  }
 
-    @GetMapping("/saved/textbooks")
-    ApiResponse<PageResponse<SavedResource>> getSavedTextbooks(
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        return ApiResponse.<PageResponse<SavedResource>>builder()
-                .message("Giáo trình đã lưu")
-                .result(resourceService.getSavedTextbooks(page, size))
-                .build();
-    }
+  @GetMapping("/saved/textbooks")
+  ApiResponse<PageResponse<SavedResource>> getSavedTextbooks(
+      @RequestParam(defaultValue = "1") int page,
+      @RequestParam(defaultValue = "10") int size) {
+    return ApiResponse.<PageResponse<SavedResource>>builder()
+        .message("Giáo trình đã lưu")
+        .result(resourceService.getSavedTextbooks(page, size))
+        .build();
+  }
 }

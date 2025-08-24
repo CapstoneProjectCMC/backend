@@ -8,6 +8,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class UpdateCommentDto {
-    private String commentId;
-    private String content;
+  private String commentId;
+  private String content;
 }

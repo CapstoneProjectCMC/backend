@@ -29,84 +29,84 @@ import org.springframework.web.bind.annotation.RestController;
 @Builder
 @Slf4j
 public class UserController {
-    UserService userService;
+  UserService userService;
 
-    @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/user")
-    ApiResponse<Void> createUser(
-            @RequestBody @Valid UserCreationRequest request) {
-        userService.createUser(request);
-        return ApiResponse.<Void>builder()
-                .message("Create User successful")
-                .build();
-    }
+  @PreAuthorize("hasRole('ADMIN')")
+  @PostMapping("/user")
+  ApiResponse<Void> createUser(
+      @RequestBody @Valid UserCreationRequest request) {
+    userService.createUser(request);
+    return ApiResponse.<Void>builder()
+        .message("Create User successful")
+        .build();
+  }
 
-    @PostMapping("/user/create-password")
-    ApiResponse<Void> createPassword(
-            @RequestBody @Valid PasswordCreationRequest request) {
-        userService.createPassword(request);
-        return ApiResponse.<Void>builder()
-                .message(
-                        "Password has been created, you could use it to log-in")
-                .build();
-    }
+  @PostMapping("/user/create-password")
+  ApiResponse<Void> createPassword(
+      @RequestBody @Valid PasswordCreationRequest request) {
+    userService.createPassword(request);
+    return ApiResponse.<Void>builder()
+        .message(
+            "Password has been created, you could use it to log-in")
+        .build();
+  }
 
-    @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/users")
-    ApiResponse<PageResponse<UserResponse>> getUsers(
-            @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size) {
-        return ApiResponse.<PageResponse<UserResponse>>builder()
-                .result(userService.getUsers(page, size))
-                .message("Get Users successful")
-                .build();
-    }
+  @PreAuthorize("hasRole('ADMIN')")
+  @GetMapping("/users")
+  ApiResponse<PageResponse<UserResponse>> getUsers(
+      @RequestParam(value = "page", defaultValue = "1") int page,
+      @RequestParam(value = "size", defaultValue = "10") int size) {
+    return ApiResponse.<PageResponse<UserResponse>>builder()
+        .result(userService.getUsers(page, size))
+        .message("Get Users successful")
+        .build();
+  }
 
-    @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/user/{userId}")
-    ApiResponse<UserResponse> getUser(
-            @PathVariable("userId") String userId) {
-        return ApiResponse.<UserResponse>builder()
-                .result(userService.getUser(userId))
-                .message("Get User successful")
-                .build();
-    }
+  @PreAuthorize("hasRole('ADMIN')")
+  @GetMapping("/user/{userId}")
+  ApiResponse<UserResponse> getUser(
+      @PathVariable("userId") String userId) {
+    return ApiResponse.<UserResponse>builder()
+        .result(userService.getUser(userId))
+        .message("Get User successful")
+        .build();
+  }
 
-    @GetMapping("/user/my-info")
-    ApiResponse<UserResponse> getMyInfo() {
-        return ApiResponse.<UserResponse>builder()
-                .result(userService.getMyInfo())
-                .message("Get My Info successful")
-                .build();
-    }
+  @GetMapping("/user/my-info")
+  ApiResponse<UserResponse> getMyInfo() {
+    return ApiResponse.<UserResponse>builder()
+        .result(userService.getMyInfo())
+        .message("Get My Info successful")
+        .build();
+  }
 
-    @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("/user/{userId}")
-    ApiResponse<String> deleteUser(
-            @PathVariable String userId) {
-        userService.deleteUser(userId);
-        return ApiResponse.<String>builder()
-                .result("User deleted successful")
-                .build();
-    }
+  @PreAuthorize("hasRole('ADMIN')")
+  @DeleteMapping("/user/{userId}")
+  ApiResponse<String> deleteUser(
+      @PathVariable String userId) {
+    userService.deleteUser(userId);
+    return ApiResponse.<String>builder()
+        .result("User deleted successful")
+        .build();
+  }
 
-    @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping("/user/{userId}")
-    ApiResponse<Void> updateUser(
-            @PathVariable("userId") String userId,
-            @RequestBody UserUpdateRequest request) {
-        userService.updateUserById(userId, request);
-        return ApiResponse.<Void>builder()
-                .message("Update User successful")
-                .build();
-    }
+  @PreAuthorize("hasRole('ADMIN')")
+  @PutMapping("/user/{userId}")
+  ApiResponse<Void> updateUser(
+      @PathVariable("userId") String userId,
+      @RequestBody UserUpdateRequest request) {
+    userService.updateUserById(userId, request);
+    return ApiResponse.<Void>builder()
+        .message("Update User successful")
+        .build();
+  }
 
-    @PutMapping("/user/my-info")
-    ApiResponse<Void> updateMyInfo(
-            UserUpdateRequest request) {
-        userService.updateMyInfo(request);
-        return ApiResponse.<Void>builder()
-                .message("Update My Info successful")
-                .build();
-    }
+  @PutMapping("/user/my-info")
+  ApiResponse<Void> updateMyInfo(
+      UserUpdateRequest request) {
+    userService.updateMyInfo(request);
+    return ApiResponse.<Void>builder()
+        .message("Update My Info successful")
+        .build();
+  }
 }

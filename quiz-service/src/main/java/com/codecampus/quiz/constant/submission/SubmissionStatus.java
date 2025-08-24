@@ -9,8 +9,8 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public enum SubmissionStatus {
-    PENDING(1),
-    GRADED(2),
-    ERROR(3);
-    int code;
+  PENDING(1),
+  GRADED(2),
+  ERROR(3);
+  int code;
 }

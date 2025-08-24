@@ -4,9 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record ExerciseResponse(
-        String id,
-        String title,
-        String description,
-        String exerciseType
+    String id,
+    String title,
+    String description,
+    String exerciseType
 ) {
 }

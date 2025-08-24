@@ -26,27 +26,27 @@ import org.hibernate.annotations.Where;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @SQLDelete(sql = "UPDATE code_submission_result " +
-        "SET deleted_by = ? , deleted_at = now() " +
-        "WHERE submission_id = ? AND test_case_id = ?")
+    "SET deleted_by = ? , deleted_at = now() " +
+    "WHERE submission_id = ? AND test_case_id = ?")
 @Where(clause = "deleted_at IS NULL")
 public class CodeSubmissionResult {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    String id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
+  String id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "submission_id", nullable = false)
-    CodeSubmission submission;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "submission_id", nullable = false)
+  CodeSubmission submission;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "test_case_id", nullable = false)
-    TestCase testCase;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "test_case_id", nullable = false)
+  TestCase testCase;
 
-    boolean passed;
-    Integer runtimeMs;
-    Integer memoryKb;
-    @Lob
-    String output;
-    @Lob
-    String errorMessage;
+  boolean passed;
+  Integer runtimeMs;
+  Integer memoryKb;
+  @Lob
+  String output;
+  @Lob
+  String errorMessage;
 }

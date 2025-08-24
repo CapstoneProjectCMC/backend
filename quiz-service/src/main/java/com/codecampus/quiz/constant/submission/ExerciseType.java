@@ -9,6 +9,6 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public enum ExerciseType {
-    CODING,
-    QUIZ
+  CODING,
+  QUIZ
 }

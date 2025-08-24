@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CodingExerciseRepository
-        extends JpaRepository<CodingExercise, String> {
+    extends JpaRepository<CodingExercise, String> {
 }
 

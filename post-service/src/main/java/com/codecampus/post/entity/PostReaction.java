@@ -27,19 +27,19 @@ import org.hibernate.annotations.Where;
 @Entity
 @Table(name = "post_reaction")
 @SQLDelete(sql = "UPDATE post_reaction " +
-        "SET deleted_by = ? , deleted_at = now() " +
-        "WHERE id = ?")
+    "SET deleted_by = ? , deleted_at = now() " +
+    "WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
 public class PostReaction extends AuditMetadata {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    String reactionId;
+  @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
+  String reactionId;
 
-    String userId;
-    String commentId; // for comment reactions
-    String emojiType;
+  String userId;
+  String commentId; // for comment reactions
+  String emojiType;
 
-    @ManyToOne
-    @JoinColumn(name = "post_id", nullable = false)
-    Post post;
+  @ManyToOne
+  @JoinColumn(name = "post_id", nullable = false)
+  Post post;
 }

@@ -29,27 +29,27 @@ import org.hibernate.annotations.Where;
 @Entity
 @Table(name = "quiz_submission_answer")
 @SQLDelete(sql = "UPDATE quiz_submission_answer " +
-        "SET deleted_by = ? , deleted_at = now() " +
-        "WHERE id = ?")
+    "SET deleted_by = ? , deleted_at = now() " +
+    "WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
 public class QuizSubmissionAnswer extends AuditMetadata {
-    @EmbeddedId
-    QuizSubmissionAnswerId id;
+  @EmbeddedId
+  QuizSubmissionAnswerId id;
 
-    @JsonBackReference
-    @MapsId("quizSubmissionId")
-    @ManyToOne
-    QuizSubmission submission;
+  @JsonBackReference
+  @MapsId("quizSubmissionId")
+  @ManyToOne
+  QuizSubmission submission;
 
-    @MapsId("questionId")
-    @ManyToOne
-    Question question;
+  @MapsId("questionId")
+  @ManyToOne
+  Question question;
 
-    @ManyToOne
-    @JoinColumn(name = "question_option_id",
-            foreignKey = @ForeignKey(name = "fk_quiz_answer_option"))
-    Option selectedOption;
+  @ManyToOne
+  @JoinColumn(name = "question_option_id",
+      foreignKey = @ForeignKey(name = "fk_quiz_answer_option"))
+  Option selectedOption;
 
-    String answerText;
-    boolean correct;
+  String answerText;
+  boolean correct;
 }

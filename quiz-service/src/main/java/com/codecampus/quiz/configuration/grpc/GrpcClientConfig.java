@@ -9,19 +9,19 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class GrpcClientConfig {
-    @Bean(destroyMethod = "shutdownNow")
-    ManagedChannel submissionChannel(
-            @Value("${submission.grpc.host}") String host,
-            @Value("${submission.grpc.port}") int port) {
-        return ManagedChannelBuilder.forAddress(host, port)
-                .usePlaintext()
-                .build();
-    }
+  @Bean(destroyMethod = "shutdownNow")
+  ManagedChannel submissionChannel(
+      @Value("${submission.grpc.host}") String host,
+      @Value("${submission.grpc.port}") int port) {
+    return ManagedChannelBuilder.forAddress(host, port)
+        .usePlaintext()
+        .build();
+  }
 
-    @Bean
-    SubmissionSyncServiceGrpc.SubmissionSyncServiceBlockingStub submissionStub(
-            ManagedChannel submissionChannel) {
-        return SubmissionSyncServiceGrpc.newBlockingStub(submissionChannel);
-    }
+  @Bean
+  SubmissionSyncServiceGrpc.SubmissionSyncServiceBlockingStub submissionStub(
+      ManagedChannel submissionChannel) {
+    return SubmissionSyncServiceGrpc.newBlockingStub(submissionChannel);
+  }
 
 }

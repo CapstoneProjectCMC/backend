@@ -15,34 +15,34 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserProfileEventListener {
-    ObjectMapper objectMapper;
-    UserSummaryCacheService userSummaryCacheService;
+  ObjectMapper objectMapper;
+  UserSummaryCacheService userSummaryCacheService;
 
-    @KafkaListener(
-            topics = "${app.event.profile-events}",
-            groupId = "submission-service"
-    )
-    public void onProfileEvent(String raw) {
-        try {
-            UserProfileEvent event =
-                    objectMapper.readValue(raw, UserProfileEvent.class);
-            String userId = event.getId();
-            switch (event.getType()) {
-                case UPDATED, RESTORED -> {
-                    // Làm mới cache ngay, tránh data stale
-                    userSummaryCacheService.refresh(userId);
-                    log.info("[ProfileEvent] Refreshed user cache {}", userId);
-                }
-                case DELETED -> {
-                    // User bị xoá mềm: xoá cache để tránh leak
-                    userSummaryCacheService.evictTwice(userId);
-                    log.info("[ProfileEvent] Evicted user cache {}", userId);
-                }
-                default -> { /* no-op */ }
-            }
-        } catch (Exception e) {
-            log.error("[ProfileEvent] parse/handle failed: {}", e.getMessage(),
-                    e);
+  @KafkaListener(
+      topics = "${app.event.profile-events}",
+      groupId = "submission-service"
+  )
+  public void onProfileEvent(String raw) {
+    try {
+      UserProfileEvent event =
+          objectMapper.readValue(raw, UserProfileEvent.class);
+      String userId = event.getId();
+      switch (event.getType()) {
+        case UPDATED, RESTORED -> {
+          // Làm mới cache ngay, tránh data stale
+          userSummaryCacheService.refresh(userId);
+          log.info("[ProfileEvent] Refreshed user cache {}", userId);
         }
+        case DELETED -> {
+          // User bị xoá mềm: xoá cache để tránh leak
+          userSummaryCacheService.evictTwice(userId);
+          log.info("[ProfileEvent] Evicted user cache {}", userId);
+        }
+        default -> { /* no-op */ }
+      }
+    } catch (Exception e) {
+      log.error("[ProfileEvent] parse/handle failed: {}", e.getMessage(),
+          e);
     }
+  }
 }

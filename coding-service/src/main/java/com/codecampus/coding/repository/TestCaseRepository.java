@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TestCaseRepository
-        extends JpaRepository<TestCase, String> {
+    extends JpaRepository<TestCase, String> {
 }
 

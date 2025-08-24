@@ -20,17 +20,17 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class ContestController {
 
-    ContestService contestService;
+  ContestService contestService;
 
-    // TODO Khi nào thêm đồng bộ từ submission service qua, khi có các contest assign cho student
-    @GetMapping("/contests/my")
-    ApiResponse<PageResponse<ContestStatus>> getMyContestStatuses(
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size) {
+  // TODO Khi nào thêm đồng bộ từ submission service qua, khi có các contest assign cho student
+  @GetMapping("/contests/my")
+  ApiResponse<PageResponse<ContestStatus>> getMyContestStatuses(
+      @RequestParam(defaultValue = "1") int page,
+      @RequestParam(defaultValue = "10") int size) {
 
-        return ApiResponse.<PageResponse<ContestStatus>>builder()
-                .message("Danh sách trạng thái contest")
-                .result(contestService.getMyContestStatuses(page, size))
-                .build();
-    }
+    return ApiResponse.<PageResponse<ContestStatus>>builder()
+        .message("Danh sách trạng thái contest")
+        .result(contestService.getMyContestStatuses(page, size))
+        .build();
+  }
 }

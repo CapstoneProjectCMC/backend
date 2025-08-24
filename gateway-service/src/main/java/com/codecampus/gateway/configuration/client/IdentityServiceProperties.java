@@ -11,11 +11,11 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "identity.service")
 public class IdentityServiceProperties {
 
-    /**
-     * Base URL bao gồm context-path (/identity)
-     * VD:
-     * - Local : http://localhost:8080/identity
-     * - Docker: http://identity-service:8080/identity
-     */
-    private String baseUrl;
+  /**
+   * Base URL bao gồm context-path (/identity)
+   * VD:
+   * - Local : http://localhost:8080/identity
+   * - Docker: http://identity-service:8080/identity
+   */
+  private String baseUrl;
 }

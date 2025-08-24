@@ -9,13 +9,6 @@ import com.codecampus.submission.helper.ExerciseHelper;
 import com.codecampus.submission.repository.AssignmentRepository;
 import com.codecampus.submission.service.grpc.GrpcCodingClient;
 import com.codecampus.submission.service.grpc.GrpcQuizClient;
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,163 +17,169 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AssignmentService {
-    AssignmentRepository assignmentRepository;
+  AssignmentRepository assignmentRepository;
 
-    ExerciseHelper exerciseHelper;
-    GrpcQuizClient grpcQuizClient;
-    GrpcCodingClient grpcCodingClient;
+  ExerciseHelper exerciseHelper;
+  GrpcQuizClient grpcQuizClient;
+  GrpcCodingClient grpcCodingClient;
 
-    @Transactional
-    public Assignment assignExercise(
-            String exerciseId,
-            String studentId,
-            Instant dueAt) {
-        Exercise exercise =
-                exerciseHelper.getExerciseOrThrow(exerciseId);
+  @Transactional
+  public Assignment assignExercise(
+      String exerciseId,
+      String studentId,
+      Instant dueAt) {
+    Exercise exercise =
+        exerciseHelper.getExerciseOrThrow(exerciseId);
 
-        Assignment assignment = assignmentRepository
-                .findByExerciseIdAndStudentId(exerciseId, studentId)
-                .orElseGet(Assignment::new);
+    Assignment assignment = assignmentRepository
+        .findByExerciseIdAndStudentId(exerciseId, studentId)
+        .orElseGet(Assignment::new);
 
-        assignment.setExercise(exercise);
-        assignment.setStudentId(studentId);
-        assignment.setDueAt(dueAt);
-        assignment.setCompleted(false);
-        assignmentRepository.save(assignment);
+    assignment.setExercise(exercise);
+    assignment.setStudentId(studentId);
+    assignment.setDueAt(dueAt);
+    assignment.setCompleted(false);
+    assignmentRepository.save(assignment);
 
 
-        if (exercise.getExerciseType() == ExerciseType.QUIZ) {
-            grpcQuizClient.pushAssignment(assignment);
-        } else if (exercise.getExerciseType() == ExerciseType.CODING) {
-            grpcCodingClient.pushAssignment(assignment);
-        }
-        return assignment;
+    if (exercise.getExerciseType() == ExerciseType.QUIZ) {
+      grpcQuizClient.pushAssignment(assignment);
+    } else if (exercise.getExerciseType() == ExerciseType.CODING) {
+      grpcCodingClient.pushAssignment(assignment);
     }
+    return assignment;
+  }
 
-    @Transactional
-    public void softDeleteAssignment(
-            String exerciseId,
-            String studentId) {
-        String by = AuthenticationHelper.getMyUsername();
+  @Transactional
+  public void softDeleteAssignment(
+      String exerciseId,
+      String studentId) {
+    String by = AuthenticationHelper.getMyUsername();
 
-        assignmentRepository.findByExerciseIdAndStudentId(exerciseId, studentId)
-                .ifPresent(a -> {
-                    a.markDeleted(by);
-                    assignmentRepository.save(a);
-                    pushAssignmentDeleteToChildService(a);
-                });
-    }
-
-    @Transactional
-    public void bulkSoftDeleteAssignments(
-            String exerciseId, Set<String> studentIds) {
-
-        String by = AuthenticationHelper.getMyUsername();
-
-        if (studentIds == null || studentIds.isEmpty()) {
-            return;
-        }
-
-        List<Assignment> assigmentList = assignmentRepository
-                .findByExerciseIdAndStudentIdIn(exerciseId,
-                        studentIds.stream()
-                                .filter(Objects::nonNull)
-                                .map(String::trim)
-                                .filter(s -> !s.isEmpty()).distinct().toList()
-                );
-
-        assigmentList.forEach(assignment -> {
-            assignment.markDeleted(by);
-            pushAssignmentDeleteToChildService(assignment);
+    assignmentRepository.findByExerciseIdAndStudentId(exerciseId, studentId)
+        .ifPresent(a -> {
+          a.markDeleted(by);
+          assignmentRepository.save(a);
+          pushAssignmentDeleteToChildService(a);
         });
+  }
+
+  @Transactional
+  public void bulkSoftDeleteAssignments(
+      String exerciseId, Set<String> studentIds) {
+
+    String by = AuthenticationHelper.getMyUsername();
+
+    if (studentIds == null || studentIds.isEmpty()) {
+      return;
     }
 
-
-    @Transactional
-    public List<Assignment> assignExerciseToMany(
-            String exerciseId,
-            BulkAssignExerciseRequest bulkAssignExerciseRequest) {
-        List<String> studentIds = bulkAssignExerciseRequest.studentIds()
-                .stream()
+    List<Assignment> assigmentList = assignmentRepository
+        .findByExerciseIdAndStudentIdIn(exerciseId,
+            studentIds.stream()
                 .filter(Objects::nonNull)
                 .map(String::trim)
-                .filter(studentId -> !studentId.isEmpty())
-                .distinct()
-                .toList();
-        if (studentIds.isEmpty()) {
-            return List.of();
-        }
+                .filter(s -> !s.isEmpty()).distinct().toList()
+        );
 
-        Exercise exercise = exerciseHelper.getExerciseOrThrow(exerciseId);
+    assigmentList.forEach(assignment -> {
+      assignment.markDeleted(by);
+      pushAssignmentDeleteToChildService(assignment);
+    });
+  }
 
-        // Lấy các assignment hiện có
-        Map<String, Assignment> existingByStudent = assignmentRepository
-                .findByExerciseIdAndStudentIdIn(exerciseId, studentIds)
-                .stream()
-                .collect(Collectors.toMap(Assignment::getStudentId,
-                        Function.identity()));
 
-        // Upsert
-        List<Assignment> assignmentList = new ArrayList<>(studentIds.size());
-        for (String studentId : studentIds) {
-            Assignment assignment =
-                    existingByStudent.getOrDefault(studentId,
-                            Assignment.builder().build());
-            assignment.setExercise(exercise);
-            assignment.setStudentId(studentId);
-            assignment.setDueAt(bulkAssignExerciseRequest.dueAt());
-            assignment.setCompleted(false);
-            assignmentList.add(assignment);
-        }
-
-        List<Assignment> assignmentListSaved =
-                assignmentRepository.saveAll(assignmentList);
-
-        assignmentListSaved.forEach(
-                assignment -> pushAssignmentToChildService(
-                        exercise, assignment));
-
-        return assignmentListSaved;
+  @Transactional
+  public List<Assignment> assignExerciseToMany(
+      String exerciseId,
+      BulkAssignExerciseRequest bulkAssignExerciseRequest) {
+    List<String> studentIds = bulkAssignExerciseRequest.studentIds()
+        .stream()
+        .filter(Objects::nonNull)
+        .map(String::trim)
+        .filter(studentId -> !studentId.isEmpty())
+        .distinct()
+        .toList();
+    if (studentIds.isEmpty()) {
+      return List.of();
     }
 
-    /**
-     * Đánh dấu completed = true khi submission pass.
-     */
-    @Transactional
-    public void markCompleted(
-            String exerciseId,
-            String studentId) {
-        assignmentRepository.findByExerciseIdAndStudentId(exerciseId, studentId)
-                .ifPresent(a -> {
-                    a.setCompleted(true);
-                    // Đẩy trạng thái mới sang service con để đồng bộ (idempotent)
-                    pushAssignmentToChildService(a.getExercise(), a);
-                });
+    Exercise exercise = exerciseHelper.getExerciseOrThrow(exerciseId);
+
+    // Lấy các assignment hiện có
+    Map<String, Assignment> existingByStudent = assignmentRepository
+        .findByExerciseIdAndStudentIdIn(exerciseId, studentIds)
+        .stream()
+        .collect(Collectors.toMap(Assignment::getStudentId,
+            Function.identity()));
+
+    // Upsert
+    List<Assignment> assignmentList = new ArrayList<>(studentIds.size());
+    for (String studentId : studentIds) {
+      Assignment assignment =
+          existingByStudent.getOrDefault(studentId,
+              Assignment.builder().build());
+      assignment.setExercise(exercise);
+      assignment.setStudentId(studentId);
+      assignment.setDueAt(bulkAssignExerciseRequest.dueAt());
+      assignment.setCompleted(false);
+      assignmentList.add(assignment);
     }
 
+    List<Assignment> assignmentListSaved =
+        assignmentRepository.saveAll(assignmentList);
 
-    public void pushAssignmentToChildService(
-            Exercise exercise,
-            Assignment assignment) {
-        if (exercise.getExerciseType() == ExerciseType.QUIZ) {
-            grpcQuizClient.pushAssignment(assignment);
-        } else if (exercise.getExerciseType() == ExerciseType.CODING) {
-            grpcCodingClient.pushAssignment(assignment);
-        }
-    }
+    assignmentListSaved.forEach(
+        assignment -> pushAssignmentToChildService(
+            exercise, assignment));
 
-    public void pushAssignmentDeleteToChildService(Assignment assignment) {
-        Exercise e = assignment.getExercise();
-        if (e.getExerciseType() == ExerciseType.QUIZ) {
-            grpcQuizClient.softDeleteAssignment(assignment.getId());
-        } else if (e.getExerciseType() == ExerciseType.CODING) {
-            grpcCodingClient.softDeleteAssignment(assignment.getId());
-        }
+    return assignmentListSaved;
+  }
+
+  /**
+   * Đánh dấu completed = true khi submission pass.
+   */
+  @Transactional
+  public void markCompleted(
+      String exerciseId,
+      String studentId) {
+    assignmentRepository.findByExerciseIdAndStudentId(exerciseId, studentId)
+        .ifPresent(a -> {
+          a.setCompleted(true);
+          // Đẩy trạng thái mới sang service con để đồng bộ (idempotent)
+          pushAssignmentToChildService(a.getExercise(), a);
+        });
+  }
+
+
+  public void pushAssignmentToChildService(
+      Exercise exercise,
+      Assignment assignment) {
+    if (exercise.getExerciseType() == ExerciseType.QUIZ) {
+      grpcQuizClient.pushAssignment(assignment);
+    } else if (exercise.getExerciseType() == ExerciseType.CODING) {
+      grpcCodingClient.pushAssignment(assignment);
     }
+  }
+
+  public void pushAssignmentDeleteToChildService(Assignment assignment) {
+    Exercise e = assignment.getExercise();
+    if (e.getExerciseType() == ExerciseType.QUIZ) {
+      grpcQuizClient.softDeleteAssignment(assignment.getId());
+    } else if (e.getExerciseType() == ExerciseType.CODING) {
+      grpcCodingClient.softDeleteAssignment(assignment.getId());
+    }
+  }
 }

@@ -2,30 +2,29 @@ package com.codecampus.profile.repository;
 
 import com.codecampus.profile.entity.Org;
 import com.codecampus.profile.entity.properties.exercise.AssignedOrgExercise;
+import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
-
 @Repository
 public interface OrgRepository
-        extends Neo4jRepository<Org, String> {
+    extends Neo4jRepository<Org, String> {
 
-    Optional<Org> findByOrgId(String orgId);
+  Optional<Org> findByOrgId(String orgId);
 
-    @Query(value = """
-            MATCH (o:Organization {orgId:$orgId})-[a:ASSIGNED_ORG_EXERCISE]->(e:Exercise)
-            RETURN a, e ORDER BY e.title
-            SKIP $skip
-            LIMIT $limit
-            """,
-            countQuery = """
-                    MATCH (o:Organization {orgId:$orgId})-[a:ASSIGNED_ORG_EXERCISE]->(:Exercise)
-                    RETURN count(a)
-                    """)
-    Page<AssignedOrgExercise> findAssignedExercises(
-            String orgId, Pageable pageable);
+  @Query(value = """
+      MATCH (o:Organization {orgId:$orgId})-[a:ASSIGNED_ORG_EXERCISE]->(e:Exercise)
+      RETURN a, e ORDER BY e.title
+      SKIP $skip
+      LIMIT $limit
+      """,
+      countQuery = """
+          MATCH (o:Organization {orgId:$orgId})-[a:ASSIGNED_ORG_EXERCISE]->(:Exercise)
+          RETURN count(a)
+          """)
+  Page<AssignedOrgExercise> findAssignedExercises(
+      String orgId, Pageable pageable);
 }

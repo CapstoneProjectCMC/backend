@@ -1,5 +1,7 @@
 package com.codecampus.chat.entity;
 
+import java.time.Instant;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,9 +13,6 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
-import java.time.Instant;
-import java.util.List;
-
 @Setter
 @Getter
 @Builder
@@ -22,17 +21,17 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Document(collection = "conversation")
 public class Conversation {
-    @MongoId
-    String id;
+  @MongoId
+  String id;
 
-    String type; // GROUP, DIRECT
+  String type; // GROUP, DIRECT
 
-    @Indexed(unique = true)
-    String participantsHash;
+  @Indexed(unique = true)
+  String participantsHash;
 
-    List<ParticipantInfo> participants;
+  List<ParticipantInfo> participants;
 
-    Instant createdDate;
+  Instant createdDate;
 
-    Instant modifiedDate;
+  Instant modifiedDate;
 }

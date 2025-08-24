@@ -22,23 +22,23 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RequestMapping("/auth")
 public class OtpController {
-    OtpService otpService;
+  OtpService otpService;
 
-    @PostMapping("/send-otp")
-    public ApiResponse<OtpResponse> sendOtp(
-            @RequestBody UserCreationRequest request) {
-        return ApiResponse.<OtpResponse>builder()
-                .result(otpService.sendOtp(request))
-                .message("OTP sent successfully")
-                .build();
-    }
+  @PostMapping("/send-otp")
+  public ApiResponse<OtpResponse> sendOtp(
+      @RequestBody UserCreationRequest request) {
+    return ApiResponse.<OtpResponse>builder()
+        .result(otpService.sendOtp(request))
+        .message("OTP sent successfully")
+        .build();
+  }
 
-    @PostMapping("/verify-otp")
-    public ApiResponse<Void> verifyOtp(
-            @RequestBody OtpVerificationRequest request) {
-        otpService.verifyOtp(request);
-        return ApiResponse.<Void>builder()
-                .message("OTP verified successfully")
-                .build();
-    }
+  @PostMapping("/verify-otp")
+  public ApiResponse<Void> verifyOtp(
+      @RequestBody OtpVerificationRequest request) {
+    otpService.verifyOtp(request);
+    return ApiResponse.<Void>builder()
+        .message("OTP verified successfully")
+        .build();
+  }
 }

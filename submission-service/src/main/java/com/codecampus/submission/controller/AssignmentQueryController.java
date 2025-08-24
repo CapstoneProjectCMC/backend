@@ -22,28 +22,28 @@ import org.springframework.web.bind.annotation.RestController;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AssignmentQueryController {
 
-    AssignmentQueryService assignmentQueryService;
+  AssignmentQueryService assignmentQueryService;
 
-    @GetMapping("/assignments/self")
-    ApiResponse<PageResponse<MyAssignmentResponse>> myAssignments(
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "20") int size) {
-        return ApiResponse.<PageResponse<MyAssignmentResponse>>builder()
-                .result(assignmentQueryService.getAssignmentsForStudent(
-                        page, size))
-                .message("Danh sách bài tập được giao cho bạn!")
-                .build();
-    }
+  @GetMapping("/assignments/self")
+  ApiResponse<PageResponse<MyAssignmentResponse>> myAssignments(
+      @RequestParam(defaultValue = "1") int page,
+      @RequestParam(defaultValue = "20") int size) {
+    return ApiResponse.<PageResponse<MyAssignmentResponse>>builder()
+        .result(assignmentQueryService.getAssignmentsForStudent(
+            page, size))
+        .message("Danh sách bài tập được giao cho bạn!")
+        .build();
+  }
 
-    @GetMapping("/assignments/{exerciseId}")
-    public PageResponse<AssignedStudentResponse> getAssignedStudentsForExercise(
-            @PathVariable String exerciseId,
-            @RequestParam(required = false) Boolean completed,
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "20") int size) {
+  @GetMapping("/assignments/{exerciseId}")
+  public PageResponse<AssignedStudentResponse> getAssignedStudentsForExercise(
+      @PathVariable String exerciseId,
+      @RequestParam(required = false) Boolean completed,
+      @RequestParam(defaultValue = "1") int page,
+      @RequestParam(defaultValue = "20") int size) {
 
-        return assignmentQueryService.getAssignedStudentsForExercise(
-                exerciseId, completed,
-                page, size);
-    }
+    return assignmentQueryService.getAssignedStudentsForExercise(
+        exerciseId, completed,
+        page, size);
+  }
 }

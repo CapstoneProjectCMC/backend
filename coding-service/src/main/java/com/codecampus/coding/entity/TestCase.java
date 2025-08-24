@@ -28,27 +28,27 @@ import org.hibernate.annotations.Where;
 @Entity
 @Table(name = "test_case")
 @SQLDelete(sql = """
-        UPDATE test_case
-           SET deleted_by = ?, deleted_at = now()
-         WHERE id = ?""")
+    UPDATE test_case
+       SET deleted_by = ?, deleted_at = now()
+     WHERE id = ?""")
 @Where(clause = "deleted_at IS NULL")
 public class TestCase extends AuditMetadata {
-    @Id
-    String id;
+  @Id
+  String id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "coding_exercise_id", nullable = false)
-    @JsonBackReference
-    CodingExercise coding;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "coding_exercise_id", nullable = false)
+  @JsonBackReference
+  CodingExercise coding;
 
-    @Column(columnDefinition = "text")
-    String input;
+  @Column(columnDefinition = "text")
+  String input;
 
-    @Column(columnDefinition = "text")
-    String expectedOutput;
+  @Column(columnDefinition = "text")
+  String expectedOutput;
 
-    boolean sample;
+  boolean sample;
 
-    @Column(columnDefinition = "text")
-    String note;
+  @Column(columnDefinition = "text")
+  String note;
 }

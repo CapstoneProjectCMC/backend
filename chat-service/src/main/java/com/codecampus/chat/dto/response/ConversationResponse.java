@@ -1,13 +1,12 @@
 package com.codecampus.chat.dto.response;
 
 import com.codecampus.chat.entity.ParticipantInfo;
+import java.time.Instant;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
-
-import java.time.Instant;
-import java.util.List;
 
 @Data
 @Builder
@@ -16,12 +15,12 @@ import java.util.List;
 // Khi build thì KHÔNG response null
 //@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ConversationResponse {
-    String id;
-    String type; // GROUP; DIRECT
-    String participantsHash;
-    String conversationAvatar;
-    String conversationName;
-    List<ParticipantInfo> participants;
-    Instant createdDate;
-    Instant modifiedDate;
+  String id;
+  String type; // GROUP; DIRECT
+  String participantsHash;
+  String conversationAvatar;
+  String conversationName;
+  List<ParticipantInfo> participants;
+  Instant createdDate;
+  Instant modifiedDate;
 }

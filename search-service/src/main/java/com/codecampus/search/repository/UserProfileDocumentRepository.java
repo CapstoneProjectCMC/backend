@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserProfileDocumentRepository
-        extends ElasticsearchRepository<UserProfileDocument, String> {
+    extends ElasticsearchRepository<UserProfileDocument, String> {
 }

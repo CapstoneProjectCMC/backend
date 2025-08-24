@@ -3,6 +3,7 @@ package com.codecampus.submission.entity.audit;
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
+import java.time.Instant;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
@@ -12,46 +13,44 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.Instant;
-
 @Data
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 @FieldDefaults(level = AccessLevel.PROTECTED)
 public class AuditMetadata implements SoftDeletable {
-    /* ---- create ---- */
-    @CreatedBy
-    @Column(name = "created_by")
-    String createdBy;
+  /* ---- create ---- */
+  @CreatedBy
+  @Column(name = "created_by")
+  String createdBy;
 
-    @CreatedDate
-    @Column(name = "created_at")
-    Instant createdAt;
+  @CreatedDate
+  @Column(name = "created_at")
+  Instant createdAt;
 
-    /* ---- update ---- */
-    @LastModifiedBy
-    @Column(name = "updated_by")
-    String updatedBy;
+  /* ---- update ---- */
+  @LastModifiedBy
+  @Column(name = "updated_by")
+  String updatedBy;
 
-    @LastModifiedDate
-    @Column(name = "updated_at")
-    Instant updatedAt;
+  @LastModifiedDate
+  @Column(name = "updated_at")
+  Instant updatedAt;
 
-    /* ---- soft-delete ---- */
-    @Column(name = "deleted_by")
-    String deletedBy;
+  /* ---- soft-delete ---- */
+  @Column(name = "deleted_by")
+  String deletedBy;
 
-    @Column(name = "deleted_at")
-    Instant deletedAt;
+  @Column(name = "deleted_at")
+  Instant deletedAt;
 
-    @Override
-    public void markDeleted(String by) {
-        this.deletedBy = by;
-        this.deletedAt = Instant.now();
-    }
+  @Override
+  public void markDeleted(String by) {
+    this.deletedBy = by;
+    this.deletedAt = Instant.now();
+  }
 
-    @Override
-    public boolean isDeleted() {
-        return deletedAt != null;
-    }
+  @Override
+  public boolean isDeleted() {
+    return deletedAt != null;
+  }
 }

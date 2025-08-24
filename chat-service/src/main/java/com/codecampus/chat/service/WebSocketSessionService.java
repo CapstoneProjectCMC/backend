@@ -14,16 +14,16 @@ import org.springframework.stereotype.Service;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class WebSocketSessionService {
 
-    WebSocketSessionRepository webSocketSessionRepository;
+  WebSocketSessionRepository webSocketSessionRepository;
 
-    public void createWebSocketSession(
-            WebSocketSession webSocketSession) {
-        webSocketSessionRepository.save(webSocketSession);
-    }
+  public void createWebSocketSession(
+      WebSocketSession webSocketSession) {
+    webSocketSessionRepository.save(webSocketSession);
+  }
 
-    public void deleteWebSocketSession(
-            String sessionId) {
-        webSocketSessionRepository
-                .deleteBySocketSessionId(sessionId);
-    }
+  public void deleteWebSocketSession(
+      String sessionId) {
+    webSocketSessionRepository
+        .deleteBySocketSessionId(sessionId);
+  }
 }

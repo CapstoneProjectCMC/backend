@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AssignmentRepository
-        extends JpaRepository<Assignment, String> {
-    boolean existsByExerciseIdAndStudentId(
-            String exerciseId, String studentId);
+    extends JpaRepository<Assignment, String> {
+  boolean existsByExerciseIdAndStudentId(
+      String exerciseId, String studentId);
 }

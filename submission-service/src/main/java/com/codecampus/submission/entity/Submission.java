@@ -16,6 +16,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,10 +29,6 @@ import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-
 @Getter
 @Setter
 @Builder
@@ -39,50 +38,50 @@ import java.util.List;
 @Entity
 @Table(name = "submission")
 @SQLDelete(sql = "UPDATE submission " +
-        "SET deleted_by = ? , deleted_at = now() " +
-        "WHERE id = ?")
+    "SET deleted_by = ? , deleted_at = now() " +
+    "WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
 public class Submission extends AuditMetadata {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    String id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
+  String id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "exercise_id", nullable = false)
-    Exercise exercise;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "exercise_id", nullable = false)
+  Exercise exercise;
 
-    @Column(name = "user_id", nullable = false)
-    String userId;
+  @Column(name = "user_id", nullable = false)
+  String userId;
 
-    @Column(name = "submitted_at", nullable = false, updatable = false)
-    Instant submittedAt;
+  @Column(name = "submitted_at", nullable = false, updatable = false)
+  Instant submittedAt;
 
-    @Column(columnDefinition = "smallint")
-    Integer score;
+  @Column(columnDefinition = "smallint")
+  Integer score;
 
-    @Enumerated(EnumType.ORDINAL)
-    @Column(nullable = false, columnDefinition = "smallint")
-    SubmissionStatus status;
+  @Enumerated(EnumType.ORDINAL)
+  @Column(nullable = false, columnDefinition = "smallint")
+  SubmissionStatus status;
 
-    // ----- Code-only fields -----
-    @Column(length = 20)
-    String language;
+  // ----- Code-only fields -----
+  @Column(length = 20)
+  String language;
 
-    @Column(name = "source_code", columnDefinition = "text")
-    String sourceCode;
+  @Column(name = "source_code", columnDefinition = "text")
+  String sourceCode;
 
-    Integer runtime;
-    Integer memoryUsed;
+  Integer runtime;
+  Integer memoryUsed;
 
-    @Column(name = "time_taken_seconds")
-    Integer timeTakenSeconds;
+  @Column(name = "time_taken_seconds")
+  Integer timeTakenSeconds;
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "submission",
-            fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
-    @Builder.Default
-    List<SubmissionAnswer> answers = new ArrayList<>();
+  @JsonManagedReference
+  @OneToMany(mappedBy = "submission",
+      fetch = FetchType.LAZY,
+      cascade = CascadeType.ALL,
+      orphanRemoval = true
+  )
+  @Builder.Default
+  List<SubmissionAnswer> answers = new ArrayList<>();
 }

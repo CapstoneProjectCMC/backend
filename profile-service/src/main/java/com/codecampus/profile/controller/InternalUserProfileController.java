@@ -27,48 +27,48 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RequestMapping("/internal")
 public class InternalUserProfileController {
-    UserProfileService userProfileService;
+  UserProfileService userProfileService;
 
-    @PostMapping("/user")
-    ApiResponse<UserProfileResponse> internalCreateUserProfile(
-            @RequestBody UserProfileCreationRequest request) {
-        return ApiResponse.<UserProfileResponse>builder()
-                .result(userProfileService.createUserProfile(request))
-                .build();
-    }
+  @PostMapping("/user")
+  ApiResponse<UserProfileResponse> internalCreateUserProfile(
+      @RequestBody UserProfileCreationRequest request) {
+    return ApiResponse.<UserProfileResponse>builder()
+        .result(userProfileService.createUserProfile(request))
+        .build();
+  }
 
-    @GetMapping("/user/{userId}")
-    ApiResponse<UserProfileResponse> internalGetUserProfileByUserId(
-            @PathVariable("userId") String userId) {
-        return ApiResponse.<UserProfileResponse>builder()
-                .result(userProfileService.getUserProfileByUserId(userId))
-                .build();
-    }
+  @GetMapping("/user/{userId}")
+  ApiResponse<UserProfileResponse> internalGetUserProfileByUserId(
+      @PathVariable("userId") String userId) {
+    return ApiResponse.<UserProfileResponse>builder()
+        .result(userProfileService.getUserProfileByUserId(userId))
+        .build();
+  }
 
-    @PatchMapping("/user/{userId}")
-    ApiResponse<Void> internalUpdateProfileByUserId(
-            @PathVariable String userId,
-            @RequestBody UserProfileUpdateRequest request) {
-        userProfileService.updateUserProfileById(userId, request);
-        return ApiResponse.<Void>builder()
-                .build();
-    }
+  @PatchMapping("/user/{userId}")
+  ApiResponse<Void> internalUpdateProfileByUserId(
+      @PathVariable String userId,
+      @RequestBody UserProfileUpdateRequest request) {
+    userProfileService.updateUserProfileById(userId, request);
+    return ApiResponse.<Void>builder()
+        .build();
+  }
 
-    @DeleteMapping("/user/{userId}")
-    ApiResponse<Void> internalSoftDeleteByUserId(
-            @PathVariable String userId,
-            @RequestParam(required = false) String deletedBy) {
-        userProfileService.softDeleteUserProfileByUserId(
-                userId, deletedBy);
-        return ApiResponse.<Void>builder()
-                .build();
-    }
+  @DeleteMapping("/user/{userId}")
+  ApiResponse<Void> internalSoftDeleteByUserId(
+      @PathVariable String userId,
+      @RequestParam(required = false) String deletedBy) {
+    userProfileService.softDeleteUserProfileByUserId(
+        userId, deletedBy);
+    return ApiResponse.<Void>builder()
+        .build();
+  }
 
-    @PatchMapping("/user/{userId}/restore")
-    ApiResponse<Void> restoreByUserId(
-            @PathVariable String userId) {
-        userProfileService.restoreByUserId(userId);
-        return ApiResponse.<Void>builder()
-                .build();
-    }
+  @PatchMapping("/user/{userId}/restore")
+  ApiResponse<Void> restoreByUserId(
+      @PathVariable String userId) {
+    userProfileService.restoreByUserId(userId);
+    return ApiResponse.<Void>builder()
+        .build();
+  }
 }

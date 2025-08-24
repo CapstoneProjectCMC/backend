@@ -25,69 +25,69 @@ import org.springframework.transaction.annotation.Transactional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class SubmissionHistoryService {
 
-    SubmissionRepository submissionRepository;
-    SubmissionMapper submissionMapper;
+  SubmissionRepository submissionRepository;
+  SubmissionMapper submissionMapper;
 
-    @Transactional(readOnly = true)
-    public PageResponse<QuizAttemptHistoryResponse> getQuizAttemptHistoriesForStudent(
-            int page, int size) {
+  @Transactional(readOnly = true)
+  public PageResponse<QuizAttemptHistoryResponse> getQuizAttemptHistoriesForStudent(
+      int page, int size) {
 
-        String studentId = AuthenticationHelper.getMyUserId();
+    String studentId = AuthenticationHelper.getMyUserId();
 
-        Pageable pageable = PageRequest.of(
-                Math.max(page - 1, 0),
-                Math.max(size, 1),
-                Sort.by(Sort.Order.desc("score"),
-                        Sort.Order.asc("timeTakenSeconds"),
-                        Sort.Order.desc("submittedAt"))
-        );
+    Pageable pageable = PageRequest.of(
+        Math.max(page - 1, 0),
+        Math.max(size, 1),
+        Sort.by(Sort.Order.desc("score"),
+            Sort.Order.asc("timeTakenSeconds"),
+            Sort.Order.desc("submittedAt"))
+    );
 
-        Page<QuizAttemptHistoryResponse> pageData = submissionRepository
-                .findQuizSubmissionsByStudent(studentId, pageable)
-                .map(submissionMapper::mapSubmissionToQuizAttemptHistoryResponse);
+    Page<QuizAttemptHistoryResponse> pageData = submissionRepository
+        .findQuizSubmissionsByStudent(studentId, pageable)
+        .map(submissionMapper::mapSubmissionToQuizAttemptHistoryResponse);
 
-        return PageResponseHelper.toPageResponse(pageData, page);
-    }
+    return PageResponseHelper.toPageResponse(pageData, page);
+  }
 
-    @Transactional(readOnly = true)
-    public PageResponse<CodingAttemptHistoryResponse> getCodingAttemptHistoriesForStudent(
-            int page, int size) {
+  @Transactional(readOnly = true)
+  public PageResponse<CodingAttemptHistoryResponse> getCodingAttemptHistoriesForStudent(
+      int page, int size) {
 
-        String studentId = AuthenticationHelper.getMyUserId();
+    String studentId = AuthenticationHelper.getMyUserId();
 
-        Pageable pageable = PageRequest.of(
-                Math.max(page - 1, 0),
-                Math.max(size, 1),
-                Sort.by(Sort.Order.desc("score"),
-                        Sort.Order.asc("timeTakenSeconds"),
-                        Sort.Order.desc("submittedAt"))
-        );
+    Pageable pageable = PageRequest.of(
+        Math.max(page - 1, 0),
+        Math.max(size, 1),
+        Sort.by(Sort.Order.desc("score"),
+            Sort.Order.asc("timeTakenSeconds"),
+            Sort.Order.desc("submittedAt"))
+    );
 
-        Page<CodingAttemptHistoryResponse> pageData =
-                submissionRepository
-                        .findCodingSubmissionsByStudent(studentId, pageable)
-                        .map(submissionMapper::mapSubmissionToCodingAttemptHistoryResponse);
+    Page<CodingAttemptHistoryResponse> pageData =
+        submissionRepository
+            .findCodingSubmissionsByStudent(studentId, pageable)
+            .map(submissionMapper::mapSubmissionToCodingAttemptHistoryResponse);
 
-        return PageResponseHelper.toPageResponse(pageData, page);
-    }
+    return PageResponseHelper.toPageResponse(pageData, page);
+  }
 
-    @Transactional(readOnly = true)
-    public PageResponse<AllSubmissionHistoryResponse> mySubmissions(
-            int page, int size) {
-        String studentId = AuthenticationHelper.getMyUserId();
+  @Transactional(readOnly = true)
+  public PageResponse<AllSubmissionHistoryResponse> mySubmissions(
+      int page, int size) {
+    String studentId = AuthenticationHelper.getMyUserId();
 
-        Pageable pageable = PageRequest.of(
-                Math.max(page - 1, 0),
-                Math.max(size, 1),
-                // Mặc định: mới nhất trước
-                Sort.by(Sort.Order.desc("submittedAt"))
-        );
+    Pageable pageable = PageRequest.of(
+        Math.max(page - 1, 0),
+        Math.max(size, 1),
+        // Mặc định: mới nhất trước
+        Sort.by(Sort.Order.desc("submittedAt"))
+    );
 
-        Page<AllSubmissionHistoryResponse> pageData =
-                submissionRepository
-                        .findByUserId(studentId, pageable)
-                        .map(submissionMapper::mapSubmissionToAllSubmissionHistoryResponse);
+    Page<AllSubmissionHistoryResponse> pageData =
+        submissionRepository
+            .findByUserId(studentId, pageable)
+            .map(submissionMapper::mapSubmissionToAllSubmissionHistoryResponse);
 
-        return PageResponseHelper.toPageResponse(pageData, page);
-    }
+    return PageResponseHelper.toPageResponse(pageData, page);
+  }
 }

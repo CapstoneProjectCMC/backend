@@ -21,15 +21,15 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RequestMapping("/package")
 public class PackageController {
-    PackageService packageService;
+  PackageService packageService;
 
-    @GetMapping("/my-subscriptions")
-    ApiResponse<PageResponse<SubscribedTo>> getMySubscriptions(
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        return ApiResponse.<PageResponse<SubscribedTo>>builder()
-                .message("Gói dịch vụ đã mua")
-                .result(packageService.getMySubscriptions(page, size))
-                .build();
-    }
+  @GetMapping("/my-subscriptions")
+  ApiResponse<PageResponse<SubscribedTo>> getMySubscriptions(
+      @RequestParam(defaultValue = "1") int page,
+      @RequestParam(defaultValue = "10") int size) {
+    return ApiResponse.<PageResponse<SubscribedTo>>builder()
+        .message("Gói dịch vụ đã mua")
+        .result(packageService.getMySubscriptions(page, size))
+        .build();
+  }
 }

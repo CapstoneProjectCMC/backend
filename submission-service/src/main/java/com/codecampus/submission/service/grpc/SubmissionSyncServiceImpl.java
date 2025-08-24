@@ -18,30 +18,30 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class SubmissionSyncServiceImpl
-        extends SubmissionSyncServiceGrpc.SubmissionSyncServiceImplBase {
+    extends SubmissionSyncServiceGrpc.SubmissionSyncServiceImplBase {
 
-    ExerciseService exerciseService;
+  ExerciseService exerciseService;
 
-    @Override
-    @Transactional
-    public void createQuizSubmission(
-            CreateQuizSubmissionRequest request,
-            StreamObserver<Empty> responseObserver) {
+  @Override
+  @Transactional
+  public void createQuizSubmission(
+      CreateQuizSubmissionRequest request,
+      StreamObserver<Empty> responseObserver) {
 
-        exerciseService.createQuizSubmission(request);
+    exerciseService.createQuizSubmission(request);
 
-        responseObserver.onNext(Empty.getDefaultInstance());
-        responseObserver.onCompleted();
-    }
+    responseObserver.onNext(Empty.getDefaultInstance());
+    responseObserver.onCompleted();
+  }
 
-    @Override
-    public void createCodeSubmission(
-            CreateCodeSubmissionRequest request,
-            StreamObserver<Empty> responseObserver) {
+  @Override
+  public void createCodeSubmission(
+      CreateCodeSubmissionRequest request,
+      StreamObserver<Empty> responseObserver) {
 
-        exerciseService.createCodeSubmission(request);
+    exerciseService.createCodeSubmission(request);
 
-        responseObserver.onNext(Empty.getDefaultInstance());
-        responseObserver.onCompleted();
-    }
+    responseObserver.onNext(Empty.getDefaultInstance());
+    responseObserver.onCompleted();
+  }
 }

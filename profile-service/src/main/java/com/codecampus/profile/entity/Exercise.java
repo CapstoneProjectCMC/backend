@@ -20,12 +20,12 @@ import org.springframework.data.neo4j.core.support.UUIDStringGenerator;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Node("Exercise")
 public class Exercise {
-    @Id
-    @GeneratedValue(generatorClass = UUIDStringGenerator.class)
-    String id;
+  @Id
+  @GeneratedValue(generatorClass = UUIDStringGenerator.class)
+  String id;
 
-    String exerciseId;
-    String title;
-    String type;
-    int difficulty;
+  String exerciseId;
+  String title;
+  String type;
+  int difficulty;
 }

@@ -9,10 +9,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 @FeignClient(name = "profile-service",
-            url = "http://localhost:8081",
-            configuration = {FeignMultipartSupportConfig.class,
-                    AuthenticationRequestInterceptor.class})
+    url = "http://localhost:8081",
+    configuration = {FeignMultipartSupportConfig.class,
+        AuthenticationRequestInterceptor.class})
 public interface ProfileServiceClient {
-    @GetMapping(value = "/profile/user/{userId}")
-    ApiResponse<ProfileResponseDto> getUserProfileById(@PathVariable String userId);
+  @GetMapping(value = "/profile/user/{userId}")
+  ApiResponse<ProfileResponseDto> getUserProfileById(
+      @PathVariable String userId);
 }

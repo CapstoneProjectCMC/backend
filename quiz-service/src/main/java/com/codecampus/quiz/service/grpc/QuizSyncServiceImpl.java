@@ -25,121 +25,121 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class QuizSyncServiceImpl
-        extends QuizSyncServiceGrpc.QuizSyncServiceImplBase {
+    extends QuizSyncServiceGrpc.QuizSyncServiceImplBase {
 
-    QuizService quizService;
+  QuizService quizService;
 
-    @Override
-    @Transactional
-    public void createQuizExercise(
-            CreateQuizExerciseRequest createQuizRequest,
-            StreamObserver<Empty> responseObserver) {
+  @Override
+  @Transactional
+  public void createQuizExercise(
+      CreateQuizExerciseRequest createQuizRequest,
+      StreamObserver<Empty> responseObserver) {
 
-        quizService.createQuizExercise(createQuizRequest);
+    quizService.createQuizExercise(createQuizRequest);
 
-        responseObserver.onNext(Empty.getDefaultInstance());
-        responseObserver.onCompleted();
-    }
+    responseObserver.onNext(Empty.getDefaultInstance());
+    responseObserver.onCompleted();
+  }
 
-    @Override
-    @Transactional
-    public void addQuizDetail(
-            AddQuizDetailRequest addQuizRequest,
-            StreamObserver<Empty> responseObserver) {
+  @Override
+  @Transactional
+  public void addQuizDetail(
+      AddQuizDetailRequest addQuizRequest,
+      StreamObserver<Empty> responseObserver) {
 
-        quizService.addQuizDetail(addQuizRequest);
+    quizService.addQuizDetail(addQuizRequest);
 
-        responseObserver.onNext(Empty.getDefaultInstance());
-        responseObserver.onCompleted();
-    }
+    responseObserver.onNext(Empty.getDefaultInstance());
+    responseObserver.onCompleted();
+  }
 
-    @Override
-    @Transactional
-    public void softDeleteExercise(
-            SoftDeleteRequest softDeleteRequest,
-            StreamObserver<Empty> responseObserver) {
+  @Override
+  @Transactional
+  public void softDeleteExercise(
+      SoftDeleteRequest softDeleteRequest,
+      StreamObserver<Empty> responseObserver) {
 
-        quizService.softDeleteExercise(softDeleteRequest.getId());
+    quizService.softDeleteExercise(softDeleteRequest.getId());
 
-        responseObserver.onNext(Empty.getDefaultInstance());
-        responseObserver.onCompleted();
-    }
+    responseObserver.onNext(Empty.getDefaultInstance());
+    responseObserver.onCompleted();
+  }
 
-    @Override
-    @Transactional
-    public void addQuestion(
-            AddQuestionRequest addQuestionRequest,
-            StreamObserver<Empty> responseObserver) {
+  @Override
+  @Transactional
+  public void addQuestion(
+      AddQuestionRequest addQuestionRequest,
+      StreamObserver<Empty> responseObserver) {
 
-        quizService.addQuestion(addQuestionRequest);
+    quizService.addQuestion(addQuestionRequest);
 
-        responseObserver.onNext(Empty.getDefaultInstance());
-        responseObserver.onCompleted();
-    }
+    responseObserver.onNext(Empty.getDefaultInstance());
+    responseObserver.onCompleted();
+  }
 
-    @Override
-    @Transactional
-    public void softDeleteQuestion(
-            SoftDeleteQuestionRequest softDeleteQuestionRequest,
-            StreamObserver<Empty> responseObserver) {
+  @Override
+  @Transactional
+  public void softDeleteQuestion(
+      SoftDeleteQuestionRequest softDeleteQuestionRequest,
+      StreamObserver<Empty> responseObserver) {
 
-        quizService.softDeleteQuestion(
-                softDeleteQuestionRequest.getExerciseId(),
-                softDeleteQuestionRequest.getQuestionId());
+    quizService.softDeleteQuestion(
+        softDeleteQuestionRequest.getExerciseId(),
+        softDeleteQuestionRequest.getQuestionId());
 
-        responseObserver.onNext(Empty.getDefaultInstance());
-        responseObserver.onCompleted();
-    }
+    responseObserver.onNext(Empty.getDefaultInstance());
+    responseObserver.onCompleted();
+  }
 
-    @Override
-    @Transactional
-    public void addOption(
-            AddOptionRequest addOptionRequest,
-            StreamObserver<Empty> responseObserver) {
+  @Override
+  @Transactional
+  public void addOption(
+      AddOptionRequest addOptionRequest,
+      StreamObserver<Empty> responseObserver) {
 
-        quizService.addOption(addOptionRequest);
+    quizService.addOption(addOptionRequest);
 
-        responseObserver.onNext(Empty.getDefaultInstance());
-        responseObserver.onCompleted();
-    }
+    responseObserver.onNext(Empty.getDefaultInstance());
+    responseObserver.onCompleted();
+  }
 
 
-    @Override
-    @Transactional
-    public void softDeleteOption(
-            SoftDeleteOptionRequest softDeleteOptionRequest,
-            StreamObserver<Empty> responseObserver) {
+  @Override
+  @Transactional
+  public void softDeleteOption(
+      SoftDeleteOptionRequest softDeleteOptionRequest,
+      StreamObserver<Empty> responseObserver) {
 
-        quizService.softDeleteOption(
-                softDeleteOptionRequest.getExerciseId(),
-                softDeleteOptionRequest.getQuestionId(),
-                softDeleteOptionRequest.getOptionId());
+    quizService.softDeleteOption(
+        softDeleteOptionRequest.getExerciseId(),
+        softDeleteOptionRequest.getQuestionId(),
+        softDeleteOptionRequest.getOptionId());
 
-        responseObserver.onNext(Empty.getDefaultInstance());
-        responseObserver.onCompleted();
-    }
+    responseObserver.onNext(Empty.getDefaultInstance());
+    responseObserver.onCompleted();
+  }
 
-    @Override
-    @Transactional
-    public void upsertAssignment(
-            UpsertAssignmentRequest upsertAssignmentRequest,
-            StreamObserver<Empty> responseObserver) {
+  @Override
+  @Transactional
+  public void upsertAssignment(
+      UpsertAssignmentRequest upsertAssignmentRequest,
+      StreamObserver<Empty> responseObserver) {
 
-        quizService.upsertAssignment(upsertAssignmentRequest);
+    quizService.upsertAssignment(upsertAssignmentRequest);
 
-        responseObserver.onNext(Empty.getDefaultInstance());
-        responseObserver.onCompleted();
-    }
+    responseObserver.onNext(Empty.getDefaultInstance());
+    responseObserver.onCompleted();
+  }
 
-    @Override
-    public void softDeleteAssignment(
-            SoftDeleteAssignmentRequest request,
-            StreamObserver<Empty> responseObserver) {
+  @Override
+  public void softDeleteAssignment(
+      SoftDeleteAssignmentRequest request,
+      StreamObserver<Empty> responseObserver) {
 
-        quizService.softDeleteAssignment(request.getId());
-        responseObserver.onNext(Empty.getDefaultInstance());
-        responseObserver.onCompleted();
-    }
+    quizService.softDeleteAssignment(request.getId());
+    responseObserver.onNext(Empty.getDefaultInstance());
+    responseObserver.onCompleted();
+  }
 
 
 }

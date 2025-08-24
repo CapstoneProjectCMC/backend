@@ -27,30 +27,30 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/internal")
 public class InternalCodingController {
 
-    CodingService codingService;
+  CodingService codingService;
 
-    @PostMapping("/coding/exercise/{exerciseId}/coding-detail")
-    ApiResponse<CodingDetail> internalAddCodingDetail(
-            @PathVariable("exerciseId") String exerciseId,
-            @RequestBody @Valid AddCodingDetailRequest addCodingDetailRequest) {
+  @PostMapping("/coding/exercise/{exerciseId}/coding-detail")
+  ApiResponse<CodingDetail> internalAddCodingDetail(
+      @PathVariable("exerciseId") String exerciseId,
+      @RequestBody @Valid AddCodingDetailRequest addCodingDetailRequest) {
 
-        return ApiResponse.<CodingDetail>builder()
-                .message("Tạo Quiz thành công!")
-                .result(codingService.addCodingDetail(
-                        exerciseId, addCodingDetailRequest, true))
-                .build();
-    }
+    return ApiResponse.<CodingDetail>builder()
+        .message("Tạo Quiz thành công!")
+        .result(codingService.addCodingDetail(
+            exerciseId, addCodingDetailRequest, true))
+        .build();
+  }
 
-    @PostMapping("/coding/{exerciseId}/test-case")
-    ApiResponse<TestCase> internalAddTestCase(
-            @PathVariable("exerciseId") String exerciseId,
-            @RequestBody @Valid TestCaseDto testCaseDto)
-            throws BadRequestException {
+  @PostMapping("/coding/{exerciseId}/test-case")
+  ApiResponse<TestCase> internalAddTestCase(
+      @PathVariable("exerciseId") String exerciseId,
+      @RequestBody @Valid TestCaseDto testCaseDto)
+      throws BadRequestException {
 
-        return ApiResponse.<TestCase>builder()
-                .message("Thêm câu hỏi cho quiz thành công!")
-                .result(codingService.addTestCase(
-                        exerciseId, testCaseDto, true))
-                .build();
-    }
+    return ApiResponse.<TestCase>builder()
+        .message("Thêm câu hỏi cho quiz thành công!")
+        .result(codingService.addTestCase(
+            exerciseId, testCaseDto, true))
+        .build();
+  }
 }

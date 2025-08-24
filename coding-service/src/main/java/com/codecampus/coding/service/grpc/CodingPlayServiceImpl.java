@@ -19,33 +19,33 @@ import net.devh.boot.grpc.server.service.GrpcService;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CodingPlayServiceImpl
-        extends CodingPlayServiceGrpc.CodingPlayServiceImplBase {
+    extends CodingPlayServiceGrpc.CodingPlayServiceImplBase {
 
-    CodingService codingService;
-    CodeJudgeService codeJudgeService;
+  CodingService codingService;
+  CodeJudgeService codeJudgeService;
 
-    @Override
-    public void submitCode(
-            SubmitCodeRequest request,
-            StreamObserver<SubmitCodeResponse> responseObserver) {
+  @Override
+  public void submitCode(
+      SubmitCodeRequest request,
+      StreamObserver<SubmitCodeResponse> responseObserver) {
 
-        SubmitCodeResponse submitCodeResponse =
-                codeJudgeService.judgeCodeSubmission(request);
+    SubmitCodeResponse submitCodeResponse =
+        codeJudgeService.judgeCodeSubmission(request);
 
-        responseObserver.onNext(submitCodeResponse);
-        responseObserver.onCompleted();
-    }
+    responseObserver.onNext(submitCodeResponse);
+    responseObserver.onCompleted();
+  }
 
-    @Override
-    public void loadCoding(
-            LoadCodingRequest request,
-            StreamObserver<LoadCodingResponse> responseObserver) {
+  @Override
+  public void loadCoding(
+      LoadCodingRequest request,
+      StreamObserver<LoadCodingResponse> responseObserver) {
 
-        LoadCodingResponse response =
-                codingService.loadCoding(
-                        request.getExerciseId());
+    LoadCodingResponse response =
+        codingService.loadCoding(
+            request.getExerciseId());
 
-        responseObserver.onNext(response);
-        responseObserver.onCompleted();
-    }
+    responseObserver.onNext(response);
+    responseObserver.onCompleted();
+  }
 }

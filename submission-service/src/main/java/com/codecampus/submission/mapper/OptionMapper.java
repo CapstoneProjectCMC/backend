@@ -11,15 +11,15 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 
 @Mapper(componentModel = "spring",
-        unmappedTargetPolicy = ReportingPolicy.IGNORE)
+    unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface OptionMapper {
 
-    @Mapping(target = "question", ignore = true)
-    Option toOptionFromOptionDto(OptionDto dto);
+  @Mapping(target = "question", ignore = true)
+  Option toOptionFromOptionDto(OptionDto dto);
 
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void patchUpdateOptionRequestToOption(
-            UpdateOptionRequest request,
-            @MappingTarget Option option
-    );
+  @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+  void patchUpdateOptionRequestToOption(
+      UpdateOptionRequest request,
+      @MappingTarget Option option
+  );
 }

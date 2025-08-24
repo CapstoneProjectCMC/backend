@@ -12,22 +12,22 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @FeignClient(
-        name = "organization-service",
-        url = "${app.services.organization}",
-        configuration = {AuthenticationRequestInterceptor.class},
-        path = "/api/OrganizationMember"
+    name = "organization-service",
+    url = "${app.services.organization}",
+    configuration = {AuthenticationRequestInterceptor.class},
+    path = "/api/OrganizationMember"
 )
 public interface OrganizationClient {
-    @GetMapping(
-            value = "/user/{userId}/primary",
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    ApiResponse<PrimaryOrgResponse> getPrimaryOrg(
-            @PathVariable("userId") String userId);
+  @GetMapping(
+      value = "/user/{userId}/primary",
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  ApiResponse<PrimaryOrgResponse> getPrimaryOrg(
+      @PathVariable("userId") String userId);
 
-    @PostMapping(
-            value = "/add",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    ApiResponse<Void> createMembership(
-            @RequestBody CreateOrganizationMemberRequest request);
+  @PostMapping(
+      value = "/add",
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  ApiResponse<Void> createMembership(
+      @RequestBody CreateOrganizationMemberRequest request);
 }

@@ -24,22 +24,22 @@ import org.springframework.web.bind.annotation.RestController;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ConversationController {
 
-    ConversationService conversationService;
+  ConversationService conversationService;
 
-    @PostMapping("/conversation")
-    ApiResponse<ConversationResponse> createConversation(
-            @RequestBody @Valid ConversationRequest request) {
-        return ApiResponse.<ConversationResponse>builder()
-                .result(conversationService.createConversation(request))
-                .build();
-    }
+  @PostMapping("/conversation")
+  ApiResponse<ConversationResponse> createConversation(
+      @RequestBody @Valid ConversationRequest request) {
+    return ApiResponse.<ConversationResponse>builder()
+        .result(conversationService.createConversation(request))
+        .build();
+  }
 
-    @GetMapping("/conversations")
-    ApiResponse<PageResponse<ConversationResponse>> getMyConversations(
-            @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "size", defaultValue = "20") int size) {
-        return ApiResponse.<PageResponse<ConversationResponse>>builder()
-                .result(conversationService.getMyConversations(page, size))
-                .build();
-    }
+  @GetMapping("/conversations")
+  ApiResponse<PageResponse<ConversationResponse>> getMyConversations(
+      @RequestParam(value = "page", defaultValue = "1") int page,
+      @RequestParam(value = "size", defaultValue = "20") int size) {
+    return ApiResponse.<PageResponse<ConversationResponse>>builder()
+        .result(conversationService.getMyConversations(page, size))
+        .build();
+  }
 }

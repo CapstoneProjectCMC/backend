@@ -10,6 +10,7 @@ import com.codecampus.ai.dto.response.ExerciseResponse;
 import com.codecampus.ai.dto.response.QuestionResponse;
 import com.codecampus.ai.dto.response.TestCaseResponse;
 import com.codecampus.ai.service.ExerciseGenerationService;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
@@ -20,8 +21,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @Slf4j
 @Builder
 @RestController
@@ -29,56 +28,56 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AiGenerateController {
 
-    ExerciseGenerationService exerciseGenerationService;
+  ExerciseGenerationService exerciseGenerationService;
 
-    @PostMapping("/generate/quiz")
-    public ApiResponse<ExerciseResponse> generateQuizExercise(
-            @RequestBody GenerateQuizPromptIn generateQuizPromptIn) {
+  @PostMapping("/generate/quiz")
+  public ApiResponse<ExerciseResponse> generateQuizExercise(
+      @RequestBody GenerateQuizPromptIn generateQuizPromptIn) {
 
-        return ApiResponse.<ExerciseResponse>builder()
-                .result(exerciseGenerationService
-                        .generateQuizExercise(generateQuizPromptIn))
-                .message("Gợi ý bản nháp quiz!")
-                .build();
-    }
+    return ApiResponse.<ExerciseResponse>builder()
+        .result(exerciseGenerationService
+            .generateQuizExercise(generateQuizPromptIn))
+        .message("Gợi ý bản nháp quiz!")
+        .build();
+  }
 
-    @PostMapping("/generate/question")
-    public ApiResponse<QuestionResponse> generateQuestion(
-            @RequestBody QuestionPromptIn questionPromptIn)
-            throws BadRequestException {
+  @PostMapping("/generate/question")
+  public ApiResponse<QuestionResponse> generateQuestion(
+      @RequestBody QuestionPromptIn questionPromptIn)
+      throws BadRequestException {
 
-        return ApiResponse.<QuestionResponse>builder()
-                .result(exerciseGenerationService
-                        .generateQuestion(questionPromptIn)
-                )
-                .message("Gợi ý câu hỏi!")
-                .build();
-    }
+    return ApiResponse.<QuestionResponse>builder()
+        .result(exerciseGenerationService
+            .generateQuestion(questionPromptIn)
+        )
+        .message("Gợi ý câu hỏi!")
+        .build();
+  }
 
-    @PostMapping("/generate/questions")
-    public ApiResponse<List<QuestionResponse>> generateQuestions(
-            @RequestBody GenerateQuestionsPromptIn in) {
-        return ApiResponse.<List<QuestionResponse>>builder()
-                .result(exerciseGenerationService.generateQuestions(in))
-                .message("Gợi ý câu hỏi!")
-                .build();
-    }
+  @PostMapping("/generate/questions")
+  public ApiResponse<List<QuestionResponse>> generateQuestions(
+      @RequestBody GenerateQuestionsPromptIn in) {
+    return ApiResponse.<List<QuestionResponse>>builder()
+        .result(exerciseGenerationService.generateQuestions(in))
+        .message("Gợi ý câu hỏi!")
+        .build();
+  }
 
-    @PostMapping("/generate/coding")
-    public ApiResponse<ExerciseResponse> generateCodingExercise(
-            @RequestBody GenerateCodingPromptIn in) {
-        return ApiResponse.<ExerciseResponse>builder()
-                .result(exerciseGenerationService.generateCodingExercise(in))
-                .message("Gợi ý bản nháp coding!")
-                .build();
-    }
+  @PostMapping("/generate/coding")
+  public ApiResponse<ExerciseResponse> generateCodingExercise(
+      @RequestBody GenerateCodingPromptIn in) {
+    return ApiResponse.<ExerciseResponse>builder()
+        .result(exerciseGenerationService.generateCodingExercise(in))
+        .message("Gợi ý bản nháp coding!")
+        .build();
+  }
 
-    @PostMapping("/generate/coding/test-cases")
-    public ApiResponse<List<TestCaseResponse>> generateTestCases(
-            @RequestBody GenerateTestCasesPromptIn in) {
-        return ApiResponse.<List<TestCaseResponse>>builder()
-                .result(exerciseGenerationService.generateTestCases(in))
-                .message("Đã sinh thêm testcases!")
-                .build();
-    }
+  @PostMapping("/generate/coding/test-cases")
+  public ApiResponse<List<TestCaseResponse>> generateTestCases(
+      @RequestBody GenerateTestCasesPromptIn in) {
+    return ApiResponse.<List<TestCaseResponse>>builder()
+        .result(exerciseGenerationService.generateTestCases(in))
+        .message("Đã sinh thêm testcases!")
+        .build();
+  }
 }

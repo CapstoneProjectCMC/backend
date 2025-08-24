@@ -16,71 +16,71 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
 public class RedisConfig {
-    @Bean
-    public RedisConnectionFactory redisConnectionFactory(
-            @Value("${spring.data.redis.host}") String host,
-            @Value("${spring.data.redis.port}") int port,
-            @Value("${spring.data.redis.password:}") String password) {
+  @Bean
+  public RedisConnectionFactory redisConnectionFactory(
+      @Value("${spring.data.redis.host}") String host,
+      @Value("${spring.data.redis.port}") int port,
+      @Value("${spring.data.redis.password:}") String password) {
 
-        LettuceConnectionFactory connectionFactory =
-                new LettuceConnectionFactory(host, port);
-        connectionFactory.setPassword(password);
-        return connectionFactory;
-    }
+    LettuceConnectionFactory connectionFactory =
+        new LettuceConnectionFactory(host, port);
+    connectionFactory.setPassword(password);
+    return connectionFactory;
+  }
 
-    @Bean
-    public RedisTemplate<String, Object> redisTemplate(
-            RedisConnectionFactory cf) {
+  @Bean
+  public RedisTemplate<String, Object> redisTemplate(
+      RedisConnectionFactory cf) {
 
-        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
-        redisTemplate.setConnectionFactory(cf);
+    RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
+    redisTemplate.setConnectionFactory(cf);
 
-        // Key = String, Value = JSON
-        StringRedisSerializer keySerialize = new StringRedisSerializer();
-        GenericJackson2JsonRedisSerializer valueSer =
-                new GenericJackson2JsonRedisSerializer();
+    // Key = String, Value = JSON
+    StringRedisSerializer keySerialize = new StringRedisSerializer();
+    GenericJackson2JsonRedisSerializer valueSer =
+        new GenericJackson2JsonRedisSerializer();
 
-        redisTemplate.setKeySerializer(keySerialize);
-        redisTemplate.setHashKeySerializer(keySerialize);
+    redisTemplate.setKeySerializer(keySerialize);
+    redisTemplate.setHashKeySerializer(keySerialize);
 
-        redisTemplate.setValueSerializer(valueSer);
-        redisTemplate.setHashValueSerializer(valueSer);
-        redisTemplate.afterPropertiesSet();
-        return redisTemplate;
-    }
+    redisTemplate.setValueSerializer(valueSer);
+    redisTemplate.setHashValueSerializer(valueSer);
+    redisTemplate.afterPropertiesSet();
+    return redisTemplate;
+  }
 
-    @Bean
-    public RedisTemplate<String, LoadCodingResponse> loadCodingRedisTemplate(
-            RedisConnectionFactory connectionFactory) {
+  @Bean
+  public RedisTemplate<String, LoadCodingResponse> loadCodingRedisTemplate(
+      RedisConnectionFactory connectionFactory) {
 
-        RedisTemplate<String, LoadCodingResponse> redisTemplate =
-                new RedisTemplate<>();
-        redisTemplate.setConnectionFactory(connectionFactory);
+    RedisTemplate<String, LoadCodingResponse> redisTemplate =
+        new RedisTemplate<>();
+    redisTemplate.setConnectionFactory(connectionFactory);
 
-        StringRedisSerializer keySerialization = new StringRedisSerializer();
-        ProtoRedisSerializer valueSerialization = new ProtoRedisSerializer();
+    StringRedisSerializer keySerialization = new StringRedisSerializer();
+    ProtoRedisSerializer valueSerialization = new ProtoRedisSerializer();
 
-        redisTemplate.setKeySerializer(keySerialization);
-        redisTemplate.setHashKeySerializer(keySerialization);
-        redisTemplate.setValueSerializer(valueSerialization);
-        redisTemplate.setHashValueSerializer(valueSerialization);
-        redisTemplate.afterPropertiesSet();
-        return redisTemplate;
-    }
+    redisTemplate.setKeySerializer(keySerialization);
+    redisTemplate.setHashKeySerializer(keySerialization);
+    redisTemplate.setValueSerializer(valueSerialization);
+    redisTemplate.setHashValueSerializer(valueSerialization);
+    redisTemplate.afterPropertiesSet();
+    return redisTemplate;
+  }
 
-    @Bean(destroyMethod = "shutdown") // shutdown() sẽ được gọi khi Spring tắt
-    public RedissonClient redissonClient(
-            @Value("${spring.data.redis.host}") String host,
-            @Value("${spring.data.redis.port}") int port,
-            @Value("${spring.data.redis.password:}") String password) {
+  @Bean(destroyMethod = "shutdown") // shutdown() sẽ được gọi khi Spring tắt
+  public RedissonClient redissonClient(
+      @Value("${spring.data.redis.host}") String host,
+      @Value("${spring.data.redis.port}") int port,
+      @Value("${spring.data.redis.password:}") String password) {
 
-        Config config = new Config();
-        config.useSingleServer()
-                .setAddress("redis://" + host + ":" + port)
-                .setPassword(password.isBlank() ? null : password)
-                .setConnectionPoolSize(16)
-                .setConnectionMinimumIdleSize(4);
+    Config config = new Config();
+    config.useSingleServer()
+        .setAddress("redis://" + host + ":" + port)
+        .setPassword(password.isBlank() ? null : password)
+        .setConnectionPoolSize(16)
+        .setConnectionMinimumIdleSize(4);
 
-        return Redisson.create(config);
-    }
+    return Redisson.create(config);
+  }
 }

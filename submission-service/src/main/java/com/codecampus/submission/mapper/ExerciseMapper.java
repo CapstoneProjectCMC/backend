@@ -13,28 +13,28 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 
 @Mapper(
-        componentModel = "spring",
-        unmappedTargetPolicy = ReportingPolicy.IGNORE
+    componentModel = "spring",
+    unmappedTargetPolicy = ReportingPolicy.IGNORE
 )
 public interface ExerciseMapper {
 
-    @Mapping(target = "userId", expression = "java(userId)")
-    @Mapping(target = "visibility",
-            expression =
-                    "java(request.visibility() != null ?"
-                            +
-                            "request.visibility(): "
-                            +
-                            "(request.orgId()==null || request.orgId().isBlank()))")
-    Exercise toExerciseFromCreateExerciseRequest(
-            CreateExerciseRequest request,
-            @Context String userId);
+  @Mapping(target = "userId", expression = "java(userId)")
+  @Mapping(target = "visibility",
+      expression =
+          "java(request.visibility() != null ?"
+              +
+              "request.visibility(): "
+              +
+              "(request.orgId()==null || request.orgId().isBlank()))")
+  Exercise toExerciseFromCreateExerciseRequest(
+      CreateExerciseRequest request,
+      @Context String userId);
 
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void patchUpdateExerciseRequestToExercise(
-            UpdateExerciseRequest request,
-            @MappingTarget Exercise exercise
-    );
+  @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+  void patchUpdateExerciseRequestToExercise(
+      UpdateExerciseRequest request,
+      @MappingTarget Exercise exercise
+  );
 
-    ExerciseQuizResponse toExerciseQuizResponseFromExercise(Exercise e);
+  ExerciseQuizResponse toExerciseQuizResponseFromExercise(Exercise e);
 }

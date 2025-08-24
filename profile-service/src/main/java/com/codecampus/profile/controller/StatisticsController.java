@@ -21,14 +21,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/stats")
 public class StatisticsController {
 
-    StatisticsService statisticsService;
+  StatisticsService statisticsService;
 
-    @GetMapping("/post/{userId}")
-    ApiResponse<UserPostStats> getPostStats(
-            @PathVariable String userId) {
-        return ApiResponse.<UserPostStats>builder()
-                .message("Thống kê bài viết")
-                .result(statisticsService.getPostStats(userId))
-                .build();
-    }
+  @GetMapping("/post/{userId}")
+  ApiResponse<UserPostStats> getPostStats(
+      @PathVariable String userId) {
+    return ApiResponse.<UserPostStats>builder()
+        .message("Thống kê bài viết")
+        .result(statisticsService.getPostStats(userId))
+        .build();
+  }
 }

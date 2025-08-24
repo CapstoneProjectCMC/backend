@@ -19,32 +19,32 @@ import net.devh.boot.grpc.server.service.GrpcService;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class QuizPlayServiceImpl
-        extends QuizPlayServiceGrpc.QuizPlayServiceImplBase {
+    extends QuizPlayServiceGrpc.QuizPlayServiceImplBase {
 
-    QuizService quizService;
+  QuizService quizService;
 
-    @Override
-    @Transactional
-    public void loadQuiz(
-            LoadQuizRequest loadQuizRequest,
-            StreamObserver<LoadQuizResponse> responseObserver) {
-        LoadQuizResponse response = quizService.loadQuiz(
-                loadQuizRequest.getExerciseId()
-        );
+  @Override
+  @Transactional
+  public void loadQuiz(
+      LoadQuizRequest loadQuizRequest,
+      StreamObserver<LoadQuizResponse> responseObserver) {
+    LoadQuizResponse response = quizService.loadQuiz(
+        loadQuizRequest.getExerciseId()
+    );
 
-        responseObserver.onNext(response);
-        responseObserver.onCompleted();
-    }
+    responseObserver.onNext(response);
+    responseObserver.onCompleted();
+  }
 
-    @Override
-    @Transactional
-    public void submitQuiz(
-            SubmitQuizRequest submitQuizRequest,
-            StreamObserver<SubmitQuizResponse> responseObserver) {
+  @Override
+  @Transactional
+  public void submitQuiz(
+      SubmitQuizRequest submitQuizRequest,
+      StreamObserver<SubmitQuizResponse> responseObserver) {
 
-        SubmitQuizResponse response = quizService.submitQuiz(submitQuizRequest);
+    SubmitQuizResponse response = quizService.submitQuiz(submitQuizRequest);
 
-        responseObserver.onNext(response);
-        responseObserver.onCompleted();
-    }
+    responseObserver.onNext(response);
+    responseObserver.onCompleted();
+  }
 }

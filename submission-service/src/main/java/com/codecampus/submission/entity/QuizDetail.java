@@ -12,6 +12,8 @@ import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,9 +24,6 @@ import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Getter
 @Setter
 @Builder
@@ -34,28 +33,28 @@ import java.util.List;
 @Entity
 @Table(name = "quiz_detail")
 @SQLDelete(sql = "UPDATE quiz_detail " +
-        "SET deleted_by = ? , deleted_at = now() " +
-        "WHERE id = ?")
+    "SET deleted_by = ? , deleted_at = now() " +
+    "WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
 public class QuizDetail extends AuditMetadata {
-    @Id
-    String id;
+  @Id
+  String id;
 
-    @JsonBackReference
-    @OneToOne
-    @MapsId
-    @JoinColumn(name = "id")
-    Exercise exercise;
+  @JsonBackReference
+  @OneToOne
+  @MapsId
+  @JoinColumn(name = "id")
+  Exercise exercise;
 
-    @Column(name = "num_questions")
-    int numQuestions;
+  @Column(name = "num_questions")
+  int numQuestions;
 
-    @Column(name = "total_points")
-    int totalPoints;
+  @Column(name = "total_points")
+  int totalPoints;
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "quizDetail",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true)
-    List<Question> questions = new ArrayList<>();
+  @JsonManagedReference
+  @OneToMany(mappedBy = "quizDetail",
+      cascade = CascadeType.ALL,
+      orphanRemoval = true)
+  List<Question> questions = new ArrayList<>();
 }

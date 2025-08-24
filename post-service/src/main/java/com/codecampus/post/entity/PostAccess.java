@@ -29,20 +29,20 @@ import org.hibernate.annotations.Where;
 @Entity
 @Table(name = "post_access")
 @SQLDelete(sql = "UPDATE post_access " +
-        "SET deleted_by = ? , deleted_at = now() " +
-        "WHERE id = ?")
+    "SET deleted_by = ? , deleted_at = now() " +
+    "WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
 public class PostAccess extends AuditMetadata {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    String postAccessId;
+  @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
+  String postAccessId;
 
-    @JsonBackReference
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id", nullable = false)
-    Post post;
+  @JsonBackReference
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "post_id", nullable = false)
+  Post post;
 
-    String userId;
-    Boolean isExcluded;
+  String userId;
+  Boolean isExcluded;
 }
 

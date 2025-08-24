@@ -7,6 +7,6 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface ExercisePayloadMapper {
-    @Mapping(target = "exerciseType", expression = "java(e.getExerciseType().name())")
-    ExercisePayload toExercisePayloadFromExercise(Exercise e);
+  @Mapping(target = "exerciseType", expression = "java(e.getExerciseType().name())")
+  ExercisePayload toExercisePayloadFromExercise(Exercise e);
 }

@@ -26,46 +26,46 @@ import org.springframework.web.bind.annotation.RestController;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class QuizController {
 
-    QuizService quizService;
+  QuizService quizService;
 
-    @GetMapping("/{quizId}/load")
-    ApiResponse<LoadQuizResponse> loadQuiz(
-            @PathVariable String quizId) {
+  @GetMapping("/{quizId}/load")
+  ApiResponse<LoadQuizResponse> loadQuiz(
+      @PathVariable String quizId) {
 
-        return ApiResponse.<LoadQuizResponse>builder()
-                .result(quizService.loadQuiz(quizId))
-                .message("Load quiz thành công!")
-                .build();
+    return ApiResponse.<LoadQuizResponse>builder()
+        .result(quizService.loadQuiz(quizId))
+        .message("Load quiz thành công!")
+        .build();
+  }
+
+  //FIXME Hardcode để fix được bug convert từ JSON sang protobuf hứng data
+  @PostMapping("/{quizId}/submit")
+  ApiResponse<SubmitQuizResponse> submitQuiz(
+      @PathVariable String quizId,
+      @RequestBody String bodyJson)
+      throws InvalidProtocolBufferException {
+
+    /* 1. Parse JSON ⇒ protobuf */
+    SubmitQuizRequest.Builder builder = SubmitQuizRequest.newBuilder();
+    JsonFormat.parser()
+        .ignoringUnknownFields()
+        .merge(bodyJson, builder);
+
+    /* 2. Bù exerciseId nếu client không gửi */
+    if (builder.getExerciseId().isEmpty()) {
+      builder.setExerciseId(quizId);
     }
 
-    //FIXME Hardcode để fix được bug convert từ JSON sang protobuf hứng data
-    @PostMapping("/{quizId}/submit")
-    ApiResponse<SubmitQuizResponse> submitQuiz(
-            @PathVariable String quizId,
-            @RequestBody String bodyJson)
-            throws InvalidProtocolBufferException {
+    /* 3. Kiểm tra khớp path/body */
+    Assert.isTrue(quizId.equals(builder.getExerciseId()),
+        "exerciseId mismatch");
 
-        /* 1. Parse JSON ⇒ protobuf */
-        SubmitQuizRequest.Builder builder = SubmitQuizRequest.newBuilder();
-        JsonFormat.parser()
-                .ignoringUnknownFields()
-                .merge(bodyJson, builder);
+    /* 4. Chấm điểm & trả kết quả */
+    SubmitQuizResponse rsp = quizService.submitQuiz(builder.build());
 
-        /* 2. Bù exerciseId nếu client không gửi */
-        if (builder.getExerciseId().isEmpty()) {
-            builder.setExerciseId(quizId);
-        }
-
-        /* 3. Kiểm tra khớp path/body */
-        Assert.isTrue(quizId.equals(builder.getExerciseId()),
-                "exerciseId mismatch");
-
-        /* 4. Chấm điểm & trả kết quả */
-        SubmitQuizResponse rsp = quizService.submitQuiz(builder.build());
-
-        return ApiResponse.<SubmitQuizResponse>builder()
-                .result(rsp)
-                .message("Nộp bài thành công!")
-                .build();
-    }
+    return ApiResponse.<SubmitQuizResponse>builder()
+        .result(rsp)
+        .message("Nộp bài thành công!")
+        .build();
+  }
 }

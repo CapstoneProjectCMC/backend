@@ -11,19 +11,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @FeignClient(
-        name = "identity-client",
-        url = "${app.services.identity}",
-        path = "/auth",
-        configuration = {
-                AuthenticationRequestInterceptor.class, FeignConfig.class}
+    name = "identity-client",
+    url = "${app.services.identity}",
+    path = "/auth",
+    configuration = {
+        AuthenticationRequestInterceptor.class, FeignConfig.class}
 )
 public interface IdentityClient {
 
-    @PostMapping(
-            value = "/introspect",
-            produces = MediaType.APPLICATION_JSON_VALUE,
-            consumes = MediaType.APPLICATION_JSON_VALUE
-    )
-    ApiResponse<IntrospectResponse> introspect(
-            @RequestBody IntrospectRequest request);
+  @PostMapping(
+      value = "/introspect",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE
+  )
+  ApiResponse<IntrospectResponse> introspect(
+      @RequestBody IntrospectRequest request);
 }

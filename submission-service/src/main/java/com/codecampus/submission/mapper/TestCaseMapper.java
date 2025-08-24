@@ -11,13 +11,13 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 
 @Mapper(componentModel = "spring",
-        unmappedTargetPolicy = ReportingPolicy.IGNORE)
+    unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface TestCaseMapper {
-    @Mapping(target = "codingDetail", ignore = true)
-    TestCase toTestCaseFromTestCaseDto(TestCaseDto testCaseDto);
+  @Mapping(target = "codingDetail", ignore = true)
+  TestCase toTestCaseFromTestCaseDto(TestCaseDto testCaseDto);
 
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void patchUpdateTestCaseRequestToTestCase(
-            @MappingTarget TestCase testCase,
-            UpdateTestCaseRequest testCaseRequest);
+  @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+  void patchUpdateTestCaseRequestToTestCase(
+      @MappingTarget TestCase testCase,
+      UpdateTestCaseRequest testCaseRequest);
 }

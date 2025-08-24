@@ -24,60 +24,60 @@ import org.springframework.web.bind.annotation.RestController;
 @Builder
 @Slf4j
 public class ExerciseController {
-    ExerciseService exerciseService;
+  ExerciseService exerciseService;
 
-    /* ---- SAVE / UNSAVE ------------------------------------------------- */
+  /* ---- SAVE / UNSAVE ------------------------------------------------- */
 
-    @PostMapping("/exercise/{exerciseId}/save")
-    ApiResponse<Void> saveExercise(
-            @PathVariable String exerciseId) {
-        exerciseService.saveExercise(exerciseId);
-        return ApiResponse.<Void>builder()
-                .message("Đã lưu bài tập")
-                .build();
-    }
+  @PostMapping("/exercise/{exerciseId}/save")
+  ApiResponse<Void> saveExercise(
+      @PathVariable String exerciseId) {
+    exerciseService.saveExercise(exerciseId);
+    return ApiResponse.<Void>builder()
+        .message("Đã lưu bài tập")
+        .build();
+  }
 
-    @DeleteMapping("/exercise/{exerciseId}/save")
-    ApiResponse<Void> unsaveExercise(
-            @PathVariable String exerciseId) {
-        exerciseService.unsaveExercise(exerciseId);
-        return ApiResponse.<Void>builder()
-                .message("Đã hủy lưu bài tập")
-                .build();
-    }
+  @DeleteMapping("/exercise/{exerciseId}/save")
+  ApiResponse<Void> unsaveExercise(
+      @PathVariable String exerciseId) {
+    exerciseService.unsaveExercise(exerciseId);
+    return ApiResponse.<Void>builder()
+        .message("Đã hủy lưu bài tập")
+        .build();
+  }
 
-    /* ---- PAGING QUERIES ------------------------------------------------ */
+  /* ---- PAGING QUERIES ------------------------------------------------ */
 
-    @GetMapping("/exercises/saved")
-    ApiResponse<PageResponse<SavedExercise>> getSavedExercises(
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size) {
+  @GetMapping("/exercises/saved")
+  ApiResponse<PageResponse<SavedExercise>> getSavedExercises(
+      @RequestParam(defaultValue = "1") int page,
+      @RequestParam(defaultValue = "10") int size) {
 
-        return ApiResponse.<PageResponse<SavedExercise>>builder()
-                .message("Bài tập đã lưu")
-                .result(exerciseService.getSavedExercises(page, size))
-                .build();
-    }
+    return ApiResponse.<PageResponse<SavedExercise>>builder()
+        .message("Bài tập đã lưu")
+        .result(exerciseService.getSavedExercises(page, size))
+        .build();
+  }
 
-    @GetMapping("/exercises/completed")
-    ApiResponse<PageResponse<CompletedExercise>> getCompletedExercises(
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size) {
+  @GetMapping("/exercises/completed")
+  ApiResponse<PageResponse<CompletedExercise>> getCompletedExercises(
+      @RequestParam(defaultValue = "1") int page,
+      @RequestParam(defaultValue = "10") int size) {
 
-        return ApiResponse.<PageResponse<CompletedExercise>>builder()
-                .message("Bài tập đã hoàn thành")
-                .result(exerciseService.getCompletedExercises(page, size))
-                .build();
-    }
+    return ApiResponse.<PageResponse<CompletedExercise>>builder()
+        .message("Bài tập đã hoàn thành")
+        .result(exerciseService.getCompletedExercises(page, size))
+        .build();
+  }
 
-    @GetMapping("/exercises/created")
-    ApiResponse<PageResponse<CreatedExercise>> getCreatedExercises(
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size) {
+  @GetMapping("/exercises/created")
+  ApiResponse<PageResponse<CreatedExercise>> getCreatedExercises(
+      @RequestParam(defaultValue = "1") int page,
+      @RequestParam(defaultValue = "10") int size) {
 
-        return ApiResponse.<PageResponse<CreatedExercise>>builder()
-                .message("Bài tập do tôi tạo")
-                .result(exerciseService.getCreatedExercises(page, size))
-                .build();
-    }
+    return ApiResponse.<PageResponse<CreatedExercise>>builder()
+        .message("Bài tập do tôi tạo")
+        .result(exerciseService.getCreatedExercises(page, size))
+        .build();
+  }
 }

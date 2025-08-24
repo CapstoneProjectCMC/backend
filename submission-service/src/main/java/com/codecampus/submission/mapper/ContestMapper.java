@@ -6,12 +6,12 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 @Mapper(
-        componentModel = "spring"
+    componentModel = "spring"
 )
 public interface ContestMapper {
 
-    @Mapping(target = "exercises", ignore = true)
-    @Mapping(target = "orgId", ignore = true)
-    Contest toContestFromCreateContestRequest(
-            CreateContestRequest request);
+  @Mapping(target = "exercises", ignore = true)
+  @Mapping(target = "orgId", ignore = true)
+  Contest toContestFromCreateContestRequest(
+      CreateContestRequest request);
 }

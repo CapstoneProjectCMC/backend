@@ -1,4 +1,5 @@
 package com.codecampus.post.config.DbConfig;
+
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -7,13 +8,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class PostgresFullTextSearchConfig {
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+  @Autowired
+  private JdbcTemplate jdbcTemplate;
 
-    @PostConstruct
-    public void init() {
-        // 1. Thêm cột search_vector (nếu chưa có)
-        jdbcTemplate.execute("""
+  @PostConstruct
+  public void init() {
+    // 1. Thêm cột search_vector (nếu chưa có)
+    jdbcTemplate.execute("""
             DO $$
             BEGIN
                 IF NOT EXISTS (
@@ -26,16 +27,16 @@ public class PostgresFullTextSearchConfig {
             $$;
         """);
 
-        // 2. Cập nhật dữ liệu hiện tại
-        jdbcTemplate.execute("""
+    // 2. Cập nhật dữ liệu hiện tại
+    jdbcTemplate.execute("""
             UPDATE post
             SET search_vector =
                 setweight(to_tsvector('simple', coalesce(title, '')), 'A') ||
                 setweight(to_tsvector('simple', coalesce(content, '')), 'B');
         """);
 
-        // 3. Tạo index GIN (nếu chưa có)
-        jdbcTemplate.execute("""
+    // 3. Tạo index GIN (nếu chưa có)
+    jdbcTemplate.execute("""
             DO $$
             BEGIN
                 IF NOT EXISTS (
@@ -49,8 +50,8 @@ public class PostgresFullTextSearchConfig {
             $$;
         """);
 
-        // 4. Tạo trigger function và trigger (nếu chưa có)
-        jdbcTemplate.execute("""
+    // 4. Tạo trigger function và trigger (nếu chưa có)
+    jdbcTemplate.execute("""
             CREATE OR REPLACE FUNCTION post_search_vector_trigger() RETURNS trigger AS $$
             begin
               new.search_vector :=
@@ -61,7 +62,7 @@ public class PostgresFullTextSearchConfig {
             $$ LANGUAGE plpgsql;
         """);
 
-        jdbcTemplate.execute("""
+    jdbcTemplate.execute("""
             DO $$
             BEGIN
                 IF NOT EXISTS (
@@ -75,5 +76,5 @@ public class PostgresFullTextSearchConfig {
             END
             $$;
         """);
-    }
+  }
 }

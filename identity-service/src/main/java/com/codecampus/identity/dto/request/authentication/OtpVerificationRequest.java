@@ -9,6 +9,6 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class OtpVerificationRequest {
-    String email;
-    String otpCode;
+  String email;
+  String otpCode;
 }

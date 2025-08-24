@@ -20,19 +20,19 @@ import reactor.core.publisher.Mono;
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class IdentityService {
-    IdentityClient identityClient;
+  IdentityClient identityClient;
 
-    /**
-     * Gửi yêu cầu kiểm tra tính hợp lệ của token đến Identity Service.
-     *
-     * @param token chuỗi JWT hoặc token cần xác thực
-     * @return Mono chứa ApiResponse với thông tin phản hồi IntrospectResponse từ Identity Service
-     */
-    public Mono<ApiResponse<IntrospectResponse>> introspect(
-            String token) {
-        return identityClient.introspect(
-                IntrospectRequest.builder()
-                        .token(token)
-                        .build());
-    }
+  /**
+   * Gửi yêu cầu kiểm tra tính hợp lệ của token đến Identity Service.
+   *
+   * @param token chuỗi JWT hoặc token cần xác thực
+   * @return Mono chứa ApiResponse với thông tin phản hồi IntrospectResponse từ Identity Service
+   */
+  public Mono<ApiResponse<IntrospectResponse>> introspect(
+      String token) {
+    return identityClient.introspect(
+        IntrospectRequest.builder()
+            .token(token)
+            .build());
+  }
 }

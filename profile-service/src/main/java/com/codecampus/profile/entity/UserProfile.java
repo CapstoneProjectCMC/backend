@@ -16,6 +16,9 @@ import com.codecampus.profile.entity.properties.resource.SavedResource;
 import com.codecampus.profile.entity.properties.social.Blocks;
 import com.codecampus.profile.entity.properties.social.Follows;
 import com.codecampus.profile.entity.properties.subcribe.SubscribedTo;
+import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,10 +30,6 @@ import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
-import java.time.Instant;
-import java.util.HashSet;
-import java.util.Set;
-
 @Getter
 @Setter
 @Builder
@@ -39,98 +38,98 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Node("User")
 public class UserProfile {
-    @Id
-    String userId;
+  @Id
+  String userId;
 
-    String username;
-    String email;
+  String username;
+  String email;
 
-    @Builder.Default
-    Boolean active = true;
+  @Builder.Default
+  Boolean active = true;
 
-    @Builder.Default
-    Set<String> roles = new HashSet<>();
+  @Builder.Default
+  Set<String> roles = new HashSet<>();
 
-    String firstName;
-    String lastName;
-    Instant dob;
-    Instant createdAt;
-    String avatarUrl;
-    String backgroundUrl;
-    String bio;
-    Boolean gender;
-    String displayName;
-    Integer education;
-    String[] links;
-    String city;
+  String firstName;
+  String lastName;
+  Instant dob;
+  Instant createdAt;
+  String avatarUrl;
+  String backgroundUrl;
+  String bio;
+  Boolean gender;
+  String displayName;
+  Integer education;
+  String[] links;
+  String city;
 
-    Instant updatedAt;
+  Instant updatedAt;
 
-    // --- SOFT DELETE ---
-    Instant deletedAt;
-    String deletedBy;
+  // --- SOFT DELETE ---
+  Instant deletedAt;
+  String deletedBy;
 
-    /* Relationships */
+  /* Relationships */
 
-    // Follows / Blocks
-    @Relationship(type = "FOLLOWS")
-    Set<Follows> follows = new HashSet<>();
+  // Follows / Blocks
+  @Relationship(type = "FOLLOWS")
+  Set<Follows> follows = new HashSet<>();
 
-    @Relationship(type = "BLOCKS")
-    Set<Blocks> blocks = new HashSet<>();
+  @Relationship(type = "BLOCKS")
+  Set<Blocks> blocks = new HashSet<>();
 
-    // Family
-    @Relationship(type = "PARENT_OF")
-    Set<UserProfile> children = new HashSet<>();
+  // Family
+  @Relationship(type = "PARENT_OF")
+  Set<UserProfile> children = new HashSet<>();
 
-    // Exercise
-    @Relationship(type = "SAVED_EXERCISE")
-    Set<SavedExercise> savedExercises = new HashSet<>();
+  // Exercise
+  @Relationship(type = "SAVED_EXERCISE")
+  Set<SavedExercise> savedExercises = new HashSet<>();
 
-    @Relationship(type = "COMPLETED_EXERCISE")
-    Set<CompletedExercise> completedExercises = new HashSet<>();
+  @Relationship(type = "COMPLETED_EXERCISE")
+  Set<CompletedExercise> completedExercises = new HashSet<>();
 
-    @Relationship(type = "CREATED_EXERCISE")
-    Set<CreatedExercise> createdExercises = new HashSet<>();
+  @Relationship(type = "CREATED_EXERCISE")
+  Set<CreatedExercise> createdExercises = new HashSet<>();
 
-    @Relationship(type = "ASSIGNED_ORG_EXERCISE")
-    Set<AssignedOrgExercise> exercises = new HashSet<>();
+  @Relationship(type = "ASSIGNED_ORG_EXERCISE")
+  Set<AssignedOrgExercise> exercises = new HashSet<>();
 
-    @Relationship(type = "CONTEST_STATUS")
-    Set<ContestStatus> contests = new HashSet<>();
+  @Relationship(type = "CONTEST_STATUS")
+  Set<ContestStatus> contests = new HashSet<>();
 
-    // Post
-    @Relationship(type = "SAVED_POST")
-    Set<SavedPost> savedPosts = new HashSet<>();
+  // Post
+  @Relationship(type = "SAVED_POST")
+  Set<SavedPost> savedPosts = new HashSet<>();
 
-    @Relationship(type = "VIEWED_POST")
-    Set<ViewedPost> viewedPosts = new HashSet<>();
+  @Relationship(type = "VIEWED_POST")
+  Set<ViewedPost> viewedPosts = new HashSet<>();
 
-    @Relationship(type = "REACTION")
-    Set<Reaction> reactions = new HashSet<>();
+  @Relationship(type = "REACTION")
+  Set<Reaction> reactions = new HashSet<>();
 
-    @Relationship(type = "REPORTED_POST")
-    Set<ReportedPost> reportedPosts = new HashSet<>();
+  @Relationship(type = "REPORTED_POST")
+  Set<ReportedPost> reportedPosts = new HashSet<>();
 
-    // Package
-    @Relationship(type = "SUBSCRIBED_TO")
-    Set<SubscribedTo> subscriptions = new HashSet<>();
+  // Package
+  @Relationship(type = "SUBSCRIBED_TO")
+  Set<SubscribedTo> subscriptions = new HashSet<>();
 
-    // Activity
-    @Relationship(type = "HAS_ACTIVITY")
-    Set<ActivityWeek> activityWeeks = new HashSet<>();
+  // Activity
+  @Relationship(type = "HAS_ACTIVITY")
+  Set<ActivityWeek> activityWeeks = new HashSet<>();
 
-    // Org
-    @Relationship(type = "MEMBER_ORG")
-    Set<MemberOrg> memberOrgs = new HashSet<>();
+  // Org
+  @Relationship(type = "MEMBER_ORG")
+  Set<MemberOrg> memberOrgs = new HashSet<>();
 
-    @Relationship(type = "CREATED_ORG")
-    Set<CreatedOrg> createdOrgs = new HashSet<>();
+  @Relationship(type = "CREATED_ORG")
+  Set<CreatedOrg> createdOrgs = new HashSet<>();
 
-    // Resource
-    @Relationship(type = "SAVED_RESOURCE")
-    Set<SavedResource> savedResources = new HashSet<>();
+  // Resource
+  @Relationship(type = "SAVED_RESOURCE")
+  Set<SavedResource> savedResources = new HashSet<>();
 
-    @Relationship(type = "REPORTED_RESOURCE")
-    Set<ReportedResource> reportedResources = new HashSet<>();
+  @Relationship(type = "REPORTED_RESOURCE")
+  Set<ReportedResource> reportedResources = new HashSet<>();
 }

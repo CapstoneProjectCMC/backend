@@ -9,6 +9,6 @@ import lombok.experimental.FieldDefaults;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PrimaryOrgDto {
-    String organizationId;
-    String role; // Admin | Teacher | Student | SuperAdmin
+  String organizationId;
+  String role; // Admin | Teacher | Student | SuperAdmin
 }

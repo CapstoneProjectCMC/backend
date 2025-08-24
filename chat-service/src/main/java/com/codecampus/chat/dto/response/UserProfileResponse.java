@@ -12,14 +12,14 @@ import lombok.experimental.FieldDefaults;
 // Khi build thì KHÔNG response null
 //@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserProfileResponse {
-    String userId;
-    String username;
-    String email;
-    String displayName;
-    String avatarUrl;
-    String backgroundUrl;
-    Boolean active;
-    String firstName;
-    String lastName;
-    Boolean gender;
+  String userId;
+  String username;
+  String email;
+  String displayName;
+  String avatarUrl;
+  String backgroundUrl;
+  Boolean active;
+  String firstName;
+  String lastName;
+  Boolean gender;
 }

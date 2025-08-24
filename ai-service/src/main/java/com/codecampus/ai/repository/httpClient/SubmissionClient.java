@@ -18,11 +18,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @FeignClient(
-        name = "submission-client",
-        url = "${app.services.submission}",
-        path = "/internal",
-        configuration = {
-                AuthenticationRequestInterceptor.class, FeignConfig.class}
+    name = "submission-client",
+    url = "${app.services.submission}",
+    path = "/internal",
+    configuration = {
+        AuthenticationRequestInterceptor.class, FeignConfig.class}
 )
 public interface SubmissionClient {
 
@@ -33,12 +33,12 @@ public interface SubmissionClient {
 //    ApiResponse<ExerciseResponse> internalCreateExercise(
 //            @RequestBody CreateExerciseRequest request);
 
-    @PostMapping(
-            value = "/exercise/quiz",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    ApiResponse<ExerciseResponse> internalCreateQuizExercise(
-            @RequestBody CreateQuizExerciseRequest request);
+  @PostMapping(
+      value = "/exercise/quiz",
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  ApiResponse<ExerciseResponse> internalCreateQuizExercise(
+      @RequestBody CreateQuizExerciseRequest request);
 
 //    @PostMapping(
 //            value = "/quiz/exercise/{exerciseId}/quiz-detail",
@@ -48,14 +48,14 @@ public interface SubmissionClient {
 //            @PathVariable("exerciseId") String exerciseId,
 //            @RequestBody @Valid AddQuizDetailRequest addQuizRequest);
 
-    @PostMapping(
-            value = "/quiz/{exerciseId}/question",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    ApiResponse<QuestionResponse> internalAddQuestion(
-            @PathVariable("exerciseId") String exerciseId,
-            @RequestBody QuestionDto questionDto)
-            throws BadRequestException;
+  @PostMapping(
+      value = "/quiz/{exerciseId}/question",
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  ApiResponse<QuestionResponse> internalAddQuestion(
+      @PathVariable("exerciseId") String exerciseId,
+      @RequestBody QuestionDto questionDto)
+      throws BadRequestException;
 
 //    @PostMapping(
 //            value = "/quiz/question/{questionId}/option",
@@ -65,19 +65,19 @@ public interface SubmissionClient {
 //            @PathVariable String questionId,
 //            @RequestBody @Valid OptionDto request);
 
-    @PostMapping(
-            value = "/exercise/coding",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    ApiResponse<ExerciseResponse> internalCreateCodingExercise(
-            @RequestBody CreateCodingExerciseRequest request);
+  @PostMapping(
+      value = "/exercise/coding",
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  ApiResponse<ExerciseResponse> internalCreateCodingExercise(
+      @RequestBody CreateCodingExerciseRequest request);
 
-    @PostMapping(
-            value = "/coding/{exerciseId}/test-case",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    ApiResponse<TestCaseResponse> internalAddTestCase(
-            @PathVariable("exerciseId") String exerciseId,
-            @RequestBody TestCaseDto testCaseDto)
-            throws BadRequestException;
+  @PostMapping(
+      value = "/coding/{exerciseId}/test-case",
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  ApiResponse<TestCaseResponse> internalAddTestCase(
+      @PathVariable("exerciseId") String exerciseId,
+      @RequestBody TestCaseDto testCaseDto)
+      throws BadRequestException;
 }

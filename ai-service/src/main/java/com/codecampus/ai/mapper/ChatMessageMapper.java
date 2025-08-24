@@ -7,16 +7,16 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface ChatMessageMapper {
 
-    default MessageResponse toMessageResponseFromChatMessage(
-            ChatMessage chatMessage) {
-        return new MessageResponse(
-                chatMessage.getId(),
-                chatMessage.getChatRole().name(),
-                chatMessage.getContent(),
-                chatMessage.getImageOriginalName(),
-                chatMessage.getImageContentType(),
-                chatMessage.getImageUrl(),
-                chatMessage.getCreatedAt()
-        );
-    }
+  default MessageResponse toMessageResponseFromChatMessage(
+      ChatMessage chatMessage) {
+    return new MessageResponse(
+        chatMessage.getId(),
+        chatMessage.getChatRole().name(),
+        chatMessage.getContent(),
+        chatMessage.getImageOriginalName(),
+        chatMessage.getImageContentType(),
+        chatMessage.getImageUrl(),
+        chatMessage.getCreatedAt()
+    );
+  }
 }

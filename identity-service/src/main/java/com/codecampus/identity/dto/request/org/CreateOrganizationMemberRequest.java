@@ -11,9 +11,9 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CreateOrganizationMemberRequest {
-    String userId;
-    String scopeType = "Organization"; // cố định "Organization"
-    String scopeId; // orgId
-    String role; // "Admin" | "Teacher" | "Student" | "SuperAdmin"
-    boolean isActive = true;
+  String userId;
+  String scopeType = "Organization"; // cố định "Organization"
+  String scopeId; // orgId
+  String role; // "Admin" | "Teacher" | "Student" | "SuperAdmin"
+  boolean isActive = true;
 }

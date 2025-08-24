@@ -29,42 +29,42 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/internal")
 public class InternalQuizController {
 
-    QuizService quizService;
+  QuizService quizService;
 
-    @PostMapping("/quiz/exercise/{exerciseId}/quiz-detail")
-    ApiResponse<QuizDetail> internalAddQuizDetail(
-            @PathVariable("exerciseId") String exerciseId,
-            @RequestBody @Valid AddQuizDetailRequest addQuizRequest) {
+  @PostMapping("/quiz/exercise/{exerciseId}/quiz-detail")
+  ApiResponse<QuizDetail> internalAddQuizDetail(
+      @PathVariable("exerciseId") String exerciseId,
+      @RequestBody @Valid AddQuizDetailRequest addQuizRequest) {
 
-        return ApiResponse.<QuizDetail>builder()
-                .message("Tạo Quiz thành công!")
-                .result(quizService.addQuizDetail(
-                        exerciseId, addQuizRequest, true))
-                .build();
-    }
+    return ApiResponse.<QuizDetail>builder()
+        .message("Tạo Quiz thành công!")
+        .result(quizService.addQuizDetail(
+            exerciseId, addQuizRequest, true))
+        .build();
+  }
 
-    @PostMapping("/quiz/{exerciseId}/question")
-    ApiResponse<Question> internalAddQuestion(
-            @PathVariable("exerciseId") String exerciseId,
-            @RequestBody @Valid QuestionDto questionDto)
-            throws BadRequestException {
+  @PostMapping("/quiz/{exerciseId}/question")
+  ApiResponse<Question> internalAddQuestion(
+      @PathVariable("exerciseId") String exerciseId,
+      @RequestBody @Valid QuestionDto questionDto)
+      throws BadRequestException {
 
-        return ApiResponse.<Question>builder()
-                .message("Thêm câu hỏi cho quiz thành công!")
-                .result(quizService.addQuestion(
-                        exerciseId, questionDto, true))
-                .build();
-    }
+    return ApiResponse.<Question>builder()
+        .message("Thêm câu hỏi cho quiz thành công!")
+        .result(quizService.addQuestion(
+            exerciseId, questionDto, true))
+        .build();
+  }
 
-    @PostMapping("/quiz/question/{questionId}/option")
-    ApiResponse<Option> internalAddOption(
-            @PathVariable String questionId,
-            @RequestBody @Valid OptionDto request) {
+  @PostMapping("/quiz/question/{questionId}/option")
+  ApiResponse<Option> internalAddOption(
+      @PathVariable String questionId,
+      @RequestBody @Valid OptionDto request) {
 
-        return ApiResponse.<Option>builder()
-                .message("Thêm option thành công!")
-                .result(quizService.addOption(
-                        questionId, request, true))
-                .build();
-    }
+    return ApiResponse.<Option>builder()
+        .message("Thêm option thành công!")
+        .result(quizService.addOption(
+            questionId, request, true))
+        .build();
+  }
 }

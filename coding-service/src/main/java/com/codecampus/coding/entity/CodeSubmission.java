@@ -11,6 +11,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,10 +24,6 @@ import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-
 @Getter
 @Setter
 @Builder
@@ -33,33 +32,33 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @SQLDelete(sql = "UPDATE code_submission " +
-        "SET deleted_by = ? , deleted_at = now() " +
-        "WHERE submission_id = ? AND test_case_id = ?")
+    "SET deleted_by = ? , deleted_at = now() " +
+    "WHERE submission_id = ? AND test_case_id = ?")
 @Where(clause = "deleted_at IS NULL")
 public class CodeSubmission extends AuditMetadata {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    String id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
+  String id;
 
-    String studentId;
-    String language;
+  String studentId;
+  String language;
 
-    @Lob
-    String sourceCode;
+  @Lob
+  String sourceCode;
 
-    Instant submittedAt;
-    Integer timeTakenSeconds;
+  Instant submittedAt;
+  Integer timeTakenSeconds;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "coding_exercise_id", nullable = false)
-    CodingExercise exercise;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "coding_exercise_id", nullable = false)
+  CodingExercise exercise;
 
-    Integer score;              // #passed
-    Integer totalPoints;        // #testcases
-    boolean passed;
+  Integer score;              // #passed
+  Integer totalPoints;        // #testcases
+  boolean passed;
 
-    @OneToMany(mappedBy = "submission",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true)
-    List<CodeSubmissionResult> results = new ArrayList<>();
+  @OneToMany(mappedBy = "submission",
+      cascade = CascadeType.ALL,
+      orphanRemoval = true)
+  List<CodeSubmissionResult> results = new ArrayList<>();
 }

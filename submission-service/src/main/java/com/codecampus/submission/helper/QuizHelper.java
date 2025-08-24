@@ -8,6 +8,8 @@ import com.codecampus.submission.entity.Option;
 import com.codecampus.submission.entity.Question;
 import com.codecampus.submission.entity.QuizDetail;
 import com.codecampus.submission.repository.QuestionRepository;
+import java.util.Comparator;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -16,100 +18,97 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
-import java.util.Comparator;
-import java.util.List;
-
 @Component
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class QuizHelper {
 
-    QuestionRepository questionRepository;
+  QuestionRepository questionRepository;
 
-    public void recalcQuiz(QuizDetail quizDetail) {
-        int totalPoints = quizDetail.getQuestions().stream()
-                .filter(q -> !q.isDeleted())
-                .mapToInt(Question::getPoints)
-                .sum();
+  public void recalcQuiz(QuizDetail quizDetail) {
+    int totalPoints = quizDetail.getQuestions().stream()
+        .filter(q -> !q.isDeleted())
+        .mapToInt(Question::getPoints)
+        .sum();
 
-        int numQuestions = (int) quizDetail.getQuestions().stream()
-                .filter(q -> !q.isDeleted())
-                .count();
-        quizDetail.setTotalPoints(totalPoints);
-        quizDetail.setNumQuestions(numQuestions);
-    }
+    int numQuestions = (int) quizDetail.getQuestions().stream()
+        .filter(q -> !q.isDeleted())
+        .count();
+    quizDetail.setTotalPoints(totalPoints);
+    quizDetail.setNumQuestions(numQuestions);
+  }
 
-    public QuizDetailSliceDetailResponse buildQuizSliceWithOptions(
-            QuizDetail quizDetail,
-            int qPage, int qSize,
-            SortField qSortBy, boolean qAsc) {
+  public QuizDetailSliceDetailResponse buildQuizSliceWithOptions(
+      QuizDetail quizDetail,
+      int qPage, int qSize,
+      SortField qSortBy, boolean qAsc) {
 
-        Pageable pageable = PageRequest.of(
-                qPage - 1,
-                qSize,
-                SortHelper.build(qSortBy, qAsc));
+    Pageable pageable = PageRequest.of(
+        qPage - 1,
+        qSize,
+        SortHelper.build(qSortBy, qAsc));
 
-        Page<Question> pageData =
-                questionRepository.findByQuizDetailId(quizDetail.getId(),
-                        pageable);
+    Page<Question> pageData =
+        questionRepository.findByQuizDetailId(quizDetail.getId(),
+            pageable);
 
-        List<QuestionDetailResponse> questions = pageData.getContent()
-                .stream()
-                .map(this::mapQuestionToQuestionDetailResponse)
-                .toList();
+    List<QuestionDetailResponse> questions = pageData.getContent()
+        .stream()
+        .map(this::mapQuestionToQuestionDetailResponse)
+        .toList();
 
-        return QuizDetailSliceDetailResponse.builder()
-                .id(quizDetail.getId())
-                .numQuestions(quizDetail.getNumQuestions())
-                .totalPoints(quizDetail.getTotalPoints())
-                .currentPage(pageData.getNumber() + 1)
-                .totalPages(pageData.getTotalPages())
-                .pageSize(pageData.getSize())
-                .totalElements(pageData.getTotalElements())
-                .questions(questions)
-                .createdBy(quizDetail.getCreatedBy())
-                .createdAt(quizDetail.getCreatedAt())
-                .updatedBy(quizDetail.getUpdatedBy())
-                .updatedAt(quizDetail.getUpdatedAt())
-                .deletedBy(quizDetail.getDeletedBy())
-                .deletedAt(quizDetail.getDeletedAt())
-                .build();
-    }
+    return QuizDetailSliceDetailResponse.builder()
+        .id(quizDetail.getId())
+        .numQuestions(quizDetail.getNumQuestions())
+        .totalPoints(quizDetail.getTotalPoints())
+        .currentPage(pageData.getNumber() + 1)
+        .totalPages(pageData.getTotalPages())
+        .pageSize(pageData.getSize())
+        .totalElements(pageData.getTotalElements())
+        .questions(questions)
+        .createdBy(quizDetail.getCreatedBy())
+        .createdAt(quizDetail.getCreatedAt())
+        .updatedBy(quizDetail.getUpdatedBy())
+        .updatedAt(quizDetail.getUpdatedAt())
+        .deletedBy(quizDetail.getDeletedBy())
+        .deletedAt(quizDetail.getDeletedAt())
+        .build();
+  }
 
-    private QuestionDetailResponse mapQuestionToQuestionDetailResponse(
-            Question q) {
-        return QuestionDetailResponse.builder()
-                .id(q.getId())
-                .text(q.getText())
-                .points(q.getPoints())
-                .type(q.getQuestionType().name())
-                .orderInQuiz(q.getOrderInQuiz())
-                .options(q.getOptions().stream()
-                        .sorted(Comparator.comparing(Option::getOrder,
-                                Comparator.nullsLast(String::compareTo)))
-                        .map(this::mapOptionToOptionDetailResponse)
-                        .toList())
-                .createdBy(q.getCreatedBy())
-                .createdAt(q.getCreatedAt())
-                .updatedBy(q.getUpdatedBy())
-                .updatedAt(q.getUpdatedAt())
-                .deletedBy(q.getDeletedBy())
-                .deletedAt(q.getDeletedAt())
-                .build();
-    }
+  private QuestionDetailResponse mapQuestionToQuestionDetailResponse(
+      Question q) {
+    return QuestionDetailResponse.builder()
+        .id(q.getId())
+        .text(q.getText())
+        .points(q.getPoints())
+        .type(q.getQuestionType().name())
+        .orderInQuiz(q.getOrderInQuiz())
+        .options(q.getOptions().stream()
+            .sorted(Comparator.comparing(Option::getOrder,
+                Comparator.nullsLast(String::compareTo)))
+            .map(this::mapOptionToOptionDetailResponse)
+            .toList())
+        .createdBy(q.getCreatedBy())
+        .createdAt(q.getCreatedAt())
+        .updatedBy(q.getUpdatedBy())
+        .updatedAt(q.getUpdatedAt())
+        .deletedBy(q.getDeletedBy())
+        .deletedAt(q.getDeletedAt())
+        .build();
+  }
 
-    private OptionDetailResponse mapOptionToOptionDetailResponse(Option o) {
-        return OptionDetailResponse.builder()
-                .id(o.getId())
-                .optionText(o.getOptionText())
-                .correct(o.isCorrect())
-                .order(o.getOrder())
-                .createdAt(o.getCreatedAt())
-                .createdBy(o.getCreatedBy())
-                .updatedAt(o.getUpdatedAt())
-                .updatedBy(o.getUpdatedBy())
-                .deletedBy(o.getDeletedBy())
-                .deletedAt(o.getDeletedAt())
-                .build();
-    }
+  private OptionDetailResponse mapOptionToOptionDetailResponse(Option o) {
+    return OptionDetailResponse.builder()
+        .id(o.getId())
+        .optionText(o.getOptionText())
+        .correct(o.isCorrect())
+        .order(o.getOrder())
+        .createdAt(o.getCreatedAt())
+        .createdBy(o.getCreatedBy())
+        .updatedAt(o.getUpdatedAt())
+        .updatedBy(o.getUpdatedBy())
+        .deletedBy(o.getDeletedBy())
+        .deletedAt(o.getDeletedAt())
+        .build();
+  }
 }

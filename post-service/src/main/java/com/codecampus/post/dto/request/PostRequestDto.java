@@ -13,16 +13,16 @@ import lombok.Setter;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class PostRequestDto {
-    private String postId; // for update post
-    private String title;
-    private String orgId;
-    private String content;
-    private String oldImgesUrls; // for update post img
-    private boolean isPublic;
-    private boolean allowComment;
-    private String postType;
-    private String hashtag;
-    private String status;
-    private AddFileDocumentDto fileDocument; // for add file document
+  private String postId; // for update post
+  private String title;
+  private String orgId;
+  private String content;
+  private String oldImgesUrls; // for update post img
+  private boolean isPublic;
+  private boolean allowComment;
+  private String postType;
+  private String hashtag;
+  private String status;
+  private AddFileDocumentDto fileDocument; // for add file document
 //    private PostAccess postAccess;
 }

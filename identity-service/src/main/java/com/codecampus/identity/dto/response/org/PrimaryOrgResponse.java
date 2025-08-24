@@ -9,6 +9,6 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PrimaryOrgResponse {
-    String organizationId; // GUID dạng string
-    String role;           // "Admin", "Teacher", "Student", ...
+  String organizationId; // GUID dạng string
+  String role;           // "Admin", "Teacher", "Student", ...
 }

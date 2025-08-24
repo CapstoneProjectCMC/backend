@@ -22,87 +22,87 @@ import net.devh.boot.grpc.server.service.GrpcService;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CodingSyncServiceImpl
-        extends CodingSyncServiceGrpc.CodingSyncServiceImplBase {
+    extends CodingSyncServiceGrpc.CodingSyncServiceImplBase {
 
-    CodingService codingService;
+  CodingService codingService;
 
-    @Override
-    public void createCodingExercise(
-            CreateCodingExerciseRequest createCodingExerciseRequest,
-            StreamObserver<Empty> responseObserver) {
+  @Override
+  public void createCodingExercise(
+      CreateCodingExerciseRequest createCodingExerciseRequest,
+      StreamObserver<Empty> responseObserver) {
 
-        codingService.createCodingExercise(createCodingExerciseRequest);
+    codingService.createCodingExercise(createCodingExerciseRequest);
 
-        responseObserver.onNext(Empty.getDefaultInstance());
-        responseObserver.onCompleted();
-    }
+    responseObserver.onNext(Empty.getDefaultInstance());
+    responseObserver.onCompleted();
+  }
 
-    @Override
-    public void addCodingDetail(
-            AddCodingDetailRequest addCodingDetailRequest,
-            StreamObserver<Empty> responseObserver) {
+  @Override
+  public void addCodingDetail(
+      AddCodingDetailRequest addCodingDetailRequest,
+      StreamObserver<Empty> responseObserver) {
 
-        codingService.addCodingDetail(addCodingDetailRequest);
+    codingService.addCodingDetail(addCodingDetailRequest);
 
-        responseObserver.onNext(Empty.getDefaultInstance());
-        responseObserver.onCompleted();
-    }
+    responseObserver.onNext(Empty.getDefaultInstance());
+    responseObserver.onCompleted();
+  }
 
-    @Override
-    public void addTestCase(
-            AddTestCaseRequest addTestCaseRequest,
-            StreamObserver<Empty> responseObserver) {
+  @Override
+  public void addTestCase(
+      AddTestCaseRequest addTestCaseRequest,
+      StreamObserver<Empty> responseObserver) {
 
-        codingService.addTestCase(addTestCaseRequest);
+    codingService.addTestCase(addTestCaseRequest);
 
-        responseObserver.onNext(Empty.getDefaultInstance());
-        responseObserver.onCompleted();
-    }
+    responseObserver.onNext(Empty.getDefaultInstance());
+    responseObserver.onCompleted();
+  }
 
-    @Override
-    public void softDeleteExercise(
-            SoftDeleteRequest softDeleteRequest,
-            StreamObserver<Empty> responseObserver) {
+  @Override
+  public void softDeleteExercise(
+      SoftDeleteRequest softDeleteRequest,
+      StreamObserver<Empty> responseObserver) {
 
-        codingService.softDeleteExercise(softDeleteRequest.getId());
+    codingService.softDeleteExercise(softDeleteRequest.getId());
 
-        responseObserver.onNext(Empty.getDefaultInstance());
-        responseObserver.onCompleted();
-    }
+    responseObserver.onNext(Empty.getDefaultInstance());
+    responseObserver.onCompleted();
+  }
 
-    @Override
-    public void softDeleteTestCase(
-            SoftDeleteTestCaseRequest softDeleteTestCaseRequest,
-            StreamObserver<Empty> responseObserver) {
+  @Override
+  public void softDeleteTestCase(
+      SoftDeleteTestCaseRequest softDeleteTestCaseRequest,
+      StreamObserver<Empty> responseObserver) {
 
-        codingService.softDeleteTestCase(
-                softDeleteTestCaseRequest.getExerciseId(),
-                softDeleteTestCaseRequest.getTestCaseId()
-        );
+    codingService.softDeleteTestCase(
+        softDeleteTestCaseRequest.getExerciseId(),
+        softDeleteTestCaseRequest.getTestCaseId()
+    );
 
-        responseObserver.onNext(Empty.getDefaultInstance());
-        responseObserver.onCompleted();
-    }
+    responseObserver.onNext(Empty.getDefaultInstance());
+    responseObserver.onCompleted();
+  }
 
-    @Override
-    public void upsertAssignment(
-            UpsertAssignmentRequest upsertAssignmentRequest,
-            StreamObserver<Empty> responseObserver) {
+  @Override
+  public void upsertAssignment(
+      UpsertAssignmentRequest upsertAssignmentRequest,
+      StreamObserver<Empty> responseObserver) {
 
-        codingService.upsertAssignment(upsertAssignmentRequest);
+    codingService.upsertAssignment(upsertAssignmentRequest);
 
-        responseObserver.onNext(Empty.getDefaultInstance());
-        responseObserver.onCompleted();
-    }
+    responseObserver.onNext(Empty.getDefaultInstance());
+    responseObserver.onCompleted();
+  }
 
-    @Override
-    public void softDeleteAssignment(
-            SoftDeleteAssignmentRequest request,
-            StreamObserver<Empty> responseObserver) {
+  @Override
+  public void softDeleteAssignment(
+      SoftDeleteAssignmentRequest request,
+      StreamObserver<Empty> responseObserver) {
 
-        codingService.softDeleteAssignment(request.getId());
+    codingService.softDeleteAssignment(request.getId());
 
-        responseObserver.onNext(Empty.getDefaultInstance());
-        responseObserver.onCompleted();
-    }
+    responseObserver.onNext(Empty.getDefaultInstance());
+    responseObserver.onCompleted();
+  }
 }

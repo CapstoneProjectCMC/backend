@@ -7,6 +7,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,9 +16,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-
-import java.util.HashSet;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -26,15 +25,15 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 public class Role extends AuditMetadata {
-    @Id
-    String name;
+  @Id
+  String name;
 
-    String description;
+  String description;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "role_permissions",
-            joinColumns = @JoinColumn(name = "role_name"),
-            inverseJoinColumns = @JoinColumn(name = "permission_name"))
-    @Builder.Default
-    Set<Permission> permissions = new HashSet<>();
+  @ManyToMany(fetch = FetchType.LAZY)
+  @JoinTable(name = "role_permissions",
+      joinColumns = @JoinColumn(name = "role_name"),
+      inverseJoinColumns = @JoinColumn(name = "permission_name"))
+  @Builder.Default
+  Set<Permission> permissions = new HashSet<>();
 }

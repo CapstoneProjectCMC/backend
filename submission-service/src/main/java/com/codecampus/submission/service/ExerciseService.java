@@ -46,6 +46,11 @@ import com.codecampus.submission.service.grpc.GrpcCodingClient;
 import com.codecampus.submission.service.grpc.GrpcQuizClient;
 import com.codecampus.submission.service.kafka.ExerciseEventProducer;
 import dtos.UserSummary;
+import java.time.Instant;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -56,340 +61,336 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 @Service
 @RequiredArgsConstructor
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ExerciseService {
-    ExerciseRepository exerciseRepository;
-    QuestionRepository questionRepository;
-    SubmissionRepository submissionRepository;
-    AssignmentRepository assignmentRepository;
-    TestCaseRepository testCaseRepository;
-    SubmissionResultRepository submissionResultRepository;
-    UserBulkLoader userBulkLoader;
+  ExerciseRepository exerciseRepository;
+  QuestionRepository questionRepository;
+  SubmissionRepository submissionRepository;
+  AssignmentRepository assignmentRepository;
+  TestCaseRepository testCaseRepository;
+  SubmissionResultRepository submissionResultRepository;
+  UserBulkLoader userBulkLoader;
 
-    UserSummaryCacheService userSummaryCacheService;
-    ContestService contestService;
-    AssignmentService assignmentService;
-    QuizService quizService;
-    CodingService codingService;
+  UserSummaryCacheService userSummaryCacheService;
+  ContestService contestService;
+  AssignmentService assignmentService;
+  QuizService quizService;
+  CodingService codingService;
 
-    GrpcQuizClient grpcQuizClient;
-    GrpcCodingClient grpcCodingClient;
-    ExerciseEventProducer exerciseEventProducer;
+  GrpcQuizClient grpcQuizClient;
+  GrpcCodingClient grpcCodingClient;
+  ExerciseEventProducer exerciseEventProducer;
 
-    ExerciseMapper exerciseMapper;
-    SubmissionMapper submissionMapper;
+  ExerciseMapper exerciseMapper;
+  SubmissionMapper submissionMapper;
 
-    QuizHelper quizHelper;
-    CodingHelper codingHelper;
-    ExerciseHelper exerciseHelper;
+  QuizHelper quizHelper;
+  CodingHelper codingHelper;
+  ExerciseHelper exerciseHelper;
 
 
-    @Transactional
-    public Exercise createExercise(
-            CreateExerciseRequest request,
-            boolean returnExercise) {
-        Exercise exercise = exerciseRepository
-                .save(exerciseMapper.toExerciseFromCreateExerciseRequest(
-                        request, AuthenticationHelper.getMyUserId()));
-        if (exercise.getExerciseType() == ExerciseType.QUIZ) {
-            grpcQuizClient.pushExercise(exercise);
-        } else if (exercise.getExerciseType() == ExerciseType.CODING) {
-            grpcCodingClient.pushExercise(exercise);
-        }
-
-        exerciseEventProducer.publishCreatedExerciseEvent(exercise);
-
-        if (returnExercise) {
-            return exercise;
-        }
-        return null;
+  @Transactional
+  public Exercise createExercise(
+      CreateExerciseRequest request,
+      boolean returnExercise) {
+    Exercise exercise = exerciseRepository
+        .save(exerciseMapper.toExerciseFromCreateExerciseRequest(
+            request, AuthenticationHelper.getMyUserId()));
+    if (exercise.getExerciseType() == ExerciseType.QUIZ) {
+      grpcQuizClient.pushExercise(exercise);
+    } else if (exercise.getExerciseType() == ExerciseType.CODING) {
+      grpcCodingClient.pushExercise(exercise);
     }
 
-    @Transactional
-    public Exercise createQuizExercise(
-            CreateQuizExerciseRequest request,
-            boolean returnExercise) {
-        Exercise exercise =
-                createExercise(
-                        request.createExerciseRequest(),
-                        true
-                );
-        exerciseRepository.saveAndFlush(exercise);
+    exerciseEventProducer.publishCreatedExerciseEvent(exercise);
 
-        quizService.addQuizDetail(
-                exercise.getId(),
-                request.addQuizDetailRequest(),
-                false);
+    if (returnExercise) {
+      return exercise;
+    }
+    return null;
+  }
 
-        if (returnExercise) {
-            return exercise;
-        }
-        return null;
+  @Transactional
+  public Exercise createQuizExercise(
+      CreateQuizExerciseRequest request,
+      boolean returnExercise) {
+    Exercise exercise =
+        createExercise(
+            request.createExerciseRequest(),
+            true
+        );
+    exerciseRepository.saveAndFlush(exercise);
+
+    quizService.addQuizDetail(
+        exercise.getId(),
+        request.addQuizDetailRequest(),
+        false);
+
+    if (returnExercise) {
+      return exercise;
+    }
+    return null;
+  }
+
+  /**
+   * Tạo CODING exercise + coding detail trong 1 call
+   */
+  @Transactional
+  public Exercise createCodingExercise(
+      CreateCodingExerciseRequest request,
+      boolean returnExercise) {
+    Exercise exercise = createExercise(
+        request.createExerciseRequest(), true);
+    exerciseRepository.saveAndFlush(exercise);
+
+    // đẩy coding detail
+    codingService.addCodingDetail(
+        exercise.getId(),
+        request.addCodingDetailRequest(),
+        false);
+
+    if (returnExercise) {
+      return exercise;
+    }
+    return null;
+  }
+
+
+  @Transactional
+  public void createQuizSubmission(
+      CreateQuizSubmissionRequest request) {
+    QuizSubmissionDto quizSubmissionDto = request.getSubmission();
+
+    Exercise exercise = exerciseHelper
+        .getExerciseOrThrow(quizSubmissionDto.getExerciseId());
+
+    Submission submission = submissionMapper
+        .toSubmissionFromQuizSubmissionDto(
+            quizSubmissionDto,
+            exercise,
+            questionRepository
+        );
+    submissionRepository.save(submission);
+
+    // Set Complete
+    assignmentRepository
+        .findByExerciseIdAndStudentId(
+            quizSubmissionDto.getExerciseId(),
+            quizSubmissionDto.getStudentId())
+        .ifPresent(a -> a.setCompleted(true));
+
+    assignmentService.markCompleted(
+        quizSubmissionDto.getExerciseId(),
+        quizSubmissionDto.getStudentId()
+    );
+
+    // Cập nhật xếp hạng contest
+    contestService.updateRankingOnSubmission(submission);
+  }
+
+  @Transactional
+  public void createCodeSubmission(
+      CreateCodeSubmissionRequest request) {
+
+    CodeSubmissionDto codeSubmissionDto = request.getSubmission();
+
+    Exercise exercise =
+        exerciseHelper.getExerciseOrThrow(
+            codeSubmissionDto.getExerciseId());
+
+    Submission submission = Submission.builder()
+        .exercise(exercise)
+        .userId(codeSubmissionDto.getStudentId())
+        .submittedAt(Instant.ofEpochSecond(
+            codeSubmissionDto.getSubmittedAt().getSeconds(),
+            codeSubmissionDto.getSubmittedAt().getNanos()))
+        .language(codeSubmissionDto.getLanguage())
+        .sourceCode(codeSubmissionDto.getSourceCode())
+        .timeTakenSeconds(codeSubmissionDto.getTimeTakenSeconds())
+        .score(codeSubmissionDto.getScore())
+        .memoryUsed(codeSubmissionDto.getPeakMemoryMb())
+        .status(codeSubmissionDto.getScore() ==
+            codeSubmissionDto.getTotalPoints()
+            ? SubmissionStatus.PASSED
+            : (codeSubmissionDto.getScore() == 0
+            ? SubmissionStatus.FAILED
+            : SubmissionStatus.PARTIAL))
+        .build();
+    submissionRepository.save(submission);
+
+    // Lưu chi tiết Testcase
+    codeSubmissionDto.getResultsList().forEach(r -> {
+      TestCase testCase = testCaseRepository
+          .findById(r.getTestCaseId())
+          .orElseThrow(() -> new AppException(
+              ErrorCode.TESTCASE_NOT_FOUND));
+
+      submissionResultRepository.save(SubmissionResultDetail.builder()
+          .id(new SubmissionResultId(submission.getId(),
+              testCase.getId()))
+          .submission(submission)
+          .testCase(testCase)
+          .passed(r.getPassed())
+          .runTimeTs(r.getRuntimeMs())
+          .memoryUsed(r.getMemoryMb())
+          .output(r.getOutput())
+          .errorMessage(r.getErrorMessage())
+          .build());
+    });
+
+    /* Side-effects */
+    assignmentService.markCompleted(
+        exercise.getId(),
+        submission.getUserId());
+
+    contestService.updateRankingOnSubmission(submission);
+  }
+
+  @Transactional
+  public void updateExercise(
+      String id, UpdateExerciseRequest request) {
+    Exercise exercise = exerciseHelper
+        .getExerciseOrThrow(id);
+    exerciseMapper.patchUpdateExerciseRequestToExercise(request, exercise);
+
+    if (exercise.getExerciseType() == ExerciseType.QUIZ) {
+      grpcQuizClient.pushExercise(exercise);
+    } else if (exercise.getExerciseType() == ExerciseType.CODING) {
+      grpcCodingClient.pushExercise(exercise);
+    }
+    exerciseEventProducer.publishUpdatedExerciseEvent(exercise);
+  }
+
+  @Transactional
+  public void softDeleteExercise(String exerciseId) {
+    Exercise exercise = exerciseHelper
+        .getExerciseOrThrow(exerciseId);
+    String by = AuthenticationHelper.getMyUsername();
+    exerciseHelper.markExerciseDeletedRecursively(exercise, by);
+    exerciseRepository.save(exercise);
+
+    exerciseEventProducer.publishDeletedExerciseEvent(exercise);
+    if (exercise.getExerciseType() ==
+        ExerciseType.QUIZ) {
+      grpcQuizClient.softDeleteExercise(exerciseId);
+    } else if (exercise.getExerciseType()
+        == ExerciseType.CODING) {
+      grpcCodingClient.softDeleteExercise(exerciseId);
+    }
+  }
+
+  public PageResponse<ExerciseQuizResponse> getAllExercises(
+      int page, int size,
+      SortField sortBy, boolean asc) {
+
+    Pageable pageable = PageRequest.of(
+        page - 1,
+        size,
+        SortHelper.build(sortBy, asc));
+
+    Page<Exercise> pageData = exerciseRepository
+        .findAll(pageable);
+    // .map(exerciseMapper::toExerciseQuizResponseFromExercise);
+
+    // Bulk load user summaries
+    Set<String> userIds = pageData
+        .stream()
+        .map(Exercise::getUserId)
+        .collect(Collectors.toSet());
+    Map<String, UserSummary> summaries = userBulkLoader.loadAll(userIds);
+
+    Page<ExerciseQuizResponse> out = pageData
+        .map(
+            e -> exerciseHelper.toExerciseQuizResponseFromExerciseAndUserSummary(
+                e, summaries.get(e.getUserId())))
+        .map(a -> a); // no-op để giữ Page map
+
+    return PageResponseHelper.toPageResponse(out, page);
+  }
+
+  public PageResponse<ExerciseQuizResponse> getExercisesOf(
+      int page, int size,
+      SortField sortBy, boolean asc) {
+
+    Pageable pageable = PageRequest.of(
+        page - 1,
+        size,
+        SortHelper.build(sortBy, asc));
+
+    Page<Exercise> pageData = exerciseRepository
+        .findByUserId(AuthenticationHelper.getMyUserId(), pageable);
+    // .map(exerciseMapper::toExerciseQuizResponseFromExercise);
+
+    Set<String> userIds = pageData.stream().map(Exercise::getUserId)
+        .collect(java.util.stream.Collectors.toSet());
+    Map<String, UserSummary> summaries = userBulkLoader.loadAll(userIds);
+
+    Page<ExerciseQuizResponse> out = pageData
+        .map(
+            e -> exerciseHelper.toExerciseQuizResponseFromExerciseAndUserSummary(
+                e, summaries.get(e.getUserId())));
+
+    return PageResponseHelper.toPageResponse(out, page);
+  }
+
+  @Transactional(readOnly = true)
+  public ExerciseQuizDetailResponse getQuizExerciseDetail(
+      String exerciseId,
+      int qPage, int qSize,
+      SortField qSortBy, boolean qAsc) {
+
+    Exercise exercise =
+        exerciseHelper.getExerciseOrThrow(exerciseId);
+
+    if (exercise.getExerciseType() != ExerciseType.QUIZ) {
+      throw new AppException(ErrorCode.EXERCISE_TYPE);
     }
 
-    /**
-     * Tạo CODING exercise + coding detail trong 1 call
-     */
-    @Transactional
-    public Exercise createCodingExercise(
-            CreateCodingExerciseRequest request,
-            boolean returnExercise) {
-        Exercise exercise = createExercise(
-                request.createExerciseRequest(), true);
-        exerciseRepository.saveAndFlush(exercise);
+    QuizDetail quizDetail = Optional.ofNullable(
+            exercise.getQuizDetail())
+        .orElseThrow(() -> new AppException(
+            ErrorCode.QUIZ_DETAIL_NOT_FOUND));
 
-        // đẩy coding detail
-        codingService.addCodingDetail(
-                exercise.getId(),
-                request.addCodingDetailRequest(),
-                false);
-
-        if (returnExercise) {
-            return exercise;
-        }
-        return null;
-    }
-
-
-    @Transactional
-    public void createQuizSubmission(
-            CreateQuizSubmissionRequest request) {
-        QuizSubmissionDto quizSubmissionDto = request.getSubmission();
-
-        Exercise exercise = exerciseHelper
-                .getExerciseOrThrow(quizSubmissionDto.getExerciseId());
-
-        Submission submission = submissionMapper
-                .toSubmissionFromQuizSubmissionDto(
-                        quizSubmissionDto,
-                        exercise,
-                        questionRepository
-                );
-        submissionRepository.save(submission);
-
-        // Set Complete
-        assignmentRepository
-                .findByExerciseIdAndStudentId(
-                        quizSubmissionDto.getExerciseId(),
-                        quizSubmissionDto.getStudentId())
-                .ifPresent(a -> a.setCompleted(true));
-
-        assignmentService.markCompleted(
-                quizSubmissionDto.getExerciseId(),
-                quizSubmissionDto.getStudentId()
+    QuizDetailSliceDetailResponse qSlice =
+        quizHelper.buildQuizSliceWithOptions(
+            quizDetail, qPage, qSize, qSortBy, qAsc
         );
 
-        // Cập nhật xếp hạng contest
-        contestService.updateRankingOnSubmission(submission);
+    UserSummary userSummary =
+        userSummaryCacheService.getOrLoad(exercise.getUserId());
+
+    return exerciseHelper.toExerciseQuizDetailResponseFromExerciseQuizDetailSliceDetailResponseAndUserSummary(
+        exercise, qSlice, userSummary);
+  }
+
+  @Transactional(readOnly = true)
+  public ExerciseCodingDetailResponse getCodingExerciseDetail(
+      String exerciseId,
+      int tcPage, int tcSize,
+      SortField tcSortBy, boolean tcAsc) {
+
+    Exercise exercise =
+        exerciseHelper.getExerciseOrThrow(exerciseId);
+
+    if (exercise.getExerciseType() != ExerciseType.CODING) {
+      throw new AppException(ErrorCode.EXERCISE_TYPE);
     }
 
-    @Transactional
-    public void createCodeSubmission(
-            CreateCodeSubmissionRequest request) {
+    CodingDetail codingDetail = Optional.ofNullable(
+            exercise.getCodingDetail())
+        .orElseThrow(() -> new AppException(
+            ErrorCode.CODING_DETAIL_NOT_FOUND));
 
-        CodeSubmissionDto codeSubmissionDto = request.getSubmission();
+    CodingDetailSliceDetailResponse slice = codingHelper.buildCodingSlice(
+        codingDetail, tcPage, tcSize, tcSortBy, tcAsc);
 
-        Exercise exercise =
-                exerciseHelper.getExerciseOrThrow(
-                        codeSubmissionDto.getExerciseId());
+    UserSummary userSummary =
+        userSummaryCacheService.getOrLoad(exercise.getUserId());
 
-        Submission submission = Submission.builder()
-                .exercise(exercise)
-                .userId(codeSubmissionDto.getStudentId())
-                .submittedAt(Instant.ofEpochSecond(
-                        codeSubmissionDto.getSubmittedAt().getSeconds(),
-                        codeSubmissionDto.getSubmittedAt().getNanos()))
-                .language(codeSubmissionDto.getLanguage())
-                .sourceCode(codeSubmissionDto.getSourceCode())
-                .timeTakenSeconds(codeSubmissionDto.getTimeTakenSeconds())
-                .score(codeSubmissionDto.getScore())
-                .memoryUsed(codeSubmissionDto.getPeakMemoryMb())
-                .status(codeSubmissionDto.getScore() ==
-                        codeSubmissionDto.getTotalPoints()
-                        ? SubmissionStatus.PASSED
-                        : (codeSubmissionDto.getScore() == 0
-                        ? SubmissionStatus.FAILED
-                        : SubmissionStatus.PARTIAL))
-                .build();
-        submissionRepository.save(submission);
-
-        // Lưu chi tiết Testcase
-        codeSubmissionDto.getResultsList().forEach(r -> {
-            TestCase testCase = testCaseRepository
-                    .findById(r.getTestCaseId())
-                    .orElseThrow(() -> new AppException(
-                            ErrorCode.TESTCASE_NOT_FOUND));
-
-            submissionResultRepository.save(SubmissionResultDetail.builder()
-                    .id(new SubmissionResultId(submission.getId(),
-                            testCase.getId()))
-                    .submission(submission)
-                    .testCase(testCase)
-                    .passed(r.getPassed())
-                    .runTimeTs(r.getRuntimeMs())
-                    .memoryUsed(r.getMemoryMb())
-                    .output(r.getOutput())
-                    .errorMessage(r.getErrorMessage())
-                    .build());
-        });
-
-        /* Side-effects */
-        assignmentService.markCompleted(
-                exercise.getId(),
-                submission.getUserId());
-
-        contestService.updateRankingOnSubmission(submission);
-    }
-
-    @Transactional
-    public void updateExercise(
-            String id, UpdateExerciseRequest request) {
-        Exercise exercise = exerciseHelper
-                .getExerciseOrThrow(id);
-        exerciseMapper.patchUpdateExerciseRequestToExercise(request, exercise);
-
-        if (exercise.getExerciseType() == ExerciseType.QUIZ) {
-            grpcQuizClient.pushExercise(exercise);
-        } else if (exercise.getExerciseType() == ExerciseType.CODING) {
-            grpcCodingClient.pushExercise(exercise);
-        }
-        exerciseEventProducer.publishUpdatedExerciseEvent(exercise);
-    }
-
-    @Transactional
-    public void softDeleteExercise(String exerciseId) {
-        Exercise exercise = exerciseHelper
-                .getExerciseOrThrow(exerciseId);
-        String by = AuthenticationHelper.getMyUsername();
-        exerciseHelper.markExerciseDeletedRecursively(exercise, by);
-        exerciseRepository.save(exercise);
-
-        exerciseEventProducer.publishDeletedExerciseEvent(exercise);
-        if (exercise.getExerciseType() ==
-                ExerciseType.QUIZ) {
-            grpcQuizClient.softDeleteExercise(exerciseId);
-        } else if (exercise.getExerciseType()
-                == ExerciseType.CODING) {
-            grpcCodingClient.softDeleteExercise(exerciseId);
-        }
-    }
-
-    public PageResponse<ExerciseQuizResponse> getAllExercises(
-            int page, int size,
-            SortField sortBy, boolean asc) {
-
-        Pageable pageable = PageRequest.of(
-                page - 1,
-                size,
-                SortHelper.build(sortBy, asc));
-
-        Page<Exercise> pageData = exerciseRepository
-                .findAll(pageable);
-        // .map(exerciseMapper::toExerciseQuizResponseFromExercise);
-
-        // Bulk load user summaries
-        Set<String> userIds = pageData
-                .stream()
-                .map(Exercise::getUserId)
-                .collect(Collectors.toSet());
-        Map<String, UserSummary> summaries = userBulkLoader.loadAll(userIds);
-
-        Page<ExerciseQuizResponse> out = pageData
-                .map(e -> exerciseHelper.toExerciseQuizResponseFromExerciseAndUserSummary(
-                        e, summaries.get(e.getUserId())))
-                .map(a -> a); // no-op để giữ Page map
-
-        return PageResponseHelper.toPageResponse(out, page);
-    }
-
-    public PageResponse<ExerciseQuizResponse> getExercisesOf(
-            int page, int size,
-            SortField sortBy, boolean asc) {
-
-        Pageable pageable = PageRequest.of(
-                page - 1,
-                size,
-                SortHelper.build(sortBy, asc));
-
-        Page<Exercise> pageData = exerciseRepository
-                .findByUserId(AuthenticationHelper.getMyUserId(), pageable);
-        // .map(exerciseMapper::toExerciseQuizResponseFromExercise);
-
-        Set<String> userIds = pageData.stream().map(Exercise::getUserId)
-                .collect(java.util.stream.Collectors.toSet());
-        Map<String, UserSummary> summaries = userBulkLoader.loadAll(userIds);
-
-        Page<ExerciseQuizResponse> out = pageData
-                .map(e -> exerciseHelper.toExerciseQuizResponseFromExerciseAndUserSummary(
-                        e, summaries.get(e.getUserId())));
-
-        return PageResponseHelper.toPageResponse(out, page);
-    }
-
-    @Transactional(readOnly = true)
-    public ExerciseQuizDetailResponse getQuizExerciseDetail(
-            String exerciseId,
-            int qPage, int qSize,
-            SortField qSortBy, boolean qAsc) {
-
-        Exercise exercise =
-                exerciseHelper.getExerciseOrThrow(exerciseId);
-
-        if (exercise.getExerciseType() != ExerciseType.QUIZ) {
-            throw new AppException(ErrorCode.EXERCISE_TYPE);
-        }
-
-        QuizDetail quizDetail = Optional.ofNullable(
-                        exercise.getQuizDetail())
-                .orElseThrow(() -> new AppException(
-                        ErrorCode.QUIZ_DETAIL_NOT_FOUND));
-
-        QuizDetailSliceDetailResponse qSlice =
-                quizHelper.buildQuizSliceWithOptions(
-                        quizDetail, qPage, qSize, qSortBy, qAsc
-                );
-
-        UserSummary userSummary =
-                userSummaryCacheService.getOrLoad(exercise.getUserId());
-
-        return exerciseHelper.toExerciseQuizDetailResponseFromExerciseQuizDetailSliceDetailResponseAndUserSummary(
-                exercise, qSlice, userSummary);
-    }
-
-    @Transactional(readOnly = true)
-    public ExerciseCodingDetailResponse getCodingExerciseDetail(
-            String exerciseId,
-            int tcPage, int tcSize,
-            SortField tcSortBy, boolean tcAsc) {
-
-        Exercise exercise =
-                exerciseHelper.getExerciseOrThrow(exerciseId);
-
-        if (exercise.getExerciseType() != ExerciseType.CODING) {
-            throw new AppException(ErrorCode.EXERCISE_TYPE);
-        }
-
-        CodingDetail codingDetail = Optional.ofNullable(
-                        exercise.getCodingDetail())
-                .orElseThrow(() -> new AppException(
-                        ErrorCode.CODING_DETAIL_NOT_FOUND));
-
-        CodingDetailSliceDetailResponse slice = codingHelper.buildCodingSlice(
-                codingDetail, tcPage, tcSize, tcSortBy, tcAsc);
-
-        UserSummary userSummary =
-                userSummaryCacheService.getOrLoad(exercise.getUserId());
-
-        return exerciseHelper.toExerciseCodingDetailResponseFromExerciseCodingDetailSliceDetailResponseAndUserSummary(
-                exercise, slice, userSummary);
-    }
+    return exerciseHelper.toExerciseCodingDetailResponseFromExerciseCodingDetailSliceDetailResponseAndUserSummary(
+        exercise, slice, userSummary);
+  }
 }

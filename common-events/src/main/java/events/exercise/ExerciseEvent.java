@@ -14,10 +14,10 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @AllArgsConstructor
 public class ExerciseEvent {
-    Type type;
-    String id;
+  Type type;
+  String id;
 
-    ExercisePayload payload; // null nếu DELETED
+  ExercisePayload payload; // null nếu DELETED
 
-    public enum Type { CREATED, UPDATED, DELETED }
+  public enum Type { CREATED, UPDATED, DELETED }
 }

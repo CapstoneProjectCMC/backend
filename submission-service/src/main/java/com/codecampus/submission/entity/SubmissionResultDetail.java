@@ -29,34 +29,34 @@ import org.hibernate.annotations.Where;
 @Entity
 @Table(name = "submission_result_detail")
 @SQLDelete(sql = "UPDATE submission_result_detail " +
-        "SET deleted_by = ? , deleted_at = now() " +
-        "WHERE id = ?")
+    "SET deleted_by = ? , deleted_at = now() " +
+    "WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
 public class SubmissionResultDetail extends AuditMetadata {
-    @EmbeddedId
-    SubmissionResultId id;
+  @EmbeddedId
+  SubmissionResultId id;
 
-    @MapsId("submissionId")
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "submission_id")
-    Submission submission;
+  @MapsId("submissionId")
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "submission_id")
+  Submission submission;
 
-    @MapsId("testCaseId")
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "test_case_id")
-    TestCase testCase;
+  @MapsId("testCaseId")
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "test_case_id")
+  TestCase testCase;
 
-    @Column(nullable = false)
-    boolean passed;
+  @Column(nullable = false)
+  boolean passed;
 
-    @Column(name = "run_time_ts")
-    Integer runTimeTs;
+  @Column(name = "run_time_ts")
+  Integer runTimeTs;
 
-    Integer memoryUsed;
+  Integer memoryUsed;
 
-    @Column(columnDefinition = "text")
-    String output;
+  @Column(columnDefinition = "text")
+  String output;
 
-    @Column(name = "error_message", columnDefinition = "text")
-    String errorMessage;
+  @Column(name = "error_message", columnDefinition = "text")
+  String errorMessage;
 }

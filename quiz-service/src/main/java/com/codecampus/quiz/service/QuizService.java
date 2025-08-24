@@ -32,6 +32,8 @@ import com.codecampus.quiz.repository.QuizSubmissionRepository;
 import com.codecampus.quiz.service.cache.LoadQuizCacheService;
 import com.codecampus.submission.grpc.CreateQuizSubmissionRequest;
 import com.codecampus.submission.grpc.SubmissionSyncServiceGrpc;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -41,321 +43,318 @@ import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
-
 @Service
 @RequiredArgsConstructor
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class QuizService {
 
-    QuizExerciseRepository quizExerciseRepository;
-    QuizSubmissionRepository quizSubmissionRepository;
-    QuestionRepository questionRepository;
-    AssignmentRepository assignmentRepository;
+  QuizExerciseRepository quizExerciseRepository;
+  QuizSubmissionRepository quizSubmissionRepository;
+  QuestionRepository questionRepository;
+  AssignmentRepository assignmentRepository;
 
-    RedissonClient redisson;
+  RedissonClient redisson;
 
-    LoadQuizCacheService loadQuizCacheService;
+  LoadQuizCacheService loadQuizCacheService;
 
-    AssignmentMapper assignmentMapper;
-    QuizMapper quizMapper;
-    SubmissionMapper submissionMapper;
+  AssignmentMapper assignmentMapper;
+  QuizMapper quizMapper;
+  SubmissionMapper submissionMapper;
 
-    QuizHelper quizHelper;
+  QuizHelper quizHelper;
 
-    SubmissionSyncServiceGrpc.SubmissionSyncServiceBlockingStub submissionStub;
+  SubmissionSyncServiceGrpc.SubmissionSyncServiceBlockingStub submissionStub;
 
-    @Transactional
-    public void createQuizExercise(
-            CreateQuizExerciseRequest createQuizRequest) {
+  @Transactional
+  public void createQuizExercise(
+      CreateQuizExerciseRequest createQuizRequest) {
 
-        QuizExerciseDto exerciseDto = createQuizRequest.getExercise();
-        QuizExercise quizExercise = quizExerciseRepository
-                .findById(exerciseDto.getId())
-                .orElseGet(QuizExercise::new);
+    QuizExerciseDto exerciseDto = createQuizRequest.getExercise();
+    QuizExercise quizExercise = quizExerciseRepository
+        .findById(exerciseDto.getId())
+        .orElseGet(QuizExercise::new);
 
-        quizMapper.patchQuizExerciseDtoToQuizExercise(
-                exerciseDto, quizExercise);
-        quizExerciseRepository.save(quizExercise);
-    }
+    quizMapper.patchQuizExerciseDtoToQuizExercise(
+        exerciseDto, quizExercise);
+    quizExerciseRepository.save(quizExercise);
+  }
 
-    @Transactional
-    public void addQuizDetail(
-            AddQuizDetailRequest addQuizRequest) {
-        QuizExercise quiz =
-                quizHelper.findQuizOrThrow(addQuizRequest.getExerciseId());
+  @Transactional
+  public void addQuizDetail(
+      AddQuizDetailRequest addQuizRequest) {
+    QuizExercise quiz =
+        quizHelper.findQuizOrThrow(addQuizRequest.getExerciseId());
 
-        addQuizRequest.getQuestionsList().forEach(questionDto -> {
-            Question question = quiz.getQuestions()
-                    .stream()
-                    .filter(q -> q.getId()
-                            .equals(questionDto.getId()))
-                    .findFirst()
-                    .orElseGet(() -> {
-                        Question newQuestion =
-                                quizMapper.toQuestionFromQuestionDto(
-                                        questionDto);
+    addQuizRequest.getQuestionsList().forEach(questionDto -> {
+      Question question = quiz.getQuestions()
+          .stream()
+          .filter(q -> q.getId()
+              .equals(questionDto.getId()))
+          .findFirst()
+          .orElseGet(() -> {
+            Question newQuestion =
+                quizMapper.toQuestionFromQuestionDto(
+                    questionDto);
 
 
-                        newQuestion.setQuiz(quiz);
-                        quiz.getQuestions().add(newQuestion);
-                        return newQuestion;
-                    });
-            quizMapper.patchQuestionDtoToQuestion(questionDto, question);
+            newQuestion.setQuiz(quiz);
+            quiz.getQuestions().add(newQuestion);
+            return newQuestion;
+          });
+      quizMapper.patchQuestionDtoToQuestion(questionDto, question);
 
-            questionDto.getOptionsList().forEach(optionDto -> {
-                Option option = question.getOptions()
-                        .stream()
-                        .filter(o -> o.getId().equals(optionDto.getId()))
-                        .findFirst()
-                        .orElseGet(() -> {
-                            Option newOption =
-                                    quizMapper.toOptionFromOptionDto(optionDto);
-                            newOption.setQuestion(question);
-                            question.getOptions().add(newOption);
-                            return newOption;
-                        });
-                quizMapper.patchOptionDtoToOption(optionDto, option);
+      questionDto.getOptionsList().forEach(optionDto -> {
+        Option option = question.getOptions()
+            .stream()
+            .filter(o -> o.getId().equals(optionDto.getId()))
+            .findFirst()
+            .orElseGet(() -> {
+              Option newOption =
+                  quizMapper.toOptionFromOptionDto(optionDto);
+              newOption.setQuestion(question);
+              question.getOptions().add(newOption);
+              return newOption;
             });
-
-        });
-        QuizScoringHelper.recalc(quiz);
-        quizExerciseRepository.saveAndFlush(quiz);
-        loadQuizCacheService.refresh(
-                addQuizRequest.getExerciseId());
-    }
-
-    @Transactional
-    public void softDeleteExercise(String exerciseId) {
-        QuizExercise quizExercise = quizHelper.findQuizOrThrow(exerciseId);
-        String by = AuthenticationHelper.getMyUsername();
-        quizExercise.markDeleted(by);
-        quizExercise.getQuestions().forEach(question -> {
-            question.markDeleted(by);
-            question.getOptions().forEach(option -> option.markDeleted(by));
-        });
-        quizExerciseRepository.save(quizExercise);
-
-        loadQuizCacheService.refresh(exerciseId);
-    }
-
-    @Transactional
-    public void addQuestion(
-            AddQuestionRequest addQuestionRequest) {
-        QuizExercise quiz =
-                quizHelper.findQuizOrThrow(addQuestionRequest.getExerciseId());
-        QuestionDto questionDto = addQuestionRequest.getQuestion();
-
-        Question question = quiz.findQuestionById(questionDto.getId())
-                .orElseGet(() -> {
-                    Question q = quizMapper.toQuestionFromQuestionDto(
-                            questionDto);
-                    q.setQuiz(quiz);
-                    quiz.getQuestions().add(q);
-                    return q;
-                });
-
-        quizMapper.patchQuestionDtoToQuestion(questionDto, question);
-
-        questionDto.getOptionsList().forEach(optionDto -> {
-            Option option = question.findOptionById(optionDto.getId())
-                    .orElseGet(() -> {
-                        Option o = quizMapper.toOptionFromOptionDto(
-                                optionDto);
-                        o.setQuestion(question);
-                        question.getOptions().add(o);
-                        return o;
-                    });
-
-            quizMapper.patchOptionDtoToOption(optionDto, option);
-        });
-
-        QuizScoringHelper.recalc(quiz);
-        quizExerciseRepository.save(quiz);
-
-        loadQuizCacheService.refresh(addQuestionRequest.getExerciseId());
-    }
-
-    @Transactional
-    public void softDeleteQuestion(
-            String exerciseId,
-            String questionId) {
-
-        QuizExercise quizExercise = quizHelper.findQuizOrThrow(exerciseId);
-        quizExercise.findQuestionById(questionId).ifPresent(question -> {
-            question.markDeleted(AuthenticationHelper.getMyUsername());
-            question.getOptions()
-                    .forEach(o -> o.markDeleted(question.getDeletedBy()));
-        });
-
-        QuizScoringHelper.recalc(quizExercise);
-        quizExerciseRepository.save(quizExercise);
-        loadQuizCacheService.refresh(exerciseId);
-    }
-
-    @Transactional
-    public void addOption(AddOptionRequest addOptionRequest) {
-
-        Question question =
-                quizHelper.findQuestionOrThrow(
-                        addOptionRequest.getQuestionId());
-        OptionDto optionDto = addOptionRequest.getOption();
-
-        Option option = question.findOptionById(optionDto.getId())
-                .orElseGet(() -> {
-                    Option o = quizMapper.toOptionFromOptionDto(optionDto);
-                    o.setQuestion(question);
-                    question.getOptions().add(o);
-                    return o;
-                });
         quizMapper.patchOptionDtoToOption(optionDto, option);
+      });
 
-        questionRepository.save(question);
-        loadQuizCacheService.refresh(addOptionRequest.getExerciseId());
+    });
+    QuizScoringHelper.recalc(quiz);
+    quizExerciseRepository.saveAndFlush(quiz);
+    loadQuizCacheService.refresh(
+        addQuizRequest.getExerciseId());
+  }
+
+  @Transactional
+  public void softDeleteExercise(String exerciseId) {
+    QuizExercise quizExercise = quizHelper.findQuizOrThrow(exerciseId);
+    String by = AuthenticationHelper.getMyUsername();
+    quizExercise.markDeleted(by);
+    quizExercise.getQuestions().forEach(question -> {
+      question.markDeleted(by);
+      question.getOptions().forEach(option -> option.markDeleted(by));
+    });
+    quizExerciseRepository.save(quizExercise);
+
+    loadQuizCacheService.refresh(exerciseId);
+  }
+
+  @Transactional
+  public void addQuestion(
+      AddQuestionRequest addQuestionRequest) {
+    QuizExercise quiz =
+        quizHelper.findQuizOrThrow(addQuestionRequest.getExerciseId());
+    QuestionDto questionDto = addQuestionRequest.getQuestion();
+
+    Question question = quiz.findQuestionById(questionDto.getId())
+        .orElseGet(() -> {
+          Question q = quizMapper.toQuestionFromQuestionDto(
+              questionDto);
+          q.setQuiz(quiz);
+          quiz.getQuestions().add(q);
+          return q;
+        });
+
+    quizMapper.patchQuestionDtoToQuestion(questionDto, question);
+
+    questionDto.getOptionsList().forEach(optionDto -> {
+      Option option = question.findOptionById(optionDto.getId())
+          .orElseGet(() -> {
+            Option o = quizMapper.toOptionFromOptionDto(
+                optionDto);
+            o.setQuestion(question);
+            question.getOptions().add(o);
+            return o;
+          });
+
+      quizMapper.patchOptionDtoToOption(optionDto, option);
+    });
+
+    QuizScoringHelper.recalc(quiz);
+    quizExerciseRepository.save(quiz);
+
+    loadQuizCacheService.refresh(addQuestionRequest.getExerciseId());
+  }
+
+  @Transactional
+  public void softDeleteQuestion(
+      String exerciseId,
+      String questionId) {
+
+    QuizExercise quizExercise = quizHelper.findQuizOrThrow(exerciseId);
+    quizExercise.findQuestionById(questionId).ifPresent(question -> {
+      question.markDeleted(AuthenticationHelper.getMyUsername());
+      question.getOptions()
+          .forEach(o -> o.markDeleted(question.getDeletedBy()));
+    });
+
+    QuizScoringHelper.recalc(quizExercise);
+    quizExerciseRepository.save(quizExercise);
+    loadQuizCacheService.refresh(exerciseId);
+  }
+
+  @Transactional
+  public void addOption(AddOptionRequest addOptionRequest) {
+
+    Question question =
+        quizHelper.findQuestionOrThrow(
+            addOptionRequest.getQuestionId());
+    OptionDto optionDto = addOptionRequest.getOption();
+
+    Option option = question.findOptionById(optionDto.getId())
+        .orElseGet(() -> {
+          Option o = quizMapper.toOptionFromOptionDto(optionDto);
+          o.setQuestion(question);
+          question.getOptions().add(o);
+          return o;
+        });
+    quizMapper.patchOptionDtoToOption(optionDto, option);
+
+    questionRepository.save(question);
+    loadQuizCacheService.refresh(addOptionRequest.getExerciseId());
+  }
+
+
+  @Transactional
+  public void softDeleteOption(
+      String exerciseId,
+      String questionId,
+      String optionId) {
+    QuizExercise quizExercise = quizHelper.findQuizOrThrow(exerciseId);
+    quizExercise.findQuestionById(questionId)
+        .flatMap(question -> question.findOptionById(optionId))
+        .ifPresent(option -> option.markDeleted(
+            AuthenticationHelper.getMyUsername()));
+    loadQuizCacheService.refresh(exerciseId);
+  }
+
+  @Transactional(readOnly = true)
+  public LoadQuizResponse loadQuiz(
+      String exerciseId) {
+
+    String userId = AuthenticationHelper.getMyUserId();
+    String username = AuthenticationHelper.getMyUsername();
+    Set<String> roles = Set.copyOf(AuthenticationHelper.getMyRoles());
+    boolean teacher = roles.contains("TEACHER");
+
+    /* ---------- Thử lấy từ cache ---------- */
+    LoadQuizResponse loadQuizCached = loadQuizCacheService
+        .get(exerciseId);
+    if (loadQuizCached != null
+        && quizHelper.hasAccessOnLoadQuizResponse(
+        loadQuizCached, userId, username, teacher)) {
+      return loadQuizCached;
     }
 
+    /* ---------- Stampede-lock ---------- */
+    String lockName = "lock:quiz" + exerciseId;
+    RLock lock = redisson.getLock(lockName);
 
-    @Transactional
-    public void softDeleteOption(
-            String exerciseId,
-            String questionId,
-            String optionId) {
-        QuizExercise quizExercise = quizHelper.findQuizOrThrow(exerciseId);
-        quizExercise.findQuestionById(questionId)
-                .flatMap(question -> question.findOptionById(optionId))
-                .ifPresent(option -> option.markDeleted(
-                        AuthenticationHelper.getMyUsername()));
-        loadQuizCacheService.refresh(exerciseId);
-    }
-
-    @Transactional(readOnly = true)
-    public LoadQuizResponse loadQuiz(
-            String exerciseId) {
-
-        String userId = AuthenticationHelper.getMyUserId();
-        String username = AuthenticationHelper.getMyUsername();
-        Set<String> roles = Set.copyOf(AuthenticationHelper.getMyRoles());
-        boolean teacher = roles.contains("TEACHER");
-
-        /* ---------- Thử lấy từ cache ---------- */
-        LoadQuizResponse loadQuizCached = loadQuizCacheService
-                .get(exerciseId);
-        if (loadQuizCached != null
-                && quizHelper.hasAccessOnLoadQuizResponse(
-                loadQuizCached, userId, username, teacher)) {
-            return loadQuizCached;
+    try {
+      // Chặn stampede: chỉ 1 thread/node truy DB
+      if (lock.tryLock(2, 10, TimeUnit.SECONDS)) {
+        // Re-check sau khi có lock
+        loadQuizCached =
+            loadQuizCacheService.get(exerciseId);
+        if (loadQuizCached != null) {
+          return loadQuizCached;
         }
 
-        /* ---------- Stampede-lock ---------- */
-        String lockName = "lock:quiz" + exerciseId;
-        RLock lock = redisson.getLock(lockName);
-
-        try {
-            // Chặn stampede: chỉ 1 thread/node truy DB
-            if (lock.tryLock(2, 10, TimeUnit.SECONDS)) {
-                // Re-check sau khi có lock
-                loadQuizCached =
-                        loadQuizCacheService.get(exerciseId);
-                if (loadQuizCached != null) {
-                    return loadQuizCached;
-                }
-
-                // Truy DB -> build response
-                QuizExercise quizExercise = quizHelper
-                        .findQuizOrThrow(exerciseId);
-
-                if (!quizHelper.hasAccessOnQuizExercise(
-                        quizExercise, userId, username, teacher)) {
-                    throw new AppException(ErrorCode.UNAUTHORIZED);
-                }
-
-                LoadQuizResponse loadQuizResponse =
-                        quizMapper.toLoadQuizResponseFromQuizExercise(
-                                quizExercise); // Đã ẩn correct
-
-                // Ghi cache
-                loadQuizCacheService.put(exerciseId, loadQuizResponse);
-                return loadQuizResponse;
-            }
-        } catch (InterruptedException exception) {
-            Thread.currentThread().interrupt();
-        } finally {
-            if (lock.isHeldByCurrentThread()) {
-                lock.unlock();
-            }
-        }
-
-        // Fallback (không lấy được lock)
-        QuizExercise quizExercise =
-                quizHelper.findQuizOrThrow(exerciseId);
+        // Truy DB -> build response
+        QuizExercise quizExercise = quizHelper
+            .findQuizOrThrow(exerciseId);
 
         if (!quizHelper.hasAccessOnQuizExercise(
-                quizExercise, userId, username, teacher)) {
-            throw new AppException(ErrorCode.UNAUTHORIZED);
+            quizExercise, userId, username, teacher)) {
+          throw new AppException(ErrorCode.UNAUTHORIZED);
         }
 
-        return quizMapper.toLoadQuizResponseFromQuizExercise(
+        LoadQuizResponse loadQuizResponse =
+            quizMapper.toLoadQuizResponseFromQuizExercise(
                 quizExercise); // Đã ẩn correct
+
+        // Ghi cache
+        loadQuizCacheService.put(exerciseId, loadQuizResponse);
+        return loadQuizResponse;
+      }
+    } catch (InterruptedException exception) {
+      Thread.currentThread().interrupt();
+    } finally {
+      if (lock.isHeldByCurrentThread()) {
+        lock.unlock();
+      }
     }
 
-    @Transactional
-    public SubmitQuizResponse submitQuiz(SubmitQuizRequest request) {
-        QuizExercise quizExercise =
-                quizHelper.findQuizOrThrow(request.getExerciseId());
+    // Fallback (không lấy được lock)
+    QuizExercise quizExercise =
+        quizHelper.findQuizOrThrow(exerciseId);
 
-        QuizSubmission quizSubmission = QuizScoringHelper.score(
-                quizExercise, request);
-
-        boolean passed = quizSubmission.getTotalPoints() > 0
-                && (quizSubmission.getScore() * 100) >=
-                (85 * quizSubmission.getTotalPoints());
-
-        quizSubmissionRepository.save(quizSubmission);
-
-        // Sync sang submission-service
-        submissionStub.createQuizSubmission(
-                CreateQuizSubmissionRequest.newBuilder()
-                        .setSubmission(
-                                submissionMapper.toQuizSubmissionDtoFromQuizSubmission(
-                                        quizSubmission))
-                        .build()
-        );
-
-        return SubmitQuizResponse.newBuilder()
-                .setScore(quizSubmission.getScore())
-                .setTotalPoints(quizSubmission.getTotalPoints())
-                .setPassed(passed)
-                .setTimeTakenSeconds(quizSubmission.getTimeTakenSeconds())
-                .build();
+    if (!quizHelper.hasAccessOnQuizExercise(
+        quizExercise, userId, username, teacher)) {
+      throw new AppException(ErrorCode.UNAUTHORIZED);
     }
 
-    @Transactional
-    public void upsertAssignment(
-            UpsertAssignmentRequest request) {
-        AssignmentDto assignmentDto = request.getAssignment();
-        Assignment assignment = assignmentRepository
-                .findById(assignmentDto.getId())
-                .orElseGet(Assignment::new);
+    return quizMapper.toLoadQuizResponseFromQuizExercise(
+        quizExercise); // Đã ẩn correct
+  }
 
-        assignmentMapper.patchAssignmentDtoToAssignment(
-                assignmentDto,
-                assignment
-        );
-        assignmentRepository.save(assignment);
-    }
+  @Transactional
+  public SubmitQuizResponse submitQuiz(SubmitQuizRequest request) {
+    QuizExercise quizExercise =
+        quizHelper.findQuizOrThrow(request.getExerciseId());
 
-    @Transactional
-    public void softDeleteAssignment(String assignmentId) {
-        Assignment assignment = assignmentRepository
-                .findById(assignmentId)
-                .orElseThrow(
-                        () -> new AppException(ErrorCode.ASSIGNMENT_NOT_FOUND));
+    QuizSubmission quizSubmission = QuizScoringHelper.score(
+        quizExercise, request);
 
-        String by = AuthenticationHelper.getMyUsername();
-        assignment.markDeleted(by);
-        assignmentRepository.save(assignment);
-    }
+    boolean passed = quizSubmission.getTotalPoints() > 0
+        && (quizSubmission.getScore() * 100) >=
+        (85 * quizSubmission.getTotalPoints());
+
+    quizSubmissionRepository.save(quizSubmission);
+
+    // Sync sang submission-service
+    submissionStub.createQuizSubmission(
+        CreateQuizSubmissionRequest.newBuilder()
+            .setSubmission(
+                submissionMapper.toQuizSubmissionDtoFromQuizSubmission(
+                    quizSubmission))
+            .build()
+    );
+
+    return SubmitQuizResponse.newBuilder()
+        .setScore(quizSubmission.getScore())
+        .setTotalPoints(quizSubmission.getTotalPoints())
+        .setPassed(passed)
+        .setTimeTakenSeconds(quizSubmission.getTimeTakenSeconds())
+        .build();
+  }
+
+  @Transactional
+  public void upsertAssignment(
+      UpsertAssignmentRequest request) {
+    AssignmentDto assignmentDto = request.getAssignment();
+    Assignment assignment = assignmentRepository
+        .findById(assignmentDto.getId())
+        .orElseGet(Assignment::new);
+
+    assignmentMapper.patchAssignmentDtoToAssignment(
+        assignmentDto,
+        assignment
+    );
+    assignmentRepository.save(assignment);
+  }
+
+  @Transactional
+  public void softDeleteAssignment(String assignmentId) {
+    Assignment assignment = assignmentRepository
+        .findById(assignmentId)
+        .orElseThrow(
+            () -> new AppException(ErrorCode.ASSIGNMENT_NOT_FOUND));
+
+    String by = AuthenticationHelper.getMyUsername();
+    assignment.markDeleted(by);
+    assignmentRepository.save(assignment);
+  }
 }
 

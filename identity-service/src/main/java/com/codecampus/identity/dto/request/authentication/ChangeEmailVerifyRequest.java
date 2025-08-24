@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ChangeEmailVerifyRequest {
-    String newEmail;
-    String otpCode;
+  String newEmail;
+  String otpCode;
 }

@@ -15,40 +15,40 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @FeignClient(
-        name = "profile-service",
-        url = "${app.services.profile}",
-        configuration = {AuthenticationRequestInterceptor.class},
-        path = "/internal"
+    name = "profile-service",
+    url = "${app.services.profile}",
+    configuration = {AuthenticationRequestInterceptor.class},
+    path = "/internal"
 )
 public interface ProfileClient {
-    @PostMapping(
-            value = "/user",
-            produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    ApiResponse<UserProfileResponse> internalCreateUserProfile(
-            @RequestBody UserProfileCreationRequest request);
+  @PostMapping(
+      value = "/user",
+      produces = MediaType.APPLICATION_JSON_VALUE
+  )
+  ApiResponse<UserProfileResponse> internalCreateUserProfile(
+      @RequestBody UserProfileCreationRequest request);
 
-    @PatchMapping(
-            value = "/user/{userId}",
-            produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    ApiResponse<Void> internalUpdateProfileByUserId(
-            @PathVariable("userId") String userId,
-            @RequestBody UserProfileUpdateRequest request);
+  @PatchMapping(
+      value = "/user/{userId}",
+      produces = MediaType.APPLICATION_JSON_VALUE
+  )
+  ApiResponse<Void> internalUpdateProfileByUserId(
+      @PathVariable("userId") String userId,
+      @RequestBody UserProfileUpdateRequest request);
 
-    @DeleteMapping(
-            value = "/user/{userId}",
-            produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    ApiResponse<Void> internalSoftDeleteByUserId(
-            @PathVariable("userId") String userId,
-            @RequestParam(value = "deletedBy", required = false)
-            String deletedBy);
+  @DeleteMapping(
+      value = "/user/{userId}",
+      produces = MediaType.APPLICATION_JSON_VALUE
+  )
+  ApiResponse<Void> internalSoftDeleteByUserId(
+      @PathVariable("userId") String userId,
+      @RequestParam(value = "deletedBy", required = false)
+      String deletedBy);
 
-    @PatchMapping(
-            value = "/user/{userId}/restore",
-            produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    ApiResponse<Void> internalRestoreProfile(
-            @PathVariable("userId") String userId);
+  @PatchMapping(
+      value = "/user/{userId}/restore",
+      produces = MediaType.APPLICATION_JSON_VALUE
+  )
+  ApiResponse<Void> internalRestoreProfile(
+      @PathVariable("userId") String userId);
 }

@@ -2,15 +2,14 @@ package com.codecampus.chat.mapper;
 
 import com.codecampus.chat.dto.response.ConversationResponse;
 import com.codecampus.chat.entity.Conversation;
-import org.mapstruct.Mapper;
-
 import java.util.List;
+import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface ConversationMapper {
-    ConversationResponse toConversationResponseFromConversation(
-            Conversation conversation);
+  ConversationResponse toConversationResponseFromConversation(
+      Conversation conversation);
 
-    List<ConversationResponse> toListConversationResponseFromListConversation(
-            List<Conversation> conversations);
+  List<ConversationResponse> toListConversationResponseFromListConversation(
+      List<Conversation> conversations);
 }

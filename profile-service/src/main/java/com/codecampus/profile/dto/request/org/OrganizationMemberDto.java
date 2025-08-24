@@ -9,11 +9,11 @@ import lombok.experimental.FieldDefaults;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class OrganizationMemberDto {
-    String id;
-    String userId;
-    String scopeType;  // Organization | Grade | Class
-    String scopeId;
-    String role;       // SuperAdmin | Admin | Teacher | Student
-    boolean isActive;
-    String scopeName;
+  String id;
+  String userId;
+  String scopeType;  // Organization | Grade | Class
+  String scopeId;
+  String role;       // SuperAdmin | Admin | Teacher | Student
+  boolean isActive;
+  String scopeName;
 }

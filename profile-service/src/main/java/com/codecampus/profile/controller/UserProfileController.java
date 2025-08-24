@@ -29,87 +29,87 @@ import org.springframework.web.multipart.MultipartFile;
 @Builder
 @Slf4j
 public class UserProfileController {
-    UserProfileService userProfileService;
-    ProfileImageService profileImageService;
+  UserProfileService userProfileService;
+  ProfileImageService profileImageService;
 
-    @GetMapping("/user/{userId}")
-    ApiResponse<UserProfileResponse> getUserProfileByUserId(
-            @PathVariable("userId") String userId) {
-        return ApiResponse.<UserProfileResponse>builder()
-                .result(userProfileService.getUserProfileByUserId(userId))
-                .message("Get thành công profile!")
-                .build();
-    }
+  @GetMapping("/user/{userId}")
+  ApiResponse<UserProfileResponse> getUserProfileByUserId(
+      @PathVariable("userId") String userId) {
+    return ApiResponse.<UserProfileResponse>builder()
+        .result(userProfileService.getUserProfileByUserId(userId))
+        .message("Get thành công profile!")
+        .build();
+  }
 
-    @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/users")
-    ApiResponse<PageResponse<UserProfileResponse>> getAllUserProfiles(
-            @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size) {
-        return ApiResponse.<PageResponse<UserProfileResponse>>builder()
-                .result(userProfileService.getAllUserProfiles(page, size))
-                .message("Get thành công tất cả các profile!")
-                .build();
-    }
+  @PreAuthorize("hasRole('ADMIN')")
+  @GetMapping("/users")
+  ApiResponse<PageResponse<UserProfileResponse>> getAllUserProfiles(
+      @RequestParam(value = "page", defaultValue = "1") int page,
+      @RequestParam(value = "size", defaultValue = "10") int size) {
+    return ApiResponse.<PageResponse<UserProfileResponse>>builder()
+        .result(userProfileService.getAllUserProfiles(page, size))
+        .message("Get thành công tất cả các profile!")
+        .build();
+  }
 
-    @GetMapping("/user/my-profile")
-    ApiResponse<UserProfileResponse> getMyUserProfile() {
-        return ApiResponse.<UserProfileResponse>builder()
-                .result(userProfileService.getMyUserProfile())
-                .message("Get thành công profile!")
-                .build();
-    }
+  @GetMapping("/user/my-profile")
+  ApiResponse<UserProfileResponse> getMyUserProfile() {
+    return ApiResponse.<UserProfileResponse>builder()
+        .result(userProfileService.getMyUserProfile())
+        .message("Get thành công profile!")
+        .build();
+  }
 
-    @PatchMapping("/user/my-profile")
-    ApiResponse<Void> updateMyUserProfile(
-            @RequestBody UserProfileUpdateRequest request) {
-        userProfileService.updateMyUserProfile(request);
-        return ApiResponse.<Void>builder()
-                .message("Update thành công profile!")
-                .build();
-    }
+  @PatchMapping("/user/my-profile")
+  ApiResponse<Void> updateMyUserProfile(
+      @RequestBody UserProfileUpdateRequest request) {
+    userProfileService.updateMyUserProfile(request);
+    return ApiResponse.<Void>builder()
+        .message("Update thành công profile!")
+        .build();
+  }
 
-    @PostMapping(
-            value = "/user/my-profile/avatar",
-            consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    ApiResponse<Void> uploadAvatar(
-            @RequestPart("file") MultipartFile file) {
-        profileImageService.uploadAvatar(file);
-        return ApiResponse.<Void>builder()
-                .message("Upload thành công avatar!")
-                .build();
-    }
+  @PostMapping(
+      value = "/user/my-profile/avatar",
+      consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  ApiResponse<Void> uploadAvatar(
+      @RequestPart("file") MultipartFile file) {
+    profileImageService.uploadAvatar(file);
+    return ApiResponse.<Void>builder()
+        .message("Upload thành công avatar!")
+        .build();
+  }
 
-    @PostMapping(
-            value = "/user/my-profile/background",
-            consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    ApiResponse<Void> uploadBackground(
-            @RequestPart("file") MultipartFile file) {
-        profileImageService.uploadBackground(file);
-        return ApiResponse.<Void>builder()
-                .message("Upload thành công background!")
-                .build();
-    }
+  @PostMapping(
+      value = "/user/my-profile/background",
+      consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  ApiResponse<Void> uploadBackground(
+      @RequestPart("file") MultipartFile file) {
+    profileImageService.uploadBackground(file);
+    return ApiResponse.<Void>builder()
+        .message("Upload thành công background!")
+        .build();
+  }
 
-    @PatchMapping(
-            value = "/user/my-profile/avatar",
-            consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    ApiResponse<Void> updateAvatar(
-            @RequestPart("file") MultipartFile file) {
-        profileImageService.updateAvatar(file);
-        return ApiResponse.<Void>builder()
-                .message("Đã cập nhật avatar!")
-                .build();
-    }
+  @PatchMapping(
+      value = "/user/my-profile/avatar",
+      consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  ApiResponse<Void> updateAvatar(
+      @RequestPart("file") MultipartFile file) {
+    profileImageService.updateAvatar(file);
+    return ApiResponse.<Void>builder()
+        .message("Đã cập nhật avatar!")
+        .build();
+  }
 
-    @PatchMapping(value = "/user/my-profile/background",
-            consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    ApiResponse<Void> updateBackground(
-            @RequestPart("file") MultipartFile file) {
-        profileImageService.updateBackground(file);
-        return ApiResponse.<Void>builder()
-                .message("Đã cập nhật background!")
-                .build();
-    }
+  @PatchMapping(value = "/user/my-profile/background",
+      consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  ApiResponse<Void> updateBackground(
+      @RequestPart("file") MultipartFile file) {
+    profileImageService.updateBackground(file);
+    return ApiResponse.<Void>builder()
+        .message("Đã cập nhật background!")
+        .build();
+  }
 
 }

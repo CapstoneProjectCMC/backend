@@ -3,6 +3,7 @@ package com.codecampus.profile.controller;
 import com.codecampus.profile.dto.common.ApiResponse;
 import com.codecampus.profile.entity.UserProfile;
 import com.codecampus.profile.service.FamilyService;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
@@ -15,8 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @RestController
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -25,36 +24,36 @@ import java.util.List;
 @RequestMapping("/family")
 public class FamilyController {
 
-    FamilyService familyService;
+  FamilyService familyService;
 
-    @PostMapping("/{parentId}/children/{childId}")
-    ApiResponse<Void> addChild(
-            @PathVariable String parentId,
-            @PathVariable String childId) {
+  @PostMapping("/{parentId}/children/{childId}")
+  ApiResponse<Void> addChild(
+      @PathVariable String parentId,
+      @PathVariable String childId) {
 
-        familyService.addChild(parentId, childId);
-        return ApiResponse.<Void>builder()
-                .message("Thêm con thành công")
-                .build();
-    }
+    familyService.addChild(parentId, childId);
+    return ApiResponse.<Void>builder()
+        .message("Thêm con thành công")
+        .build();
+  }
 
-    @DeleteMapping("/{parentId}/children/{childId}")
-    ApiResponse<Void> removeChild(
-            @PathVariable String parentId,
-            @PathVariable String childId) {
+  @DeleteMapping("/{parentId}/children/{childId}")
+  ApiResponse<Void> removeChild(
+      @PathVariable String parentId,
+      @PathVariable String childId) {
 
-        familyService.removeChild(parentId, childId);
-        return ApiResponse.<Void>builder()
-                .message("Đã xóa con")
-                .build();
-    }
+    familyService.removeChild(parentId, childId);
+    return ApiResponse.<Void>builder()
+        .message("Đã xóa con")
+        .build();
+  }
 
-    @GetMapping("/{parentId}/children")
-    ApiResponse<List<UserProfile>> getChildren(
-            @PathVariable String parentId) {
-        return ApiResponse.<List<UserProfile>>builder()
-                .message("Danh sách con")
-                .result(familyService.getChildren(parentId))
-                .build();
-    }
+  @GetMapping("/{parentId}/children")
+  ApiResponse<List<UserProfile>> getChildren(
+      @PathVariable String parentId) {
+    return ApiResponse.<List<UserProfile>>builder()
+        .message("Danh sách con")
+        .result(familyService.getChildren(parentId))
+        .build();
+  }
 }

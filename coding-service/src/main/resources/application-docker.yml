@@ -12,6 +12,11 @@ submission:
     host: submission-service
     port: 9590
 
+playground:
+  grpc:
+    host: coding-service
+    port: 9593
+
 spring:
   datasource:
     url: jdbc:postgresql://coding-db:5432/${CODING_DATABASE}

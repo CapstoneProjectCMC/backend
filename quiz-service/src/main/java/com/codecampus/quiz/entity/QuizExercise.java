@@ -8,6 +8,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,10 +21,6 @@ import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
 @Getter
 @Setter
 @Builder
@@ -31,38 +30,38 @@ import java.util.Optional;
 @Entity
 @Table(name = "quiz_exercise")
 @SQLDelete(sql = "UPDATE quiz_exercise " +
-        "SET deleted_by = ? , deleted_at = now() " +
-        "WHERE id = ?")
+    "SET deleted_by = ? , deleted_at = now() " +
+    "WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
 public class QuizExercise extends AuditMetadata {
-    @Id
-    String id;
+  @Id
+  String id;
 
-    @Column(length = 100, nullable = false)
-    String title;
+  @Column(length = 100, nullable = false)
+  String title;
 
-    @Column(columnDefinition = "text")
-    String description;
+  @Column(columnDefinition = "text")
+  String description;
 
-    int totalPoints;
-    int numQuestions;
+  int totalPoints;
+  int numQuestions;
 
-    int duration;
+  int duration;
 
-    boolean publicAccessible;
+  boolean publicAccessible;
 
-    @JsonManagedReference
-    @OneToMany(
-            mappedBy = "quiz",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
-    List<Question> questions = new ArrayList<>();
+  @JsonManagedReference
+  @OneToMany(
+      mappedBy = "quiz",
+      cascade = CascadeType.ALL,
+      orphanRemoval = true
+  )
+  List<Question> questions = new ArrayList<>();
 
-    public Optional<Question> findQuestionById(String questionId) {
-        return questions.stream()
-                .filter(q -> !q.isDeleted())
-                .filter(q -> q.getId().equals(questionId))
-                .findFirst();
-    }
+  public Optional<Question> findQuestionById(String questionId) {
+    return questions.stream()
+        .filter(q -> !q.isDeleted())
+        .filter(q -> q.getId().equals(questionId))
+        .findFirst();
+  }
 }

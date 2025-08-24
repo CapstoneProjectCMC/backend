@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.time.Instant;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,8 +23,6 @@ import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
-import java.time.Instant;
-
 @Getter
 @Setter
 @Builder
@@ -33,25 +32,25 @@ import java.time.Instant;
 @Entity
 @Table(name = "exercise_assignment")
 @SQLDelete(sql = "UPDATE exercise_assignment " +
-        "SET deleted_by = ? , deleted_at = now() " +
-        "WHERE id = ?")
+    "SET deleted_by = ? , deleted_at = now() " +
+    "WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
 @EqualsAndHashCode(callSuper = false)
 public class Assignment extends AuditMetadata {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    String id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
+  String id;
 
-    @JsonManagedReference
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "exercise_id")
-    Exercise exercise;
+  @JsonManagedReference
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "exercise_id")
+  Exercise exercise;
 
-    @Column(name = "student_id", nullable = false)
-    String studentId;          // userId (sub của HS)
+  @Column(name = "student_id", nullable = false)
+  String studentId;          // userId (sub của HS)
 
-    @Column(name = "due_at")
-    Instant dueAt;
+  @Column(name = "due_at")
+  Instant dueAt;
 
-    boolean completed;         // cập nhật khi pass
+  boolean completed;         // cập nhật khi pass
 }

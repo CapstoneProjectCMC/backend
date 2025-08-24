@@ -1,5 +1,6 @@
 package com.codecampus.chat.entity;
 
+import java.time.Instant;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,8 +11,6 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
-import java.time.Instant;
-
 @Setter
 @Getter
 @Builder
@@ -20,12 +19,12 @@ import java.time.Instant;
 @Document(collection = "web_socket_session")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class WebSocketSession {
-    @MongoId
-    String id;
+  @MongoId
+  String id;
 
-    String socketSessionId;
+  String socketSessionId;
 
-    String userId;
+  String userId;
 
-    Instant createdAt;
+  Instant createdAt;
 }

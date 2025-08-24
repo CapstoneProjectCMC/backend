@@ -10,9 +10,10 @@ import lombok.Setter;
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class PostReactionRequestDto {
-    private String postId;
-    private String userId;
-    private String commentId; // for comment reactions, can be null if reacting to the post itself
-    private String reactionType; // upvote || downvote
+  private String postId;
+  private String userId;
+  private String commentId;
+      // for comment reactions, can be null if reacting to the post itself
+  private String reactionType; // upvote || downvote
 }
 

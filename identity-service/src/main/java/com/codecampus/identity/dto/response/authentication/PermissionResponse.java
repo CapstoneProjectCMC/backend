@@ -12,6 +12,6 @@ import lombok.experimental.FieldDefaults;
 // Khi build thì KHÔNG response null
 //@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PermissionResponse {
-    String name;
-    String description;
+  String name;
+  String description;
 }

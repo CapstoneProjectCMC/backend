@@ -10,35 +10,35 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class GrpcClientConfig {
-    // ----- Quiz Service -----
-    @Bean(destroyMethod = "shutdownNow")
-    public ManagedChannel quizChannel(
-            @Value("${quiz.grpc.host}") String host,
-            @Value("${quiz.grpc.port}") int port) {
-        return ManagedChannelBuilder.forAddress(host, port)
-                .usePlaintext()
-                .build();
-    }
+  // ----- Quiz Service -----
+  @Bean(destroyMethod = "shutdownNow")
+  public ManagedChannel quizChannel(
+      @Value("${quiz.grpc.host}") String host,
+      @Value("${quiz.grpc.port}") int port) {
+    return ManagedChannelBuilder.forAddress(host, port)
+        .usePlaintext()
+        .build();
+  }
 
-    @Bean
-    public QuizSyncServiceGrpc.QuizSyncServiceBlockingStub quizStub(
-            ManagedChannel quizChannel) {
-        return QuizSyncServiceGrpc.newBlockingStub(quizChannel);
-    }
+  @Bean
+  public QuizSyncServiceGrpc.QuizSyncServiceBlockingStub quizStub(
+      ManagedChannel quizChannel) {
+    return QuizSyncServiceGrpc.newBlockingStub(quizChannel);
+  }
 
-    // ----- Coding Service -----
-    @Bean(destroyMethod = "shutdownNow")
-    ManagedChannel codingChannel(
-            @Value("${coding.grpc.host}") String host,
-            @Value("${coding.grpc.port}") int port) {
-        return ManagedChannelBuilder.forAddress(host, port)
-                .usePlaintext()
-                .build();
-    }
+  // ----- Coding Service -----
+  @Bean(destroyMethod = "shutdownNow")
+  ManagedChannel codingChannel(
+      @Value("${coding.grpc.host}") String host,
+      @Value("${coding.grpc.port}") int port) {
+    return ManagedChannelBuilder.forAddress(host, port)
+        .usePlaintext()
+        .build();
+  }
 
-    @Bean
-    CodingSyncServiceGrpc.CodingSyncServiceBlockingStub codingStub(
-            ManagedChannel codingChannel) {
-        return CodingSyncServiceGrpc.newBlockingStub(codingChannel);
-    }
+  @Bean
+  CodingSyncServiceGrpc.CodingSyncServiceBlockingStub codingStub(
+      ManagedChannel codingChannel) {
+    return CodingSyncServiceGrpc.newBlockingStub(codingChannel);
+  }
 }

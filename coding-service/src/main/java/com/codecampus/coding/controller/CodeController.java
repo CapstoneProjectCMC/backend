@@ -27,47 +27,47 @@ import org.springframework.web.bind.annotation.RestController;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CodeController {
 
-    CodeJudgeService codeJudgeService;
-    CodingService codingService;
-    SubmissionMapper submissionMapper;
+  CodeJudgeService codeJudgeService;
+  CodingService codingService;
+  SubmissionMapper submissionMapper;
 
-    @GetMapping("/{codingId}/load")
-    ApiResponse<LoadCodingResponse> loadCoding(
-            @PathVariable String codingId) {
+  @GetMapping("/{codingId}/load")
+  ApiResponse<LoadCodingResponse> loadCoding(
+      @PathVariable String codingId) {
 
-        return ApiResponse.<LoadCodingResponse>builder()
-                .result(codingService.loadCoding(codingId))
-                .message("Load code thành công!")
-                .build();
+    return ApiResponse.<LoadCodingResponse>builder()
+        .result(codingService.loadCoding(codingId))
+        .message("Load code thành công!")
+        .build();
+  }
+
+  @PostMapping("/{codingId}/submit")
+  public ApiResponse<SubmitCodeResponse> submitCode(
+      @PathVariable String codingId,
+      @RequestBody String bodyJson)
+      throws Exception {
+
+    /* 1. Parse JSON ⇒ protobuf */
+    SubmitCodeRequest.Builder builder = SubmitCodeRequest.newBuilder();
+    JsonFormat.parser()
+        .ignoringUnknownFields()
+        .merge(bodyJson, builder);
+
+    /* 2. Bù exerciseId nếu client không gửi */
+    if (builder.getExerciseId().isEmpty()) {
+      builder.setExerciseId(codingId);
     }
 
-    @PostMapping("/{codingId}/submit")
-    public ApiResponse<SubmitCodeResponse> submitCode(
-            @PathVariable String codingId,
-            @RequestBody String bodyJson)
-            throws Exception {
+    /* 3. Kiểm tra khớp path/body */
+    Assert.isTrue(codingId.equals(builder.getExerciseId()),
+        "exerciseId mismatch");
 
-        /* 1. Parse JSON ⇒ protobuf */
-        SubmitCodeRequest.Builder builder = SubmitCodeRequest.newBuilder();
-        JsonFormat.parser()
-                .ignoringUnknownFields()
-                .merge(bodyJson, builder);
+    /* 4. Chấm – đồng bộ về submission-service nằm trong CodeJudgeService */
+    SubmitCodeResponse judged = codeJudgeService
+        .judgeCodeSubmission(builder.build());
 
-        /* 2. Bù exerciseId nếu client không gửi */
-        if (builder.getExerciseId().isEmpty()) {
-            builder.setExerciseId(codingId);
-        }
-
-        /* 3. Kiểm tra khớp path/body */
-        Assert.isTrue(codingId.equals(builder.getExerciseId()),
-                "exerciseId mismatch");
-
-        /* 4. Chấm – đồng bộ về submission-service nằm trong CodeJudgeService */
-        SubmitCodeResponse judged = codeJudgeService
-                .judgeCodeSubmission(builder.build());
-
-        return ApiResponse.<SubmitCodeResponse>builder()
-                .result(judged)
-                .build();
-    }
+    return ApiResponse.<SubmitCodeResponse>builder()
+        .result(judged)
+        .build();
+  }
 }

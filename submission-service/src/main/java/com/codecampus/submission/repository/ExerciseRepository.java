@@ -8,8 +8,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ExerciseRepository
-        extends JpaRepository<Exercise, String> {
-    Page<Exercise> findByUserId(
-            String teacherId, Pageable pageable);
+    extends JpaRepository<Exercise, String> {
+  Page<Exercise> findByUserId(
+      String teacherId, Pageable pageable);
 }
 

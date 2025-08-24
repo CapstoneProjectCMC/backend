@@ -18,67 +18,67 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class QuizHelper {
 
-    QuizExerciseRepository quizExerciseRepository;
-    QuestionRepository questionRepository;
-    AssignmentRepository assignmentRepository;
+  QuizExerciseRepository quizExerciseRepository;
+  QuestionRepository questionRepository;
+  AssignmentRepository assignmentRepository;
 
-    public QuizExercise findQuizOrThrow(String exerciseId) {
-        return quizExerciseRepository
-                .findById(exerciseId)
-                .orElseThrow(
-                        () -> new AppException(ErrorCode.EXERCISE_NOT_FOUND)
-                );
-    }
+  public QuizExercise findQuizOrThrow(String exerciseId) {
+    return quizExerciseRepository
+        .findById(exerciseId)
+        .orElseThrow(
+            () -> new AppException(ErrorCode.EXERCISE_NOT_FOUND)
+        );
+  }
 
-    public Question findQuestionOrThrow(String questionId) {
-        return questionRepository
-                .findById(questionId)
-                .orElseThrow(
-                        () -> new AppException(ErrorCode.QUESTION_NOT_FOUND)
-                );
-    }
+  public Question findQuestionOrThrow(String questionId) {
+    return questionRepository
+        .findById(questionId)
+        .orElseThrow(
+            () -> new AppException(ErrorCode.QUESTION_NOT_FOUND)
+        );
+  }
 
-    public boolean hasAccessOnLoadQuizResponse(
-            LoadQuizResponse loadQuizResponse,
-            String userId,
-            String username,
-            boolean teacher) {
+  public boolean hasAccessOnLoadQuizResponse(
+      LoadQuizResponse loadQuizResponse,
+      String userId,
+      String username,
+      boolean teacher) {
 
-        boolean publicAccessible = loadQuizResponse
-                .getExercise()
-                .getPublicAccessible();
-        boolean owner =
-                username != null && username.equalsIgnoreCase(
-                        loadQuizResponse.getExercise()
-                                .getCreatedBy()
-                );
+    boolean publicAccessible = loadQuizResponse
+        .getExercise()
+        .getPublicAccessible();
+    boolean owner =
+        username != null && username.equalsIgnoreCase(
+            loadQuizResponse.getExercise()
+                .getCreatedBy()
+        );
 
-        boolean assigned =
-                userId != null && assignmentRepository
-                        .existsByExerciseIdAndStudentId(
-                                loadQuizResponse.getExercise()
-                                        .getId(), userId);
+    boolean assigned =
+        userId != null && assignmentRepository
+            .existsByExerciseIdAndStudentId(
+                loadQuizResponse.getExercise()
+                    .getId(), userId);
 
-        return publicAccessible || owner || teacher || assigned;
-    }
+    return publicAccessible || owner || teacher || assigned;
+  }
 
-    public boolean hasAccessOnQuizExercise(
-            QuizExercise quiz,
-            String userId,
-            String username,
-            boolean teacher) {
+  public boolean hasAccessOnQuizExercise(
+      QuizExercise quiz,
+      String userId,
+      String username,
+      boolean teacher) {
 
-        boolean publicAccessible = quiz.isPublicAccessible();
-        boolean owner =
-                username != null &&
-                        username.equalsIgnoreCase(
-                                quiz.getCreatedBy());
+    boolean publicAccessible = quiz.isPublicAccessible();
+    boolean owner =
+        username != null &&
+            username.equalsIgnoreCase(
+                quiz.getCreatedBy());
 
-        boolean assigned =
-                userId != null && assignmentRepository
-                        .existsByExerciseIdAndStudentId(
-                                quiz.getId(), userId);
+    boolean assigned =
+        userId != null && assignmentRepository
+            .existsByExerciseIdAndStudentId(
+                quiz.getId(), userId);
 
-        return publicAccessible || owner || teacher || assigned;
-    }
+    return publicAccessible || owner || teacher || assigned;
+  }
 }

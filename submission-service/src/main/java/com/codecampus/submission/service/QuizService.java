@@ -28,6 +28,10 @@ import com.codecampus.submission.repository.QuestionRepository;
 import com.codecampus.submission.repository.QuizDetailRepository;
 import com.codecampus.submission.service.grpc.GrpcQuizClient;
 import jakarta.transaction.Transactional;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -39,299 +43,294 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 @Service
 @RequiredArgsConstructor
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class QuizService {
-    QuizDetailRepository quizDetailRepository;
-    QuestionRepository questionRepository;
-    OptionRepository optionRepository;
-    ExerciseRepository exerciseRepository;
-    GrpcQuizClient grpcQuizClient;
+  QuizDetailRepository quizDetailRepository;
+  QuestionRepository questionRepository;
+  OptionRepository optionRepository;
+  ExerciseRepository exerciseRepository;
+  GrpcQuizClient grpcQuizClient;
 
-    QuestionMapper questionMapper;
-    OptionMapper optionMapper;
+  QuestionMapper questionMapper;
+  OptionMapper optionMapper;
 
-    QuizHelper quizHelper;
+  QuizHelper quizHelper;
 
-    @Transactional
-    public QuizDetail addQuizDetail(
-            String exerciseId,
-            AddQuizDetailRequest addQuizDetailRequest,
-            boolean returnQuizDetail) {
-        Exercise exercise = getExerciseOrThrow(exerciseId);
+  @Transactional
+  public QuizDetail addQuizDetail(
+      String exerciseId,
+      AddQuizDetailRequest addQuizDetailRequest,
+      boolean returnQuizDetail) {
+    Exercise exercise = getExerciseOrThrow(exerciseId);
 
-        Assert.isTrue(
-                exercise.getExerciseType() == ExerciseType.QUIZ,
-                "Exercise không phải QUIZ"
+    Assert.isTrue(
+        exercise.getExerciseType() == ExerciseType.QUIZ,
+        "Exercise không phải QUIZ"
+    );
+
+    if (exercise.getQuizDetail() != null) {
+      throw new AppException(ErrorCode.EXERCISE_TYPE);
+    }
+
+    QuizDetail quizDetail = new QuizDetail();
+    quizDetail.setExercise(exercise);
+
+    int total = 0;
+    for (QuestionDto questionDto : addQuizDetailRequest.questions()) {
+      Question question =
+          questionMapper.toQuestionFromQuestionDto(questionDto);
+      question.setQuizDetail(quizDetail);
+      quizDetail.getQuestions().add(question);
+      total += question.getPoints();
+    }
+    quizDetail.setNumQuestions(quizDetail.getQuestions().size());
+    quizDetail.setTotalPoints(total);
+    quizDetailRepository.save(quizDetail);
+
+    grpcQuizClient.pushQuizDetail(exerciseId, quizDetail);
+
+    if (returnQuizDetail) {
+      return quizDetail;
+    }
+    return null;
+  }
+
+  @Transactional
+  public Question addQuestion(
+      String exerciseId,
+      QuestionDto questionDto,
+      boolean returnQuestion) throws BadRequestException {
+
+    Exercise exercise = getExerciseOrThrow(exerciseId);
+    QuizDetail quizDetail = Optional
+        .ofNullable(exercise.getQuizDetail())
+        .orElseThrow(
+            () -> new BadRequestException("Chưa có QuizDetail")
         );
 
-        if (exercise.getQuizDetail() != null) {
-            throw new AppException(ErrorCode.EXERCISE_TYPE);
+    Question question =
+        questionMapper.toQuestionFromQuestionDto(questionDto);
+    question.setQuizDetail(quizDetail);
+
+    quizDetail.getQuestions().add(question);
+    quizDetail.setNumQuestions(quizDetail.getNumQuestions() + 1);
+    quizDetail.setTotalPoints(
+        quizDetail.getTotalPoints() + question.getPoints());
+    questionRepository.save(question);
+
+    grpcQuizClient.pushQuestion(exerciseId, question);
+
+    if (returnQuestion) {
+      return question;
+    }
+    return null;
+  }
+
+  @Transactional
+  public Option addOption(
+      String questionId,
+      OptionDto optionDto,
+      boolean returnOption) {
+    Question question = getQuestionOrThrow(questionId);
+
+    Option option = optionMapper.toOptionFromOptionDto(optionDto);
+    option.setQuestion(question);
+    question.getOptions().add(option);
+    optionRepository.save(option);
+
+    grpcQuizClient.pushOption(
+        question.getQuizDetail().getExercise().getId(),
+        questionId,
+        option);
+
+    if (returnOption) {
+      return option;
+    }
+    return null;
+  }
+
+  @Transactional
+  public void updateQuestionWithOptions(
+      String exerciseId,
+      String questionId,
+      UpdateQuestionWithOptionsRequest request) {
+
+    Exercise exercise = getExerciseOrThrow(exerciseId);
+    Question question = getQuestionOrThrow(questionId);
+
+    /* Cập nhật phần thân question như cũ */
+    questionMapper.patchUpdateQuestionRequestToQuestion(
+        new UpdateQuestionRequest(
+            request.text(),
+            request.questionType(),
+            request.points(),
+            request.orderInQuiz()),
+        question);
+
+    Map<String, Option> current = question
+        .getOptions()
+        .stream()
+        .collect(Collectors.toMap(Option::getId,
+            option -> option));
+
+    for (OptionPatchDto optionPatchDto : request.options()) {
+
+      Option option = Optional
+          .ofNullable(current.get(optionPatchDto.id()))
+          .orElseThrow(
+              () -> new AppException(ErrorCode.OPTION_NOT_FOUND)
+          );
+
+      // --- Xoá mềm ---
+      if (Boolean.TRUE.equals(optionPatchDto.delete())) {
+        if (!option.isDeleted()) {
+          option.markDeleted(AuthenticationHelper.getMyUserId());
+          grpcQuizClient.softDeleteOption(
+              exerciseId, questionId, option.getId());
         }
+        continue;
+      }
 
-        QuizDetail quizDetail = new QuizDetail();
-        quizDetail.setExercise(exercise);
-
-        int total = 0;
-        for (QuestionDto questionDto : addQuizDetailRequest.questions()) {
-            Question question =
-                    questionMapper.toQuestionFromQuestionDto(questionDto);
-            question.setQuizDetail(quizDetail);
-            quizDetail.getQuestions().add(question);
-            total += question.getPoints();
-        }
-        quizDetail.setNumQuestions(quizDetail.getQuestions().size());
-        quizDetail.setTotalPoints(total);
-        quizDetailRepository.save(quizDetail);
-
-        grpcQuizClient.pushQuizDetail(exerciseId, quizDetail);
-
-        if (returnQuizDetail) {
-            return quizDetail;
-        }
-        return null;
+      // --- Cập nhật ---
+      optionMapper.patchUpdateOptionRequestToOption(
+          new UpdateOptionRequest(
+              optionPatchDto.optionText(),
+              optionPatchDto.correct(),
+              optionPatchDto.order()
+          ),
+          option);
     }
 
-    @Transactional
-    public Question addQuestion(
-            String exerciseId,
-            QuestionDto questionDto,
-            boolean returnQuestion) throws BadRequestException {
+    /* Tính lại quiz & sync */
+    QuizDetail quizDetail = exercise.getQuizDetail();
+    quizHelper.recalcQuiz(quizDetail);
+    questionRepository.saveAndFlush(question);
+    quizDetailRepository.saveAndFlush(quizDetail); //
 
-        Exercise exercise = getExerciseOrThrow(exerciseId);
-        QuizDetail quizDetail = Optional
-                .ofNullable(exercise.getQuizDetail())
-                .orElseThrow(
-                        () -> new BadRequestException("Chưa có QuizDetail")
-                );
+    grpcQuizClient.pushQuestion(exerciseId, question);
+  }
 
-        Question question =
-                questionMapper.toQuestionFromQuestionDto(questionDto);
-        question.setQuizDetail(quizDetail);
+  @Deprecated
+  @Transactional
+  public void updateQuestion(
+      String exerciseId,
+      String questionId,
+      UpdateQuestionRequest request) {
+    Exercise exercise = getExerciseOrThrow(exerciseId);
 
-        quizDetail.getQuestions().add(question);
-        quizDetail.setNumQuestions(quizDetail.getNumQuestions() + 1);
-        quizDetail.setTotalPoints(
-                quizDetail.getTotalPoints() + question.getPoints());
-        questionRepository.save(question);
-
-        grpcQuizClient.pushQuestion(exerciseId, question);
-
-        if (returnQuestion) {
-            return question;
-        }
-        return null;
-    }
-
-    @Transactional
-    public Option addOption(
-            String questionId,
-            OptionDto optionDto,
-            boolean returnOption) {
-        Question question = getQuestionOrThrow(questionId);
-
-        Option option = optionMapper.toOptionFromOptionDto(optionDto);
-        option.setQuestion(question);
-        question.getOptions().add(option);
-        optionRepository.save(option);
-
-        grpcQuizClient.pushOption(
-                question.getQuizDetail().getExercise().getId(),
-                questionId,
-                option);
-
-        if (returnOption) {
-            return option;
-        }
-        return null;
-    }
-
-    @Transactional
-    public void updateQuestionWithOptions(
-            String exerciseId,
-            String questionId,
-            UpdateQuestionWithOptionsRequest request) {
-
-        Exercise exercise = getExerciseOrThrow(exerciseId);
-        Question question = getQuestionOrThrow(questionId);
-
-        /* Cập nhật phần thân question như cũ */
-        questionMapper.patchUpdateQuestionRequestToQuestion(
-                new UpdateQuestionRequest(
-                        request.text(),
-                        request.questionType(),
-                        request.points(),
-                        request.orderInQuiz()),
-                question);
-
-        Map<String, Option> current = question
-                .getOptions()
-                .stream()
-                .collect(Collectors.toMap(Option::getId,
-                        option -> option));
-
-        for (OptionPatchDto optionPatchDto : request.options()) {
-
-            Option option = Optional
-                    .ofNullable(current.get(optionPatchDto.id()))
-                    .orElseThrow(
-                            () -> new AppException(ErrorCode.OPTION_NOT_FOUND)
-                    );
-
-            // --- Xoá mềm ---
-            if (Boolean.TRUE.equals(optionPatchDto.delete())) {
-                if (!option.isDeleted()) {
-                    option.markDeleted(AuthenticationHelper.getMyUserId());
-                    grpcQuizClient.softDeleteOption(
-                            exerciseId, questionId, option.getId());
-                }
-                continue;
-            }
-
-            // --- Cập nhật ---
-            optionMapper.patchUpdateOptionRequestToOption(
-                    new UpdateOptionRequest(
-                            optionPatchDto.optionText(),
-                            optionPatchDto.correct(),
-                            optionPatchDto.order()
-                    ),
-                    option);
-        }
-
-        /* Tính lại quiz & sync */
-        QuizDetail quizDetail = exercise.getQuizDetail();
-        quizHelper.recalcQuiz(quizDetail);
-        questionRepository.saveAndFlush(question);
-        quizDetailRepository.saveAndFlush(quizDetail); //
-
-        grpcQuizClient.pushQuestion(exerciseId, question);
-    }
-
-    @Deprecated
-    @Transactional
-    public void updateQuestion(
-            String exerciseId,
-            String questionId,
-            UpdateQuestionRequest request) {
-        Exercise exercise = getExerciseOrThrow(exerciseId);
-
-        Question question = exercise.getQuizDetail()
-                .getQuestions()
-                .stream()
-                .filter(q -> q.getId().equals(questionId))
-                .findFirst()
-                .orElseThrow(
-                        () -> new AppException(ErrorCode.QUESTION_NOT_FOUND)
-                );
-
-        questionMapper.patchUpdateQuestionRequestToQuestion(request, question);
-
-        QuizDetail quizDetail = exercise.getQuizDetail();
-        quizHelper.recalcQuiz(exercise.getQuizDetail());
-        quizDetailRepository.saveAndFlush(quizDetail);
-        grpcQuizClient.pushQuestion(exerciseId, question); // sync
-    }
-
-    @Transactional
-    public void updateOption(
-            String optionId,
-            UpdateOptionRequest request) {
-        Option option = optionRepository
-                .findById(optionId)
-                .orElseThrow(
-                        () -> new AppException(ErrorCode.OPTION_NOT_FOUND)
-                );
-        optionMapper.patchUpdateOptionRequestToOption(request, option);
-
-        grpcQuizClient.pushQuestion(
-                option.getQuestion().getQuizDetail().getExercise().getId(),
-                option.getQuestion());
-    }
-
-    @Transactional
-    public void softDeleteQuestion(
-            String exerciseId,
-            String questionId) {
-        getExerciseOrThrow(exerciseId);
-        Question question = getQuestionOrThrow(questionId);
-        question.markDeleted(AuthenticationHelper.getMyUsername());
-        question.getOptions()
-                .forEach(option ->
-                        option.markDeleted(question.getDeletedBy()));
-
-        QuizDetail quizDetail = question.getQuizDetail();
-        quizHelper.recalcQuiz(quizDetail);
-        quizDetailRepository.saveAndFlush(quizDetail);
-
-        grpcQuizClient.softDeleteQuestion(exerciseId, questionId);
-    }
-
-    @Transactional
-    public void softDeleteOption(
-            String exerciseId,
-            String questionId,
-            String optionId) {
-        getExerciseOrThrow(exerciseId);
-        getQuestionOrThrow(questionId);
-        Option option = getOption(optionId);
-        option.markDeleted(AuthenticationHelper.getMyUsername());
-        grpcQuizClient.softDeleteOption(
-                exerciseId,
-                questionId,
-                optionId
+    Question question = exercise.getQuizDetail()
+        .getQuestions()
+        .stream()
+        .filter(q -> q.getId().equals(questionId))
+        .findFirst()
+        .orElseThrow(
+            () -> new AppException(ErrorCode.QUESTION_NOT_FOUND)
         );
-    }
 
-    public PageResponse<Question> getQuestionsOfQuiz(
-            String exerciseId,
-            int page, int size,
-            SortField sortBy, boolean asc) {
+    questionMapper.patchUpdateQuestionRequestToQuestion(request, question);
 
-        Pageable pageable = PageRequest.of(
-                page - 1,
-                size,
-                SortHelper.build(sortBy, asc));
+    QuizDetail quizDetail = exercise.getQuizDetail();
+    quizHelper.recalcQuiz(exercise.getQuizDetail());
+    quizDetailRepository.saveAndFlush(quizDetail);
+    grpcQuizClient.pushQuestion(exerciseId, question); // sync
+  }
 
-        Page<Question> pageData = questionRepository
-                .findByQuizDetailId(exerciseId, pageable);
+  @Transactional
+  public void updateOption(
+      String optionId,
+      UpdateOptionRequest request) {
+    Option option = optionRepository
+        .findById(optionId)
+        .orElseThrow(
+            () -> new AppException(ErrorCode.OPTION_NOT_FOUND)
+        );
+    optionMapper.patchUpdateOptionRequestToOption(request, option);
 
-        return PageResponseHelper.toPageResponse(pageData, page);
-    }
+    grpcQuizClient.pushQuestion(
+        option.getQuestion().getQuizDetail().getExercise().getId(),
+        option.getQuestion());
+  }
 
-    public List<Option> getOptionsOfQuestion(String questionId) {
-        return optionRepository.findByQuestionId(questionId);
-    }
+  @Transactional
+  public void softDeleteQuestion(
+      String exerciseId,
+      String questionId) {
+    getExerciseOrThrow(exerciseId);
+    Question question = getQuestionOrThrow(questionId);
+    question.markDeleted(AuthenticationHelper.getMyUsername());
+    question.getOptions()
+        .forEach(option ->
+            option.markDeleted(question.getDeletedBy()));
 
-    public Question getQuestion(String id) {
-        return questionRepository.findById(id)
-                .orElseThrow(
-                        () -> new AppException(ErrorCode.QUESTION_NOT_FOUND));
-    }
+    QuizDetail quizDetail = question.getQuizDetail();
+    quizHelper.recalcQuiz(quizDetail);
+    quizDetailRepository.saveAndFlush(quizDetail);
 
-    public Option getOption(String id) {
-        return optionRepository
-                .findById(id)
-                .orElseThrow(
-                        () -> new AppException(ErrorCode.OPTION_NOT_FOUND));
-    }
+    grpcQuizClient.softDeleteQuestion(exerciseId, questionId);
+  }
 
-    public Exercise getExerciseOrThrow(String exerciseId) {
-        return exerciseRepository.findById(exerciseId)
-                .orElseThrow(
-                        () -> new AppException(ErrorCode.EXERCISE_NOT_FOUND));
-    }
+  @Transactional
+  public void softDeleteOption(
+      String exerciseId,
+      String questionId,
+      String optionId) {
+    getExerciseOrThrow(exerciseId);
+    getQuestionOrThrow(questionId);
+    Option option = getOption(optionId);
+    option.markDeleted(AuthenticationHelper.getMyUsername());
+    grpcQuizClient.softDeleteOption(
+        exerciseId,
+        questionId,
+        optionId
+    );
+  }
 
-    public Question getQuestionOrThrow(String questionId) {
-        return questionRepository
-                .findById(questionId)
-                .orElseThrow(
-                        () -> new AppException(ErrorCode.QUESTION_NOT_FOUND));
-    }
+  public PageResponse<Question> getQuestionsOfQuiz(
+      String exerciseId,
+      int page, int size,
+      SortField sortBy, boolean asc) {
+
+    Pageable pageable = PageRequest.of(
+        page - 1,
+        size,
+        SortHelper.build(sortBy, asc));
+
+    Page<Question> pageData = questionRepository
+        .findByQuizDetailId(exerciseId, pageable);
+
+    return PageResponseHelper.toPageResponse(pageData, page);
+  }
+
+  public List<Option> getOptionsOfQuestion(String questionId) {
+    return optionRepository.findByQuestionId(questionId);
+  }
+
+  public Question getQuestion(String id) {
+    return questionRepository.findById(id)
+        .orElseThrow(
+            () -> new AppException(ErrorCode.QUESTION_NOT_FOUND));
+  }
+
+  public Option getOption(String id) {
+    return optionRepository
+        .findById(id)
+        .orElseThrow(
+            () -> new AppException(ErrorCode.OPTION_NOT_FOUND));
+  }
+
+  public Exercise getExerciseOrThrow(String exerciseId) {
+    return exerciseRepository.findById(exerciseId)
+        .orElseThrow(
+            () -> new AppException(ErrorCode.EXERCISE_NOT_FOUND));
+  }
+
+  public Question getQuestionOrThrow(String questionId) {
+    return questionRepository
+        .findById(questionId)
+        .orElseThrow(
+            () -> new AppException(ErrorCode.QUESTION_NOT_FOUND));
+  }
 }

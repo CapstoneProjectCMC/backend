@@ -10,10 +10,10 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProfileResponseDto {
-    private String userId;
-    private String username;
-    private String email;
-    private String role;
-    private String avatarUrl;
-    private String backgroundUrl;
+  private String userId;
+  private String username;
+  private String email;
+  private String role;
+  private String avatarUrl;
+  private String backgroundUrl;
 }

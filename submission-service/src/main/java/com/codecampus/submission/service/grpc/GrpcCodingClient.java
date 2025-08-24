@@ -29,90 +29,90 @@ import org.springframework.transaction.annotation.Transactional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class GrpcCodingClient {
 
-    CodingSyncServiceGrpc.CodingSyncServiceBlockingStub stub;
-    CodingMapper codingMapper;
-    AssignmentMapper assignmentMapper;
+  CodingSyncServiceGrpc.CodingSyncServiceBlockingStub stub;
+  CodingMapper codingMapper;
+  AssignmentMapper assignmentMapper;
 
-    @Transactional
-    public void pushExercise(Exercise exercise) {
-        if (exercise.getExerciseType() != ExerciseType.CODING) {
-            return;
-        }
-
-        try {
-            CreateCodingExerciseRequest createRequest =
-                    CreateCodingExerciseRequest.newBuilder()
-                            .setExercise(
-                                    codingMapper.toCodingExerciseDtoFromExercise(
-                                            exercise))
-                            .build();
-            stub.createCodingExercise(createRequest);
-        } catch (StatusRuntimeException ex) {
-            log.error("[gRPC] pushExercise lỗi: {}", ex.getStatus(), ex);
-            throw ex;
-        }
+  @Transactional
+  public void pushExercise(Exercise exercise) {
+    if (exercise.getExerciseType() != ExerciseType.CODING) {
+      return;
     }
 
-    @Transactional
-    public void softDeleteExercise(String exerciseId) {
-        stub.softDeleteExercise(SoftDeleteRequest
-                .newBuilder()
-                .setId(exerciseId)
-                .build());
+    try {
+      CreateCodingExerciseRequest createRequest =
+          CreateCodingExerciseRequest.newBuilder()
+              .setExercise(
+                  codingMapper.toCodingExerciseDtoFromExercise(
+                      exercise))
+              .build();
+      stub.createCodingExercise(createRequest);
+    } catch (StatusRuntimeException ex) {
+      log.error("[gRPC] pushExercise lỗi: {}", ex.getStatus(), ex);
+      throw ex;
     }
+  }
 
-    @Transactional
-    public void pushCodingDetail(
-            String exerciseId,
-            CodingDetail codingDetail) {
-        AddCodingDetailRequest addCodingRequest =
-                AddCodingDetailRequest.newBuilder()
-                        .setExerciseId(exerciseId)
-                        .setCodingDetail(
-                                codingMapper.toCodingDetailDtoFromCodingDetail(
-                                        codingDetail))
-                        .build();
-        stub.addCodingDetail(addCodingRequest);
-    }
+  @Transactional
+  public void softDeleteExercise(String exerciseId) {
+    stub.softDeleteExercise(SoftDeleteRequest
+        .newBuilder()
+        .setId(exerciseId)
+        .build());
+  }
 
-    @Transactional
-    public void pushTestCase(
-            String exerciseId,
-            TestCase testCase) {
-        AddTestCaseRequest addTestRequest =
-                AddTestCaseRequest.newBuilder()
-                        .setExerciseId(exerciseId)
-                        .setTestCase(codingMapper.toTestCaseDtoFromTestCase(
-                                testCase))
-                        .build();
-        stub.addTestCase(addTestRequest);
-    }
+  @Transactional
+  public void pushCodingDetail(
+      String exerciseId,
+      CodingDetail codingDetail) {
+    AddCodingDetailRequest addCodingRequest =
+        AddCodingDetailRequest.newBuilder()
+            .setExerciseId(exerciseId)
+            .setCodingDetail(
+                codingMapper.toCodingDetailDtoFromCodingDetail(
+                    codingDetail))
+            .build();
+    stub.addCodingDetail(addCodingRequest);
+  }
 
-    @Transactional
-    public void softDeleteTestCase(String exerciseId, String testCaseId) {
-        stub.softDeleteTestCase(SoftDeleteTestCaseRequest
-                .newBuilder()
-                .setExerciseId(exerciseId)
-                .setTestCaseId(testCaseId)
-                .build());
-    }
+  @Transactional
+  public void pushTestCase(
+      String exerciseId,
+      TestCase testCase) {
+    AddTestCaseRequest addTestRequest =
+        AddTestCaseRequest.newBuilder()
+            .setExerciseId(exerciseId)
+            .setTestCase(codingMapper.toTestCaseDtoFromTestCase(
+                testCase))
+            .build();
+    stub.addTestCase(addTestRequest);
+  }
 
-    @Transactional
-    public void pushAssignment(Assignment assignment) {
-        UpsertAssignmentRequest request = UpsertAssignmentRequest.newBuilder()
-                .setAssignment(
-                        assignmentMapper.toCodingAssignmentDtoFromAssignment(
-                                assignment))
-                .build();
+  @Transactional
+  public void softDeleteTestCase(String exerciseId, String testCaseId) {
+    stub.softDeleteTestCase(SoftDeleteTestCaseRequest
+        .newBuilder()
+        .setExerciseId(exerciseId)
+        .setTestCaseId(testCaseId)
+        .build());
+  }
 
-        stub.upsertAssignment(request);
-    }
+  @Transactional
+  public void pushAssignment(Assignment assignment) {
+    UpsertAssignmentRequest request = UpsertAssignmentRequest.newBuilder()
+        .setAssignment(
+            assignmentMapper.toCodingAssignmentDtoFromAssignment(
+                assignment))
+        .build();
 
-    @Transactional
-    public void softDeleteAssignment(String assignmentId) {
-        stub.softDeleteAssignment(
-                SoftDeleteAssignmentRequest.newBuilder()
-                        .setId(assignmentId)
-                        .build());
-    }
+    stub.upsertAssignment(request);
+  }
+
+  @Transactional
+  public void softDeleteAssignment(String assignmentId) {
+    stub.softDeleteAssignment(
+        SoftDeleteAssignmentRequest.newBuilder()
+            .setId(assignmentId)
+            .build());
+  }
 }

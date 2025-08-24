@@ -17,28 +17,28 @@ import org.springframework.web.context.request.ServletRequestAttributes;
  */
 @Slf4j
 public class AuthenticationRequestInterceptor
-        implements RequestInterceptor {
-    /**
-     * Phương thức được gọi trước khi Feign gửi request.
-     *
-     * <ol>
-     *   <li>Lấy ServletRequestAttributes từ RequestContextHolder.</li>
-     *   <li>Nếu tồn tại, lấy HttpServletRequest và trích header "Authorization".</li>
-     *   <li>Nếu header có giá trị, thêm vào RequestTemplate của Feign.</li>
-     * </ol>
-     *
-     * @param requestTemplate template của request chuẩn bị gửi đi
-     */
-    @Override
-    public void apply(RequestTemplate requestTemplate) {
-        ServletRequestAttributes attributes =
-                (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+    implements RequestInterceptor {
+  /**
+   * Phương thức được gọi trước khi Feign gửi request.
+   *
+   * <ol>
+   *   <li>Lấy ServletRequestAttributes từ RequestContextHolder.</li>
+   *   <li>Nếu tồn tại, lấy HttpServletRequest và trích header "Authorization".</li>
+   *   <li>Nếu header có giá trị, thêm vào RequestTemplate của Feign.</li>
+   * </ol>
+   *
+   * @param requestTemplate template của request chuẩn bị gửi đi
+   */
+  @Override
+  public void apply(RequestTemplate requestTemplate) {
+    ServletRequestAttributes attributes =
+        (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
 
-        var authHeader = attributes.getRequest().getHeader("Authorization");
+    var authHeader = attributes.getRequest().getHeader("Authorization");
 
-        log.info("Header: {}", authHeader);
-        if (StringUtils.hasText(authHeader)) {
-            requestTemplate.header("Authorization", authHeader);
-        }
+    log.info("Header: {}", authHeader);
+    if (StringUtils.hasText(authHeader)) {
+      requestTemplate.header("Authorization", authHeader);
     }
+  }
 }

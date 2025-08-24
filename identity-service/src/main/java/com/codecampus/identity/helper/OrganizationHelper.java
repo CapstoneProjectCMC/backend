@@ -17,18 +17,18 @@ import org.springframework.stereotype.Component;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class OrganizationHelper {
 
-    OrganizationClient organizationClient;
+  OrganizationClient organizationClient;
 
-    public PrimaryOrgResponse getPrimaryOrg(
-            String userId) {
-        try {
-            ApiResponse<PrimaryOrgResponse> response =
-                    organizationClient.getPrimaryOrg(userId);
-            return response != null ? response.getResult() : null;
-        } catch (Exception ex) {
-            log.warn("Cannot fetch primary org for user {}: {}", userId,
-                    ex.getMessage());
-            return null;
-        }
+  public PrimaryOrgResponse getPrimaryOrg(
+      String userId) {
+    try {
+      ApiResponse<PrimaryOrgResponse> response =
+          organizationClient.getPrimaryOrg(userId);
+      return response != null ? response.getResult() : null;
+    } catch (Exception ex) {
+      log.warn("Cannot fetch primary org for user {}: {}", userId,
+          ex.getMessage());
+      return null;
     }
+  }
 }

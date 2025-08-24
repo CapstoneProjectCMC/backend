@@ -1,5 +1,5 @@
 package com.codecampus.profile.constant.type;
 
 public enum ResourceType {
-    LECTURE, TEXTBOOK, OTHER
+  LECTURE, TEXTBOOK, OTHER
 }

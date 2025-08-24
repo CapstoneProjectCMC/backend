@@ -31,31 +31,31 @@ import org.hibernate.annotations.Where;
 @Entity
 @Table(name = "submission_answer")
 @SQLDelete(sql = "UPDATE submission_answer " +
-        "SET deleted_by = ? , deleted_at = now() " +
-        "WHERE id = ?")
+    "SET deleted_by = ? , deleted_at = now() " +
+    "WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
 public class SubmissionAnswer extends AuditMetadata {
-    @EmbeddedId
-    SubmissionAnswerId id;
+  @EmbeddedId
+  SubmissionAnswerId id;
 
-    @JsonBackReference
-    @MapsId("submissionId")
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "submission_id")
-    Submission submission;
+  @JsonBackReference
+  @MapsId("submissionId")
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "submission_id")
+  Submission submission;
 
-    @MapsId("questionId")
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "question_id")
-    Question question;
+  @MapsId("questionId")
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "question_id")
+  Question question;
 
-    @JoinColumn(name = "selected_option")
-    @OneToOne(fetch = FetchType.LAZY)
-    Option selectedOption;
+  @JoinColumn(name = "selected_option")
+  @OneToOne(fetch = FetchType.LAZY)
+  Option selectedOption;
 
-    @Column(name = "answer_text", columnDefinition = "text")
-    String answerText;
+  @Column(name = "answer_text", columnDefinition = "text")
+  String answerText;
 
-    @Column(name = "is_correct", nullable = false)
-    boolean correct;
+  @Column(name = "is_correct", nullable = false)
+  boolean correct;
 }

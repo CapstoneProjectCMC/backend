@@ -6,6 +6,8 @@ import com.codecampus.submission.dto.request.assignment.BulkDeleteAssignExercise
 import com.codecampus.submission.dto.response.assignment.BulkAssignExerciseResponse;
 import com.codecampus.submission.entity.Assignment;
 import com.codecampus.submission.service.AssignmentService;
+import java.time.Instant;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
@@ -18,9 +20,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.Instant;
-import java.util.List;
-
 @Slf4j
 @Builder
 @RestController
@@ -28,72 +27,72 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AssignmentController {
 
-    AssignmentService assignmentService;
+  AssignmentService assignmentService;
 
-    @PostMapping("/assignment")
-    ApiResponse<Assignment> assignExercise(
-            @RequestParam String exerciseId,
-            @RequestParam String studentId,
-            @RequestParam
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant dueAt) {
-        return ApiResponse.<Assignment>builder()
-                .result(assignmentService.assignExercise(exerciseId, studentId,
-                        dueAt))
-                .message("Giao bài thành công!")
-                .build();
-    }
+  @PostMapping("/assignment")
+  ApiResponse<Assignment> assignExercise(
+      @RequestParam String exerciseId,
+      @RequestParam String studentId,
+      @RequestParam
+      @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant dueAt) {
+    return ApiResponse.<Assignment>builder()
+        .result(assignmentService.assignExercise(exerciseId, studentId,
+            dueAt))
+        .message("Giao bài thành công!")
+        .build();
+  }
 
-    @PostMapping("/assignment-bulk")
-    ApiResponse<BulkAssignExerciseResponse> bulkAssignExercise(
-            @RequestParam String exerciseId,
-            @RequestBody BulkAssignExerciseRequest bulkAssignExerciseRequest) {
+  @PostMapping("/assignment-bulk")
+  ApiResponse<BulkAssignExerciseResponse> bulkAssignExercise(
+      @RequestParam String exerciseId,
+      @RequestBody BulkAssignExerciseRequest bulkAssignExerciseRequest) {
 
-        List<Assignment> assignmentList =
-                assignmentService.assignExerciseToMany(
-                        exerciseId,
-                        bulkAssignExerciseRequest);
+    List<Assignment> assignmentList =
+        assignmentService.assignExerciseToMany(
+            exerciseId,
+            bulkAssignExerciseRequest);
 
-        long studentsAssignments = assignmentList.stream()
-                .filter(assignment -> assignment.getCreatedAt() != null
-                        && assignment.getUpdatedAt() != null).count();
+    long studentsAssignments = assignmentList.stream()
+        .filter(assignment -> assignment.getCreatedAt() != null
+            && assignment.getUpdatedAt() != null).count();
 
-        BulkAssignExerciseResponse bulkAssignExerciseResponse =
-                BulkAssignExerciseResponse.builder()
-                        .exerciseId(exerciseId)
-                        .studentsAssigned(studentsAssignments)
-                        .dueAt(bulkAssignExerciseRequest.dueAt())
-                        .build();
+    BulkAssignExerciseResponse bulkAssignExerciseResponse =
+        BulkAssignExerciseResponse.builder()
+            .exerciseId(exerciseId)
+            .studentsAssigned(studentsAssignments)
+            .dueAt(bulkAssignExerciseRequest.dueAt())
+            .build();
 
-        return ApiResponse.<BulkAssignExerciseResponse>builder()
-                .result(bulkAssignExerciseResponse)
-                .message("Giao bài thành công!")
-                .build();
-    }
+    return ApiResponse.<BulkAssignExerciseResponse>builder()
+        .result(bulkAssignExerciseResponse)
+        .message("Giao bài thành công!")
+        .build();
+  }
 
-    @DeleteMapping("/assignment")
-    ApiResponse<Void> softDeleteAssignment(
-            @RequestParam String exerciseId,
-            @RequestParam String studentId) {
+  @DeleteMapping("/assignment")
+  ApiResponse<Void> softDeleteAssignment(
+      @RequestParam String exerciseId,
+      @RequestParam String studentId) {
 
-        assignmentService.softDeleteAssignment(exerciseId, studentId);
+    assignmentService.softDeleteAssignment(exerciseId, studentId);
 
-        return ApiResponse.<Void>builder()
-                .message("Huỷ giao bài thành công!")
-                .build();
-    }
+    return ApiResponse.<Void>builder()
+        .message("Huỷ giao bài thành công!")
+        .build();
+  }
 
-    @DeleteMapping("/assignment-bulk")
-    ApiResponse<Void> bulkSoftDeleteAssignments(
-            @RequestParam String exerciseId,
-            @RequestBody
-            BulkDeleteAssignExerciseRequest bulkDeleteAssignExerciseRequest) {
+  @DeleteMapping("/assignment-bulk")
+  ApiResponse<Void> bulkSoftDeleteAssignments(
+      @RequestParam String exerciseId,
+      @RequestBody
+      BulkDeleteAssignExerciseRequest bulkDeleteAssignExerciseRequest) {
 
-        assignmentService.bulkSoftDeleteAssignments(
-                exerciseId,
-                bulkDeleteAssignExerciseRequest.studentIds());
+    assignmentService.bulkSoftDeleteAssignments(
+        exerciseId,
+        bulkDeleteAssignExerciseRequest.studentIds());
 
-        return ApiResponse.<Void>builder()
-                .message("Huỷ giao bài thành công!")
-                .build();
-    }
+    return ApiResponse.<Void>builder()
+        .message("Huỷ giao bài thành công!")
+        .build();
+  }
 }

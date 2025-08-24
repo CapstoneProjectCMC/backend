@@ -10,6 +10,10 @@ import com.codecampus.search.helper.SearchHelper;
 import com.codecampus.search.mapper.ExerciseMapper;
 import com.codecampus.search.service.cache.UserBulkLoader;
 import dtos.UserSummary;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -29,169 +33,164 @@ import org.springframework.data.elasticsearch.core.query.highlight.HighlightFiel
 import org.springframework.data.elasticsearch.core.query.highlight.HighlightFieldParameters;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 @Service
 @RequiredArgsConstructor
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ExerciseSearchService {
 
-    ElasticsearchOperations elasticsearchOperations;
-    ExerciseMapper exerciseMapper;
-    UserBulkLoader userBulkLoader;
+  ElasticsearchOperations elasticsearchOperations;
+  ExerciseMapper exerciseMapper;
+  UserBulkLoader userBulkLoader;
 
-    public PageResponse<ExerciseSearchResponse> searchExercise(
-            ExerciseSearchRequest request) {
+  public PageResponse<ExerciseSearchResponse> searchExercise(
+      ExerciseSearchRequest request) {
 
-        HighlightQuery
-                highlightQuery = buildHighLightQuery();
+    HighlightQuery
+        highlightQuery = buildHighLightQuery();
 
-        /* -------- truy vấn -------- */
-        // Như này sẽ bị lỗi vì NativeQueryBuilder().withHighlightQuery
-        // không nhận HighlightBuilder
-        //        .withHighlightQuery(new HighlightQuery(
-        //        new HighlightBuilder()
-        //                .field("title").fragmentSize(150)
-        //                .field("description").fragmentSize(150),
-        //        ExerciseDocument.class))
-        //        .build();
-        NativeQuery query = new NativeQueryBuilder()
-                .withQuery(
-                        q -> q.bool(builder -> buildQuery(request, builder)))
-                .withPageable(
-                        PageRequest.of(
-                                request.page() - 1,
-                                request.size(),
-                                Sort.by(Sort.Order.desc("createdAt"))
-                        ))
-                .withHighlightQuery(highlightQuery)
-                .build();
+    /* -------- truy vấn -------- */
+    // Như này sẽ bị lỗi vì NativeQueryBuilder().withHighlightQuery
+    // không nhận HighlightBuilder
+    //        .withHighlightQuery(new HighlightQuery(
+    //        new HighlightBuilder()
+    //                .field("title").fragmentSize(150)
+    //                .field("description").fragmentSize(150),
+    //        ExerciseDocument.class))
+    //        .build();
+    NativeQuery query = new NativeQueryBuilder()
+        .withQuery(
+            q -> q.bool(builder -> buildQuery(request, builder)))
+        .withPageable(
+            PageRequest.of(
+                request.page() - 1,
+                request.size(),
+                Sort.by(Sort.Order.desc("createdAt"))
+            ))
+        .withHighlightQuery(highlightQuery)
+        .build();
 
-        SearchHits<ExerciseDocument> hits =
-                elasticsearchOperations.search(query, ExerciseDocument.class);
-        SearchPage<ExerciseDocument> page =
-                SearchHitSupport.searchPageFor(hits, query.getPageable());
+    SearchHits<ExerciseDocument> hits =
+        elasticsearchOperations.search(query, ExerciseDocument.class);
+    SearchPage<ExerciseDocument> page =
+        SearchHitSupport.searchPageFor(hits, query.getPageable());
 
-        // Nếu không muốn dùng SearchPage mà muốn dùng Page thì như này
-        // var docPage = SearchHitSupport.unwrapSearchHits(page);
+    // Nếu không muốn dùng SearchPage mà muốn dùng Page thì như này
+    // var docPage = SearchHitSupport.unwrapSearchHits(page);
 
-        /* ==== Bulk load UserSummary ==== */
-        Set<String> userIds = page.getContent().stream()
-                .map(SearchHit::getContent)
-                .map(ExerciseDocument::getUserId)
-                .collect(Collectors.toSet());
+    /* ==== Bulk load UserSummary ==== */
+    Set<String> userIds = page.getContent().stream()
+        .map(SearchHit::getContent)
+        .map(ExerciseDocument::getUserId)
+        .collect(Collectors.toSet());
 
-        Map<String, UserSummary> summaries = userBulkLoader.loadAll(userIds);
+    Map<String, UserSummary> summaries = userBulkLoader.loadAll(userIds);
 
-        List<ExerciseSearchResponse> data = page.getContent().stream()
-                .map(SearchHit::getContent)
-                .map(doc -> {
-                    ExerciseSearchResponse base =
-                            exerciseMapper.toExerciseSearchResponseFromExerciseDocument(
-                                    doc);
-                    return base.toBuilder()
-                            .user(summaries.get(doc.getUserId()))
-                            .build();
-                })
-                .toList();
+    List<ExerciseSearchResponse> data = page.getContent().stream()
+        .map(SearchHit::getContent)
+        .map(doc -> {
+          ExerciseSearchResponse base =
+              exerciseMapper.toExerciseSearchResponseFromExerciseDocument(
+                  doc);
+          return base.toBuilder()
+              .user(summaries.get(doc.getUserId()))
+              .build();
+        })
+        .toList();
 
 //        return SearchHitSupport.searchPageFor(hits, query.getPageable())
 //                .map(SearchHit::getContent);
 
-        return PageResponse.<ExerciseSearchResponse>builder()
-                .currentPage(request.page())
-                .pageSize(page.getSize())
-                .totalPages(page.getTotalPages())
-                .totalElements(page.getTotalElements())
-                .data(data)
-                .build();
+    return PageResponse.<ExerciseSearchResponse>builder()
+        .currentPage(request.page())
+        .pageSize(page.getSize())
+        .totalPages(page.getTotalPages())
+        .totalElements(page.getTotalElements())
+        .data(data)
+        .build();
+  }
+
+  HighlightQuery buildHighLightQuery() {
+    Highlight highlight = new Highlight(
+        List.of(
+            new HighlightField(
+                "title",
+                HighlightFieldParameters.builder()
+                    .withFragmentSize(150)
+                    .build()),
+            new HighlightField(
+                "description",
+                HighlightFieldParameters.builder()
+                    .withFragmentSize(150)
+                    .build())
+        )
+    );
+
+    return new HighlightQuery(highlight, ExerciseDocument.class);
+  }
+
+  BoolQuery.Builder buildQuery(
+      ExerciseSearchRequest request,
+      BoolQuery.Builder builder) {
+
+    /* -------- full‑text Q -------- */
+    if (SearchHelper.hasText(request.q())) {
+
+      // should: exact equals trên subfield .keyword (ưu tiên cao nhất)
+      final String q = request.q();
+      builder.should(s -> s.term(t -> t.field("title.keyword").value(q)))
+          .boost(1.0f);
+      builder.should(
+          s -> s.term(t -> t.field("description.keyword").value(q)));
+
+      // should: exact phrase (ưu tiên cao)
+      builder.should(s -> s.matchPhrase(
+          mp -> mp.field("title").query(q).slop(0).boost(5.0f)));
+      builder.should(s -> s.matchPhrase(
+          mp -> mp.field("description").query(q).slop(0)
+              .boost(4.0f)));
+
+      // should: fuzzy/contains đa trường (ưu tiên thấp hơn)
+      builder.should(s -> s.multiMatch(mm -> mm
+          .query(q)
+          .fields("title^3", "description", "tags.search^2",
+              "exerciseType.search")
+          .operator(Operator.And)
+          .fuzziness("AUTO")
+          .prefixLength(1)
+          .boost(2.0f)));
+
+      builder.minimumShouldMatch("1");
     }
 
-    HighlightQuery buildHighLightQuery() {
-        Highlight highlight = new Highlight(
-                List.of(
-                        new HighlightField(
-                                "title",
-                                HighlightFieldParameters.builder()
-                                        .withFragmentSize(150)
-                                        .build()),
-                        new HighlightField(
-                                "description",
-                                HighlightFieldParameters.builder()
-                                        .withFragmentSize(150)
-                                        .build())
-                )
-        );
+    /* -------- filter -------- */
+    SearchHelper.addTermsFilter(builder, "tags",
+        request.tags());
+    SearchHelper.addTermFilter(builder, "difficulty",
+        request.difficulty());
+    SearchHelper.addTermFilter(builder, "exerciseType",
+        request.exerciseType());
+    SearchHelper.addTermFilter(builder, "createdBy",
+        request.createdBy());
+    SearchHelper.addTermFilter(builder, "orgId",
+        request.orgId());
+    SearchHelper.addTermFilter(builder, "freeForOrg",
+        request.freeForOrg());
+    SearchHelper.addTermFilter(builder, "allowAiQuestion",
+        request.allowAiQuestion());
 
-        return new HighlightQuery(highlight, ExerciseDocument.class);
-    }
+    SearchHelper.addRangeFilter(builder, "cost",
+        request.minCost(),
+        request.maxCost());
+    SearchHelper.addRangeFilter(builder, "startTime",
+        request.startAfter(),
+        null);
+    SearchHelper.addRangeFilter(builder, "endTime", null,
+        request.endBefore());
 
-    BoolQuery.Builder buildQuery(
-            ExerciseSearchRequest request,
-            BoolQuery.Builder builder) {
+    // Không trả item đã xoá mềm
+    builder.mustNot(mn -> mn.exists(e -> e.field("deletedAt")));
 
-        /* -------- full‑text Q -------- */
-        if (SearchHelper.hasText(request.q())) {
-
-            // should: exact equals trên subfield .keyword (ưu tiên cao nhất)
-            final String q = request.q();
-            builder.should(s -> s.term(t -> t.field("title.keyword").value(q)))
-                    .boost(1.0f);
-            builder.should(
-                    s -> s.term(t -> t.field("description.keyword").value(q)));
-
-            // should: exact phrase (ưu tiên cao)
-            builder.should(s -> s.matchPhrase(
-                    mp -> mp.field("title").query(q).slop(0).boost(5.0f)));
-            builder.should(s -> s.matchPhrase(
-                    mp -> mp.field("description").query(q).slop(0)
-                            .boost(4.0f)));
-
-            // should: fuzzy/contains đa trường (ưu tiên thấp hơn)
-            builder.should(s -> s.multiMatch(mm -> mm
-                    .query(q)
-                    .fields("title^3", "description", "tags.search^2",
-                            "exerciseType.search")
-                    .operator(Operator.And)
-                    .fuzziness("AUTO")
-                    .prefixLength(1)
-                    .boost(2.0f)));
-
-            builder.minimumShouldMatch("1");
-        }
-
-        /* -------- filter -------- */
-        SearchHelper.addTermsFilter(builder, "tags",
-                request.tags());
-        SearchHelper.addTermFilter(builder, "difficulty",
-                request.difficulty());
-        SearchHelper.addTermFilter(builder, "exerciseType",
-                request.exerciseType());
-        SearchHelper.addTermFilter(builder, "createdBy",
-                request.createdBy());
-        SearchHelper.addTermFilter(builder, "orgId",
-                request.orgId());
-        SearchHelper.addTermFilter(builder, "freeForOrg",
-                request.freeForOrg());
-        SearchHelper.addTermFilter(builder, "allowAiQuestion",
-                request.allowAiQuestion());
-
-        SearchHelper.addRangeFilter(builder, "cost",
-                request.minCost(),
-                request.maxCost());
-        SearchHelper.addRangeFilter(builder, "startTime",
-                request.startAfter(),
-                null);
-        SearchHelper.addRangeFilter(builder, "endTime", null,
-                request.endBefore());
-
-        // Không trả item đã xoá mềm
-        builder.mustNot(mn -> mn.exists(e -> e.field("deletedAt")));
-
-        return builder;
-    }
+    return builder;
+  }
 }

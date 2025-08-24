@@ -9,9 +9,9 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @AllArgsConstructor
 public class CodeResult {
-    boolean passed;
-    int runtimeMs;
-    int memoryMb;
-    String output;
-    String error;
+  boolean passed;
+  int runtimeMs;
+  int memoryMb;
+  String output;
+  String error;
 }

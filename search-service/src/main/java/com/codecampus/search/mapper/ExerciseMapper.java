@@ -9,13 +9,13 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface ExerciseMapper {
 
-    ExerciseDocument toExerciseDocumentFromExercisePayload(
-            ExercisePayload exercisePayload);
+  ExerciseDocument toExerciseDocumentFromExercisePayload(
+      ExercisePayload exercisePayload);
 
-    ExercisePayload toExercisePayloadFromExerciseDocument(
-            ExerciseDocument exerciseDocument);
+  ExercisePayload toExercisePayloadFromExerciseDocument(
+      ExerciseDocument exerciseDocument);
 
-    @Mapping(target = "user", ignore = true)
-    ExerciseSearchResponse toExerciseSearchResponseFromExerciseDocument(
-            ExerciseDocument exerciseDocument);
+  @Mapping(target = "user", ignore = true)
+  ExerciseSearchResponse toExerciseSearchResponseFromExerciseDocument(
+      ExerciseDocument exerciseDocument);
 }

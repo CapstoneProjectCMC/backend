@@ -22,16 +22,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/activity")
 public class ActivityTimeController {
 
-    ActivityTimeService activityTimeService;
+  ActivityTimeService activityTimeService;
 
-    @GetMapping("/weeks")
-    ApiResponse<PageResponse<ActivityWeek>> getMyActivityWeeks(
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size) {
+  @GetMapping("/weeks")
+  ApiResponse<PageResponse<ActivityWeek>> getMyActivityWeeks(
+      @RequestParam(defaultValue = "1") int page,
+      @RequestParam(defaultValue = "10") int size) {
 
-        return ApiResponse.<PageResponse<ActivityWeek>>builder()
-                .message("Danh sách tuần hoạt động")
-                .result(activityTimeService.getMyActivityWeeks(page, size))
-                .build();
-    }
+    return ApiResponse.<PageResponse<ActivityWeek>>builder()
+        .message("Danh sách tuần hoạt động")
+        .result(activityTimeService.getMyActivityWeeks(page, size))
+        .build();
+  }
 }

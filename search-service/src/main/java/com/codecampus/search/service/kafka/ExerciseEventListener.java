@@ -18,27 +18,27 @@ import org.springframework.stereotype.Service;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ExerciseEventListener {
 
-    ExerciseDocumentRepository exerciseDocumentRepository;
+  ExerciseDocumentRepository exerciseDocumentRepository;
 
-    ExerciseMapper exerciseMapper;
-    ObjectMapper objectMapper;
+  ExerciseMapper exerciseMapper;
+  ObjectMapper objectMapper;
 
-    @KafkaListener(
-            topics = "${app.event.exercise-events}",
-            groupId = "search-service")
-    public void onMessageExercise(String raw) {
-        try {
-            ExerciseEvent exerciseEvent =
-                    objectMapper.readValue(raw, ExerciseEvent.class);
-            switch (exerciseEvent.getType()) {
-                case CREATED, UPDATED -> exerciseDocumentRepository.save(
-                        exerciseMapper.toExerciseDocumentFromExercisePayload(
-                                exerciseEvent.getPayload()));
-                case DELETED -> exerciseDocumentRepository.deleteById(
-                        exerciseEvent.getId());
-            }
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+  @KafkaListener(
+      topics = "${app.event.exercise-events}",
+      groupId = "search-service")
+  public void onMessageExercise(String raw) {
+    try {
+      ExerciseEvent exerciseEvent =
+          objectMapper.readValue(raw, ExerciseEvent.class);
+      switch (exerciseEvent.getType()) {
+        case CREATED, UPDATED -> exerciseDocumentRepository.save(
+            exerciseMapper.toExerciseDocumentFromExercisePayload(
+                exerciseEvent.getPayload()));
+        case DELETED -> exerciseDocumentRepository.deleteById(
+            exerciseEvent.getId());
+      }
+    } catch (JsonProcessingException e) {
+      throw new RuntimeException(e);
     }
+  }
 }

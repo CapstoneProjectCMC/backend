@@ -13,9 +13,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class JacksonProtobufConfig {
 
-    @Bean
-    // Spring Boot tự động thêm mọi Module bean vào ObjectMapper mặc định
-    public Module protobufModule() {
-        return new ProtobufModule();
-    }
+  @Bean
+  // Spring Boot tự động thêm mọi Module bean vào ObjectMapper mặc định
+  public Module protobufModule() {
+    return new ProtobufModule();
+  }
 }

@@ -15,14 +15,14 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ParticipantInfo {
-    String userId;
-    String username;
-    String email;
-    String displayName;
-    String avatarUrl;
-    String backgroundUrl;
-    Boolean active;
-    String firstName;
-    String lastName;
-    Boolean gender;
+  String userId;
+  String username;
+  String email;
+  String displayName;
+  String avatarUrl;
+  String backgroundUrl;
+  Boolean active;
+  String firstName;
+  String lastName;
+  Boolean gender;
 }

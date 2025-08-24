@@ -14,9 +14,9 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserEvent {
-    Type type;
-    String id;            // userId
-    UserPayload payload;  // null nếu DELETED
+  Type type;
+  String id;            // userId
+  UserPayload payload;  // null nếu DELETED
 
-    public enum Type { CREATED, UPDATED, DELETED, RESTORED }
+  public enum Type { CREATED, UPDATED, DELETED, RESTORED }
 }

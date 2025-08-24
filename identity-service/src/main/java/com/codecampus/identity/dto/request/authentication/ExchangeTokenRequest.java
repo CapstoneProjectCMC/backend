@@ -16,9 +16,9 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ExchangeTokenRequest {
-    String code;
-    String clientId;
-    String clientSecret;
-    String redirectUri;
-    String grantType;
+  String code;
+  String clientId;
+  String clientSecret;
+  String redirectUri;
+  String grantType;
 }

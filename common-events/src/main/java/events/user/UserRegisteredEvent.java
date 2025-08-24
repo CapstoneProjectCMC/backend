@@ -15,7 +15,7 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserRegisteredEvent {
-    String id;
-    UserPayload user;
-    UserProfileCreationPayload profile;
+  String id;
+  UserPayload user;
+  UserProfileCreationPayload profile;
 }

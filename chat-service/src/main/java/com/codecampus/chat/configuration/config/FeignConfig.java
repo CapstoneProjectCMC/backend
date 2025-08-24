@@ -12,9 +12,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class FeignConfig {
 
-    @Bean
-    public Encoder feignEncoder(
-            ObjectFactory<HttpMessageConverters> messageConverters) {
-        return new SpringFormEncoder(new SpringEncoder(messageConverters));
-    }
+  @Bean
+  public Encoder feignEncoder(
+      ObjectFactory<HttpMessageConverters> messageConverters) {
+    return new SpringFormEncoder(new SpringEncoder(messageConverters));
+  }
 }

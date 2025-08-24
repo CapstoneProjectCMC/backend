@@ -14,6 +14,9 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,10 +27,6 @@ import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
 @Getter
 @Setter
 @Builder
@@ -37,40 +36,40 @@ import java.util.Optional;
 @Entity
 @Table(name = "question")
 @SQLDelete(sql = "UPDATE question " +
-        "SET deleted_by = ? , deleted_at = now() " +
-        "WHERE id = ?")
+    "SET deleted_by = ? , deleted_at = now() " +
+    "WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
 public class Question extends AuditMetadata {
-    @Id
-    String id;
+  @Id
+  String id;
 
-    @JsonBackReference
-    @ManyToOne
-    QuizExercise quiz;
+  @JsonBackReference
+  @ManyToOne
+  QuizExercise quiz;
 
-    @Column(columnDefinition = "text")
-    String text;
+  @Column(columnDefinition = "text")
+  String text;
 
-    @Enumerated(EnumType.ORDINAL)
-    QuestionType questionType;
+  @Enumerated(EnumType.ORDINAL)
+  QuestionType questionType;
 
-    int points;
-    int orderInQuiz;
+  int points;
+  int orderInQuiz;
 
-    @JsonManagedReference
-    @OneToMany(
-            mappedBy = "question",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
-    @OrderBy("order ASC")
-    @Builder.Default
-    List<Option> options = new ArrayList<>();
+  @JsonManagedReference
+  @OneToMany(
+      mappedBy = "question",
+      cascade = CascadeType.ALL,
+      orphanRemoval = true
+  )
+  @OrderBy("order ASC")
+  @Builder.Default
+  List<Option> options = new ArrayList<>();
 
-    public Optional<Option> findOptionById(String optionId) {
-        return options.stream()
-                .filter(o -> !o.isDeleted())
-                .filter(o -> o.getId().equals(optionId))
-                .findFirst();
-    }
+  public Optional<Option> findOptionById(String optionId) {
+    return options.stream()
+        .filter(o -> !o.isDeleted())
+        .filter(o -> o.getId().equals(optionId))
+        .findFirst();
+  }
 }

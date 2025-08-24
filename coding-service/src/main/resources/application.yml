@@ -21,6 +21,11 @@ submission:
     host: localhost
     port: 9590
 
+playground:
+  grpc:
+    host: localhost
+    port: 9593
+
 spring:
   application:
     name: coding-service

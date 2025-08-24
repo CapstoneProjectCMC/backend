@@ -56,7 +56,10 @@ services:
     user: "1001"
     group_add:
       - "${DOCKER_GID}"
-    ports: [ "8084:8084", "9592:9592" ]
+    ports:
+      - "8084:8084"
+      - "4098:4098"
+      - "9592:9592"
     networks: [ backend ]
 
   sandbox-image:
@@ -121,7 +124,9 @@ services:
       - CHAT_PASSWORD=${CHAT_PASSWORD}
       - CHAT_DATABASE=${CHAT_DATABASE}
       - REDIS_PASSWORD=${REDIS_PASSWORD}
-    ports: [ "8089:8089" ]
+    ports:
+      - "8089:8089"
+      - "4099:4099"
     networks: [ backend ]
 
   post-service:

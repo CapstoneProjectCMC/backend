@@ -10,6 +10,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,8 +21,6 @@ import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
-import java.util.List;
-
 @Getter
 @Setter
 @Builder
@@ -31,26 +30,26 @@ import java.util.List;
 @Entity
 @Table(name = "post_comment")
 @SQLDelete(sql = "UPDATE post_comment " +
-        "SET deleted_by = ? , deleted_at = now() " +
-        "WHERE id = ?")
+    "SET deleted_by = ? , deleted_at = now() " +
+    "WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
 public class PostComment extends AuditMetadata {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    String commentId;
+  @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
+  String commentId;
 
-    String userId;
-    String content;
+  String userId;
+  String content;
 
-    @ManyToOne
-    @JoinColumn(name = "post_id", nullable = false)
-    Post post;
+  @ManyToOne
+  @JoinColumn(name = "post_id", nullable = false)
+  Post post;
 
-    @ManyToOne
-    @JoinColumn(name = "parent_comment_id")
-    PostComment parentComment; // comment reply
+  @ManyToOne
+  @JoinColumn(name = "parent_comment_id")
+  PostComment parentComment; // comment reply
 
-    @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL)
-    List<PostComment> replies;
+  @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL)
+  List<PostComment> replies;
 }
 

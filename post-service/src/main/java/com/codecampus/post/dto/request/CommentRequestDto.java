@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CommentRequestDto {
-    private String postId;
-    private String parentCommentId; // null nếu là comment gốc
-    private String content;
+  private String postId;
+  private String parentCommentId; // null nếu là comment gốc
+  private String content;
 }

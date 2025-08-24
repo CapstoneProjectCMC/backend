@@ -25,71 +25,71 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RequestMapping("/social")
 public class SocialController {
-    SocialService socialService;
+  SocialService socialService;
 
-    @PostMapping("/follow/{targetUserId}")
-    ApiResponse<Void> follow(
-            @PathVariable String targetUserId) {
-        socialService.follow(targetUserId);
-        return ApiResponse.<Void>builder()
-                .message("Đã follow")
-                .build();
-    }
+  @PostMapping("/follow/{targetUserId}")
+  ApiResponse<Void> follow(
+      @PathVariable String targetUserId) {
+    socialService.follow(targetUserId);
+    return ApiResponse.<Void>builder()
+        .message("Đã follow")
+        .build();
+  }
 
-    @DeleteMapping("/follow/{targetUserId}")
-    ApiResponse<Void> unfollow(
-            @PathVariable String targetUserId) {
-        socialService.unfollow(targetUserId);
-        return ApiResponse.<Void>builder()
-                .message("Đã unfollow")
-                .build();
-    }
+  @DeleteMapping("/follow/{targetUserId}")
+  ApiResponse<Void> unfollow(
+      @PathVariable String targetUserId) {
+    socialService.unfollow(targetUserId);
+    return ApiResponse.<Void>builder()
+        .message("Đã unfollow")
+        .build();
+  }
 
-    @PostMapping("/block/{targetUserId}")
-    ApiResponse<Void> block(
-            @PathVariable String targetUserId) {
-        socialService.block(targetUserId);
-        return ApiResponse.<Void>builder()
-                .message("Đã block")
-                .build();
-    }
+  @PostMapping("/block/{targetUserId}")
+  ApiResponse<Void> block(
+      @PathVariable String targetUserId) {
+    socialService.block(targetUserId);
+    return ApiResponse.<Void>builder()
+        .message("Đã block")
+        .build();
+  }
 
-    @DeleteMapping("/block/{targetUserId}")
-    ApiResponse<Void> unblock(
-            @PathVariable String targetUserId) {
-        socialService.unblock(targetUserId);
-        return ApiResponse.<Void>builder()
-                .message("Đã unblock")
-                .build();
-    }
+  @DeleteMapping("/block/{targetUserId}")
+  ApiResponse<Void> unblock(
+      @PathVariable String targetUserId) {
+    socialService.unblock(targetUserId);
+    return ApiResponse.<Void>builder()
+        .message("Đã unblock")
+        .build();
+  }
 
-    @GetMapping("/followers")
-    ApiResponse<PageResponse<Follows>> getFollowers(
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        return ApiResponse.<PageResponse<Follows>>builder()
-                .message("Followers")
-                .result(socialService.getFollowers(page, size))
-                .build();
-    }
+  @GetMapping("/followers")
+  ApiResponse<PageResponse<Follows>> getFollowers(
+      @RequestParam(defaultValue = "1") int page,
+      @RequestParam(defaultValue = "10") int size) {
+    return ApiResponse.<PageResponse<Follows>>builder()
+        .message("Followers")
+        .result(socialService.getFollowers(page, size))
+        .build();
+  }
 
-    @GetMapping("/followings")
-    ApiResponse<PageResponse<Follows>> getFollowings(
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        return ApiResponse.<PageResponse<Follows>>builder()
-                .message("Followings")
-                .result(socialService.getFollowings(page, size))
-                .build();
-    }
+  @GetMapping("/followings")
+  ApiResponse<PageResponse<Follows>> getFollowings(
+      @RequestParam(defaultValue = "1") int page,
+      @RequestParam(defaultValue = "10") int size) {
+    return ApiResponse.<PageResponse<Follows>>builder()
+        .message("Followings")
+        .result(socialService.getFollowings(page, size))
+        .build();
+  }
 
-    @GetMapping("/blocked")
-    ApiResponse<PageResponse<Blocks>> findBlocked(
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        return ApiResponse.<PageResponse<Blocks>>builder()
-                .message("Danh sách blocked")
-                .result(socialService.findBlocked(page, size))
-                .build();
-    }
+  @GetMapping("/blocked")
+  ApiResponse<PageResponse<Blocks>> findBlocked(
+      @RequestParam(defaultValue = "1") int page,
+      @RequestParam(defaultValue = "10") int size) {
+    return ApiResponse.<PageResponse<Blocks>>builder()
+        .message("Danh sách blocked")
+        .result(socialService.findBlocked(page, size))
+        .build();
+  }
 }

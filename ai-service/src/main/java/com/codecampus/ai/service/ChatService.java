@@ -22,66 +22,66 @@ import org.springframework.util.MimeTypeUtils;
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ChatService {
-    ChatClient chatClient;
-    JdbcChatMemoryRepository jdbcChatMemoryRepository;
+  ChatClient chatClient;
+  JdbcChatMemoryRepository jdbcChatMemoryRepository;
 
-    public ChatService(
-            ChatClient.Builder builder,
-            JdbcChatMemoryRepository jdbcChatMemoryRepository) {
-        this.jdbcChatMemoryRepository = jdbcChatMemoryRepository;
+  public ChatService(
+      ChatClient.Builder builder,
+      JdbcChatMemoryRepository jdbcChatMemoryRepository) {
+    this.jdbcChatMemoryRepository = jdbcChatMemoryRepository;
 
-        //TODO Nếu mà đầy bộ nhớ thì throw ra lỗi cụ thể
-        ChatMemory chatMemory = MessageWindowChatMemory.builder()
-                .chatMemoryRepository(jdbcChatMemoryRepository)
-                .maxMessages(100)
-                .build();
+    //TODO Nếu mà đầy bộ nhớ thì throw ra lỗi cụ thể
+    ChatMemory chatMemory = MessageWindowChatMemory.builder()
+        .chatMemoryRepository(jdbcChatMemoryRepository)
+        .maxMessages(100)
+        .build();
 
-        chatClient = builder
-                .defaultAdvisors(MessageChatMemoryAdvisor.builder(chatMemory)
-                        .build())
-                .build();
-    }
+    chatClient = builder
+        .defaultAdvisors(MessageChatMemoryAdvisor.builder(chatMemory)
+            .build())
+        .build();
+  }
 
-    public String chat(
-            String threadId,
-            ChatRequest chatRequest) {
+  public String chat(
+      String threadId,
+      ChatRequest chatRequest) {
 
-        SystemMessage sys = new SystemMessage("""
-                You are CodeCampus.AI
-                You should response with a formal voice
-                """);
-        UserMessage user = new UserMessage(chatRequest.message());
-        Prompt prompt = new Prompt(sys, user);
+    SystemMessage sys = new SystemMessage("""
+        You are CodeCampus.AI
+        You should response with a formal voice
+        """);
+    UserMessage user = new UserMessage(chatRequest.message());
+    Prompt prompt = new Prompt(sys, user);
 
-        return chatClient
-                .prompt(prompt)
-                .options(ChatOptions.builder().temperature(0.3).build())
-                .advisors(
-                        adv -> adv.param(ChatMemory.CONVERSATION_ID, threadId))
-                .call()
-                .content();
-    }
+    return chatClient
+        .prompt(prompt)
+        .options(ChatOptions.builder().temperature(0.3).build())
+        .advisors(
+            adv -> adv.param(ChatMemory.CONVERSATION_ID, threadId))
+        .call()
+        .content();
+  }
 
-    public String chatWithImage(
-            String threadId,
-            String absolutePath,
-            String contentType,
-            String message) {
-        Media media = Media.builder()
-                .mimeType(MimeTypeUtils.parseMimeType(
-                        contentType != null ? contentType :
-                                "application/octet-stream"))
-                .data(new FileSystemResource(absolutePath))
-                .build();
+  public String chatWithImage(
+      String threadId,
+      String absolutePath,
+      String contentType,
+      String message) {
+    Media media = Media.builder()
+        .mimeType(MimeTypeUtils.parseMimeType(
+            contentType != null ? contentType :
+                "application/octet-stream"))
+        .data(new FileSystemResource(absolutePath))
+        .build();
 
-        return chatClient
-                .prompt()
-                .options(ChatOptions.builder().temperature(0.2).build())
-                .system("You are CodeCampus.AI")
-                .user(u -> u.media(media).text(message))
-                .advisors(
-                        adv -> adv.param(ChatMemory.CONVERSATION_ID, threadId))
-                .call()
-                .content();
-    }
+    return chatClient
+        .prompt()
+        .options(ChatOptions.builder().temperature(0.2).build())
+        .system("You are CodeCampus.AI")
+        .user(u -> u.media(media).text(message))
+        .advisors(
+            adv -> adv.param(ChatMemory.CONVERSATION_ID, threadId))
+        .call()
+        .content();
+  }
 }

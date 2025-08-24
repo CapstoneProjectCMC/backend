@@ -16,58 +16,58 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class CodingHelper {
 
-    CodingExerciseRepository codingExerciseRepository;
-    AssignmentRepository assignmentRepository;
+  CodingExerciseRepository codingExerciseRepository;
+  AssignmentRepository assignmentRepository;
 
-    public CodingExercise findCodingOrThrow(String exerciseId) {
-        return codingExerciseRepository
-                .findById(exerciseId)
-                .orElseThrow(
-                        () -> new AppException(ErrorCode.EXERCISE_NOT_FOUND)
-                );
-    }
+  public CodingExercise findCodingOrThrow(String exerciseId) {
+    return codingExerciseRepository
+        .findById(exerciseId)
+        .orElseThrow(
+            () -> new AppException(ErrorCode.EXERCISE_NOT_FOUND)
+        );
+  }
 
-    public boolean hasAccessOnLoadCodingResponse(
-            LoadCodingResponse loadCodingResponse,
-            String userId,
-            String username,
-            boolean teacher) {
+  public boolean hasAccessOnLoadCodingResponse(
+      LoadCodingResponse loadCodingResponse,
+      String userId,
+      String username,
+      boolean teacher) {
 
-        boolean publicAccessible = loadCodingResponse
-                .getExercise()
-                .getPublicAccessible();
-        boolean owner =
-                username != null && username.equalsIgnoreCase(
-                        loadCodingResponse.getExercise()
-                                .getCreatedBy()
-                );
+    boolean publicAccessible = loadCodingResponse
+        .getExercise()
+        .getPublicAccessible();
+    boolean owner =
+        username != null && username.equalsIgnoreCase(
+            loadCodingResponse.getExercise()
+                .getCreatedBy()
+        );
 
-        boolean assigned =
-                userId != null && assignmentRepository
-                        .existsByExerciseIdAndStudentId(
-                                loadCodingResponse.getExercise()
-                                        .getId(), userId);
+    boolean assigned =
+        userId != null && assignmentRepository
+            .existsByExerciseIdAndStudentId(
+                loadCodingResponse.getExercise()
+                    .getId(), userId);
 
-        return publicAccessible || owner || teacher || assigned;
-    }
+    return publicAccessible || owner || teacher || assigned;
+  }
 
-    public boolean hasAccessOnCodingExercise(
-            CodingExercise coding,
-            String userId,
-            String username,
-            boolean teacher) {
+  public boolean hasAccessOnCodingExercise(
+      CodingExercise coding,
+      String userId,
+      String username,
+      boolean teacher) {
 
-        boolean publicAccessible =
-                coding.isPublicAccessible();
+    boolean publicAccessible =
+        coding.isPublicAccessible();
 
-        boolean owner =
-                username != null &&
-                        username.equalsIgnoreCase(coding.getCreatedBy());
+    boolean owner =
+        username != null &&
+            username.equalsIgnoreCase(coding.getCreatedBy());
 
-        boolean assigned = userId != null &&
-                assignmentRepository.existsByExerciseIdAndStudentId(
-                        coding.getId(), userId);
+    boolean assigned = userId != null &&
+        assignmentRepository.existsByExerciseIdAndStudentId(
+            coding.getId(), userId);
 
-        return publicAccessible || owner || teacher || assigned;
-    }
+    return publicAccessible || owner || teacher || assigned;
+  }
 }

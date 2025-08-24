@@ -13,6 +13,7 @@ import com.codecampus.submission.entity.Question;
 import com.codecampus.submission.service.ExerciseService;
 import com.codecampus.submission.service.QuizService;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
@@ -28,74 +29,72 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @Slf4j
 @Builder
 @RestController
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class QuizController {
-    ExerciseService exerciseService;
-    QuizService quizService;
+  ExerciseService exerciseService;
+  QuizService quizService;
 
 
-    @PostMapping("/quiz/exercise/{exerciseId}/quiz-detail")
-    ApiResponse<Void> addQuizDetail(
-            @PathVariable("exerciseId") String exerciseId,
-            @RequestBody @Valid AddQuizDetailRequest addQuizRequest) {
+  @PostMapping("/quiz/exercise/{exerciseId}/quiz-detail")
+  ApiResponse<Void> addQuizDetail(
+      @PathVariable("exerciseId") String exerciseId,
+      @RequestBody @Valid AddQuizDetailRequest addQuizRequest) {
 
-        quizService.addQuizDetail(
-                exerciseId,
-                addQuizRequest,
-                false
-        );
+    quizService.addQuizDetail(
+        exerciseId,
+        addQuizRequest,
+        false
+    );
 
-        return ApiResponse.<Void>builder()
-                .message("Tạo Quiz thành công!")
-                .build();
-    }
+    return ApiResponse.<Void>builder()
+        .message("Tạo Quiz thành công!")
+        .build();
+  }
 
-    @PostMapping("/quiz/{exerciseId}/question")
-    ApiResponse<Void> addQuestion(
-            @PathVariable("exerciseId") String exerciseId,
-            @RequestBody @Valid QuestionDto questionDto)
-            throws BadRequestException {
+  @PostMapping("/quiz/{exerciseId}/question")
+  ApiResponse<Void> addQuestion(
+      @PathVariable("exerciseId") String exerciseId,
+      @RequestBody @Valid QuestionDto questionDto)
+      throws BadRequestException {
 
-        quizService.addQuestion(exerciseId, questionDto, false);
+    quizService.addQuestion(exerciseId, questionDto, false);
 
-        return ApiResponse.<Void>builder()
-                .message("Thêm câu hỏi cho quiz thành công!")
-                .build();
-    }
+    return ApiResponse.<Void>builder()
+        .message("Thêm câu hỏi cho quiz thành công!")
+        .build();
+  }
 
-    @PostMapping("/quiz/question/{questionId}/option")
-    ApiResponse<Void> addOption(
-            @PathVariable String questionId,
-            @RequestBody @Valid OptionDto request) {
+  @PostMapping("/quiz/question/{questionId}/option")
+  ApiResponse<Void> addOption(
+      @PathVariable String questionId,
+      @RequestBody @Valid OptionDto request) {
 
-        quizService.addOption(questionId, request, false);
+    quizService.addOption(questionId, request, false);
 
-        return ApiResponse.<Void>builder()
-                .message("Thêm option thành công!")
-                .build();
-    }
+    return ApiResponse.<Void>builder()
+        .message("Thêm option thành công!")
+        .build();
+  }
 
-    @PatchMapping("/quiz/{exerciseId}/question/{questionId}")
-    public ApiResponse<Void> updateQuestionWithOptions(
-            @PathVariable String exerciseId,
-            @PathVariable String questionId,
-            @RequestBody UpdateQuestionWithOptionsRequest body) {
+  @PatchMapping("/quiz/{exerciseId}/question/{questionId}")
+  public ApiResponse<Void> updateQuestionWithOptions(
+      @PathVariable String exerciseId,
+      @PathVariable String questionId,
+      @RequestBody UpdateQuestionWithOptionsRequest body) {
 
-        quizService.updateQuestionWithOptions(
-                exerciseId,
-                questionId,
-                body
-        );
-        return ApiResponse.<Void>builder()
-                .message("Cập nhật question + options thành công!")
-                .build();
-    }
+    quizService.updateQuestionWithOptions(
+        exerciseId,
+        questionId,
+        body
+    );
+    return ApiResponse.<Void>builder()
+        .message("Cập nhật question + options thành công!")
+        .build();
+  }
 
 //    @Deprecated
 //    @PatchMapping("/quiz/{exerciseId}/question/{questionId}")
@@ -111,84 +110,84 @@ public class QuizController {
 //                .build();
 //    }
 
-    @DeleteMapping("/quiz/{exerciseId}/question/{questionId}")
-    ApiResponse<Void> softDeleteQuestion(
-            @PathVariable String exerciseId,
-            @PathVariable String questionId) {
-        quizService.softDeleteQuestion(exerciseId, questionId);
+  @DeleteMapping("/quiz/{exerciseId}/question/{questionId}")
+  ApiResponse<Void> softDeleteQuestion(
+      @PathVariable String exerciseId,
+      @PathVariable String questionId) {
+    quizService.softDeleteQuestion(exerciseId, questionId);
 
-        return ApiResponse.<Void>builder()
-                .message("Đã xoá câu hỏi!")
-                .build();
-    }
+    return ApiResponse.<Void>builder()
+        .message("Đã xoá câu hỏi!")
+        .build();
+  }
 
-    @PatchMapping("/quiz/question/option/{optionId}")
-    ApiResponse<Void> updateOption(
-            @PathVariable String optionId,
-            @RequestBody UpdateOptionRequest request) {
+  @PatchMapping("/quiz/question/option/{optionId}")
+  ApiResponse<Void> updateOption(
+      @PathVariable String optionId,
+      @RequestBody UpdateOptionRequest request) {
 
-        quizService.updateOption(optionId, request);
+    quizService.updateOption(optionId, request);
 
-        return ApiResponse.<Void>builder()
-                .message("Sửa option thành công!")
-                .build();
-    }
+    return ApiResponse.<Void>builder()
+        .message("Sửa option thành công!")
+        .build();
+  }
 
-    @DeleteMapping("/quiz/{exerciseId}/{questionId}/option/{optionId}")
-    ApiResponse<Void> softDeleteOption(
-            @PathVariable String exerciseId,
-            @PathVariable String questionId,
-            @PathVariable String optionId) {
+  @DeleteMapping("/quiz/{exerciseId}/{questionId}/option/{optionId}")
+  ApiResponse<Void> softDeleteOption(
+      @PathVariable String exerciseId,
+      @PathVariable String questionId,
+      @PathVariable String optionId) {
 
-        quizService.softDeleteOption(
-                exerciseId,
-                questionId,
-                optionId);
+    quizService.softDeleteOption(
+        exerciseId,
+        questionId,
+        optionId);
 
-        return ApiResponse.<Void>builder()
-                .message("Đã xoá option thành công!")
-                .build();
-    }
+    return ApiResponse.<Void>builder()
+        .message("Đã xoá option thành công!")
+        .build();
+  }
 
-    @GetMapping("/quiz/{exerciseId}/questions")
-    ApiResponse<PageResponse<Question>> getQuestionsOfQuiz(
-            @PathVariable String exerciseId,
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "ORDER_IN_QUIZ") SortField sortBy,
-            @RequestParam(defaultValue = "false") boolean asc) {
-        return ApiResponse.<PageResponse<Question>>builder()
-                .result(quizService.getQuestionsOfQuiz(
-                        exerciseId,
-                        page, size,
-                        sortBy, asc
-                ))
-                .message("Danh sách câu hỏi!")
-                .build();
-    }
+  @GetMapping("/quiz/{exerciseId}/questions")
+  ApiResponse<PageResponse<Question>> getQuestionsOfQuiz(
+      @PathVariable String exerciseId,
+      @RequestParam(defaultValue = "1") int page,
+      @RequestParam(defaultValue = "10") int size,
+      @RequestParam(defaultValue = "ORDER_IN_QUIZ") SortField sortBy,
+      @RequestParam(defaultValue = "false") boolean asc) {
+    return ApiResponse.<PageResponse<Question>>builder()
+        .result(quizService.getQuestionsOfQuiz(
+            exerciseId,
+            page, size,
+            sortBy, asc
+        ))
+        .message("Danh sách câu hỏi!")
+        .build();
+  }
 
-    @GetMapping("/question/{questionId}")
-    ApiResponse<Question> getQuestion(@PathVariable String questionId) {
-        return ApiResponse.<Question>builder()
-                .result(quizService.getQuestion(questionId))
-                .message("Chi tiết question")
-                .build();
-    }
+  @GetMapping("/question/{questionId}")
+  ApiResponse<Question> getQuestion(@PathVariable String questionId) {
+    return ApiResponse.<Question>builder()
+        .result(quizService.getQuestion(questionId))
+        .message("Chi tiết question")
+        .build();
+  }
 
-    @GetMapping("/question/{questionId}/option")
-    ApiResponse<List<Option>> getOptionsOfQuestion(
-            @PathVariable String questionId) {
-        return ApiResponse.<List<Option>>builder()
-                .result(quizService.getOptionsOfQuestion(questionId))
-                .message("Danh sách option")
-                .build();
-    }
+  @GetMapping("/question/{questionId}/option")
+  ApiResponse<List<Option>> getOptionsOfQuestion(
+      @PathVariable String questionId) {
+    return ApiResponse.<List<Option>>builder()
+        .result(quizService.getOptionsOfQuestion(questionId))
+        .message("Danh sách option")
+        .build();
+  }
 
-    @GetMapping("/option/{optionId}")
-    ApiResponse<Option> getOption(@PathVariable String optionId) {
-        return ApiResponse.<Option>builder()
-                .result(quizService.getOption(optionId))
-                .message("Chi tiết option")
-                .build();
-    }
+  @GetMapping("/option/{optionId}")
+  ApiResponse<Option> getOption(@PathVariable String optionId) {
+    return ApiResponse.<Option>builder()
+        .result(quizService.getOption(optionId))
+        .message("Chi tiết option")
+        .build();
+  }
 }

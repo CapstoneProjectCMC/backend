@@ -21,37 +21,37 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class SubmissionHistoryController {
-    SubmissionHistoryService submissionHistoryService;
+  SubmissionHistoryService submissionHistoryService;
 
-    @GetMapping("/quiz/self/history")
-    ApiResponse<PageResponse<QuizAttemptHistoryResponse>> myQuizHistory(
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        return ApiResponse.<PageResponse<QuizAttemptHistoryResponse>>builder()
-                .result(submissionHistoryService
-                        .getQuizAttemptHistoriesForStudent(page, size))
-                .message("Lịch sử làm bài quiz của bạn!")
-                .build();
-    }
+  @GetMapping("/quiz/self/history")
+  ApiResponse<PageResponse<QuizAttemptHistoryResponse>> myQuizHistory(
+      @RequestParam(defaultValue = "1") int page,
+      @RequestParam(defaultValue = "10") int size) {
+    return ApiResponse.<PageResponse<QuizAttemptHistoryResponse>>builder()
+        .result(submissionHistoryService
+            .getQuizAttemptHistoriesForStudent(page, size))
+        .message("Lịch sử làm bài quiz của bạn!")
+        .build();
+  }
 
-    @GetMapping("/coding/self/history")
-    ApiResponse<PageResponse<CodingAttemptHistoryResponse>> myCodingHistory(
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        return ApiResponse.<PageResponse<CodingAttemptHistoryResponse>>builder()
-                .result(submissionHistoryService
-                        .getCodingAttemptHistoriesForStudent(page, size))
-                .message("Lịch sử làm bài code của bạn!")
-                .build();
-    }
+  @GetMapping("/coding/self/history")
+  ApiResponse<PageResponse<CodingAttemptHistoryResponse>> myCodingHistory(
+      @RequestParam(defaultValue = "1") int page,
+      @RequestParam(defaultValue = "10") int size) {
+    return ApiResponse.<PageResponse<CodingAttemptHistoryResponse>>builder()
+        .result(submissionHistoryService
+            .getCodingAttemptHistoriesForStudent(page, size))
+        .message("Lịch sử làm bài code của bạn!")
+        .build();
+  }
 
-    @GetMapping("/self/history")
-    ApiResponse<PageResponse<AllSubmissionHistoryResponse>> mySubmissions(
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        return ApiResponse.<PageResponse<AllSubmissionHistoryResponse>>builder()
-                .result(submissionHistoryService.mySubmissions(page, size))
-                .message("Tất cả bài nộp của bạn")
-                .build();
-    }
+  @GetMapping("/self/history")
+  ApiResponse<PageResponse<AllSubmissionHistoryResponse>> mySubmissions(
+      @RequestParam(defaultValue = "1") int page,
+      @RequestParam(defaultValue = "10") int size) {
+    return ApiResponse.<PageResponse<AllSubmissionHistoryResponse>>builder()
+        .result(submissionHistoryService.mySubmissions(page, size))
+        .message("Tất cả bài nộp của bạn")
+        .build();
+  }
 }

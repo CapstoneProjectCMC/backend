@@ -24,26 +24,26 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ChatMessageController {
-    ChatMessageService chatMessageService;
+  ChatMessageService chatMessageService;
 
-    @PostMapping("/message")
-    ApiResponse<ChatMessageResponse> createChatMessage(
-            @RequestBody @Valid ChatMessageRequest request)
-            throws JsonProcessingException {
-        return ApiResponse.<ChatMessageResponse>builder()
-                .result(chatMessageService.createChatMessage(request))
-                .build();
-    }
+  @PostMapping("/message")
+  ApiResponse<ChatMessageResponse> createChatMessage(
+      @RequestBody @Valid ChatMessageRequest request)
+      throws JsonProcessingException {
+    return ApiResponse.<ChatMessageResponse>builder()
+        .result(chatMessageService.createChatMessage(request))
+        .build();
+  }
 
-    @GetMapping("/messages")
-    ApiResponse<PageResponse<ChatMessageResponse>> getChatMessages(
-            @RequestParam("conversationId") String conversationId,
-            @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "size", defaultValue = "20") int size) {
-        return ApiResponse.<PageResponse<ChatMessageResponse>>builder()
-                .result(chatMessageService.getChatMessages(
-                        conversationId,
-                        page, size))
-                .build();
-    }
+  @GetMapping("/messages")
+  ApiResponse<PageResponse<ChatMessageResponse>> getChatMessages(
+      @RequestParam("conversationId") String conversationId,
+      @RequestParam(value = "page", defaultValue = "1") int page,
+      @RequestParam(value = "size", defaultValue = "20") int size) {
+    return ApiResponse.<PageResponse<ChatMessageResponse>>builder()
+        .result(chatMessageService.getChatMessages(
+            conversationId,
+            page, size))
+        .build();
+  }
 }

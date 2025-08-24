@@ -33,98 +33,98 @@ import org.springframework.web.bind.annotation.RestController;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CodingController {
 
-    ExerciseService exerciseService;
-    CodingService codingService;
+  ExerciseService exerciseService;
+  CodingService codingService;
 
-    @PostMapping("/coding/exercise/{exerciseId}/coding-detail")
-    ApiResponse<Void> addCodingDetail(
-            @PathVariable("exerciseId") String exerciseId,
-            @RequestBody @Valid AddCodingDetailRequest addCodingRequest) {
+  @PostMapping("/coding/exercise/{exerciseId}/coding-detail")
+  ApiResponse<Void> addCodingDetail(
+      @PathVariable("exerciseId") String exerciseId,
+      @RequestBody @Valid AddCodingDetailRequest addCodingRequest) {
 
-        codingService.addCodingDetail(
-                exerciseId,
-                addCodingRequest,
-                false);
+    codingService.addCodingDetail(
+        exerciseId,
+        addCodingRequest,
+        false);
 
-        return ApiResponse.<Void>builder()
-                .message("Tạo Coding thành công!")
-                .build();
-    }
+    return ApiResponse.<Void>builder()
+        .message("Tạo Coding thành công!")
+        .build();
+  }
 
-    @PatchMapping("/coding/exercise/{exerciseId}/coding-detail")
-    ApiResponse<Void> updateCodingDetailWithTestCaseRequest(
-            @PathVariable String exerciseId,
-            @RequestBody UpdateCodingDetailWithTestCaseRequest dto) {
+  @PatchMapping("/coding/exercise/{exerciseId}/coding-detail")
+  ApiResponse<Void> updateCodingDetailWithTestCaseRequest(
+      @PathVariable String exerciseId,
+      @RequestBody UpdateCodingDetailWithTestCaseRequest dto) {
 
-        codingService.updateCodingDetailWithTestCaseRequest(exerciseId, dto);
+    codingService.updateCodingDetailWithTestCaseRequest(exerciseId, dto);
 
-        return ApiResponse.<Void>builder()
-                .message("Sửa Coding‑detail thành công!")
-                .build();
-    }
+    return ApiResponse.<Void>builder()
+        .message("Sửa Coding‑detail thành công!")
+        .build();
+  }
 
-    @GetMapping("/coding/{exerciseId}/test-cases")
-    ApiResponse<PageResponse<TestCase>> getTestCases(
-            @PathVariable String exerciseId,
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "CREATED_AT") SortField sortBy,
-            @RequestParam(defaultValue = "false") boolean asc) {
-        return ApiResponse.<PageResponse<TestCase>>builder()
-                .message("Get các testcases thành công!")
-                .result(codingService.getTestCases(
-                        exerciseId,
-                        page, size,
-                        sortBy, asc))
-                .build();
-    }
+  @GetMapping("/coding/{exerciseId}/test-cases")
+  ApiResponse<PageResponse<TestCase>> getTestCases(
+      @PathVariable String exerciseId,
+      @RequestParam(defaultValue = "1") int page,
+      @RequestParam(defaultValue = "10") int size,
+      @RequestParam(defaultValue = "CREATED_AT") SortField sortBy,
+      @RequestParam(defaultValue = "false") boolean asc) {
+    return ApiResponse.<PageResponse<TestCase>>builder()
+        .message("Get các testcases thành công!")
+        .result(codingService.getTestCases(
+            exerciseId,
+            page, size,
+            sortBy, asc))
+        .build();
+  }
 
-    @GetMapping("/coding/test-case/{testCaseId}")
-    ApiResponse<TestCase> getTestCaseById(
-            @PathVariable String testCaseId) {
-        return ApiResponse.<TestCase>builder()
-                .result(codingService.getTestCaseOrThrow(testCaseId))
-                .message("Chi tiết testcase!")
-                .build();
-    }
+  @GetMapping("/coding/test-case/{testCaseId}")
+  ApiResponse<TestCase> getTestCaseById(
+      @PathVariable String testCaseId) {
+    return ApiResponse.<TestCase>builder()
+        .result(codingService.getTestCaseOrThrow(testCaseId))
+        .message("Chi tiết testcase!")
+        .build();
+  }
 
-    @PostMapping("/coding/{exerciseId}/test-case")
-    ApiResponse<TestCase> addTestCase(
-            @PathVariable("exerciseId") String exerciseId,
-            @RequestBody @Valid TestCaseDto testCaseDto)
-            throws BadRequestException {
+  @PostMapping("/coding/{exerciseId}/test-case")
+  ApiResponse<TestCase> addTestCase(
+      @PathVariable("exerciseId") String exerciseId,
+      @RequestBody @Valid TestCaseDto testCaseDto)
+      throws BadRequestException {
 
-        codingService.addTestCase(
-                exerciseId,
-                testCaseDto,
-                false);
+    codingService.addTestCase(
+        exerciseId,
+        testCaseDto,
+        false);
 
-        return ApiResponse.<TestCase>builder()
-                .message("Thêm testcase cho coding thành công!")
-                .build();
-    }
+    return ApiResponse.<TestCase>builder()
+        .message("Thêm testcase cho coding thành công!")
+        .build();
+  }
 
-    @PatchMapping("/coding/{exerciseId}/test-case/{testCaseId}")
-    ApiResponse<Void> updateTestCase(
-            @PathVariable String exerciseId,
-            @PathVariable String testCaseId,
-            @RequestBody UpdateTestCaseRequest request) {
+  @PatchMapping("/coding/{exerciseId}/test-case/{testCaseId}")
+  ApiResponse<Void> updateTestCase(
+      @PathVariable String exerciseId,
+      @PathVariable String testCaseId,
+      @RequestBody UpdateTestCaseRequest request) {
 
-        codingService.updateTestCase(exerciseId, testCaseId, request);
+    codingService.updateTestCase(exerciseId, testCaseId, request);
 
-        return ApiResponse.<Void>builder()
-                .message("Sửa testcase thành công!")
-                .build();
-    }
+    return ApiResponse.<Void>builder()
+        .message("Sửa testcase thành công!")
+        .build();
+  }
 
-    @DeleteMapping("/coding/{exerciseId}/test-case/{testCaseId}")
-    ApiResponse<Void> softDeleteTestCase(
-            @PathVariable String exerciseId,
-            @PathVariable String testCaseId) {
-        codingService.softDeleteTestCase(exerciseId, testCaseId);
+  @DeleteMapping("/coding/{exerciseId}/test-case/{testCaseId}")
+  ApiResponse<Void> softDeleteTestCase(
+      @PathVariable String exerciseId,
+      @PathVariable String testCaseId) {
+    codingService.softDeleteTestCase(exerciseId, testCaseId);
 
-        return ApiResponse.<Void>builder()
-                .message("Đã xoá testcase!")
-                .build();
-    }
+    return ApiResponse.<Void>builder()
+        .message("Đã xoá testcase!")
+        .build();
+  }
 }

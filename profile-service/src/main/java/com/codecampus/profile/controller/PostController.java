@@ -26,62 +26,62 @@ import org.springframework.web.bind.annotation.RestController;
 @Builder
 @Slf4j
 public class PostController {
-    PostService postService;
+  PostService postService;
 
-    @PostMapping("/post/{postId}/save")
-    ApiResponse<Void> savePost(
-            @PathVariable String postId) {
-        postService.savePost(postId);
-        return ApiResponse.<Void>builder()
-                .message("Đã lưu bài viết")
-                .build();
-    }
+  @PostMapping("/post/{postId}/save")
+  ApiResponse<Void> savePost(
+      @PathVariable String postId) {
+    postService.savePost(postId);
+    return ApiResponse.<Void>builder()
+        .message("Đã lưu bài viết")
+        .build();
+  }
 
-    @DeleteMapping("/post/{postId}/save")
-    ApiResponse<Void> unsavePost(
-            @PathVariable String postId) {
-        postService.unsavePost(postId);
-        return ApiResponse.<Void>builder()
-                .message("Đã bỏ lưu bài viết")
-                .build();
-    }
+  @DeleteMapping("/post/{postId}/save")
+  ApiResponse<Void> unsavePost(
+      @PathVariable String postId) {
+    postService.unsavePost(postId);
+    return ApiResponse.<Void>builder()
+        .message("Đã bỏ lưu bài viết")
+        .build();
+  }
 
-    @PostMapping("/post/{postId}/report")
-    ApiResponse<Void> reportPost(@PathVariable String postId,
-                                 @RequestBody ReportRequest body) {
-        postService.reportPost(postId, body.reason());
-        return ApiResponse.<Void>builder()
-                .message("Đã báo cáo bài viết")
-                .build();
-    }
+  @PostMapping("/post/{postId}/report")
+  ApiResponse<Void> reportPost(@PathVariable String postId,
+                               @RequestBody ReportRequest body) {
+    postService.reportPost(postId, body.reason());
+    return ApiResponse.<Void>builder()
+        .message("Đã báo cáo bài viết")
+        .build();
+  }
 
-    @GetMapping("/posts/saved")
-    ApiResponse<PageResponse<SavedPost>> getSavedPosts(
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        return ApiResponse.<PageResponse<SavedPost>>builder()
-                .message("Bài viết đã lưu")
-                .result(postService.getSavedPosts(page, size))
-                .build();
-    }
+  @GetMapping("/posts/saved")
+  ApiResponse<PageResponse<SavedPost>> getSavedPosts(
+      @RequestParam(defaultValue = "1") int page,
+      @RequestParam(defaultValue = "10") int size) {
+    return ApiResponse.<PageResponse<SavedPost>>builder()
+        .message("Bài viết đã lưu")
+        .result(postService.getSavedPosts(page, size))
+        .build();
+  }
 
-    @GetMapping("/post/reactions")
-    ApiResponse<PageResponse<Reaction>> getMyReactions(
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        return ApiResponse.<PageResponse<Reaction>>builder()
-                .message("Phản ứng của tôi")
-                .result(postService.getMyReactions(page, size))
-                .build();
-    }
+  @GetMapping("/post/reactions")
+  ApiResponse<PageResponse<Reaction>> getMyReactions(
+      @RequestParam(defaultValue = "1") int page,
+      @RequestParam(defaultValue = "10") int size) {
+    return ApiResponse.<PageResponse<Reaction>>builder()
+        .message("Phản ứng của tôi")
+        .result(postService.getMyReactions(page, size))
+        .build();
+  }
 
-    @GetMapping("/posts/reported")
-    ApiResponse<PageResponse<ReportedPost>> reportedPosts(
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        return ApiResponse.<PageResponse<ReportedPost>>builder()
-                .message("Bài viết tôi đã báo cáo")
-                .result(postService.getReportedPosts(page, size))
-                .build();
-    }
+  @GetMapping("/posts/reported")
+  ApiResponse<PageResponse<ReportedPost>> reportedPosts(
+      @RequestParam(defaultValue = "1") int page,
+      @RequestParam(defaultValue = "10") int size) {
+    return ApiResponse.<PageResponse<ReportedPost>>builder()
+        .message("Bài viết tôi đã báo cáo")
+        .result(postService.getReportedPosts(page, size))
+        .build();
+  }
 }

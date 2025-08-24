@@ -7,37 +7,37 @@ import jakarta.persistence.Converter;
 
 @Converter(autoApply = false)
 public class AntiCheatConfigConverter
-        implements AttributeConverter<AntiCheatConfig, String> {
+    implements AttributeConverter<AntiCheatConfig, String> {
 
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+  private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    @Override
-    public String convertToDatabaseColumn(
-            AntiCheatConfig antiCheatConfig) {
+  @Override
+  public String convertToDatabaseColumn(
+      AntiCheatConfig antiCheatConfig) {
 
-        if (antiCheatConfig == null) {
-            return null;
-        }
-
-        try {
-            return objectMapper.writeValueAsString(antiCheatConfig);
-        } catch (JsonProcessingException exception) {
-            throw new IllegalArgumentException(exception);
-        }
+    if (antiCheatConfig == null) {
+      return null;
     }
 
-    @Override
-    public AntiCheatConfig convertToEntityAttribute(
-            String jsonString) {
-
-        if (jsonString == null || jsonString.isBlank()) {
-            return null;
-        }
-
-        try {
-            return objectMapper.readValue(jsonString, AntiCheatConfig.class);
-        } catch (JsonProcessingException exception) {
-            throw new IllegalArgumentException(exception);
-        }
+    try {
+      return objectMapper.writeValueAsString(antiCheatConfig);
+    } catch (JsonProcessingException exception) {
+      throw new IllegalArgumentException(exception);
     }
+  }
+
+  @Override
+  public AntiCheatConfig convertToEntityAttribute(
+      String jsonString) {
+
+    if (jsonString == null || jsonString.isBlank()) {
+      return null;
+    }
+
+    try {
+      return objectMapper.readValue(jsonString, AntiCheatConfig.class);
+    } catch (JsonProcessingException exception) {
+      throw new IllegalArgumentException(exception);
+    }
+  }
 }

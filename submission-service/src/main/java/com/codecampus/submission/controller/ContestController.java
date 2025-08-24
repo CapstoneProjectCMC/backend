@@ -9,6 +9,7 @@ import com.codecampus.submission.entity.Contest;
 import com.codecampus.submission.entity.Exercise;
 import com.codecampus.submission.service.ContestService;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
@@ -20,8 +21,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @Slf4j
 @Builder
 @RestController
@@ -30,47 +29,47 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ContestController {
 
-    ContestService contestService;
+  ContestService contestService;
 
-    // Giáo viên tạo contest
-    @PostMapping
-    // @PreAuthorize("hasRole('TEACHER')")
-    ApiResponse<ContestResponse> createContest(
-            @RequestBody @Valid CreateContestRequest createContestRequest) {
-        Contest contest = contestService.createContest(createContestRequest);
+  // Giáo viên tạo contest
+  @PostMapping
+  // @PreAuthorize("hasRole('TEACHER')")
+  ApiResponse<ContestResponse> createContest(
+      @RequestBody @Valid CreateContestRequest createContestRequest) {
+    Contest contest = contestService.createContest(createContestRequest);
 
-        int totalQuestions = contest.getExercises().stream()
-                .mapToInt(e -> e.getExerciseType() == ExerciseType.QUIZ &&
-                        e.getQuizDetail() != null
-                        ? e.getQuizDetail().getNumQuestions()
-                        : (e.getCodingDetail() != null ?
-                        e.getCodingDetail().getTestCases().size() : 0))
-                .sum();
+    int totalQuestions = contest.getExercises().stream()
+        .mapToInt(e -> e.getExerciseType() == ExerciseType.QUIZ &&
+            e.getQuizDetail() != null
+            ? e.getQuizDetail().getNumQuestions()
+            : (e.getCodingDetail() != null ?
+            e.getCodingDetail().getTestCases().size() : 0))
+        .sum();
 
-        int totalDuration =
-                contest.getExercises().stream().mapToInt(Exercise::getDuration)
-                        .sum();
+    int totalDuration =
+        contest.getExercises().stream().mapToInt(Exercise::getDuration)
+            .sum();
 
-        return ApiResponse.<ContestResponse>builder()
-                .result(new ContestResponse(
-                        contest.getId(),
-                        contest.getTitle(), contest.getDescription(),
-                        contest.getStartTime(), contest.getEndTime(),
-                        contest.isRankPublic(), contest.getRankRevealTime(),
-                        totalQuestions, totalDuration,
-                        contest.getAntiCheatConfig()
-                ))
-                .message("Tạo kỳ thi thành công!")
-                .build();
-    }
+    return ApiResponse.<ContestResponse>builder()
+        .result(new ContestResponse(
+            contest.getId(),
+            contest.getTitle(), contest.getDescription(),
+            contest.getStartTime(), contest.getEndTime(),
+            contest.isRankPublic(), contest.getRankRevealTime(),
+            totalQuestions, totalDuration,
+            contest.getAntiCheatConfig()
+        ))
+        .message("Tạo kỳ thi thành công!")
+        .build();
+  }
 
-    // Học sinh xem contest của mình
-    @GetMapping("/self")
-    // @PreAuthorize("hasRole('STUDENT')")
-    ApiResponse<List<MyContestResponse>> myContests() {
-        return ApiResponse.<List<MyContestResponse>>builder()
-                .result(contestService.getMyContests())
-                .message("Các kỳ thi của bạn!")
-                .build();
-    }
+  // Học sinh xem contest của mình
+  @GetMapping("/self")
+  // @PreAuthorize("hasRole('STUDENT')")
+  ApiResponse<List<MyContestResponse>> myContests() {
+    return ApiResponse.<List<MyContestResponse>>builder()
+        .result(contestService.getMyContests())
+        .message("Các kỳ thi của bạn!")
+        .build();
+  }
 }
