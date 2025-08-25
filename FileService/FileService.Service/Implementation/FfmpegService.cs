@@ -60,6 +60,8 @@ namespace FileService.Service.Implementation
 
             string stderr = await process.StandardError.ReadToEndAsync();
             string stdout = await process.StandardOutput.ReadToEndAsync();
+            Console.WriteLine($"FFmpeg stdout: {stdout}");
+            Console.WriteLine($"FFmpeg stderr: {stderr}");
 
             await process.WaitForExitAsync();
 
