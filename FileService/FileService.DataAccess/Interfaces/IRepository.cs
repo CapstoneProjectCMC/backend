@@ -1,5 +1,6 @@
 ﻿using FileService.Core.ApiModels;
 using FileService.DataAccess.Models;
+using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 using System;
 using System.Linq.Expressions;
@@ -10,7 +11,7 @@ namespace FileService.DataAccess.Interfaces
 {
     public interface IRepository<T> where T : BaseDocument
     {
-     //   IMongoCollection<T> Collection { get; }
+        //   IMongoCollection<T> Collection { get; }
         Task<List<T>> FilterAsync(FilterDefinition<T> filter);
         Task<List<T>> GetAllActiveAsync();
         Task<IEnumerable<T>> GetAllAsync();

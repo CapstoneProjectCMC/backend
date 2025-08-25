@@ -179,7 +179,7 @@ namespace FileService.Api.Middlewares
 
             await context.Response.WriteAsync(jsonResponse);
             //  await context.Response.WriteAsync("An error occurred. Please contact CodeCampus support.");
-            //  await context.Response.WriteAsync(exception.Message + exception.StackTrace);
+              await context.Response.WriteAsync(exception.Message + exception.StackTrace);
         }
 
         private async Task LogRequest(HttpContext context)

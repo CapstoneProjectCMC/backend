@@ -14,12 +14,12 @@ namespace FileService.Service.Dtos.FileDocumentDtos
     public class AddFileDocumentDto
     {
         [Required]
-        public IFormFile File { get; set; }
+        public IFormFile? File { get; set; }
 
         [BsonRepresentation(BsonType.String)]
         public FileCategory Category { get; set; } // bài giảng, giáo trình, file thường
-        public string Description { get; set; }
-        public List<string> Tags { get; set; } = new(); // #java, #code
+        public string? Description { get; set; }
+        public List<string>? Tags { get; set; } = new(); // #java, #code
         
         // field dùng để xác định loại nội dung
         public bool IsLectureVideo { get; set; } = false;

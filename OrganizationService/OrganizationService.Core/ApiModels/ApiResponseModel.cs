@@ -16,21 +16,14 @@ namespace OrganizationService.Core.ApiModels
             Code = (int)StatusCodeEnum.Success;
             Message = GetDescription(StatusCodeEnum.Success);
             Status = "success";
-            Result = null;
         }
-        public ApiResponseModel(object data)
+
+        public ApiResponseModel(object data) : this()
         {
-            Code = (int)StatusCodeEnum.Success;
-            Data = data;
+            Result = data;
         }
-        public ApiResponseModel(StatusCodeEnum status)
-        {
-            Code = (int)status;
-            Message = GetDescription(status);
-            Status = status == StatusCodeEnum.Success ? "success" : "fail";
-            Result = null;
-        }
-        public ApiResponseModel(StatusCodeEnum status, object? data)
+        
+        public ApiResponseModel(StatusCodeEnum status, object? data = null)
         {
             Code = (int)status;
             Message = GetDescription(status);
@@ -58,7 +51,6 @@ namespace OrganizationService.Core.ApiModels
             }
             return value.ToString();
         }
-        public object? Data { get; set; }
     }
     public class ApiResponseModel<T>
     {

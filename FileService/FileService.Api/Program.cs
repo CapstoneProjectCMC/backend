@@ -19,7 +19,7 @@ using FileService.Service.Implementation;
 using FileService.Service.Interfaces;
 using Microsoft.Extensions.FileProviders;
 using System.Security.Claims;
-using FileService.Api.Application;
+using Google.Protobuf.WellKnownTypes;
 
 BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
 
@@ -106,7 +106,7 @@ builder.Services.AddAuthentication(options =>
 
         // Cấu hình claim để nhận Role
         RoleClaimType = ClaimTypes.Role,
-        NameClaimType = ClaimTypes.NameIdentifier
+        NameClaimType = ClaimTypes.NameIdentifier,
     };
 });
 
@@ -130,7 +130,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: MyAllowSpecificOrigins,
                       policy =>
                       {
-                          policy.AllowAnyOrigin()
+                          policy.WithOrigins("http://localhost:4200")
                           .AllowAnyHeader()
                           .AllowAnyMethod();
                       });
