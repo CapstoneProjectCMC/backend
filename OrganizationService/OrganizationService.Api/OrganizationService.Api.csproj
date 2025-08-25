@@ -39,11 +39,4 @@
   <ItemGroup>
     <ProjectReference Include="..\OrganizationService.Service\OrganizationService.Service.csproj" />
   </ItemGroup>
-
-	<!--<ItemGroup>
-		<Protobuf Include="..\SharedProtos\Protos\file.proto" GrpcServices="Client" />
-		<Protobuf Include="..\SharedProtos\Protos\organization.proto" GrpcServices="Client" />
-	</ItemGroup>-->
-
-
 </Project>
