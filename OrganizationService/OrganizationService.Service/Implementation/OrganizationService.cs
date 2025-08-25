@@ -28,8 +28,7 @@ namespace OrganizationService.Service.Implementation
             IUnitOfWork unitOfWork,
             UserContext userContext,
             IRepository<Organization> organizationRepository,
-            FileServiceClient fileServiceClient
-            IRepository<Organization> organizationRepository,
+            FileServiceClient fileServiceClient,
             IOrgEventPublisher orgEventPublisher
         ) : base(appSettings, unitOfWork, userContext)
         {
@@ -63,7 +62,7 @@ namespace OrganizationService.Service.Implementation
                     Address = o.Address,
                     Email = o.Email,
                     Phone = o.Phone,
-                 //   Logo = o.Logo,
+                    LogoId = o.Logo,
                     LogoUrl = o.LogoUrl,
                     Status = o.Status
                 });
@@ -88,7 +87,7 @@ namespace OrganizationService.Service.Implementation
                 Address = org.Address,
                 Email = org.Email,
                 Phone = org.Phone,
-              //  Logo = org.Logo,
+                LogoId = org.Logo,
                 LogoUrl = org.LogoUrl,
                 Status = org.Status
             };
@@ -109,26 +108,19 @@ namespace OrganizationService.Service.Implementation
                 Address = request.Address,
                 Email = request.Email,
                 Phone = request.Phone,
-              //  Logo = request?.Logo,
-               // LogoUrl = request?.LogoUrl,
                 Status = request.Status,
                 CreatedAt = DateTime.UtcNow,
                 CreatedBy = _userContext.UserId
             };
 
-            await _organizationRepository.CreateAsync(entity);
-            await _unitOfWork.SaveChangesAsync();
-
             // Nếu có logo file, upload lên File service
-            if (request.LogoUrl != null && request.LogoUrl.Length > 0)
+            if (request.LogoFile != null && request.LogoFile.Length > 0)
             {
                 try
                 {
-                    var logoUrl = await _fileServiceClient.UploadLogoAsync(request.LogoUrl, entity.Id);
-                    entity.LogoUrl = logoUrl;
-
-                    _organizationRepository.Update(entity);
-                    await _unitOfWork.SaveChangesAsync();
+                    var logoResult = await _fileServiceClient.UploadLogoAsync(request.LogoFile, entity.Id);
+                    entity.Logo = logoResult.FileId;
+                    entity.LogoUrl = logoResult.Url;
                 }
                 catch (ErrorException ex)
                 {
@@ -139,7 +131,16 @@ namespace OrganizationService.Service.Implementation
                     throw new ErrorException(Core.Enums.StatusCodeEnum.A01, $"Failed to upload logo: {ex.Message}");
                 }
             }
+            else
+            {
+                entity.Logo = null;
+                entity.LogoUrl = null;
+            }
 
+            await _organizationRepository.CreateAsync(entity);
+            await _unitOfWork.SaveChangesAsync();
+
+            //publish event after organization is created
             await _orgEventPublisher.PublishAsync(new {
                 type = "CREATED",
                 id = entity.Id,
@@ -152,22 +153,11 @@ namespace OrganizationService.Service.Implementation
                     phone = entity.Phone,
                     address = entity.Address,
                     status = entity.Status.ToString(),
-                    updatedAt = DateTime.UtcNow
+                    createdAt = entity.CreatedAt,
                 }
             });
             
-            return new OrganizationDto
-            {
-                Id = entity.Id,
-                Name = entity.Name,
-                Description = entity.Description,
-                Address = entity.Address,
-                Email = entity.Email,
-                Phone = entity.Phone,
-                //Logo = entity.Logo,
-                LogoUrl = entity.LogoUrl,
-                Status = entity.Status
-            };
+            return MapToDto(entity);
         }
 
         public async Task<OrganizationDto> UpdateAsync(Guid id, UpdateOrganizationRequest request)
@@ -176,25 +166,33 @@ namespace OrganizationService.Service.Implementation
             if (entity == null)
                 throw new ErrorException(Core.Enums.StatusCodeEnum.A02, "Organization not found");
 
-            entity.Name = request.Name;
-            entity.Description = request.Description;
-            entity.Address = request.Address;
-            entity.Email = request.Email;
-            entity.Phone = request.Phone;
-            entity.Logo = request.Logo;
-            entity.LogoUrl = request.LogoUrl;
+            entity.Name = request.Name ?? entity.Name;
+            entity.Description = request.Description ?? entity.Description;
+            entity.Address = request.Address ?? entity.Address;
+            entity.Email = request.Email ?? entity.Email;
+            entity.Phone = request.Phone ?? entity.Phone;
             entity.Status = request.Status;
+
+            // Nếu update có file logo mới
+            if (request.LogoFile != null && request.LogoFile.Length > 0)
+            {
+                var logoResult = await _fileServiceClient.UpdateLogoAsync(entity.Id, entity.Logo.Value, request.LogoFile);
+                entity.LogoUrl = logoResult.Url;
+            }
+
             entity.UpdatedAt = DateTime.UtcNow;
             entity.UpdatedBy = _userContext.UserId;
 
             _organizationRepository.Update(entity);
             await _unitOfWork.SaveChangesAsync();
 
-            await _orgEventPublisher.PublishAsync(new {
+            await _orgEventPublisher.PublishAsync(new
+            {
                 type = "UPDATED",
                 id = entity.Id,
                 scopeType = "ORGANIZATION",
-                payload = new { 
+                payload = new
+                {
                     name = entity.Name,
                     description = entity.Description,
                     logoUrl = entity.LogoUrl,
@@ -202,10 +200,15 @@ namespace OrganizationService.Service.Implementation
                     phone = entity.Phone,
                     address = entity.Address,
                     status = entity.Status.ToString(),
-                    updatedAt = DateTime.UtcNow
+                    updatedAt = entity.UpdatedAt
                 }
             });
-            
+
+            return MapToDto(entity);
+        }
+
+        private OrganizationDto MapToDto(Organization entity)
+        {
             return new OrganizationDto
             {
                 Id = entity.Id,
@@ -214,7 +217,7 @@ namespace OrganizationService.Service.Implementation
                 Address = entity.Address,
                 Email = entity.Email,
                 Phone = entity.Phone,
-               // Logo = entity.Logo,
+                LogoId = entity.Logo,
                 LogoUrl = entity.LogoUrl,
                 Status = entity.Status
             };

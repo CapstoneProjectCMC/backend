@@ -17,6 +17,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using Confluent.Kafka;
 using OrganizationService.Core.Constants;
+using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
 //builder.Logging.AddAzureWebAppDiagnostics();
@@ -67,6 +68,7 @@ builder.Services.AddScoped<FileServiceClient>(sp =>
     var httpClient = sp.GetRequiredService<IHttpClientFactory>().CreateClient("FileService");
     var configuration = sp.GetRequiredService<IConfiguration>();
     var logger = sp.GetRequiredService<ILogger<FileServiceClient>>();
+    var userContext = sp.GetRequiredService<UserContext>();
     var fileServiceBaseUrl = configuration["FileService:BaseUrl"];
 
     if (string.IsNullOrEmpty(fileServiceBaseUrl))
@@ -75,7 +77,7 @@ builder.Services.AddScoped<FileServiceClient>(sp =>
         throw new InvalidOperationException("FileService:BaseUrl is not configured in appsettings.json");
     }
 
-    return new FileServiceClient(httpClient, fileServiceBaseUrl);
+    return new FileServiceClient(httpClient, fileServiceBaseUrl, userContext,logger);
 });
 
 
@@ -98,16 +100,23 @@ builder.Services.AddAuthentication(options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
     {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        ValidateLifetime = false,
         ValidateIssuerSigningKey = true,
         ValidIssuer = appSettings.Jwt.Issuer,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(appSettings.Jwt.Key))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(appSettings.Jwt.Key)),
+
+        // Cấu hình claim để nhận Role
+        RoleClaimType = ClaimTypes.Role,
+       // NameClaimType = ClaimTypes.NameIdentifier,
+        NameClaimType = "userId",
+
+        ValidAlgorithms = new[] { SecurityAlgorithms.HmacSha512 }
     };
 });
 
-
+//thêm MemoryCache để cache claims
 builder.Services.AddMemoryCache();
 
 //add author policies

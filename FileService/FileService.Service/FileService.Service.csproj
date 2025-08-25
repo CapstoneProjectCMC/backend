@@ -29,9 +29,5 @@
 	  <ProjectReference Include="..\FileService.DataAccess\FileService.DataAccess.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="FileServiceServer\Protos\" />
-  </ItemGroup>
-
 
 </Project>

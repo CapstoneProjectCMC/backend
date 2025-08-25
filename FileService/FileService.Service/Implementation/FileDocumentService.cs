@@ -52,7 +52,7 @@ namespace FileService.Service.Implementation
             // Validate PageIndex and PageSize
             ValidatePagingModel(fileDocumentDto);
 
-            var items = await _fileDocumentRepository.FilterAsync(x => !x.IsDeleted);
+            var items = await _fileDocumentRepository.FilterAsync(x => !x.IsDeleted || !x.IsActive || !x.IsRemoved);
 
             // Lấy tất cả TagIds từ các file
             var allTagIds = items.SelectMany(f => f.TagIds).Distinct().ToList();
@@ -88,7 +88,9 @@ namespace FileService.Service.Implementation
                     IsLectureVideo = file.IsLectureVideo,
                     IsTextbook = file.IsTextbook,
                     TranscodingStatus = file.TranscodingStatus,
-                    AssociatedResourceIds = file.AssociatedResourceIds
+                    AssociatedResourceIds = file.AssociatedResourceIds,
+                    CreatedAt = file.CreatedAt,
+                    CreatedBy = file.CreatedBy,
                 };
 
                 result.Add(fileModel);
@@ -104,13 +106,6 @@ namespace FileService.Service.Implementation
 
             var result = new List<FileDocumentModel>();
 
-            //foreach (var file in files)
-            //{
-            //    result.Add(await ToModelAsync(file));
-            //}
-
-            //return result;
-            //Cách 2 truy xuất nhanh hơn
             var tasks = files.Select(file => ToModelAsync(file));
             return (await Task.WhenAll(tasks)).ToList();
         }
@@ -120,12 +115,6 @@ namespace FileService.Service.Implementation
             var files = await _fileDocumentRepository.FilterAsync(f => f.Category == FileCategory.RegularFile && !f.IsDeleted);
             var result = new List<FileDocumentModel>();
 
-            //foreach (var file in files)
-            //{
-            //    result.Add(await ToModelAsync(file));
-            //}
-            //return result;
-            // Cách 2 truy xuất nhanh hơn
             var tasks = files.Select(file => ToModelAsync(file));
             return (await Task.WhenAll(tasks)).ToList();
         }
@@ -161,7 +150,9 @@ namespace FileService.Service.Implementation
                 IsLectureVideo = entity.IsLectureVideo,
                 IsTextbook = entity.IsTextbook,
                 TranscodingStatus = entity.TranscodingStatus,
-                AssociatedResourceIds = entity.AssociatedResourceIds
+                AssociatedResourceIds = entity.AssociatedResourceIds,
+                CreatedAt = entity.CreatedAt,
+                CreatedBy = entity.CreatedBy,
             };
         }
 
@@ -201,23 +192,16 @@ namespace FileService.Service.Implementation
                 IsTextbook = file.IsTextbook,
                 TranscodingStatus = file.TranscodingStatus,
                 AssociatedResourceIds = file.AssociatedResourceIds,
-                HlsUrl = file.HlsUrl
+                HlsUrl = file.HlsUrl,
+                CreatedAt = file.CreatedAt,
+                CreatedBy = file.CreatedBy
             };
         }
 
-        public async Task<string> AddFileAsync(AddFileDocumentDto dto)
+        public async Task<FileUploadResult> AddFileAsync(AddFileDocumentDto dto)
         {
-            if (dto.File == null || dto.File.Length == 0)
-                throw new ErrorException(StatusCodeEnum.A01);
-
-            if (string.IsNullOrWhiteSpace(dto.File.FileName))
-                throw new ErrorException(StatusCodeEnum.A04);
-
             if (dto.File.FileName.Length > 255)
                 throw new ErrorException(StatusCodeEnum.A05);
-
-            if (dto.Tags == null || !dto.Tags.Any())
-                throw new ErrorException(StatusCodeEnum.A06);
 
             if (string.IsNullOrWhiteSpace(dto.Category.ToString()))
                 throw new ErrorException(StatusCodeEnum.A07);
@@ -252,7 +236,7 @@ namespace FileService.Service.Implementation
                 CreatedBy = _userContext.UserId,
                 OrgId = dto?.OrgId.HasValue == true && dto.OrgId != Guid.Empty ? dto.OrgId : null,
                 IsLectureVideo = dto.IsLectureVideo,
-                IsTextbook = dto.IsTextbook
+                IsTextbook = dto.IsTextbook,
             };
 
             // Tính toán checksum của file
@@ -282,7 +266,12 @@ namespace FileService.Service.Implementation
             await _fileDocumentRepository.CreateAsync(file);
 
             var publicUrl = await _minioService.GetPublicFileUrlAsync(file.Url);
-            return publicUrl;
+           
+            return new FileUploadResult
+            {
+                FileId = file.Id,
+                Url = publicUrl,
+            };
         }
 
         public async Task<EditFileDocumentResponseModel> EditFileDetailAsync(Guid id, EditFileDocumentDto dto)
@@ -291,24 +280,11 @@ namespace FileService.Service.Implementation
             if (file == null || file.IsRemoved)
                 throw new ErrorException(StatusCodeEnum.A02);
 
-            if (string.IsNullOrWhiteSpace(dto.FileName))
-                throw new ErrorException(StatusCodeEnum.A04);
-
             if (dto.FileName.Length > 255)
                 throw new ErrorException(StatusCodeEnum.A05);
 
-            if (dto.Tags == null || !dto.Tags.Any())
-                throw new ErrorException(StatusCodeEnum.A06);
-
             if (string.IsNullOrWhiteSpace(dto.Category.ToString()))
                 throw new ErrorException(StatusCodeEnum.A07);
-
-            // check if file with same name already exists
-            var nameExisted = await _fileDocumentRepository.ExistsAsync(x =>
-                x.Id != id && !x.IsDeleted && x.FileName.ToLower() == dto.FileName.ToLower());
-
-            if (nameExisted)
-                throw new ErrorException(StatusCodeEnum.A08);
 
             file.FileName = dto.FileName;
             file.Category = dto.Category;
@@ -365,7 +341,6 @@ namespace FileService.Service.Implementation
                         throw new Exception($"Failed to copy file to temp location {tempFilePath}: {ex.Message}", ex);
                     }
                 }
-                //await _minioService.UploadStreamAsync(file.Url.TrimStart('/'), tempFilePath, dto.File.ContentType);
 
                 using (var newStream = dto.File.OpenReadStream())
                 {
@@ -483,6 +458,8 @@ namespace FileService.Service.Implementation
             }
 
             //soft delete
+            file.IsActive = false;
+            file.IsDeleted = true;
             file.IsRemoved = true;
             file.DeletedAt = DateTime.UtcNow;
             file.DeletedBy = _userContext.UserId;

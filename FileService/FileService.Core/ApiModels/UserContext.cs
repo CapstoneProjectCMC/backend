@@ -14,6 +14,7 @@ namespace FileService.Core.ApiModels
         public string? Username { get; set; }
         public string? Role { get; set; }
         public Guid? ActionId { get; set; }
+        public string? OrganizationId { get; set; }
         public List<string> Permissions { get; set; } = new();
 
 
