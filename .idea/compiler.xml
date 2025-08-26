@@ -20,8 +20,8 @@
         <module name="coding-service" />
         <module name="search-service" />
         <module name="common-dtos" />
-        <module name="chat-service" />
         <module name="profile-service" />
+        <module name="chat-service" />
         <module name="identity-service" />
       </profile>
       <profile name="Maven default annotation processors profile" enabled="true">
