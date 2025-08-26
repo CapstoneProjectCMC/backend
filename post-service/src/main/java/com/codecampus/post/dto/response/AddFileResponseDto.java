@@ -7,5 +7,5 @@ public class AddFileResponseDto {
   private int code;
   private String message;
   private String status;
-  private String result;
+  private FileResult result;
 }

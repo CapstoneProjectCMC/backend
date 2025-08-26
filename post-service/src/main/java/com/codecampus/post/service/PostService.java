@@ -6,6 +6,7 @@ import com.codecampus.post.dto.common.PageRequestDto;
 import com.codecampus.post.dto.common.PageResponse;
 import com.codecampus.post.dto.request.PostRequestDto;
 import com.codecampus.post.dto.response.AddFileResponseDto;
+import com.codecampus.post.dto.response.FileResult;
 import com.codecampus.post.dto.response.PostResponseDto;
 import com.codecampus.post.dto.response.ProfileResponseDto;
 import com.codecampus.post.entity.Post;
@@ -207,6 +208,7 @@ public class PostService {
       // Nếu API C# trả result là String URL
       fileUrls = Optional.ofNullable(response)
           .map(AddFileResponseDto::getResult)
+          .map(FileResult::getUrl)
           .map(List::of)
           .orElse(Collections.emptyList());
     }
@@ -271,6 +273,7 @@ public class PostService {
           postRequestDto.getFileDocument());
       List<String> newFileUrls = Optional.ofNullable(response)
           .map(AddFileResponseDto::getResult)
+          .map(FileResult::getUrl)
           .map(List::of)
           .orElse(Collections.emptyList());
 
