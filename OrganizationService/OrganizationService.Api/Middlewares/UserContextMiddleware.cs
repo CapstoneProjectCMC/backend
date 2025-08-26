@@ -46,6 +46,9 @@ namespace OrganizationService.Api.Middlewares
             var sessionId = httpContext.User.Claims.FirstOrDefault(c => c.Type == "sessionId")?.Value;
             var role = httpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
             var userType = httpContext.User.Claims.FirstOrDefault(c => c.Type == "userType")?.Value;
+            var username = httpContext.User.Claims.FirstOrDefault(c => c.Type == "username")?.Value;
+            var permissions = httpContext.User.Claims.Where(c => c.Type == "permissions").Select(c => c.Value).ToList();
+
 
             if (userContext == null)
             {
@@ -71,7 +74,16 @@ namespace OrganizationService.Api.Middlewares
             {
                 userContext.Role = role;
             }
-            _logger.LogInformation($"UserContextMiddleware: UserId: {userContext.UserId}, Email: {userContext.Email}, Role: {userContext.Role}, SessionId: {userContext.SessionId}");
+
+            if (!string.IsNullOrEmpty(username))
+            {
+                userContext.Username = username;
+            }
+
+            if (permissions != null && permissions.Any())
+            {
+                userContext.Permissions = permissions;
+            }
 
             await _next(httpContext);
         }

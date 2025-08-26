@@ -140,6 +140,9 @@ services:
     networks: [ backend ]
 
   file-service:
+    build:
+      context: .
+      dockerfile: ./docker/file-service.Dockerfile
     image: ${DOCKERHUB_USER}/codecampus-file-service:${IMAGE_TAG:-latest}
     environment:
       - ASPNETCORE_ENVIRONMENT=Staging
@@ -152,7 +155,7 @@ services:
       - AppSettings__MinioConfig__SecretKey=${MINIO_ROOT_PASSWORD}
       - AppSettings__MinioConfig__BucketName=programmingcontest2025
       - AppSettings__MinioConfig__Secure=false
-      - AppSettings__Jwt__Key=uifhjcnsqbhwbAMKXjdt123gdritocet
+      - AppSettings__Jwt__Key=1TjXchw5FloESb63Kc+DFhTARvpWL4jUGCwfGWxuG5SIf/1y/LgJxHnMqaF6A/ij
       - AppSettings__Jwt__Issuer=Code Campus
       - AppSettings__Jwt__Audience=Code Campus
     ports: [ "8082:8082" ]

@@ -15,8 +15,8 @@ namespace OrganizationService.Service.ApiModels.Organization
         public string? Address { get; set; }
         public string? Email { get; set; }
         public string? Phone { get; set; }
-      //  public Guid? Logo { get; set; }
-        public IFormFile? LogoUrl { get; set; }
+       // public Guid? Logo { get; set; }
+        public IFormFile? LogoFile { get; set; }
         public OrganizationStatus Status { get; set; }
     }
 }

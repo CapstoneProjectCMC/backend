@@ -19,12 +19,10 @@ using FileService.Service.Implementation;
 using FileService.Service.Interfaces;
 using Microsoft.Extensions.FileProviders;
 using System.Security.Claims;
-using FileService.Api.Application;
 
 BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
 
 var builder = WebApplication.CreateBuilder(args);
-//builder.Services.AddTransient<GrpcClient>();  // Add gRPC client service
 
 var config = builder.Configuration;
 
@@ -42,7 +40,6 @@ builder.Services.AddHttpContextAccessor();
 
 var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 Console.WriteLine($"ASPNETCORE_ENVIRONMENT: {env}");
-//builder.Services.Configure<MinioConfig>(builder.Configuration.GetSection("MinioConfig"));
 
 builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection("MongoDbSettings"));
 builder.Services.Configure<FfmpegSettings>(builder.Configuration.GetSection("FfmpegSettings"));
@@ -106,7 +103,7 @@ builder.Services.AddAuthentication(options =>
 
         // Cấu hình claim để nhận Role
         RoleClaimType = ClaimTypes.Role,
-        NameClaimType = ClaimTypes.NameIdentifier
+        NameClaimType = ClaimTypes.NameIdentifier,
     };
 });
 
@@ -125,16 +122,16 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("LoggedInUsers", policy => policy.RequireRole("USER", "TEACHER", "ORG_ADMIN", "SYS_ADMIN"));
 });
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy(name: MyAllowSpecificOrigins,
-                      policy =>
-                      {
-                          policy.AllowAnyOrigin()
-                          .AllowAnyHeader()
-                          .AllowAnyMethod();
-                      });
-});
+//builder.Services.AddCors(options =>
+//{
+//    options.AddPolicy(name: MyAllowSpecificOrigins,
+//                      policy =>
+//                      {
+//                          policy.AllowAnyOrigin()
+//                          .AllowAnyHeader()
+//                          .AllowAnyMethod();
+//                      });
+//});
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -185,9 +182,6 @@ builder.WebHost.ConfigureKestrel(options =>
 
 var app = builder.Build();
 
-//var client = app.Services.GetRequiredService<GrpcClient>(); // Call gRPC client service to test connection
-//client.GetFilesAsync("pdf").Wait(); // test với filter là "pdf"
-
 // Migrate MongoDB and seed data if necessary
 app.MigrateMongoDb();
 
@@ -200,7 +194,7 @@ if (app.Environment.IsDevelopment())
 }
 
 //kích hoạt CORS policy
-app.UseCors(MyAllowSpecificOrigins);
+//app.UseCors(MyAllowSpecificOrigins);
 
 app.UseHttpsRedirection();
 app.UseAuthentication();

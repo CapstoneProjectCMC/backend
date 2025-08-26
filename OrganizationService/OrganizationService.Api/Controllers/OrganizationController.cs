@@ -54,7 +54,7 @@ namespace OrganizationService.Api.Controllers
 
         //edit project
         [HttpPut("edit/{orgId}")]
-        public async Task<IActionResult> EditDetailOrganization(Guid orgId, [FromBody] UpdateOrganizationRequest editOrgModel)
+        public async Task<IActionResult> EditDetailOrganization(Guid orgId, [FromForm] UpdateOrganizationRequest editOrgModel)
         {
             var result = await _organizationService.UpdateAsync(orgId, editOrgModel);
             return Success(result);

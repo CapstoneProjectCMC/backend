@@ -17,7 +17,6 @@ namespace OrganizationService.Core.ApiModels
     {
         public string Key { get; set; }
         public string Issuer { get; set; }
-       // public string Audience { get; set; }
         public int AccessTokenExpiresTime { get; set; }
         public int RefreshTokenExpiresTime { get; set; }
     }
