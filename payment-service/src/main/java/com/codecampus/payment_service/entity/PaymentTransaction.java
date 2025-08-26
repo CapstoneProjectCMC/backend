@@ -35,7 +35,7 @@ public class PaymentTransaction extends AuditMetadata {
   Double amount;
 
   @Column(name = "currency", nullable = false)
-  Double currency;
+  String currency;
 
   @Column(name = "status", nullable = false)
   String status = "PENDING";

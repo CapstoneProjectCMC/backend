@@ -43,9 +43,9 @@ public class PaymentService {
         .get("userId")
         .toString();
 
-    Wallet wallet = walletRepository.findByUserId(request.getUserId())
+    Wallet wallet = walletRepository.findByUserId(userId)
         .orElseGet(() -> walletRepository.save(Wallet.builder()
-            .userId(request.getUserId())
+            .userId(userId)
             .balance(0.0)
             .build()));
 

@@ -14,10 +14,9 @@ import lombok.Setter;
 public class TransactionRequestDto {
   private String transactionId;
   private String referenceId;
-  private String userId;
   private String transactionType; // "TOPUP", "PURCHASE"
   private double amount; // point
-  private double currency; // vnd
+  private String currency; // vnd
   // for purchase
   private String itemId;
   private String itemType; // "COURSE", "SUBSCRIPTION"
