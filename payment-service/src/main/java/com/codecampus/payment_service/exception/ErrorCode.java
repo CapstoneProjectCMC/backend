@@ -7,6 +7,7 @@ import static com.codecampus.payment_service.constant.exception.ErrorCodeConstan
 import static com.codecampus.payment_service.constant.exception.ErrorCodeConstant.INTERNAL_SERVER_STATUS;
 import static com.codecampus.payment_service.constant.exception.ErrorCodeConstant.NOT_FOUND_STATUS;
 import static com.codecampus.payment_service.constant.exception.ErrorCodeConstant.UNAUTHORIZED_STATUS;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CONFLICT;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
@@ -45,6 +46,14 @@ public enum ErrorCode {
       NOT_FOUND),
   ORG_NOT_FOUND(4049004, NOT_FOUND_STATUS, "Không tìm thấy tổ chức!",
       NOT_FOUND),
+
+  //405 - Payment Error
+  WALLET_NOT_FOUND(4059001, NOT_FOUND.toString(), "Không tìm thấy ví!",
+      NOT_FOUND),
+    INSUFFICIENT_BALANCE(4059002, NOT_ACCEPTABLE.toString(), "Số dư không đủ!",
+        BAD_REQUEST),
+  PURCHASED_iTEM(4059003, NOT_ACCEPTABLE.toString(), "Đã mua sản phẩm!",
+      BAD_REQUEST),
 
   // 409 - Conflict
   USER_ALREADY_EXISTS(4099001, CONFLICT_STATUS, "Người dùng đã tồn tại!",

@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/payment")
+@RequestMapping("/payments")
 @RequiredArgsConstructor
 public class PaymentController {
 
@@ -50,4 +50,12 @@ public class PaymentController {
                                                    HttpServletRequest request) {
   return paymentService.getPurchaseHistory(page, size, request);
   }
+
+  @GetMapping("/wallet")
+    public ApiResponse<?> getWallet(HttpServletRequest request) {
+        return ApiResponse.builder()
+            .result(paymentService.getBalance(request))
+            .message("Lấy ví thành công")
+            .build();
+    }
 }

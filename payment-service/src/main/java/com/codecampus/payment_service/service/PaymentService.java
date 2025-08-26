@@ -7,6 +7,8 @@ import com.codecampus.payment_service.dto.request.TransactionRequestDto;
 import com.codecampus.payment_service.entity.PaymentTransaction;
 import com.codecampus.payment_service.entity.Purchase;
 import com.codecampus.payment_service.entity.Wallet;
+import com.codecampus.payment_service.exception.AppException;
+import com.codecampus.payment_service.exception.ErrorCode;
 import com.codecampus.payment_service.repository.PaymentTransactionRepository;
 import com.codecampus.payment_service.repository.PurchaseRepository;
 import com.codecampus.payment_service.repository.WalletRepository;
@@ -46,6 +48,7 @@ public class PaymentService {
     Wallet wallet = walletRepository.findByUserId(userId)
         .orElseGet(() -> walletRepository.save(Wallet.builder()
             .userId(userId)
+            .username(username)
             .balance(0.0)
             .build()));
 
@@ -55,7 +58,7 @@ public class PaymentService {
         .userId(userId)
         .username(username)
         .transactionType(TransactionEnum.TOPUP)
-        .currency(request.getCurrency())
+        .currency(request.getCurrency() == null ? "VND" : request.getCurrency())
         .amount(request.getAmount())
         .status("SUCCESS")
         .referenceCode(request.getReferenceId())
@@ -75,7 +78,7 @@ public class PaymentService {
   public void purchase(TransactionRequestDto request, HttpServletRequest httpRequest) {
     String token = httpRequest.getHeader("Authorization");
     if (token == null || !token.startsWith("Bearer ")) {
-      throw new RuntimeException("Missing or invalid Authorization header");
+      throw new AppException(ErrorCode.UNAUTHORIZED);
     }
     String username = jwtDecoder.decode(token.substring(7))
         .getClaims()
@@ -87,10 +90,10 @@ public class PaymentService {
         .toString();
 
     Wallet wallet = walletRepository.findByUserId(userId)
-        .orElseThrow(() -> new RuntimeException("Wallet not found"));
+        .orElseThrow(() -> new AppException(ErrorCode.WALLET_NOT_FOUND));
 
     if (wallet.getBalance() < request.getItemPrice()) {
-      throw new RuntimeException("Insufficient balance");
+      throw new AppException(ErrorCode.INSUFFICIENT_BALANCE);
     }
 
     // check đã mua chưa
@@ -98,15 +101,17 @@ public class PaymentService {
         request.getItemId(),
         request.getItemType());
     if (existed.isPresent()) {
-      throw new RuntimeException("Item already purchased");
+      throw new AppException(ErrorCode.PURCHASED_iTEM);
     }
 
     // tạo transaction
     PaymentTransaction tx = PaymentTransaction.builder()
         .transactionId(request.getTransactionId())
         .userId(userId)
+        .username(username)
         .transactionType(TransactionEnum.PURCHASE)
         .amount(request.getItemPrice())
+        .currency(request.getCurrency() == null ? "VND" : request.getCurrency())
         .status("SUCCESS")
         .referenceCode(request.getReferenceId())
         .build();
@@ -135,7 +140,7 @@ public class PaymentService {
   public PageResponse<PaymentTransaction> getTransactionHistory(int page, int size, HttpServletRequest request) {
     String token = request.getHeader("Authorization");
     if (token == null || !token.startsWith("Bearer ")) {
-      throw new RuntimeException("Missing or invalid Authorization header");
+      throw new AppException(ErrorCode.UNAUTHORIZED);
     }
 
     String userId = jwtDecoder.decode(token.substring(7))
@@ -158,7 +163,7 @@ public class PaymentService {
   public PageResponse<Purchase> getPurchaseHistory(int page, int size, HttpServletRequest request) {
     String token = request.getHeader("Authorization");
     if (token == null || !token.startsWith("Bearer ")) {
-      throw new RuntimeException("Missing or invalid Authorization header");
+      throw new AppException(ErrorCode.UNAUTHORIZED);
     }
 
     String userId = jwtDecoder.decode(token.substring(7))
@@ -176,5 +181,19 @@ public class PaymentService {
         .totalElements(purchases.getTotalElements())
         .data(purchases.getContent())
         .build();
+  }
+
+  @Transactional(readOnly = true)
+  public Wallet getBalance(HttpServletRequest request) {
+    String token = request.getHeader("Authorization");
+    if (token == null || !token.startsWith("Bearer ")) {
+      throw new AppException(ErrorCode.UNAUTHORIZED);
+    }
+    String userId = jwtDecoder.decode(token.substring(7))
+        .getClaims()
+        .get("userId")
+        .toString();
+
+    return walletRepository.findByUserId(userId).get();
   }
 }
