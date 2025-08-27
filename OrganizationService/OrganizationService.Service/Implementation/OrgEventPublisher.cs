@@ -14,7 +14,7 @@ namespace OrganizationService.Service.Implementation
         public async Task PublishAsync(object evt) {
             var json = JsonSerializer.Serialize(evt);
             var key = JsonDocument.Parse(json).RootElement.GetProperty("id").GetString();
-            await _producer.ProduceAsync(_opt.Topics.OrganizationEvents, new Message<string,string>{ Key = key, Value = json });
+           await _producer.ProduceAsync(_opt.Topics.OrganizationEvents, new Message<string,string>{ Key = key, Value = json });
         }
     }
 }

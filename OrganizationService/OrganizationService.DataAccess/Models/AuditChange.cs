@@ -10,13 +10,13 @@ namespace OrganizationService.DataAccess.Models
     public class AuditChange : BaseTable<Guid>
     {
         [Required]
-        public string EntityName { get; set; }
+        public string EntityName { get; set; } = string.Empty;
 
         [Required]
-        public string Action { get; set; }
+        public string Action { get; set; } = string.Empty;
 
         [Required]
-        public string RecordId { get; set; }
+        public string RecordId { get; set; } = string.Empty;
 
         public string? ColumnEffect { get; set; }
 

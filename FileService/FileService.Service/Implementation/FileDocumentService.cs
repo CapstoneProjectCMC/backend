@@ -6,10 +6,13 @@ using FileService.DataAccess.Interfaces;
 using FileService.DataAccess.Models;
 using FileService.Service.ApiModels.FileDocumentModels;
 using FileService.Service.ApiModels.TagModels;
+using FileService.Service.ApiModels.UserModels;
 using FileService.Service.Dtos.FileDocumentDtos;
 using FileService.Service.Interfaces;
 using MongoDB.Driver;
 using System.Diagnostics;
+using System.Net.Http;
+using System.Text.Json;
 
 namespace FileService.Service.Implementation
 {
@@ -21,6 +24,7 @@ namespace FileService.Service.Implementation
         private readonly IMinioService _minioService;
         private readonly ITagService _tagService;
         private readonly IRepository<Tags> _tagRepository;
+        private readonly IIdentityServiceClient _identityServiceClient;
 
         public FileDocumentService(
             AppSettings appSettings,
@@ -29,7 +33,9 @@ namespace FileService.Service.Implementation
             IMinioService minioService,
             ITagService tagService,
             IRepository<FileDocument> fileDocumentRepository,
-            IRepository<Tags> tagRepository)
+            IRepository<Tags> tagRepository,
+            IIdentityServiceClient identityServiceClient
+            )
              : base(appSettings, userContext)
         {
             _fileDocumentRepository = fileDocumentRepository;
@@ -38,6 +44,7 @@ namespace FileService.Service.Implementation
             _minioService = minioService;
             _tagService = tagService;
             _tagRepository = tagRepository;
+            _identityServiceClient = identityServiceClient;
         }
 
         private void ValidatePagingModel(FileDocumentDto fileDocumentDto)
@@ -47,12 +54,16 @@ namespace FileService.Service.Implementation
             if (fileDocumentDto.PageSize < 1)
                 throw new ErrorException(Core.Enums.StatusCodeEnum.PageSizeInvalid);
         }
+
+        
         public async Task<IEnumerable<FileDocumentModel>> GetViewModelsAsync(FileDocumentDto fileDocumentDto)
         {
             // Validate PageIndex and PageSize
             ValidatePagingModel(fileDocumentDto);
 
             var items = await _fileDocumentRepository.FilterAsync(x => !x.IsDeleted || !x.IsActive || !x.IsRemoved);
+
+            items = items.OrderByDescending(x => x.CreatedAt).ToList();
 
             // Lấy tất cả TagIds từ các file
             var allTagIds = items.SelectMany(f => f.TagIds).Distinct().ToList();
@@ -91,7 +102,11 @@ namespace FileService.Service.Implementation
                     AssociatedResourceIds = file.AssociatedResourceIds,
                     CreatedAt = file.CreatedAt,
                     CreatedBy = file.CreatedBy,
+                    OrganizationId = _userContext.OrganizationId,
                 };
+
+                //Call Identity Service
+                fileModel.UserProfile = await _identityServiceClient.GetUserProfileAsync(file.CreatedBy.ToString()) ?? new UserProfileResponse();
 
                 result.Add(fileModel);
             }
@@ -102,21 +117,104 @@ namespace FileService.Service.Implementation
 
         public async Task<List<FileDocumentModel>> GetVideosAsync()
         {
-            var files = await _fileDocumentRepository.FilterAsync(f => f.Category == FileCategory.Video && !f.IsDeleted);
+            var videos = await _fileDocumentRepository.FilterAsync(f => f.Category == FileCategory.Video && !f.IsDeleted && f.IsLectureVideo == true);
+            if (videos == null || !videos.Any())
+            {
+                throw new ErrorException(StatusCodeEnum.D01);
+            }
+
+            videos = videos.OrderByDescending(x => x.CreatedAt).ToList();
 
             var result = new List<FileDocumentModel>();
+            foreach (var videosItem in videos) 
+            {
+                var publicUrl = await _minioService.GetPublicFileUrlAsync(videosItem.Url.TrimStart('/'));
+                var model = new FileDocumentModel
+                {
+                    Id = videosItem.Id,
+                    FileName = videosItem.FileName,
+                    FileType = videosItem.FileType,
+                    Url = publicUrl,
+                    Size = videosItem.Size,
+                    Checksum = videosItem.Checksum,
+                    Category = videosItem.Category,
+                    IsActive = videosItem.IsActive,
+                    ViewCount = videosItem.ViewCount,
+                    Rating = videosItem.Rating,
+                    Description = videosItem.Description,
+                    OrgId = videosItem.OrgId,
+                    ThumbnailUrl = videosItem.ThumbnailUrl,
+                    HlsUrl = videosItem.HlsUrl,
+                    Duration = videosItem.Duration,
+                    IsLectureVideo = videosItem.IsLectureVideo,
+                    IsTextbook = videosItem.IsTextbook,
+                    TranscodingStatus = videosItem.TranscodingStatus,
+                    AssociatedResourceIds = videosItem.AssociatedResourceIds,
+                    CreatedAt = videosItem.CreatedAt,
+                    CreatedBy = videosItem.CreatedBy,
+                    OrganizationId = _userContext.OrganizationId,
+                };
 
-            var tasks = files.Select(file => ToModelAsync(file));
-            return (await Task.WhenAll(tasks)).ToList();
+                // Call Identity Service to get user info
+                model.UserProfile = await _identityServiceClient.GetUserProfileAsync(videosItem.CreatedBy.ToString()) ?? new UserProfileResponse();
+
+                result.Add(model);
+            }
+
+            return result;
+
+          //  var tasks = videos.Select(file => ToModelAsync(file));
+          //  return (await Task.WhenAll(tasks)).ToList();
         }
 
         public async Task<List<FileDocumentModel>> GetRegularFilesAsync()
         {
-            var files = await _fileDocumentRepository.FilterAsync(f => f.Category == FileCategory.RegularFile && !f.IsDeleted);
-            var result = new List<FileDocumentModel>();
+            var files = await _fileDocumentRepository.FilterAsync(f => f.Category == FileCategory.RegularFile && !f.IsDeleted && f.IsLectureVideo == false);
+            if (files == null || !files.Any())
+            {
+                throw new ErrorException(StatusCodeEnum.D01);
+            }
 
-            var tasks = files.Select(file => ToModelAsync(file));
-            return (await Task.WhenAll(tasks)).ToList();
+            files = files.OrderByDescending(x => x.CreatedAt).ToList();
+
+            var result = new List<FileDocumentModel>();
+            foreach (var filesItem in files)
+            {
+                var publicUrl = await _minioService.GetPublicFileUrlAsync(filesItem.Url.TrimStart('/'));
+                var model = new FileDocumentModel
+                {
+                    Id = filesItem.Id,
+                    FileName = filesItem.FileName,
+                    FileType = filesItem.FileType,
+                    Url = publicUrl,
+                    Size = filesItem.Size,
+                    Checksum = filesItem.Checksum,
+                    Category = filesItem.Category,
+                    IsActive = filesItem.IsActive,
+                    ViewCount = filesItem.ViewCount,
+                    Rating = filesItem.Rating,
+                    Description = filesItem.Description,
+                    OrgId = filesItem.OrgId,
+                    ThumbnailUrl = filesItem.ThumbnailUrl,
+                    HlsUrl = filesItem.HlsUrl,
+                    Duration = filesItem.Duration,
+                    IsLectureVideo = filesItem.IsLectureVideo,
+                    IsTextbook = filesItem.IsTextbook,
+                    TranscodingStatus = filesItem.TranscodingStatus,
+                    AssociatedResourceIds = filesItem.AssociatedResourceIds,
+                    CreatedAt = filesItem.CreatedAt,
+                    CreatedBy = filesItem.CreatedBy,
+                    OrganizationId = _userContext.OrganizationId,
+                };
+
+                // Call Identity Service to get user info
+                model.UserProfile = await _identityServiceClient.GetUserProfileAsync(filesItem.CreatedBy.ToString()) ?? new UserProfileResponse();
+
+                result.Add(model);
+            }
+            return result;
+           // var tasks = files.Select(file => ToModelAsync(file));
+         //   return (await Task.WhenAll(tasks)).ToList();
         }
 
         private async Task<FileDocumentModel> ToModelAsync(FileDocument entity)
@@ -128,6 +226,9 @@ namespace FileService.Service.Implementation
             var tagDict = tags.ToDictionary(t => t.Id, t => new TagModel { Id = t.Id, Name = t.Label });
 
             var publicUrl = await _minioService.GetPublicFileUrlAsync(entity.Url.TrimStart('/'));
+
+            // Gọi Identity service để lấy thông tin user
+            var userProfile = await _identityServiceClient.GetUserProfileAsync(entity.CreatedBy.ToString());
 
             return new FileDocumentModel
             {
@@ -153,6 +254,8 @@ namespace FileService.Service.Implementation
                 AssociatedResourceIds = entity.AssociatedResourceIds,
                 CreatedAt = entity.CreatedAt,
                 CreatedBy = entity.CreatedBy,
+                OrganizationId = _userContext.OrganizationId,
+                UserProfile = userProfile ?? new UserProfileResponse()
             };
         }
 
@@ -171,7 +274,7 @@ namespace FileService.Service.Implementation
             // Tạo publicUrl URL từ MinIO
             var publicUrl = await _minioService.GetPublicFileUrlAsync(file.Url.TrimStart('/')); // Loại bỏ '/' đầu nếu có
 
-            return new FileDocumentModel
+            var model = new FileDocumentModel
             {
                 Id = file.Id,
                 FileName = file.FileName,
@@ -194,8 +297,13 @@ namespace FileService.Service.Implementation
                 AssociatedResourceIds = file.AssociatedResourceIds,
                 HlsUrl = file.HlsUrl,
                 CreatedAt = file.CreatedAt,
-                CreatedBy = file.CreatedBy
+                CreatedBy = file.CreatedBy,
+                OrganizationId = _userContext.OrganizationId,
             };
+
+            // Call Identity Service to get user info
+            model.UserProfile = await _identityServiceClient.GetUserProfileAsync(file.CreatedBy.ToString()) ?? new UserProfileResponse();
+            return model;
         }
 
         public async Task<FileUploadResult> AddFileAsync(AddFileDocumentDto dto)
@@ -427,7 +535,9 @@ namespace FileService.Service.Implementation
                 Duration = file.Duration,
                 HlsUrl = file.HlsUrl,
                 UpdatedAt = file.UpdatedAt,
-                UpdatedBy = file.UpdatedBy
+                UpdatedBy = file.UpdatedBy,
+                Roles = _userContext.Roles,
+                OrganizationRole = _userContext.OrganizationRole,
             };
         }
 

@@ -10,34 +10,34 @@ namespace OrganizationService.Core.Enums
     public enum StatusCodeEnum
     {
         [Description("Lỗi hệ thống.")]
-        Error = 5008201,
+        Error = 5008301,
 
         [Description("Xung đột đồng thời")]
-        ConcurrencyConflict = 4098202,
+        ConcurrencyConflict = 4098302,
 
         [Description("Không tìm thấy")]
-        PageIndexInvalid = 4048203,
+        PageIndexInvalid = 4048303,
 
         [Description("Kích thước trang không hợp lệ")]
-        PageSizeInvalid = 4008204,
+        PageSizeInvalid = 4008304,
 
         [Description("{Required Field} được yêu cầu.")]
-        A01 = 4008205,
+        A01 = 4008305,
 
         [Description("{{Object}} không được tìm thấy")]
-        A02 = 4048206,
+        A02 = 4048306,
 
         [Description("Incorrect username or password. Please try again.")]
-        B01 = 4018213,
+        B01 = 4018313,
 
         [Description("Download Interrupted. Please check your internet connection and try again.")]
-        C05 = 5038214,
+        C05 = 5038314,
 
         [Description("Invalid filter option.")]
-        InvalidOption = 4008216,
+        InvalidOption = 4008316,
 
         [Description("Unmatched columns found.")]
-        UnmatchedColumns = 4008217,
+        UnmatchedColumns = 4008317,
 
         [Description("Success")]
         Success = 200,
@@ -55,6 +55,30 @@ namespace OrganizationService.Core.Enums
         NotFound = 404,
 
         [Description("Internal Server Error")]
-        InternalServerError = 500
+        InternalServerError = 500,
+
+        [Description("Organization not found")]
+        D01 = 4008320,
+
+        [Description("Organization with this name already exists")]
+        D02 = 4008321,
+
+        [Description("Failed to upload logo")]
+        D03 = 4038322,
+
+        [Description("No authentication token provided for File Service.")]
+        D04 = 4038323,
+
+        [Description("Logo file is empty or null")]
+        D05 = 4038324,
+
+        [Description("Invalid file format. Only PNG, JPG, JPEG, WEBP, GIF are allowed.")]  
+        D06 = 4008325,
+
+        [Description("Logo file is too large.")]
+        D07 = 4008326,
+
+        [Description("File Service did not return a valid result.")]
+        D08 = 5008327
     }
 }

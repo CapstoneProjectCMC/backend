@@ -1,5 +1,6 @@
 ﻿using FileService.Core.Enums;
 using FileService.Service.ApiModels.TagModels;
+using FileService.Service.ApiModels.UserModels;
 using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
@@ -14,13 +15,13 @@ namespace FileService.Service.ApiModels.FileDocumentModels
         public Guid Id { get; set; }
         public string? FileName { get; set; }
 
-        public string FileType { get; set; } // video/mp4, application/pdf, image/jpeg
+        public string FileType { get; set; } = string.Empty; // video/mp4, application/pdf, image/jpeg
 
         public long Size { get; set; } //bytes, MB, GB
 
-        public string Url { get; set; } // http://localhost:<port>/static/{fileId}
+        public string Url { get; set; } = string.Empty; // http://localhost:<port>/static/{fileId}
 
-        public string Checksum { get; set; } // SHA256 kiểm tra tính toàn vẹn, bảo mật
+        public string Checksum { get; set; } = string.Empty; // SHA256 kiểm tra tính toàn vẹn, bảo mật
 
         public FileCategory Category { get; set; } // bài giảng, giáo trình, file thường
 
@@ -28,11 +29,11 @@ namespace FileService.Service.ApiModels.FileDocumentModels
 
       //  public bool IsRemoved { get; set; } = false;
 
-        public string Description { get; set; }
+        public string Description { get; set; } = string.Empty;
 
-        public string ThumbnailUrl { get; set; } // cho video, hình ảnh
+        public string ThumbnailUrl { get; set; } = string.Empty; // cho video, hình ảnh
 
-        public string TranscodingStatus { get; set; } // running, finished, failed
+        public string TranscodingStatus { get; set; } = string.Empty; // running, finished, failed
 
         public List<string> AssociatedResourceIds { get; set; } = new();
 
@@ -59,5 +60,12 @@ namespace FileService.Service.ApiModels.FileDocumentModels
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public Guid? CreatedBy { get; set; }
+
+        // lấy thêm thông tin user để trả về
+        public string? OrganizationId { get; set; }
+        public string? OrganizationRole { get; set; } = string.Empty;
+
+        // thêm thông tin của user tạo file
+        public UserProfileResponse UserProfile { get; set; } = new UserProfileResponse();
     }
 }
