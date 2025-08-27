@@ -5,8 +5,6 @@ import static com.codecampus.profile.helper.PageResponseHelper.toPageResponse;
 import com.codecampus.profile.constant.type.ResourceType;
 import com.codecampus.profile.dto.common.PageResponse;
 import com.codecampus.profile.entity.FileResource;
-import com.codecampus.profile.entity.UserProfile;
-import com.codecampus.profile.entity.properties.resource.ReportedResource;
 import com.codecampus.profile.entity.properties.resource.SavedResource;
 import com.codecampus.profile.exception.AppException;
 import com.codecampus.profile.exception.ErrorCode;
@@ -21,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -29,30 +28,33 @@ import org.springframework.stereotype.Service;
 public class ResourceService {
   FileResourceRepository fileResourceRepository;
   UserProfileRepository userProfileRepository;
-
   UserProfileService userProfileService;
 
+  @Transactional
   public void saveResource(String fileId) {
-    UserProfile userProfile = userProfileService.getUserProfile();
-    FileResource fileResource = getResource(fileId);
-    userProfile.getSavedResources().add(
-        SavedResource.builder().saveAt(Instant.now())
-            .resource(fileResource).build()
-    );
-    userProfileRepository.save(userProfile);
+    getResource(fileId);
+    userProfileRepository.mergeSavedResource(
+        AuthenticationHelper.getMyUserId(), fileId, Instant.now());
   }
 
+  @Transactional
   public void reportResource(
       String fileId, String reason) {
-    UserProfile userProfile = userProfileService.getUserProfile();
-    FileResource fileResource = getResource(fileId);
-    userProfile.getReportedResources().add(
-        ReportedResource.builder()
-            .reason(reason)
-            .reportedAt(Instant.now()).resource(fileResource)
-            .build()
-    );
-    userProfileRepository.save(userProfile);
+    getResource(fileId);
+    userProfileRepository.mergeReportedResource(
+        AuthenticationHelper.getMyUserId(), fileId, reason, Instant.now());
+  }
+
+  @Transactional
+  public void unsaveResource(String fileId) {
+    userProfileRepository.deleteSavedResource(
+        AuthenticationHelper.getMyUserId(), fileId);
+  }
+
+  @Transactional
+  public void unReportResource(String fileId) {
+    userProfileRepository.deleteReportedResource(
+        AuthenticationHelper.getMyUserId(), fileId);
   }
 
   public PageResponse<SavedResource> getSavedLectures(

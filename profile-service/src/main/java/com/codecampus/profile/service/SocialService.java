@@ -3,7 +3,6 @@ package com.codecampus.profile.service;
 import static com.codecampus.profile.helper.PageResponseHelper.toPageResponse;
 
 import com.codecampus.profile.dto.common.PageResponse;
-import com.codecampus.profile.entity.UserProfile;
 import com.codecampus.profile.entity.properties.social.Blocks;
 import com.codecampus.profile.entity.properties.social.Follows;
 import com.codecampus.profile.helper.AuthenticationHelper;
@@ -16,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Service xử lý các nghiệp vụ “xã hội” (social) của người dùng:
@@ -31,105 +31,33 @@ public class SocialService {
 
   UserProfileService userProfileService;
 
-  /**
-   * Theo dõi (follow) một người dùng khác.
-   * <p>
-   * Lấy profile người dùng hiện tại và profile của target theo {@code targetUserId},
-   * kiểm tra tránh duplicate, rồi thêm vào danh sách {@link Follows} của người dùng hiện tại.
-   *
-   * @param targetUserId ID của người dùng cần follow
-   * @throws com.codecampus.profile.exception.AppException nếu không tìm thấy profile của người dùng hiện tại hoặc của targetUserId
-   */
+  @Transactional
   public void follow(String targetUserId) {
-    UserProfile myProfile = userProfileService.getUserProfile();
-
-    UserProfile targetProfile =
-        userProfileService.getUserProfile(targetUserId);
-
-    // Tránh follow trùng
-    boolean exists = myProfile.getFollows().stream()
-        .anyMatch(
-            follows -> targetUserId.equals(
-                follows.getTarget().getUserId())
-        );
-
-    if (!exists) {
-      Follows follows = Follows.builder()
-          .since(Instant.now())
-          .target(targetProfile)
-          .build();
-      myProfile.getFollows().add(follows);
-      userProfileRepository.save(myProfile);
-    }
+    // đảm bảo cả 2 user hợp lệ/active (re-use logic cũ)
+    userProfileService.getUserProfile();           // me
+    userProfileService.getUserProfile(targetUserId); // target
+    userProfileRepository.mergeFollow(
+        AuthenticationHelper.getMyUserId(), targetUserId, Instant.now());
   }
 
-  /**
-   * Bỏ theo dõi (unfollow) một người dùng đã follow trước đó.
-   * <p>
-   * Lấy profile người dùng hiện tại, loại bỏ mọi entry trong danh sách {@link Follows}
-   * có target trùng với {@code targetUserId}, sau đó lưu lại profile.
-   *
-   * @param targetUserId ID của người dùng cần unfollow
-   * @throws com.codecampus.profile.exception.AppException nếu không tìm thấy profile của người dùng hiện tại
-   */
+  @Transactional
   public void unfollow(String targetUserId) {
-    UserProfile myProfile = userProfileService.getUserProfile();
-
-    myProfile.getFollows().removeIf(
-        follows -> targetUserId.equals(follows.getTarget().getUserId())
-    );
-
-    userProfileRepository.save(myProfile);
+    userProfileRepository.deleteFollow(
+        AuthenticationHelper.getMyUserId(), targetUserId);
   }
 
-  /**
-   * Chặn (block) một người dùng.
-   * <p>
-   * Lấy profile người dùng hiện tại và target, kiểm tra tránh block trùng,
-   * rồi thêm mới entry {@link Blocks} và lưu lại profile.
-   *
-   * @param targetUserId ID của người dùng cần block
-   * @throws com.codecampus.profile.exception.AppException nếu không tìm thấy profile của người dùng hiện tại hoặc của targetUserId
-   */
+  @Transactional
   public void block(String targetUserId) {
-    UserProfile myProfile = userProfileService.getUserProfile();
-
-    UserProfile targetProfile =
-        userProfileService.getUserProfile(targetUserId);
-
-    boolean exists = myProfile.getBlocks().stream()
-        .anyMatch(
-            blocks -> targetUserId.equals(
-                blocks.getTarget().getUserId())
-        );
-
-    if (!exists) {
-      Blocks blocks = Blocks.builder()
-          .since(Instant.now())
-          .target(targetProfile)
-          .build();
-      myProfile.getBlocks().add(blocks);
-      userProfileRepository.save(myProfile);
-    }
+    userProfileService.getUserProfile();             // me
+    userProfileService.getUserProfile(targetUserId); // target
+    userProfileRepository.mergeBlock(
+        AuthenticationHelper.getMyUserId(), targetUserId, Instant.now());
   }
 
-  /**
-   * Bỏ chặn (unblock) một người dùng đã block trước đó.
-   * <p>
-   * Lấy profile người dùng hiện tại, loại bỏ mọi entry trong danh sách {@link Blocks}
-   * có target trùng với {@code targetUserId}, sau đó lưu lại profile.
-   *
-   * @param targetUserId ID của người dùng cần unblock
-   * @throws com.codecampus.profile.exception.AppException nếu không tìm thấy profile của người dùng hiện tại
-   */
+  @Transactional
   public void unblock(String targetUserId) {
-    UserProfile myProfile = userProfileService.getUserProfile();
-
-    myProfile.getBlocks().removeIf(
-        blocks -> targetUserId.equals(blocks.getTarget().getUserId())
-    );
-
-    userProfileRepository.save(myProfile);
+    userProfileRepository.deleteBlock(
+        AuthenticationHelper.getMyUserId(), targetUserId);
   }
 
   /**

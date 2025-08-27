@@ -81,3 +81,5 @@ app:
       password: userRoot123
       email: userRoot123@gmail.com
     tempPassword: password123
+  password-reset:
+    expiry-minutes: 15

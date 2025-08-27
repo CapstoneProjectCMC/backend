@@ -85,27 +85,6 @@ public interface UserProfileRepository
       String userId,
       Pageable pageable);
 
-  /**
-   * Tạo quan hệ SAVED_EXERCISE nếu chưa có
-   */
-  @Query("""
-        MATCH (u:User {userId:$userId})
-        WHERE u.deletedAt IS NULL
-        MATCH (e:Exercise {exerciseId:$exerciseId})
-        MERGE (u)-[r:SAVED_EXERCISE]->(e)
-        ON CREATE SET r.saveAt = $now
-      """)
-  void mergeSavedExercise(String userId, String exerciseId, Instant now);
-
-  /**
-   * Xoá tất cả quan hệ SAVED_EXERCISE giữa user và exercise
-   */
-  @Query("""
-        MATCH (u:User {userId:$userId})-[r:SAVED_EXERCISE]->(e:Exercise {exerciseId:$exerciseId})
-        DELETE r
-      """)
-  void deleteSavedExercise(String userId, String exerciseId);
-
   @Query(value = """
       MATCH (u:User {userId:$userId})
       WHERE u.deletedAt IS NULL
@@ -205,6 +184,54 @@ public interface UserProfileRepository
       String userId,
       Pageable pageable);
 
+  @Query("""
+        MATCH (u:User {userId:$userId})
+        WHERE u.deletedAt IS NULL
+        MATCH (e:Exercise {exerciseId:$exerciseId})
+        MERGE (u)-[r:SAVED_EXERCISE]->(e)
+        ON CREATE SET r.saveAt = $now
+      """)
+  void mergeSavedExercise(String userId, String exerciseId, Instant now);
+
+  @Query("""
+        MATCH (u:User {userId:$userId})-[r:SAVED_EXERCISE]->(e:Exercise {exerciseId:$exerciseId})
+        DELETE r
+      """)
+  void deleteSavedExercise(String userId, String exerciseId);
+
+  /* --- POST SAVED / REPORTED --- */
+  @Query("""
+        MATCH (u:User {userId:$userId})
+        WHERE u.deletedAt IS NULL
+        MATCH (p:Post {postId:$postId})
+        MERGE (u)-[r:SAVED_POST]->(p)
+        ON CREATE SET r.saveAt = $now
+      """)
+  void mergeSavedPost(String userId, String postId, Instant now);
+
+  @Query("""
+        MATCH (u:User {userId:$userId})-[r:SAVED_POST]->(p:Post {postId:$postId})
+        DELETE r
+      """)
+  void deleteSavedPost(String userId, String postId);
+
+  @Query("""
+        MATCH (u:User {userId:$userId})
+        WHERE u.deletedAt IS NULL
+        MATCH (p:Post {postId:$postId})
+        MERGE (u)-[r:REPORTED_POST]->(p)
+        SET r.reason = $reason, r.reportedAt = $at
+      """)
+  void mergeReportedPost(String userId, String postId, String reason,
+                         Instant at);
+
+  @Query("""
+        MATCH (u:User {userId:$userId})-[r:REPORTED_POST]->(p:Post {postId:$postId})
+        DELETE r
+      """)
+  void deleteReportedPost(String userId, String postId);
+
+
   /* ========================= ACTIVITY TIME ========================= */
 
   @Query(value = """
@@ -225,6 +252,20 @@ public interface UserProfileRepository
   Page<ActivityWeek> findActivityWeek(
       String userId,
       Pageable pageable);
+
+  /* ========================= FAMILY: PARENT_OF ========================= */
+  @Query("""
+        MATCH (p:User {userId:$parent}) WHERE p.deletedAt IS NULL
+        MATCH (c:User {userId:$child})  WHERE c.deletedAt IS NULL
+        MERGE (p)-[:PARENT_OF]->(c)
+      """)
+  void mergeParentChild(String parent, String child);
+
+  @Query("""
+        MATCH (p:User {userId:$parent})-[r:PARENT_OF]->(c:User {userId:$child})
+        DELETE r
+      """)
+  void deleteParentChild(String parent, String child);
 
   /* ========================= FOLLOW / BLOCK ========================= */
 
@@ -290,6 +331,38 @@ public interface UserProfileRepository
   Page<Blocks> findBlocked(
       String userId,
       Pageable pageable);
+
+  @Query("""
+        MATCH (me:User {userId:$me})
+        WHERE me.deletedAt IS NULL
+        MATCH (target:User {userId:$target})
+        WHERE target.deletedAt IS NULL
+        MERGE (me)-[r:FOLLOWS]->(target)
+        ON CREATE SET r.since = $since
+      """)
+  void mergeFollow(String me, String target, Instant since);
+
+  @Query("""
+        MATCH (me:User {userId:$me})-[r:FOLLOWS]->(target:User {userId:$target})
+        DELETE r
+      """)
+  void deleteFollow(String me, String target);
+
+  @Query("""
+        MATCH (me:User {userId:$me})
+        WHERE me.deletedAt IS NULL
+        MATCH (target:User {userId:$target})
+        WHERE target.deletedAt IS NULL
+        MERGE (me)-[r:BLOCKS]->(target)
+        ON CREATE SET r.since = $since
+      """)
+  void mergeBlock(String me, String target, Instant since);
+
+  @Query("""
+        MATCH (me:User {userId:$me})-[r:BLOCKS]->(target:User {userId:$target})
+        DELETE r
+      """)
+  void deleteBlock(String me, String target);
 
   /* ========================= ORG ========================= */
 
@@ -397,4 +470,35 @@ public interface UserProfileRepository
       String userId,
       String type,
       Pageable pageable);
+
+  @Query("""
+        MATCH (u:User {userId:$userId})
+        WHERE u.deletedAt IS NULL
+        MATCH (f:FileResource {fileId:$fileId})
+        MERGE (u)-[r:SAVED_RESOURCE]->(f)
+        ON CREATE SET r.saveAt = $now
+      """)
+  void mergeSavedResource(String userId, String fileId, Instant now);
+
+  @Query("""
+        MATCH (u:User {userId:$userId})-[r:SAVED_RESOURCE]->(f:FileResource {fileId:$fileId})
+        DELETE r
+      """)
+  void deleteSavedResource(String userId, String fileId);
+
+  @Query("""
+        MATCH (u:User {userId:$userId})
+        WHERE u.deletedAt IS NULL
+        MATCH (f:FileResource {fileId:$fileId})
+        MERGE (u)-[r:REPORTED_RESOURCE]->(f)
+        SET r.reason = $reason, r.reportedAt = $at
+      """)
+  void mergeReportedResource(String userId, String fileId, String reason,
+                             Instant at);
+
+  @Query("""
+        MATCH (u:User {userId:$userId})-[r:REPORTED_RESOURCE]->(f:FileResource {fileId:$fileId})
+        DELETE r
+      """)
+  void deleteReportedResource(String userId, String fileId);
 }

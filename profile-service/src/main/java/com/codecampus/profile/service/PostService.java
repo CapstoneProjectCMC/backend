@@ -4,7 +4,6 @@ import static com.codecampus.profile.helper.PageResponseHelper.toPageResponse;
 
 import com.codecampus.profile.dto.common.PageResponse;
 import com.codecampus.profile.entity.Post;
-import com.codecampus.profile.entity.UserProfile;
 import com.codecampus.profile.entity.properties.post.Reaction;
 import com.codecampus.profile.entity.properties.post.ReportedPost;
 import com.codecampus.profile.entity.properties.post.SavedPost;
@@ -21,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -29,43 +29,33 @@ import org.springframework.stereotype.Service;
 public class PostService {
   UserProfileRepository userProfileRepository;
   PostRepository postRepository;
-
   UserProfileService userProfileService;
 
+  @Transactional
   public void savePost(String postId) {
-    UserProfile myProfile = userProfileService.getUserProfile();
-
-    Post post = getPost(postId);
-
-    SavedPost savedPost = SavedPost.builder()
-        .saveAt(Instant.now())
-        .post(post)
-        .build();
-
-    myProfile.getSavedPosts().add(savedPost);
-    userProfileRepository.save(myProfile);
+    getPost(postId);
+    userProfileRepository.mergeSavedPost(
+        AuthenticationHelper.getMyUserId(), postId, Instant.now());
   }
 
+  @Transactional
   public void unsavePost(String postId) {
-    UserProfile myProfile = userProfileService.getUserProfile();
-
-    myProfile.getSavedPosts()
-        .removeIf(sp -> sp.getPost() != null
-            && postId.equals(sp.getPost().getPostId()));
-
-    userProfileRepository.save(myProfile);
+    userProfileRepository.deleteSavedPost(
+        AuthenticationHelper.getMyUserId(), postId);
   }
 
+  @Transactional
   public void reportPost(String postId, String reason) {
-    UserProfile myProfile = userProfileService.getUserProfile();
+    getPost(postId); // đảm bảo node Post tồn tại
+    userProfileRepository.mergeReportedPost(
+        AuthenticationHelper.getMyUserId(), postId, reason, Instant.now());
+  }
 
-    Post post = getPost(postId);
-
-    ReportedPost reportedPost = ReportedPost.builder()
-        .post(post).reason(reason)
-        .reportedAt(Instant.now()).build();
-    myProfile.getReportedPosts().add(reportedPost);
-    userProfileRepository.save(myProfile);
+  @Transactional
+  public void unReportPost(String postId) {
+    getPost(postId); // đảm bảo node Post tồn tại
+    userProfileRepository.deleteReportedPost(
+        AuthenticationHelper.getMyUserId(), postId);
   }
 
   public PageResponse<SavedPost> getSavedPosts(

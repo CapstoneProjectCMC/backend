@@ -10,5 +10,5 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PrimaryOrgDto {
   String organizationId;
-  String role; // Admin | Teacher | Student | SuperAdmin
+  String role; // ADMIN | TEACHER | STUDENT
 }

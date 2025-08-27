@@ -1,7 +1,8 @@
 package com.codecampus.profile.service;
 
 import com.codecampus.profile.constant.file.FileType;
-import com.codecampus.profile.dto.common.FileServiceResponse;
+import com.codecampus.profile.dto.common.ApiResponse;
+import com.codecampus.profile.dto.response.file.UploadedFileResponse;
 import com.codecampus.profile.entity.UserProfile;
 import com.codecampus.profile.mapper.UserProfileMapper;
 import com.codecampus.profile.repository.UserProfileRepository;
@@ -30,48 +31,49 @@ public class ProfileImageService {
 
   public void uploadAvatar(MultipartFile file) {
     List<String> tags = List.of("avatar");
-
-    String presigned = uploadToFileService(
+    UploadedFileResponse uploaded = uploadToFileService(
         file, "avatar", tags);
-    setAvatarUrl(presigned);
+    setAvatarUrl(uploaded.getUrl());
   }
 
   public void uploadBackground(MultipartFile file) {
     List<String> tags = List.of("background");
-
-    String presigned = uploadToFileService(
+    UploadedFileResponse uploaded = uploadToFileService(
         file, "background", tags);
-    setBackgroundUrl(presigned);
+    setBackgroundUrl(uploaded.getUrl());
   }
 
   public void updateAvatar(MultipartFile file) {
     List<String> tags = List.of("avatar");
-
-    String presigned = uploadToFileService(
+    UploadedFileResponse uploaded = uploadToFileService(
         file, "avatar", tags);
-    setAvatarUrl(presigned);
+    setAvatarUrl(uploaded.getUrl());
   }
 
   public void updateBackground(MultipartFile file) {
     List<String> tags = List.of("background");
-
-    String presigned = uploadToFileService(
+    UploadedFileResponse uploaded = uploadToFileService(
         file, "background", tags);
-    setBackgroundUrl(presigned);
+    setBackgroundUrl(uploaded.getUrl());
   }
 
-  String uploadToFileService(
+  UploadedFileResponse uploadToFileService(
       MultipartFile file,
       String description,
       List<String> tags) {
-    FileServiceResponse<String> fileResponse =
+    ApiResponse<UploadedFileResponse> api =
         fileClient.uploadImage(
             file,
             FileType.Image,
             description,
             tags
         );
-    return fileResponse.result();
+
+    UploadedFileResponse result = api != null ? api.getResult() : null;
+    if (result == null || result.getUrl() == null) {
+      throw new IllegalStateException("Upload file failed: invalid response");
+    }
+    return result;
   }
 
   void setAvatarUrl(String url) {

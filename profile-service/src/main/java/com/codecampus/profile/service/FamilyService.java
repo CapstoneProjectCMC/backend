@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Service xử lý quan hệ gia đình giữa các UserProfile,
@@ -24,44 +25,17 @@ public class FamilyService {
 
   UserProfileService userProfileService;
 
-  /**
-   * Thêm một UserProfile làm con cho phụ huynh đã cho.
-   * <p>
-   * Lấy {@link UserProfile} của phụ huynh theo {@code parentId} và
-   * của con theo {@code childId}, sau đó thêm con vào danh sách
-   * {@code parent.getChildren()} và lưu lại.
-   *
-   * @param parentId ID của người dùng đóng vai trò phụ huynh
-   * @param childId  ID của người dùng đóng vai trò con
-   * @throws AppException với {@link ErrorCode#USER_NOT_FOUND}
-   *                      nếu không tìm thấy profile của phụ huynh hoặc của con
-   */
+  @Transactional
   public void addChild(String parentId, String childId) {
-    UserProfile parent = userProfileService.getUserProfile(parentId);
-    UserProfile child = userProfileService.getUserProfile(childId);
-
-    parent.getChildren().add(child);
-    userProfileRepository.save(parent);
+    // đảm bảo tồn tại
+    userProfileService.getUserProfile(parentId);
+    userProfileService.getUserProfile(childId);
+    userProfileRepository.mergeParentChild(parentId, childId);
   }
 
-
-  /**
-   * Loại bỏ một UserProfile khỏi danh sách con của phụ huynh.
-   * <p>
-   * Lấy {@link UserProfile} của phụ huynh theo {@code parentId},
-   * sau đó loại bỏ mọi {@code child} có ID bằng {@code childId}
-   * khỏi {@code parent.getChildren()} và lưu lại.
-   *
-   * @param parentId ID của người dùng đóng vai trò phụ huynh
-   * @param childId  ID của người dùng cần loại khỏi danh sách con
-   * @throws AppException với {@link ErrorCode#USER_NOT_FOUND}
-   *                      nếu không tìm thấy profile của phụ huynh
-   */
+  @Transactional
   public void removeChild(String parentId, String childId) {
-    UserProfile parent = userProfileService.getUserProfile(parentId);
-    parent.getChildren()
-        .removeIf(child -> childId.equals(child.getUserId()));
-    userProfileRepository.save(parent);
+    userProfileRepository.deleteParentChild(parentId, childId);
   }
 
 

@@ -3,7 +3,8 @@ package com.codecampus.profile.repository.client;
 import com.codecampus.profile.config.AuthenticationRequestInterceptor;
 import com.codecampus.profile.config.FeignMultipartConfiguration;
 import com.codecampus.profile.constant.file.FileType;
-import com.codecampus.profile.dto.common.FileServiceResponse;
+import com.codecampus.profile.dto.common.ApiResponse;
+import com.codecampus.profile.dto.response.file.UploadedFileResponse;
 import java.util.List;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
@@ -24,7 +25,7 @@ public interface FileClient {
   @PostMapping(
       value = "/api/FileDocument/add",
       consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-  FileServiceResponse<String> uploadImage(
+  ApiResponse<UploadedFileResponse> uploadImage(
       @RequestPart("file") MultipartFile file,
       @RequestPart("category") FileType category,
       @RequestPart("description") String description,

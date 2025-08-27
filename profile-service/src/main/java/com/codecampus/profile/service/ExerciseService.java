@@ -56,7 +56,6 @@ public class ExerciseService {
    *                      nếu không tìm thấy bài tập.
    */
   public void saveExercise(String exerciseId) {
-
     getExercise(exerciseId);
     userProfileRepository.mergeSavedExercise(
         AuthenticationHelper.getMyUserId(), exerciseId, Instant.now());
