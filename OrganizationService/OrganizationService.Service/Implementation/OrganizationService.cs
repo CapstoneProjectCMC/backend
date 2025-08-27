@@ -64,9 +64,11 @@ namespace OrganizationService.Service.Implementation
                     Phone = o.Phone,
                     LogoId = o.Logo,
                     LogoUrl = o.LogoUrl,
-                    Status = o.Status
+                    Status = o.Status,
+                    CreatedAt = o.CreatedAt,
+                    CreatedBy = _userContext.UserId,
+                    OrganizationRole = _userContext.OrganizationRole,
                 });
-               
 
             return await orgs.ToListAsync();
         }
@@ -77,7 +79,7 @@ namespace OrganizationService.Service.Implementation
                 .FirstOrDefaultAsync(o => o.Id == id && !o.IsDeleted);
 
             if (org == null)
-                throw new ErrorException(Core.Enums.StatusCodeEnum.A02, "Organization not found");
+                throw new ErrorException(Core.Enums.StatusCodeEnum.D01);
 
             return new OrganizationDto
             {
@@ -89,7 +91,10 @@ namespace OrganizationService.Service.Implementation
                 Phone = org.Phone,
                 LogoId = org.Logo,
                 LogoUrl = org.LogoUrl,
-                Status = org.Status
+                Status = org.Status,
+                CreatedAt = org.CreatedAt,
+                CreatedBy = _userContext.UserId,
+                OrganizationRole = _userContext.OrganizationRole,
             };
         }
 
@@ -97,7 +102,7 @@ namespace OrganizationService.Service.Implementation
         {
             var existingOrg = await _organizationRepository.FindAsync(o => o.Name.ToLower() == request.Name.ToLower());
             if (existingOrg != null)
-                throw new ErrorException(Core.Enums.StatusCodeEnum.A02, "Organization with this name already exists");
+                throw new ErrorException(Core.Enums.StatusCodeEnum.D02);
 
 
             var entity = new Organization
@@ -110,7 +115,7 @@ namespace OrganizationService.Service.Implementation
                 Phone = request.Phone,
                 Status = request.Status,
                 CreatedAt = DateTime.UtcNow,
-                CreatedBy = _userContext.UserId
+                CreatedBy = _userContext.UserId,
             };
 
             // Nếu có logo file, upload lên File service
@@ -119,16 +124,22 @@ namespace OrganizationService.Service.Implementation
                 try
                 {
                     var logoResult = await _fileServiceClient.UploadLogoAsync(request.LogoFile, entity.Id);
+                    if (logoResult == null || string.IsNullOrEmpty(logoResult.Url) ||logoResult.Url.ToString() == null)
+                    {
+                        throw new ErrorException(Core.Enums.StatusCodeEnum.D03, "Failed to upload logo file.");
+                    }
+
                     entity.Logo = logoResult.FileId;
                     entity.LogoUrl = logoResult.Url;
+
                 }
-                catch (ErrorException ex)
+                catch (ErrorException)
                 {
-                    throw new ErrorException(ex.StatusCode, $"Failed to upload logo: {ex.Message}");
+                    throw new ErrorException(Core.Enums.StatusCodeEnum.D03);
                 }
                 catch (Exception ex)
                 {
-                    throw new ErrorException(Core.Enums.StatusCodeEnum.A01, $"Failed to upload logo: {ex.Message}");
+                    throw new ErrorException(Core.Enums.StatusCodeEnum.D03, ex.Message);
                 }
             }
             else
@@ -164,7 +175,7 @@ namespace OrganizationService.Service.Implementation
         {
             var entity = await _organizationRepository.FindByIdAsync(id);
             if (entity == null)
-                throw new ErrorException(Core.Enums.StatusCodeEnum.A02, "Organization not found");
+                throw new ErrorException(Core.Enums.StatusCodeEnum.D01);
 
             entity.Name = request.Name ?? entity.Name;
             entity.Description = request.Description ?? entity.Description;
@@ -219,7 +230,8 @@ namespace OrganizationService.Service.Implementation
                 Phone = entity.Phone,
                 LogoId = entity.Logo,
                 LogoUrl = entity.LogoUrl,
-                Status = entity.Status
+                Status = entity.Status,
+                OrganizationRole = _userContext.OrganizationRole
             };
         }
 
@@ -227,7 +239,7 @@ namespace OrganizationService.Service.Implementation
         {
             var entity = await _organizationRepository.FindByIdAsync(id);
             if (entity == null)
-                throw new ErrorException(Core.Enums.StatusCodeEnum.A02, "Organization not found");
+                throw new ErrorException(Core.Enums.StatusCodeEnum.D01);
 
             entity.IsDeleted = true;
             entity.DeletedAt = DateTime.UtcNow;

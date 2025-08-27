@@ -38,6 +38,9 @@ builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.Re
 
 builder.Services.AddHttpContextAccessor();
 
+// Add HttpClient factory
+builder.Services.AddHttpClient<IIdentityServiceClient, IdentityServiceClient>();
+
 var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 Console.WriteLine($"ASPNETCORE_ENVIRONMENT: {env}");
 

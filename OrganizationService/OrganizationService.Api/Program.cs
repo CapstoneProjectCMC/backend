@@ -131,16 +131,16 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("LoggedInUsers", policy => policy.RequireRole("USER", "TEACHER", "ORG_ADMIN", "SYS_ADMIN"));
 });
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy(name: MyAllowSpecificOrigins,
-                      policy =>
-                      {
-                          policy.AllowAnyOrigin()
-                          .AllowAnyHeader()
-                          .AllowAnyMethod();
-                      });
-});
+//builder.Services.AddCors(options =>
+//{
+//    options.AddPolicy(name: MyAllowSpecificOrigins,
+//                      policy =>
+//                      {
+//                          policy.AllowAnyOrigin()
+//                          .AllowAnyHeader()
+//                          .AllowAnyMethod();
+//                      });
+//});
 
 
 //builder.Services.AddTwilioClient();
@@ -213,7 +213,7 @@ if (app.Environment.IsDevelopment())
 
 app.UsePathBase("/org");
 
-app.UseCors(MyAllowSpecificOrigins);
+//app.UseCors(MyAllowSpecificOrigins);
 
 app.UseHttpsRedirection();
 app.UseAuthentication();

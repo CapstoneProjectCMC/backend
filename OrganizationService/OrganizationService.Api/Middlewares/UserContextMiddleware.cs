@@ -44,10 +44,13 @@ namespace OrganizationService.Api.Middlewares
             var userId = httpContext.User.Claims.FirstOrDefault(c => c.Type == "userId")?.Value;
             var email = httpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
             var sessionId = httpContext.User.Claims.FirstOrDefault(c => c.Type == "sessionId")?.Value;
-            var role = httpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+            var role = httpContext.User.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToList();
             var userType = httpContext.User.Claims.FirstOrDefault(c => c.Type == "userType")?.Value;
             var username = httpContext.User.Claims.FirstOrDefault(c => c.Type == "username")?.Value;
             var permissions = httpContext.User.Claims.Where(c => c.Type == "permissions").Select(c => c.Value).ToList();
+            var organizationId = httpContext.User.Claims.FirstOrDefault(c => c.Type == "org_id")?.Value;
+            var organizationRole = httpContext.User.Claims.FirstOrDefault(c => c.Type == "org_role")?.Value;
+            var scope = httpContext.User.Claims.FirstOrDefault(c => c.Type == "scope")?.Value;
 
 
             if (userContext == null)
@@ -70,9 +73,9 @@ namespace OrganizationService.Api.Middlewares
                 userContext.SessionId = sid;
             }
 
-            if (!string.IsNullOrEmpty(role))
+            if (role != null && role.Any())
             {
-                userContext.Role = role;
+                userContext.Roles = role;
             }
 
             if (!string.IsNullOrEmpty(username))

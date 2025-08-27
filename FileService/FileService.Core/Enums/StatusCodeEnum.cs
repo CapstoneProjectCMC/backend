@@ -70,6 +70,9 @@ namespace FileService.Core.Enums
         NotFound = 404,
 
         [Description("Internal Server Error")]
-        InternalServerError = 500
+        InternalServerError = 500,
+
+        [Description("Sai định dạng, không truy vấn được")]
+        D01 = 4008218
     }
 }
