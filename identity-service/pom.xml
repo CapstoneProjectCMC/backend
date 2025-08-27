@@ -45,6 +45,9 @@
         <security-oauth2-jose.version>6.5.0</security-oauth2-jose.version>
         <jacoco.version>0.8.13</jacoco.version>
         <projectlombok-lombok.version>1.18.38</projectlombok-lombok.version>
+        <apache.poi.version>5.4.1</apache.poi.version>
+        <apache.poi.ooxml.version>5.4.1</apache.poi.ooxml.version>
+
 
         <!-- Plugin versions -->
         <protobuf.plugin.version>0.6.1</protobuf.plugin.version> <!-- xolstice/protobuf -->
@@ -135,6 +138,20 @@
             <groupId>com.codecampus</groupId>
             <artifactId>common-protos</artifactId>
             <version>${project.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.poi/poi -->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>${apache.poi.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml -->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>${apache.poi.ooxml.version}</version>
         </dependency>
 
         <!-- ===== Mapping & Utils ===== -->

@@ -1,6 +1,6 @@
 package com.codecampus.identity.service.authentication;
 
-import static com.codecampus.identity.constant.authentication.AuthenticationConstant.USER_ROLE;
+import static com.codecampus.identity.constant.authentication.AuthenticationConstant.STUDENT_ROLE;
 
 import com.codecampus.identity.dto.request.authentication.AuthenticationRequest;
 import com.codecampus.identity.dto.request.authentication.ExchangeTokenRequest;
@@ -137,15 +137,19 @@ public class AuthenticationService {
       throws JOSEException, ParseException {
     String token = request.getToken();
     boolean isValid = true;
+    String userId = null;
 
     try {
-      verifyToken(token, false);
+      SignedJWT signedJWT = verifyToken(token, false);
+
+      userId = signedJWT.getJWTClaimsSet().getStringClaim("userId");
     } catch (AppException e) {
       isValid = false;
     }
 
     return IntrospectResponse.builder()
         .valid(isValid)
+        .userId(userId)
         .build();
   }
 
@@ -177,7 +181,7 @@ public class AuthenticationService {
     User user = userRepository
         .findByEmail(googleUser.getEmail())
         .orElseGet(() -> {
-              Role userRole = roleRepository.findByName(USER_ROLE);
+              Role userRole = roleRepository.findByName(STUDENT_ROLE);
               User newUser = userRepository.save(User.builder()
                   .username(EmailUtils.extractUsername(
                       googleUser.getEmail()))
@@ -278,7 +282,7 @@ public class AuthenticationService {
     user.setPassword(passwordEncoder.encode(user.getPassword()));
     user.setEnabled(false); // Chưa kích hoạt
     user.setRoles(new HashSet<>());
-    roleRepository.findById(USER_ROLE)
+    roleRepository.findById(STUDENT_ROLE)
         .ifPresent(r -> user.getRoles().add(r));
 
     try {

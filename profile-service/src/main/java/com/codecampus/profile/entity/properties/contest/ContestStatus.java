@@ -21,7 +21,8 @@ import org.springframework.data.neo4j.core.schema.TargetNode;
 public class ContestStatus {
   @Id
   @GeneratedValue
-  String id;
+  Long id;
+  
   String state;   // REGISTERED, SUBMITTED, FINISHED …
   Integer rank;
   Double score;

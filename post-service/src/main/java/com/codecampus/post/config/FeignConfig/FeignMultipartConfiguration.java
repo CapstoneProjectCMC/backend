@@ -1,4 +1,4 @@
-package com.codecampus.post.config;
+package com.codecampus.post.config.FeignConfig;
 
 import feign.codec.Encoder;
 import feign.form.spring.SpringFormEncoder;
@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
  * </p>
  */
 @Configuration
-public class FeignConfiguration {
+public class FeignMultipartConfiguration {
   /**
    * Đăng ký {@link Encoder} tùy chỉnh cho Feign,
    * sử dụng {@link SpringFormEncoder} để mã hóa multipart/form-data.

@@ -74,6 +74,8 @@ public enum ErrorCode {
       NOT_FOUND),
   QUIZ_DETAIL_NOT_FOUND(4048312, NOT_FOUND_STATUS,
       "Không tìm thấy bài tập quiz!", NOT_FOUND),
+  CONTEST_NOT_FOUND(4048313, NOT_FOUND_STATUS, "Không tìm thy kỳ thi!",
+      NOT_FOUND),
 
 
   // 409 - Conflict

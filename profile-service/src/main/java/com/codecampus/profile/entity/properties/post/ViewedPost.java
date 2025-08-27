@@ -24,7 +24,7 @@ import org.springframework.data.neo4j.core.schema.TargetNode;
 public class ViewedPost {
   @Id
   @GeneratedValue
-  String id;
+  Long id;
 
   Instant firstViewed;
   Instant lastViewed;

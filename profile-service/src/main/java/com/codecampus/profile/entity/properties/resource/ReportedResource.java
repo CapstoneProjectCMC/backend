@@ -24,7 +24,8 @@ import org.springframework.data.neo4j.core.schema.TargetNode;
 public class ReportedResource {
   @Id
   @GeneratedValue
-  String id;
+  Long id;
+
   String reason;
   Instant reportedAt;
 

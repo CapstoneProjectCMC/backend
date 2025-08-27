@@ -13,4 +13,5 @@ import lombok.experimental.FieldDefaults;
 //@JsonInclude(JsonInclude.Include.NON_NULL)
 public class IntrospectResponse {
   boolean valid;
+  String userId;
 }

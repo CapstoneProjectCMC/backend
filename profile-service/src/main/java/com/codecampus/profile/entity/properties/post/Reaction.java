@@ -25,7 +25,7 @@ import org.springframework.data.neo4j.core.schema.TargetNode;
 public class Reaction {
   @Id
   @GeneratedValue
-  String id;
+  Long id;
 
   ReactionType type;
   Instant at;

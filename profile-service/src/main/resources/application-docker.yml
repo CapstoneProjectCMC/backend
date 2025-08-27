@@ -11,9 +11,15 @@ spring:
       password: ${NEO4J_PASSWORD}
   kafka:
     bootstrap-servers: kafka:9092
+  data:
+    redis:
+      host: redis     # dịch vụ trong compose
+      port: 6379
+      password: ${REDIS_PASSWORD}
 
 app:
   services:
     file: http://file-service:8082/file
     organization: http://organization-service:8091/org
+    submission: http://submission-service:8083/submission
 

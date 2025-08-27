@@ -10,7 +10,7 @@ public class SocketIOConfig {
   public SocketIOServer socketIOServer() {
     com.corundumstudio.socketio.Configuration configuration =
         new com.corundumstudio.socketio.Configuration();
-    configuration.setPort(4098);
+    configuration.setPort(4099);
     configuration.setOrigin("*");
 
     return new SocketIOServer(configuration);

@@ -40,11 +40,17 @@ public enum ErrorCode {
   // 404 - Not Found
   USER_NOT_FOUND(4049001, NOT_FOUND_STATUS, "Không tìm thấy người dùng!",
       NOT_FOUND),
-  TARGET_USER_NOT_FOUND(4049003, NOT_FOUND_STATUS,
+  TARGET_USER_NOT_FOUND(4049002, NOT_FOUND_STATUS,
       "Không tìm thấy người dùng mục tiêu!", NOT_FOUND),
-  POST_NOT_FOUND(4049004, NOT_FOUND_STATUS, "Không tìm thấy bài đăng!",
+  POST_NOT_FOUND(4049003, NOT_FOUND_STATUS, "Không tìm thấy bài đăng!",
       NOT_FOUND),
   ORG_NOT_FOUND(4049004, NOT_FOUND_STATUS, "Không tìm thấy tổ chức!",
+      NOT_FOUND),
+  PARENT_COMMENT_NOT_FOUND(4049005, NOT_FOUND_STATUS,
+      "Không tìm thấy comment cha!", NOT_FOUND),
+  COMMENT_NOT_FOUND(4049006, NOT_FOUND_STATUS, "Không tìm thấy comment!",
+      NOT_FOUND),
+  ACCESS_NOT_FOUND(4049007, NOT_FOUND_STATUS, "Không tìm thấy quyền truy cập!",
       NOT_FOUND),
 
   //406 - Post Error

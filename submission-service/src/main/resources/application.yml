@@ -63,5 +63,8 @@ app:
   event:
     exercise-events: "exercise-events"
     profile-events: "profile-events"
+    contest-events: "contest-events"
+    exercise-status-events: "exercise-status-events"
+    contest-status-events: "contest-status-events"
   services:
     profile: http://localhost:8081/profile

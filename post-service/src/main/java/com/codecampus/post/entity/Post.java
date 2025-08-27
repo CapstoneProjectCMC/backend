@@ -4,12 +4,17 @@ import com.codecampus.post.entity.audit.AuditMetadata;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -31,7 +36,7 @@ import org.hibernate.annotations.Where;
 @Table(name = "post")
 @SQLDelete(sql = "UPDATE post " +
     "SET deleted_by = ? , deleted_at = now() " +
-    "WHERE id = ?")
+    "WHERE post_id = ?")
 @Where(clause = "deleted_at IS NULL")
 public class Post extends AuditMetadata {
   @Id
@@ -47,7 +52,12 @@ public class Post extends AuditMetadata {
   Boolean allowComment;
   String hashtag;
   String status;
-  List<String> imagesUrls;
+
+  @ElementCollection
+  @CollectionTable(name = "post_images", joinColumns = @JoinColumn(name = "post_id"))
+  @Column(name = "image_url")
+  @Builder.Default
+  List<String> imagesUrls = new ArrayList<>();
 
   @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
   @JsonIgnore

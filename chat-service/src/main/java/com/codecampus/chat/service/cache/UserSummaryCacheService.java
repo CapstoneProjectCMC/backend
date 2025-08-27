@@ -25,7 +25,7 @@ import org.springframework.stereotype.Service;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserSummaryCacheService {
   Duration TTL = Duration.ofHours(6);
-  String KEY_PREFIX = "user:summary:";
+  String KEY_PREFIX = "userprofile:summary:";
 
   @Qualifier("userProfileSummaryRedisTemplate")
   RedisTemplate<String, UserProfileSummary> redis;

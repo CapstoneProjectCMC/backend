@@ -15,6 +15,7 @@ import com.codecampus.profile.entity.properties.resource.SavedResource;
 import com.codecampus.profile.entity.properties.social.Blocks;
 import com.codecampus.profile.entity.properties.social.Follows;
 import com.codecampus.profile.entity.properties.subcribe.SubscribedTo;
+import java.time.Instant;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -44,7 +45,7 @@ public interface UserProfileRepository
       MATCH (u:User {userId:$userId})
       WHERE u.deletedAt IS NULL
       MATCH (u)-[completed:COMPLETED_EXERCISE]->(e:Exercise)
-      RETURN completed, e
+      RETURN completed, e AS exercise
       ORDER BY completed.completedAt DESC
       SKIP $skip
       LIMIT $limit
@@ -59,11 +60,17 @@ public interface UserProfileRepository
       String userId,
       Pageable pageable);
 
+  // SDN6 sẽ để trống @TargetNode
+  // nếu biến RETURN trong Cypher không trùng tên
+  // với tên field trong lớp @RelationshipProperties.
+  // Ví dụ CreatedExercise có field Exercise exercise;
+  // thì trong query phải RETURN created, e AS exercise
+  // (không phải RETURN created, e).
   @Query(value = """
       MATCH (u:User {userId:$userId})
       WHERE u.deletedAt IS NULL
       MATCH (u)-[saved:SAVED_EXERCISE]->(e:Exercise)
-      RETURN saved, e
+      RETURN saved, e AS exercise
       ORDER BY saved.saveAt DESC
       SKIP $skip
       LIMIT $limit
@@ -78,12 +85,33 @@ public interface UserProfileRepository
       String userId,
       Pageable pageable);
 
+  /**
+   * Tạo quan hệ SAVED_EXERCISE nếu chưa có
+   */
+  @Query("""
+        MATCH (u:User {userId:$userId})
+        WHERE u.deletedAt IS NULL
+        MATCH (e:Exercise {exerciseId:$exerciseId})
+        MERGE (u)-[r:SAVED_EXERCISE]->(e)
+        ON CREATE SET r.saveAt = $now
+      """)
+  void mergeSavedExercise(String userId, String exerciseId, Instant now);
+
+  /**
+   * Xoá tất cả quan hệ SAVED_EXERCISE giữa user và exercise
+   */
+  @Query("""
+        MATCH (u:User {userId:$userId})-[r:SAVED_EXERCISE]->(e:Exercise {exerciseId:$exerciseId})
+        DELETE r
+      """)
+  void deleteSavedExercise(String userId, String exerciseId);
+
   @Query(value = """
       MATCH (u:User {userId:$userId})
       WHERE u.deletedAt IS NULL
       MATCH (u)-[created:CREATED_EXERCISE]->(e:Exercise)
-      RETURN created, e
-      ORDER BY created.id DESC
+      RETURN created, e AS exercise
+      ORDER BY e.title
       SKIP $skip
       LIMIT $limit
       """,
@@ -103,7 +131,7 @@ public interface UserProfileRepository
       MATCH (u:User {userId:$userId})
       WHERE u.deletedAt IS NULL
       MATCH (u)-[cs:CONTEST_STATUS]->(c:Contest)
-      RETURN cs, c
+      RETURN cs, c AS contest
       ORDER BY cs.updatedAt DESC
       SKIP $skip
       LIMIT $limit
@@ -124,7 +152,7 @@ public interface UserProfileRepository
       MATCH (u:User {userId:$userId})
       WHERE u.deletedAt IS NULL
       MATCH (u)-[sp:SAVED_POST]->(p:Post)
-      RETURN sp, p
+      RETURN sp, p AS post
       ORDER BY sp.saveAt DESC
       SKIP $skip
       LIMIT $limit
@@ -143,7 +171,7 @@ public interface UserProfileRepository
       MATCH (u:User {userId:$userId})
       WHERE u.deletedAt IS NULL
       MATCH (u)-[r:REACTION]->(p:Post)
-      RETURN r, p
+      RETURN r, p AS post
       ORDER BY r.at DESC
       SKIP $skip
       LIMIT $limit
@@ -162,7 +190,7 @@ public interface UserProfileRepository
       MATCH (u:User {userId:$userId})
       WHERE u.deletedAt IS NULL
       MATCH (u)-[rp:REPORTED_POST]->(p:Post)
-      RETURN rp, p
+      RETURN rp, p AS post
       ORDER BY rp.reportedAt DESC
       SKIP $skip
       LIMIT $limit
@@ -205,7 +233,7 @@ public interface UserProfileRepository
       WHERE me.deletedAt IS NULL
       MATCH (me)-[f:FOLLOWS]->(target:User)
       WHERE target.deletedAt IS NULL
-      RETURN f, target
+      RETURN f, target  // target đã trùng tên field @TargetNode
       ORDER BY f.since DESC
       SKIP $skip
       LIMIT $limit
@@ -226,7 +254,7 @@ public interface UserProfileRepository
       WHERE me.deletedAt IS NULL
       MATCH (src:User)-[f:FOLLOWS]->(me)
       WHERE src.deletedAt IS NULL
-      RETURN f, src
+      RETURN f, src AS target   // quan trọng: alias về đúng tên field
       ORDER BY f.since DESC
       SKIP $skip
       LIMIT $limit
@@ -269,7 +297,7 @@ public interface UserProfileRepository
       MATCH (u:User {userId:$userId})
       WHERE u.deletedAt IS NULL
       MATCH (u)-[m:MEMBER_ORG]->(o:Organization)
-      RETURN m, o
+      RETURN m, o AS organization
       ORDER BY m.joinAt DESC
       SKIP $skip
       LIMIT $limit
@@ -289,7 +317,7 @@ public interface UserProfileRepository
       WHERE u.deletedAt IS NULL
       MATCH (u)-[m:MEMBER_ORG]->(o:Organization)
       WHERE m.memberRole = $role
-      RETURN m, o
+      RETURN m, o AS organization
       ORDER BY m.joinAt DESC
       SKIP $skip
       LIMIT $limit
@@ -310,7 +338,7 @@ public interface UserProfileRepository
       MATCH (u:User {userId:$userId})
       WHERE u.deletedAt IS NULL
       MATCH (u)-[c:CREATED_ORG]->(o:Organization)
-      RETURN c, o
+      RETURN c, o AS organization
       ORDER BY c.createdAt DESC
       SKIP $skip
       LIMIT $limit
@@ -331,7 +359,7 @@ public interface UserProfileRepository
       MATCH (u:User {userId:$userId})
       WHERE u.deletedAt IS NULL
       MATCH (u)-[s:SUBSCRIBED_TO]->(p:Package)
-      RETURN s, p
+      RETURN s, p AS pkg
       ORDER BY s.start DESC
       SKIP $skip
       LIMIT $limit
@@ -353,7 +381,7 @@ public interface UserProfileRepository
       WHERE u.deletedAt IS NULL
       MATCH (u)-[sr:SAVED_RESOURCE]->(f:FileResource)
       WHERE f.type = $type
-      RETURN sr, f
+      RETURN sr, f AS resource
       ORDER BY sr.saveAt DESC
       SKIP $skip
       LIMIT $limit

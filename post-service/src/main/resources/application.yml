@@ -11,7 +11,6 @@ spring:
     username: postgres_post
     password: dinhanst2832004
     driver-class-name: org.postgresql.Driver
-
   jpa:
     hibernate:
       ddl-auto: update
@@ -19,13 +18,27 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
-
-  cloud:
-    openfeign:
-      multipart:
-        enabled: true
+  kafka:
+    bootstrap-servers: localhost:9094
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+  #      acks: all
+  #      retries: 3
+  #      # optional: giảm latency
+  #      linger-ms: 5            # gộp record <= 5 MS rồi mới gửi
+  #      batch-size: 16384       # 16 KB
+  #      compression-type: lz4   # nén nhẹ – giảm băng thông
+  data:
+    redis:
+      host: localhost # dịch vụ trong compose
+      port: 6379
+      password: dinhanst2832004
+      timeout: 3000ms
 
 app:
   services:
     profile: http://localhost:8081/profile
     file: http://localhost:8082/file
+  event:
+    profile-events: "profile-events"

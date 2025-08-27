@@ -50,7 +50,8 @@ public class PostService {
     UserProfile myProfile = userProfileService.getUserProfile();
 
     myProfile.getSavedPosts()
-        .removeIf(post -> post.getId().equals(postId));
+        .removeIf(sp -> sp.getPost() != null
+            && postId.equals(sp.getPost().getPostId()));
 
     userProfileRepository.save(myProfile);
   }

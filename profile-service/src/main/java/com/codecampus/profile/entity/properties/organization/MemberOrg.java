@@ -25,7 +25,7 @@ import org.springframework.data.neo4j.core.schema.TargetNode;
 public class MemberOrg {
   @Id
   @GeneratedValue
-  String id;
+  Long id;
 
   Instant joinAt;
 

@@ -6,6 +6,7 @@ import lombok.Data;
 @Data
 @Builder
 public class PostAccessResponseDto {
+  private String postAccessId;
   private String postId;
   private String userId;
   private boolean isExcluded;

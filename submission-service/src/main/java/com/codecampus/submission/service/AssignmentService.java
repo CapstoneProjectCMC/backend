@@ -9,6 +9,8 @@ import com.codecampus.submission.helper.ExerciseHelper;
 import com.codecampus.submission.repository.AssignmentRepository;
 import com.codecampus.submission.service.grpc.GrpcCodingClient;
 import com.codecampus.submission.service.grpc.GrpcQuizClient;
+import com.codecampus.submission.service.kafka.ExerciseStatusEventProducer;
+import dtos.ExerciseStatusDto;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +34,9 @@ public class AssignmentService {
   AssignmentRepository assignmentRepository;
 
   ExerciseHelper exerciseHelper;
+
+  ExerciseStatusEventProducer exerciseStatusEventProducer;
+
   GrpcQuizClient grpcQuizClient;
   GrpcCodingClient grpcCodingClient;
 
@@ -51,14 +56,20 @@ public class AssignmentService {
     assignment.setStudentId(studentId);
     assignment.setDueAt(dueAt);
     assignment.setCompleted(false);
-    assignmentRepository.save(assignment);
+    assignmentRepository.saveAndFlush(assignment);
 
+    pushAssignmentToChildService(exercise, assignment);
 
-    if (exercise.getExerciseType() == ExerciseType.QUIZ) {
-      grpcQuizClient.pushAssignment(assignment);
-    } else if (exercise.getExerciseType() == ExerciseType.CODING) {
-      grpcCodingClient.pushAssignment(assignment);
-    }
+    ExerciseStatusDto exerciseStatusDto = new ExerciseStatusDto(
+        exerciseId, studentId,
+        /* created   */ false,
+        /* completed */ false,
+        /* completedAt */ null,
+        /* attempts   */ null,
+        /* bestScore  */ null,
+        /* totalPts   */ null);
+    exerciseStatusEventProducer.publishUpsert(exerciseStatusDto);
+
     return assignment;
   }
 
@@ -160,6 +171,20 @@ public class AssignmentService {
           a.setCompleted(true);
           // Đẩy trạng thái mới sang service con để đồng bộ (idempotent)
           pushAssignmentToChildService(a.getExercise(), a);
+
+          ExerciseStatusDto exerciseStatusDto =
+              new ExerciseStatusDto(
+                  exerciseId,
+                  studentId,
+                  /* created */ studentId.equals(a.getExercise().getUserId()),
+                  /* completed */ true,
+                  a.getUpdatedAt(), // completedAt
+                  /* attempts */ null,
+                  /* bestScore */ null,
+                  /* totalPts */ null
+              );
+
+          exerciseStatusEventProducer.publishUpsert(exerciseStatusDto);
         });
   }
 

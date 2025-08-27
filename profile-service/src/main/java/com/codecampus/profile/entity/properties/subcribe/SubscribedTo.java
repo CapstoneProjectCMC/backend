@@ -24,7 +24,7 @@ import org.springframework.data.neo4j.core.schema.TargetNode;
 public class SubscribedTo {
   @Id
   @GeneratedValue
-  String id;
+  Long id;
 
   Instant start;
   Instant end;

@@ -1,28 +1,32 @@
 package com.codecampus.post.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import java.util.List;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class PostRequestDto {
-  private String postId; // for update post
-  private String title;
-  private String orgId;
-  private String content;
-  private String oldImgesUrls; // for update post img
-  private boolean isPublic;
-  private boolean allowComment;
-  private String postType;
-  private String hashtag;
-  private String status;
-  private AddFileDocumentDto fileDocument; // for add file document
-//    private PostAccess postAccess;
+  String title;
+  String orgId;
+  String content;
+  List<String> oldImagesUrls;
+  Boolean isPublic;
+  Boolean allowComment;
+  String postType;
+  String hashtag;
+  String status;
+  AddFileDocumentDto fileDocument;
 }

@@ -34,6 +34,10 @@ public class AuthenticationRequestInterceptor
     ServletRequestAttributes attributes =
         (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
 
+    if (attributes == null) {
+      return;
+    }
+
     var authHeader = attributes.getRequest().getHeader("Authorization");
 
     log.info("Header: {}", authHeader);

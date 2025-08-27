@@ -1,0 +1,22 @@
+package events.contest;
+
+import events.contest.data.ContestPayload;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.FieldDefaults;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class ContestEvent {
+  Type type;
+  String id;
+  ContestPayload payload;
+
+  public enum Type { CREATED, UPDATED, DELETED }
+}

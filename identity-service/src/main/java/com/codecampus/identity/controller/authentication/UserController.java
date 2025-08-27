@@ -1,12 +1,12 @@
 package com.codecampus.identity.controller.authentication;
 
 import com.codecampus.identity.dto.common.ApiResponse;
-import com.codecampus.identity.dto.common.PageResponse;
+import com.codecampus.identity.dto.data.BulkImportResult;
 import com.codecampus.identity.dto.request.authentication.PasswordCreationRequest;
 import com.codecampus.identity.dto.request.authentication.UserCreationRequest;
 import com.codecampus.identity.dto.request.authentication.UserUpdateRequest;
-import com.codecampus.identity.dto.response.authentication.UserResponse;
 import com.codecampus.identity.service.account.UserService;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -20,8 +20,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -33,13 +34,24 @@ public class UserController {
 
   @PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/user")
-  ApiResponse<Void> createUser(
+  ApiResponse<Void> createStudent(
       @RequestBody @Valid UserCreationRequest request) {
-    userService.createUser(request);
+    userService.createStudent(request);
     return ApiResponse.<Void>builder()
         .message("Create User successful")
         .build();
   }
+
+  @PreAuthorize("hasRole('ADMIN')")
+  @PostMapping("/teacher")
+  ApiResponse<Void> createTeacher(
+      @RequestBody @Valid UserCreationRequest request) {
+    userService.createTeacher(request);
+    return ApiResponse.<Void>builder()
+        .message("Create Teacher successful")
+        .build();
+  }
+
 
   @PostMapping("/user/create-password")
   ApiResponse<Void> createPassword(
@@ -52,41 +64,22 @@ public class UserController {
   }
 
   @PreAuthorize("hasRole('ADMIN')")
-  @GetMapping("/users")
-  ApiResponse<PageResponse<UserResponse>> getUsers(
-      @RequestParam(value = "page", defaultValue = "1") int page,
-      @RequestParam(value = "size", defaultValue = "10") int size) {
-    return ApiResponse.<PageResponse<UserResponse>>builder()
-        .result(userService.getUsers(page, size))
-        .message("Get Users successful")
-        .build();
-  }
-
-  @PreAuthorize("hasRole('ADMIN')")
-  @GetMapping("/user/{userId}")
-  ApiResponse<UserResponse> getUser(
-      @PathVariable("userId") String userId) {
-    return ApiResponse.<UserResponse>builder()
-        .result(userService.getUser(userId))
-        .message("Get User successful")
-        .build();
-  }
-
-  @GetMapping("/user/my-info")
-  ApiResponse<UserResponse> getMyInfo() {
-    return ApiResponse.<UserResponse>builder()
-        .result(userService.getMyInfo())
-        .message("Get My Info successful")
-        .build();
-  }
-
-  @PreAuthorize("hasRole('ADMIN')")
   @DeleteMapping("/user/{userId}")
   ApiResponse<String> deleteUser(
       @PathVariable String userId) {
     userService.deleteUser(userId);
     return ApiResponse.<String>builder()
         .result("User deleted successful")
+        .build();
+  }
+
+  @PreAuthorize("hasRole('ADMIN')")
+  @PostMapping("/user/{userId}")
+  ApiResponse<String> restoreUser(
+      @PathVariable String userId) {
+    userService.restoreUser(userId);
+    return ApiResponse.<String>builder()
+        .result("User restored successful")
         .build();
   }
 
@@ -108,5 +101,21 @@ public class UserController {
     return ApiResponse.<Void>builder()
         .message("Update My Info successful")
         .build();
+  }
+
+  @PostMapping("/users/import")
+  @PreAuthorize("hasRole('ADMIN')")
+  public ApiResponse<BulkImportResult> importUsers(
+      @RequestPart("file") MultipartFile file) {
+    return ApiResponse.<BulkImportResult>builder()
+        .message("Imported")
+        .result(userService.importUsers(file))
+        .build();
+  }
+
+  @GetMapping("/users/export")
+  @PreAuthorize("hasRole('ADMIN')")
+  public void exportUsers(HttpServletResponse response) {
+    userService.exportUsers(response);
   }
 }

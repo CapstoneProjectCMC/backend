@@ -1,100 +1,101 @@
 package com.codecampus.post.controller;
 
 import com.codecampus.post.dto.common.ApiResponse;
-import com.codecampus.post.dto.common.PageRequestDto;
 import com.codecampus.post.dto.common.PageResponse;
 import com.codecampus.post.dto.request.PostRequestDto;
+import com.codecampus.post.dto.response.PostResponseDto;
 import com.codecampus.post.service.PostService;
-import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.bind.DefaultValue;
-import org.springframework.http.ResponseEntity;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController()
-@RequestMapping("/posts")
+@RestController
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Builder
+@Slf4j
 public class PostController {
 
-  @Autowired
-  private PostService postService;
+  PostService postService;
 
-  @GetMapping("/getAllMyPosts")
-  public ResponseEntity<PageResponse<?>> getMyPosts(
-          HttpServletRequest request,
-          @RequestParam(defaultValue = "0") int page,
-          @RequestParam(defaultValue = "10") int size) {
-
-    PageResponse<?> response = postService.getAllPostsByUserId(request, page, size);
-    return ResponseEntity.ok(response);
-  }
-
-  @GetMapping("/getAllAccessiblePosts")
-  public ResponseEntity<?> getAllAccessiblePosts(HttpServletRequest request,
-                                                 @RequestParam(defaultValue = "0") int page,
-                                                 @RequestParam(defaultValue = "10") int size) {
-    return ResponseEntity.ok(ApiResponse.builder()
-        .message("Success")
-        .result(postService.getAllAccessiblePosts(request, page, size))
-        .build());
-  }
-
-  @GetMapping("/seachPosts/{searchText}")
-  public ResponseEntity<?> SeachPosts(
-      @PathVariable("searchText") String searchText,
-      HttpServletRequest request,
-      @RequestParam(defaultValue = "0") int page,
+  @GetMapping("/my")
+  ApiResponse<PageResponse<PostResponseDto>> getAllMyPosts(
+      @RequestParam(defaultValue = "1") int page,
       @RequestParam(defaultValue = "10") int size) {
-    return ResponseEntity.ok(ApiResponse.builder()
-        .message("Success")
-        .result(postService.SeachPosts(searchText, request, page, size))
-        .build());
+
+    return ApiResponse.<PageResponse<PostResponseDto>>builder()
+        .message("Get thành công các post của chính mình!")
+        .result(postService.getAllMyPosts(page, size))
+        .build();
   }
 
-  @GetMapping("/getPostByIdIfAccessible/{postId}")
-  public ResponseEntity<?> getPostByIdIfAccessible(
-      @PathVariable("postId") String postId, HttpServletRequest request) {
-    return ResponseEntity.ok(ApiResponse.builder()
-        .message("Success")
-        .result(postService.getPostByIdIfAccessible(postId, request))
-        .build());
+  @GetMapping("/view")
+  ApiResponse<PageResponse<PostResponseDto>> getVisiblePosts(
+      @RequestParam(defaultValue = "1") int page,
+      @RequestParam(defaultValue = "10") int size) {
+
+    return ApiResponse.<PageResponse<PostResponseDto>>builder()
+        .message("Get thành công các post có quyền xem!")
+        .result(postService.getVisiblePosts(page, size))
+        .build();
   }
 
-  @PostMapping("/createPost")
-  public ResponseEntity<?> createPost(
-      @ModelAttribute PostRequestDto postRequestDto,
-      HttpServletRequest request
-  ) {
-    postService.createPost(postRequestDto, request);
-    return ResponseEntity.ok(ApiResponse.builder()
-        .message("Post created successfully")
-        .build());
+  @GetMapping("/search")
+  ApiResponse<PageResponse<PostResponseDto>> searchVisiblePosts(
+      @RequestParam("q") String q,
+      @RequestParam(defaultValue = "1") int page,
+      @RequestParam(defaultValue = "10") int size) {
+    return ApiResponse.<PageResponse<PostResponseDto>>builder()
+        .message("Search thành công các post có quyền xem!")
+        .result(postService.searchVisiblePosts(q, page, size))
+        .build();
   }
 
-  @PutMapping("/updatePost")
-  public ResponseEntity<?> updatePost(
-      @ModelAttribute PostRequestDto postRequestDto,
-      HttpServletRequest request
-  ) {
-    postService.updatePost(postRequestDto, request);
-    return ResponseEntity.ok(ApiResponse.builder()
-        .message("Post updated successfully")
-        .build());
+  @GetMapping("/{postId}")
+  ApiResponse<PostResponseDto> getPostDetail(
+      @PathVariable("postId") String postId) {
+
+    return ApiResponse.<PostResponseDto>builder()
+        .message("Get thành công chi tiết post có quyền xem!")
+        .result(postService.getPostDetail(postId))
+        .build();
   }
 
-  @PutMapping("/deletePost/{postId}")
-  public ResponseEntity<?> deletePost(@PathVariable("postId") String postId,
-                                      HttpServletRequest request) {
-    postService.deletePost(postId, request);
-    return ResponseEntity.ok(ApiResponse.builder()
-        .message("Post deleted successfully")
-        .build());
+  @PostMapping("/add")
+  ApiResponse<Void> createPost(
+      @ModelAttribute PostRequestDto postRequestDto) {
+    postService.createPost(postRequestDto);
+    return ApiResponse.<Void>builder()
+        .message("Tạo post thành công!")
+        .build();
+  }
+
+  @PatchMapping("/{postId}")
+  ApiResponse<Void> updatePost(
+      @PathVariable("postId") String postId,
+      @ModelAttribute PostRequestDto postRequestDto) {
+    postService.updatePost(postId, postRequestDto);
+    return ApiResponse.<Void>builder()
+        .message("Sửa post thành công!")
+        .build();
+  }
+
+  @DeleteMapping("/{postId}")
+  ApiResponse<Void> deletePost(
+      @PathVariable("postId") String postId) {
+    postService.deletePost(postId);
+    return ApiResponse.<Void>builder()
+        .message("Xoá thành công bài post!")
+        .build();
   }
 }

@@ -30,14 +30,25 @@ spring:
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       properties:
         spring.json.trusted.packages: "*"
+  data:
+    redis:
+      host: localhost # dịch vụ trong compose
+      port: 6379
+      password: dinhanst2832004
+      timeout: 3000ms
 
 app:
   services:
     file: http://localhost:8082/file
     organization: http://localhost:8091/org
+    submission: http://localhost:8083/submission
   event:
     user-events: "user-events"
     user-registrations: "user-registrations"
     profile-events: "profile-events"
     organization-events: "organization-events"
     org-member-events: "org-member-events"
+    exercise-events: "exercise-events"
+    contest-events: "contest-events"
+    exercise-status-events: "exercise-status-events"
+    contest-status-events: "contest-status-events"

@@ -115,5 +115,9 @@ public interface SubmissionRepository
       String exerciseId,
       String userId
   );
+
+  Integer countByExerciseIdAndUserId(String exerciseId, String userId);
+
+  List<Submission> findByUserIdAndExerciseId(String userId, String exerciseId);
 }
 

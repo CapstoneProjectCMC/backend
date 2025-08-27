@@ -14,6 +14,6 @@ public class CreateOrganizationMemberRequest {
   String userId;
   String scopeType = "Organization"; // cố định "Organization"
   String scopeId; // orgId
-  String role; // "Admin" | "Teacher" | "Student" | "SuperAdmin"
+  String role; // "ADMIN" | "TEACHER" | "STUDENT"
   boolean isActive = true;
 }

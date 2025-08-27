@@ -4,15 +4,18 @@ import static com.codecampus.profile.helper.PageResponseHelper.toPageResponse;
 
 import com.codecampus.profile.dto.common.PageResponse;
 import com.codecampus.profile.entity.Exercise;
-import com.codecampus.profile.entity.UserProfile;
 import com.codecampus.profile.entity.properties.exercise.CompletedExercise;
 import com.codecampus.profile.entity.properties.exercise.CreatedExercise;
 import com.codecampus.profile.entity.properties.exercise.SavedExercise;
 import com.codecampus.profile.exception.AppException;
 import com.codecampus.profile.exception.ErrorCode;
 import com.codecampus.profile.helper.AuthenticationHelper;
+import com.codecampus.profile.mapper.ExerciseMapper;
 import com.codecampus.profile.repository.ExerciseRepository;
 import com.codecampus.profile.repository.UserProfileRepository;
+import com.codecampus.profile.service.cache.ExerciseCacheService;
+import com.codecampus.profile.service.cache.ExerciseStatusCacheService;
+import dtos.ExerciseSummary;
 import java.time.Instant;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -32,10 +35,13 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ExerciseService {
-  ExerciseRepository exerciseRepository;
-  UserProfileRepository userProfileRepository;
 
+  UserProfileRepository userProfileRepository;
+  ExerciseRepository exerciseRepository;
+  ExerciseMapper exerciseMapper;
   UserProfileService userProfileService;
+  ExerciseCacheService exerciseCacheService;
+  ExerciseStatusCacheService exerciseStatusCacheService;
 
   /**
    * Lưu một bài tập vào hồ sơ người dùng hiện tại.
@@ -50,17 +56,10 @@ public class ExerciseService {
    *                      nếu không tìm thấy bài tập.
    */
   public void saveExercise(String exerciseId) {
-    UserProfile profile = userProfileService.getUserProfile();
 
-    Exercise exercise = getExercise(exerciseId);
-
-    SavedExercise exerciseSaved = SavedExercise.builder()
-        .saveAt(Instant.now())
-        .exercise(exercise)
-        .build();
-
-    profile.getSavedExercises().add(exerciseSaved);
-    userProfileRepository.save(profile);
+    getExercise(exerciseId);
+    userProfileRepository.mergeSavedExercise(
+        AuthenticationHelper.getMyUserId(), exerciseId, Instant.now());
   }
 
   /**
@@ -71,11 +70,8 @@ public class ExerciseService {
    *                      nếu không tìm thấy người dùng.
    */
   public void unsaveExercise(String exerciseId) {
-    UserProfile profile = userProfileService.getUserProfile();
-
-    profile.getSavedExercises()
-        .removeIf(exercise -> exercise.getId().equals(exerciseId));
-    userProfileRepository.save(profile);
+    userProfileRepository.deleteSavedExercise(
+        AuthenticationHelper.getMyUserId(), exerciseId);
   }
 
   /**
@@ -136,10 +132,18 @@ public class ExerciseService {
   }
 
   public Exercise getExercise(String exerciseId) {
-    return exerciseRepository
-        .findByExerciseId(exerciseId)
-        .orElseThrow(
-            () -> new AppException(ErrorCode.EXERCISE_NOT_FOUND)
-        );
+
+    // 1) Ưu tiên lấy từ DB để có đầy đủ "id" (UUID) — tránh SDN tạo node mới
+    return exerciseRepository.findByExerciseId(exerciseId)
+        .orElseGet(() -> {
+          // 2) (Fallback) Tạo node Exercise tối thiểu nếu chưa có
+          //    -> Lấy meta từ cache (nếu có), rồi save một lần duy nhất
+          ExerciseSummary summary = exerciseCacheService.getOrLoad(exerciseId);
+          Exercise node = (summary == null)
+              ? Exercise.builder().exerciseId(exerciseId).build()
+              : exerciseMapper.toExerciseFromExerciseSummary(summary);
+          // save() sẽ tạo node với id=UUID (vì @GeneratedValue) và set exerciseId UNIQUE
+          return exerciseRepository.save(node);
+        });
   }
 }

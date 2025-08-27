@@ -24,7 +24,7 @@ import org.springframework.data.neo4j.core.schema.TargetNode;
 public class SavedExercise {
   @Id
   @GeneratedValue
-  String id;
+  Long id;
 
   Instant saveAt;
 

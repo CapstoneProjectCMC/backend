@@ -24,7 +24,7 @@ import org.springframework.data.neo4j.core.schema.TargetNode;
 public class CompletedExercise {
   @Id
   @GeneratedValue
-  String id;
+  Long id;
 
   int score;
   int attempts;

@@ -1,5 +1,6 @@
 package com.codecampus.submission.mapper;
 
+import com.codecampus.submission.dto.data.ExerciseSummaryDto;
 import com.codecampus.submission.dto.request.CreateExerciseRequest;
 import com.codecampus.submission.dto.request.UpdateExerciseRequest;
 import com.codecampus.submission.dto.response.quiz.ExerciseQuizResponse;
@@ -36,5 +37,22 @@ public interface ExerciseMapper {
       @MappingTarget Exercise exercise
   );
 
-  ExerciseQuizResponse toExerciseQuizResponseFromExercise(Exercise e);
+  ExerciseQuizResponse toExerciseQuizResponseFromExercise(
+      Exercise e);
+
+  default ExerciseSummaryDto toExerciseSyncDtoFromExercise(
+      Exercise exercise,
+      boolean created,
+      boolean completed) {
+    return new ExerciseSummaryDto(
+        exercise.getId(),
+        exercise.getTitle(),
+        exercise.getExerciseType(),
+        exercise.getDifficulty(),
+        exercise.isVisibility(),
+        exercise.getOrgId(),
+        created,
+        completed
+    );
+  }
 }

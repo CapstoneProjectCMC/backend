@@ -4,28 +4,26 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 public class SecurityConfigConstant {
-  // HEADER REQUEST
-  public static final String AUTHORIZATION_HEADER = "Authorization";
-  public static final String CONTENT_TYPE_HEADER = "Content-Type";
-  public static final String ACCEPT_HEADER = "Accept";
 
+  // PUBLIC ENDPOINT
+  public static final String[] PUBLIC_ENDPOINTS = {
+      "/health",
+      "/actuator/**",
+      "/auth/**",
+  };
+
+  // FRONTEND ENDPOINT (CORS)
+  public static final String FRONTEND_ENDPOINT = "http://192.168.1.30:4200";
+  public static final String FRONTEND_ENDPOINT2 = "http://localhost:4200";
+  public static final String FRONTEND_ENDPOINT3 = "http://127.0.0.1:5500";
 
   // PATTERN REQUEST
   public static final String URL_PATTERN_ALL = "/**";
 
-  // PUBLIC ENDPOINT
-  public static final String[] PUBLIC_ENDPOINTS = {
-      "/users",
-      "/hello",
-      "/auth/**",
-      "/health",
-      "/actuator/**"
-  };
-
-  // FRONTEND ENDPOINT
-  public static final String FRONTEND_ENDPOINT = "http://192.168.1.30:4200";
-  public static final String FRONTEND_ENDPOINT2 = "http://localhost:4200";
-  public static final String FRONTEND_ENDPOINT3 = "http://127.0.0.1:5500";
+  // HEADER REQUEST
+  public static final String AUTHORIZATION_HEADER = "Authorization";
+  public static final String CONTENT_TYPE_HEADER = "Content-Type";
+  public static final String ACCEPT_HEADER = "Accept";
 
   // METHOD ALLOWED
   public static String GET_METHOD = "GET";

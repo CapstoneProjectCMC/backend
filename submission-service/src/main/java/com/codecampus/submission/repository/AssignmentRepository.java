@@ -34,4 +34,8 @@ public interface AssignmentRepository
   boolean existsByExerciseIdAndStudentIdAndCompletedTrue(
       String exerciseId,
       String studentId);
+
+  List<Assignment> findByStudentIdAndCompleted(
+      String studentId,
+      boolean completed);
 }

@@ -67,4 +67,17 @@ app:
   event:
     user-events: "user-events"
     user-registrations: "user-registrations"
-
+  init:
+    admin:
+      username: admin
+      password: adminRoot123
+      email: adminRoot123@gmail.com
+    teacher:
+      username: teacherRoot
+      password: teacherRoot123
+      email: teacherRoot123@gmail.com
+    student:
+      username: userRoot
+      password: userRoot123
+      email: userRoot123@gmail.com
+    tempPassword: password123

@@ -23,7 +23,7 @@ import org.springframework.data.neo4j.core.schema.TargetNode;
 public class AssignedOrgExercise {
   @Id
   @GeneratedValue
-  String id;
+  Long id;
 
   @TargetNode
   Exercise exercise;

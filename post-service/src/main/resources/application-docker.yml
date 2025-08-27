@@ -8,6 +8,13 @@ spring:
     username: ${POST_USERNAME}
     password: ${POST_DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
+  kafka:
+    bootstrap-servers: http://kafka:9092
+  data:
+    redis:
+      host: redis     # dịch vụ trong compose
+      port: 6379
+      password: ${REDIS_PASSWORD}
 
 app:
   services:

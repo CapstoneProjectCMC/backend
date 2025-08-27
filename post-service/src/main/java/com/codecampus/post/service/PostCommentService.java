@@ -1,186 +1,159 @@
 package com.codecampus.post.service;
 
-import com.codecampus.post.config.CustomJwtDecoder;
-import com.codecampus.post.dto.request.CommentRequestDto;
-import com.codecampus.post.dto.request.UpdateCommentDto;
+import com.codecampus.post.dto.common.PageResponse;
+import com.codecampus.post.dto.response.CommentCreatedDto;
 import com.codecampus.post.dto.response.CommentResponseDto;
-import com.codecampus.post.dto.response.ProfileResponseDto;
 import com.codecampus.post.entity.Post;
 import com.codecampus.post.entity.PostComment;
+import com.codecampus.post.exception.AppException;
+import com.codecampus.post.exception.ErrorCode;
+import com.codecampus.post.helper.AuthenticationHelper;
+import com.codecampus.post.helper.CommentHelper;
+import com.codecampus.post.helper.PostHelper;
+import com.codecampus.post.mapper.CommentMapper;
 import com.codecampus.post.repository.PostCommentRepository;
 import com.codecampus.post.repository.PostRepository;
-import com.codecampus.post.repository.httpClient.ProfileServiceClient;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.transaction.Transactional;
-import java.util.ArrayList;
+import com.codecampus.post.service.cache.UserBulkLoader;
+import com.codecampus.post.utils.PageResponseUtils;
+import dtos.UserSummary;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Stream;
+import java.util.Map;
+import java.util.Set;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Slf4j
 public class PostCommentService {
 
-  private final ProfileServiceClient profileServiceClient;
-  private final PostCommentRepository postCommentRepository;
-  private final PostRepository postRepository;
-  private final CustomJwtDecoder customJwtDecoder;
+  PostCommentRepository postCommentRepository;
+  PostRepository postRepository;
+  CommentMapper commentMapper;
+  UserBulkLoader userBulkLoader;
+  PostHelper postHelper;
+  CommentHelper commentHelper;
 
   @Transactional
-  public PostComment addComment(CommentRequestDto dto,
-                                HttpServletRequest request) {
-    String token = request.getHeader("Authorization");
-    if (token == null || !token.startsWith("Bearer ")) {
-      throw new IllegalArgumentException(
-          "Authorization token is missing or invalid");
-    }
-    String userId =
-        customJwtDecoder.decode(token.substring(7)).getClaims().get("userId")
-            .toString(); // Assuming user ID is stored in the principal
+  public CommentCreatedDto addTopLevelComment(
+      String postId,
+      String content) {
+    String userId = AuthenticationHelper.getMyUserId();
 
-    Post post = postRepository.findById(dto.getPostId())
-        .orElseThrow(() -> new RuntimeException("Post not found"));
+    Post post = postRepository.findById(postId)
+        .orElseThrow(() -> new AppException(ErrorCode.POST_NOT_FOUND));
+    if (!postHelper.canView(post, userId)) {
+      throw new AppException(ErrorCode.POST_NOT_AUTHORIZED);
+    }
 
     PostComment comment = new PostComment();
     comment.setPost(post);
     comment.setUserId(userId);
-    comment.setContent(dto.getContent());
-
-    if (dto.getParentCommentId() != null) {
-      PostComment parent =
-          postCommentRepository.findById(dto.getParentCommentId())
-              .orElseThrow(
-                  () -> new RuntimeException("Parent comment not found"));
-      comment.setParentComment(parent);
-    }
-
-    return postCommentRepository.save(comment);
+    comment.setContent(content);
+    return commentMapper.toCreatedDtoFromPostComment(
+        postCommentRepository.save(comment));
   }
 
-  public List<CommentResponseDto> getCommentsByPost(String postId) {
-    List<PostComment> parents = postCommentRepository
-        .findByPost_PostIdAndParentCommentIsNullOrderByCommentIdDesc(postId);
-
-    return parents.stream()
-        .filter(c -> !c.isDeleted()) // chỉ lấy comment chưa xóa
-        .map(c -> mapWithLimitDepth(c, 1)) // bắt đầu từ depth = 1
-        .toList();
-  }
-
-  private CommentResponseDto mapWithLimitDepth(PostComment comment, int depth) {
-    List<CommentResponseDto> replyDtos;
-
-    if (depth < 2) {
-      replyDtos = comment.getReplies() != null
-          ? comment.getReplies().stream()
-          .filter(r -> !r.isDeleted())
-          .flatMap(r -> {
-            if (depth + 1 < 2) {
-              return Stream.of(mapWithLimitDepth(r, depth + 1));
-            } else {
-              return flattenReplies(r).stream();
-            }
-          })
-          .toList()
-          : List.of();
-    } else {
-      replyDtos = List.of();
-    }
-
-    // Gọi profile service để lấy thông tin user
-    ProfileResponseDto userProfile =
-        profileServiceClient.getUserProfileById(comment.getUserId())
-            .getResult();
-
-    return new CommentResponseDto(
-        comment.getCommentId(),
-        comment.getParentComment() != null ?
-            comment.getParentComment().getCommentId() : null,
-        comment.getContent(),
-        replyDtos,
-        userProfile
-    );
-  }
-
-  /**
-   * Flatten toàn bộ reply từ comment con (cấp >= 2) thành danh sách cấp 2
-   */
-  private List<CommentResponseDto> flattenReplies(PostComment comment) {
-    List<CommentResponseDto> flatList = new ArrayList<>();
-
-    if (!comment.isDeleted()) {
-      ProfileResponseDto userProfile =
-          profileServiceClient.getUserProfileById(comment.getUserId())
-              .getResult();
-
-      flatList.add(new CommentResponseDto(
-          comment.getCommentId(),
-          comment.getParentComment() != null ?
-              comment.getParentComment().getCommentId() : null,
-          comment.getContent(),
-          List.of(),
-          userProfile
-      ));
-    }
-
-    if (comment.getReplies() != null) {
-      for (PostComment child : comment.getReplies()) {
-        flatList.addAll(flattenReplies(child));
-      }
-    }
-
-    return flatList;
-  }
 
   @Transactional
-  public void updateComment(UpdateCommentDto requestDto,
-                            HttpServletRequest request) {
-    String token = request.getHeader("Authorization");
-    if (token == null || !token.startsWith("Bearer ")) {
-      throw new IllegalArgumentException(
-          "Authorization token is missing or invalid");
-    }
-    String userId =
-        customJwtDecoder.decode(token.substring(7)).getClaims().get("userId")
-            .toString(); // Assuming user ID is stored in the principal
-    if (userId == null) {
-      throw new IllegalArgumentException(
-          "User ID is required for updating comment");
+  public CommentCreatedDto addReply(
+      String postId,
+      String parentCommentId,
+      String content) {
+    String userId = AuthenticationHelper.getMyUserId();
+
+    Post post = postRepository.findById(postId)
+        .orElseThrow(() -> new AppException(ErrorCode.POST_NOT_FOUND));
+    if (!postHelper.canView(post, userId)) {
+      throw new AppException(ErrorCode.POST_NOT_AUTHORIZED);
     }
 
-    PostComment comment =
-        postCommentRepository.findById(requestDto.getCommentId())
-            .orElseThrow(() -> new RuntimeException("Comment not found"));
+    PostComment parent = postCommentRepository.findById(parentCommentId)
+        .orElseThrow(
+            () -> new AppException(ErrorCode.PARENT_COMMENT_NOT_FOUND));
+
+    PostComment comment = new PostComment();
+    comment.setPost(post);
+    comment.setUserId(userId);
+    comment.setContent(content);
+    comment.setParentComment(parent);
+    return commentMapper.toCreatedDtoFromPostComment(
+        postCommentRepository.save(comment));
+  }
+
+  @Transactional(readOnly = true)
+  public PageResponse<CommentResponseDto> getCommentsByPost(
+      String postId, int page, int size, int replySize) {
+
+    // 1) Lấy page comment gốc
+    Page<PostComment> parents =
+        postCommentRepository.findTopLevelComments(
+            postId,
+            PageRequest.of(Math.max(1, page) - 1, size));
+
+    // 2) Preload reply & gom userId
+    Map<String, List<PostComment>> repliesMap = new HashMap<>();
+    Set<String> userIds = new HashSet<>();
+
+    parents.forEach(parent -> {
+      userIds.add(parent.getUserId());
+
+      Page<PostComment> replyPage = postCommentRepository.findReplies(
+          parent.getCommentId(),
+          PageRequest.of(0, replySize <= 0 ? Integer.MAX_VALUE : replySize));
+
+      List<PostComment> replies = replyPage.getContent();
+      repliesMap.put(parent.getCommentId(), replies);
+      replies.forEach(r -> userIds.add(r.getUserId()));
+    });
+
+    // 3) Bulk load user
+    Map<String, UserSummary> userMap = userBulkLoader.loadAll(userIds);
+
+    // 4) Mapping
+    Page<CommentResponseDto> dtoPage = parents.map(parent -> {
+      List<CommentResponseDto> replyDtos =
+          repliesMap.getOrDefault(parent.getCommentId(), List.of())
+              .stream()
+              .map(r -> commentHelper.toCommentResponseDto(r, userMap))
+              .toList();
+
+      return commentHelper.toCommentResponseDto(parent, userMap, replyDtos);
+    });
+
+    return PageResponseUtils.toPageResponse(dtoPage, Math.max(1, page));
+  }
+
+
+  @Transactional
+  public void updateComment(String commentId, String newContent) {
+    String userId = AuthenticationHelper.getMyUserId();
+    PostComment comment = postCommentRepository.findById(commentId)
+        .orElseThrow(() -> new AppException(ErrorCode.COMMENT_NOT_FOUND));
 
     if (!comment.getUserId().equals(userId)) {
-      throw new RuntimeException("Not allowed to edit this comment");
+      throw new AppException(ErrorCode.UNAUTHORIZED);
     }
-
-    comment.setContent(requestDto.getContent());
+    comment.setContent(newContent);
     postCommentRepository.save(comment);
   }
 
   @Transactional
-  public void deleteComment(String commentId, HttpServletRequest request) {
-    String token = request.getHeader("Authorization");
-    if (token == null || !token.startsWith("Bearer ")) {
-      throw new IllegalArgumentException(
-          "Authorization token is missing or invalid");
-    }
-    String userId =
-        customJwtDecoder.decode(token.substring(7)).getClaims().get("userId")
-            .toString();
-    if (userId == null) {
-      throw new IllegalArgumentException(
-          "User ID is required for deleting comment");
-    }
-
+  public void deleteComment(String commentId) {
+    String by = AuthenticationHelper.getMyUsername();
     PostComment comment = postCommentRepository.findById(commentId)
-        .orElseThrow(() -> new RuntimeException("Comment not found"));
-
+        .orElseThrow(() -> new AppException(ErrorCode.COMMENT_NOT_FOUND));
     if (!comment.isDeleted()) {
-      comment.markDeleted(userId);
+      comment.markDeleted(by);
       postCommentRepository.save(comment);
     }
   }

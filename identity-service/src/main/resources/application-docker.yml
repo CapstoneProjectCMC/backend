@@ -16,3 +16,17 @@ app:
   services:
     profile: http://profile-service:8081/profile
     organization: http://organization-service:8091/org
+  init:
+    admin:
+      username: ${INIT_ADMIN_USERNAME:}
+      password: ${INIT_ADMIN_PASSWORD:}
+      email: ${INIT_ADMIN_EMAIL:}
+    teacher:
+      username: ${INIT_TEACHER_USERNAME:}
+      password: ${INIT_TEACHER_PASSWORD:}
+      email: ${INIT_TEACHER_EMAIL:}
+    student:
+      username: ${INIT_STUDENT_USERNAME:}
+      password: ${INIT_STUDENT_PASSWORD:}
+      email: ${INIT_STUDENT_EMAIL:}
+    tempPassword: ${TEMP_PASSWORD}

@@ -1,74 +1,113 @@
 package com.codecampus.post.service;
 
-import com.codecampus.post.dto.request.PostAccessRequestDto;
+import com.codecampus.post.dto.common.PageResponse;
+import com.codecampus.post.dto.request.PostAccessUpsertRequestDto;
 import com.codecampus.post.dto.response.PostAccessResponseDto;
 import com.codecampus.post.entity.Post;
 import com.codecampus.post.entity.PostAccess;
+import com.codecampus.post.exception.AppException;
+import com.codecampus.post.exception.ErrorCode;
+import com.codecampus.post.helper.AuthenticationHelper;
 import com.codecampus.post.repository.PostAccessRepository;
 import com.codecampus.post.repository.PostRepository;
+import com.codecampus.post.utils.PageResponseUtils;
 import jakarta.transaction.Transactional;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 import java.util.stream.Collectors;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Slf4j
 public class PostAccessService {
 
-  private final PostAccessRepository postAccessRepository;
-  private final PostRepository postRepository;
+  PostAccessRepository postAccessRepository;
+  PostRepository postRepository;
 
   // Thêm hoặc cập nhật quyền truy cập cho nhiều user
   @Transactional
-  public void saveOrUpdateAccess(PostAccessRequestDto dto) {
-    Post post = postRepository.findById(dto.getPostId())
-        .orElseThrow(() -> new RuntimeException("Post not found"));
+  public void upsertAccess(
+      String postId,
+      PostAccessUpsertRequestDto dto) {
+    Post post = postRepository.findById(postId)
+        .orElseThrow(() -> new AppException(ErrorCode.POST_NOT_FOUND));
 
-    // lấy danh sách userId đã có
-    Set<String> existingUserIds =
-        postAccessRepository.findByPost_PostId(dto.getPostId())
-            .stream()
-            .map(PostAccess::getUserId)
-            .collect(Collectors.toSet());
+    // Tất cả access hiện có
+    List<PostAccess> exists = postAccessRepository.findByPost_PostId(postId);
 
-    // chỉ giữ lại userId chưa có
-    List<PostAccess> newAccessList = dto.getUserIds().stream()
-        .filter(userId -> !existingUserIds.contains(userId))
-        .map(userId -> {
-          PostAccess pa = new PostAccess();
-          pa.setPost(post);
-          pa.setUserId(userId);
-          pa.setIsExcluded(dto.getIsExcluded());
-          return pa;
-        })
-        .toList();
+    // --- Cập nhật / thêm ---
+    Map<String, PostAccess> map = exists.stream()
+        .collect(Collectors.toMap(PostAccess::getUserId, a -> a));
 
-    if (!newAccessList.isEmpty()) {
-      postAccessRepository.saveAll(newAccessList);
+    for (String uid : dto.getUserIds()) {
+      PostAccess pa = map.get(uid);
+      if (pa == null) {
+        pa = PostAccess.builder()
+            .post(post)
+            .userId(uid)
+            .isExcluded(dto.getIsExcluded())
+            .build();
+      } else {
+        pa.setIsExcluded(dto.getIsExcluded());
+      }
+      postAccessRepository.save(pa);
     }
   }
 
-
-  // Xoá quyền của nhiều user
   @Transactional
-  public void deleteAccess(PostAccessRequestDto dto) {
-    postAccessRepository.deleteByPost_PostIdAndUserIdIn(dto.getPostId(),
-        dto.getUserIds());
+  public void softDeleteAccess(String accessId) {
+    String by = AuthenticationHelper.getMyUsername();
+    PostAccess access = postAccessRepository.findById(accessId)
+        .orElseThrow(() -> new AppException(ErrorCode.ACCESS_NOT_FOUND));
+
+    if (!access.isDeleted()) {
+      access.markDeleted(by);
+      postAccessRepository.save(access);
+    }
+  }
+
+  @Transactional
+  public void softDeleteAccessByUsers(
+      String postId, List<String> userIds) {
+    String by = AuthenticationHelper.getMyUsername();
+    List<PostAccess> list = postAccessRepository
+        .findByPost_PostIdAndUserIdIn(postId, userIds);
+    list.forEach(a -> {
+      if (!a.isDeleted()) {
+        a.markDeleted(by);
+      }
+    });
+    if (!list.isEmpty()) {
+      postAccessRepository.saveAll(list);
+    }
   }
 
   // Lấy danh sách quyền của 1 bài post
   @Transactional
-  public List<PostAccessResponseDto> getAccessByPostId(String postId) {
-    return postAccessRepository.findByPost_PostId(postId).stream()
-        .map(pa -> PostAccessResponseDto.builder()
+  public PageResponse<PostAccessResponseDto> getAccessByPostId(
+      String postId,
+      int page, int size) {
+
+    Page<PostAccess> pageData = postAccessRepository.findByPost_PostId(
+        postId, PageRequest.of(Math.max(1, page) - 1, size));
+
+    Page<PostAccessResponseDto> mapped =
+        pageData.map(pa -> PostAccessResponseDto.builder()
+            .postAccessId(pa.getPostAccessId())
             .postId(pa.getPost().getPostId())
             .userId(pa.getUserId())
             .isExcluded(Boolean.TRUE.equals(pa.getIsExcluded()))
-            .build()
-        )
-        .toList();
+            .build());
+
+    return PageResponseUtils.toPageResponse(mapped, Math.max(1, page));
   }
 
 }

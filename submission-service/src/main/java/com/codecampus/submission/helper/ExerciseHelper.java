@@ -37,6 +37,11 @@ public class ExerciseHelper {
       String by) {
     exercise.markDeleted(by);
 
+    if (exercise.getAssignments() != null) {
+      exercise.getAssignments()
+          .forEach(a -> a.markDeleted(by));
+    }
+
     if (exercise.getCodingDetail() != null) {
       CodingDetail codingDetail = exercise.getCodingDetail();
       codingDetail.markDeleted(by);

@@ -30,7 +30,7 @@ import org.hibernate.annotations.Where;
 @Table(name = "post_access")
 @SQLDelete(sql = "UPDATE post_access " +
     "SET deleted_by = ? , deleted_at = now() " +
-    "WHERE id = ?")
+    "WHERE post_access_id = ?")
 @Where(clause = "deleted_at IS NULL")
 public class PostAccess extends AuditMetadata {
   @Id

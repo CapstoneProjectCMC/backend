@@ -10,6 +10,16 @@ services:
       - IDENTITY_DATABASE=${IDENTITY_DATABASE}
       - IDENTITY_USERNAME=${IDENTITY_USERNAME}
       - IDENTITY_DB_PASSWORD=${IDENTITY_DB_PASSWORD}
+      - INIT_ADMIN_USERNAME=admin
+      - INIT_ADMIN_PASSWORD=adminRoot123
+      - INIT_ADMIN_EMAIL=adminRoot123@gmail.com
+      - INIT_TEACHER_USERNAME=teacherRoot
+      - INIT_TEACHER_PASSWORD=teacherRoot123
+      - INIT_TEACHER_EMAIL=teacherRoot123@gmail.com
+      - INIT_STUDENT_USERNAME=userRoot
+      - INIT_STUDENT_PASSWORD=userRoot123
+      - INIT_STUDENT_EMAIL=userRoot123@gmail.com
+      - TEMP_PASSWORD=password123
     ports: [ "8080:8080" ]
     depends_on:
       - profile-service
@@ -21,6 +31,7 @@ services:
       - SPRING_PROFILES_ACTIVE=docker
       - NEO4J_USERNAME=neo4j
       - NEO4J_PASSWORD=${NEO4J_PASSWORD}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
     ports: [ "8081:8081" ]
     networks: [ backend ]
 
@@ -136,6 +147,7 @@ services:
       - POST_DATABASE=${POST_DATABASE}
       - POST_USERNAME=${POST_USERNAME}
       - POST_DB_PASSWORD=${POST_DB_PASSWORD}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
     ports: [ "8090:8090" ]
     networks: [ backend ]
 

@@ -28,7 +28,7 @@ import org.hibernate.annotations.Where;
 @Table(name = "post_reaction")
 @SQLDelete(sql = "UPDATE post_reaction " +
     "SET deleted_by = ? , deleted_at = now() " +
-    "WHERE id = ?")
+    "WHERE reaction_id = ?")
 @Where(clause = "deleted_at IS NULL")
 public class PostReaction extends AuditMetadata {
   @Id

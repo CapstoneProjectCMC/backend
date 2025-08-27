@@ -1,21 +1,20 @@
 package com.codecampus.post.service;
 
 
-import com.codecampus.post.config.CustomJwtDecoder;
-import com.codecampus.post.dto.common.PageRequestDto;
 import com.codecampus.post.dto.common.PageResponse;
+import com.codecampus.post.dto.request.AddFileDocumentDto;
 import com.codecampus.post.dto.request.PostRequestDto;
 import com.codecampus.post.dto.response.AddFileResponseDto;
 import com.codecampus.post.dto.response.PostResponseDto;
-import com.codecampus.post.dto.response.ProfileResponseDto;
 import com.codecampus.post.entity.Post;
 import com.codecampus.post.exception.AppException;
 import com.codecampus.post.exception.ErrorCode;
+import com.codecampus.post.helper.AuthenticationHelper;
+import com.codecampus.post.helper.PostHelper;
 import com.codecampus.post.mapper.PostMapper;
 import com.codecampus.post.repository.PostRepository;
 import com.codecampus.post.repository.httpClient.FileServiceClient;
-import com.codecampus.post.repository.httpClient.ProfileServiceClient;
-import jakarta.servlet.http.HttpServletRequest;
+import com.codecampus.post.utils.PageResponseUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -23,7 +22,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import javax.imageio.ImageIO;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -33,164 +35,80 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Slf4j
 public class PostService {
-  private final CustomJwtDecoder customJwtDecoder;
-  private final PostRepository postRepository;
-  private final PostMapper postMapper;
-  private final FileServiceClient fileServiceClient;
-  private final ProfileServiceClient profileServiceClient;
+  PostRepository postRepository;
+  PostMapper postMapper;
+  FileServiceClient fileServiceClient;
+  PostHelper postHelper;
 
-  public PageResponse<?> getAllPostsByUserId(HttpServletRequest request, int page, int size) {
-    String token = request.getHeader("Authorization");
-    String userId = customJwtDecoder.decode(token.substring(7)).getClaims()
-        .get("userId").toString();
-    Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
-    Page<Post> postPage = postRepository.findByUserId(userId, pageable);
+  public PageResponse<PostResponseDto> getAllMyPosts(
+      int page, int size) {
 
-    // Map Post -> PostResponseDto
-    List<PostResponseDto> postResponses = postPage.getContent().stream()
-        .map(post -> {
-          ProfileResponseDto profile = profileServiceClient
-              .getUserProfileById(post.getUserId()).getResult();
+    String userId = AuthenticationHelper.getMyUserId();
 
-          return PostResponseDto.builder()
-              .postId(post.getPostId())
-              .userId(post.getUserId())
-              .username(profile.getUsername())
-              .avatarUrl(profile.getAvatarUrl())
-              .orgId(post.getOrgId())
-              .postType(post.getPostType())
-              .title(post.getTitle())
-              .content(post.getContent())
-              .allowComment(post.getAllowComment())
-              .hashtag(post.getHashtag())
-              .status(post.getStatus())
-              .accesses(post.getAccesses())
-              .createdAt(post.getCreatedAt().toString())
-              .build();
-        })
-        .toList();
+    Pageable pageable =
+        PageRequest.of(Math.max(1, page) - 1, size,
+            Sort.by("createdAt").descending());
+    Page<PostResponseDto> postPage = postRepository
+        .findByUserId(userId, pageable)
+        .map(postHelper::toPostResponseDtoFromPost);
 
-    return PageResponse.<PostResponseDto>builder()
-        .currentPage(postPage.getNumber())
-        .totalPages(postPage.getTotalPages())
-        .pageSize(postPage.getSize())
-        .totalElements(postPage.getTotalElements())
-        .data(postResponses)
-        .build();
+    return PageResponseUtils.toPageResponse(postPage, Math.max(1, page));
   }
 
-  public PageResponse<?> getAllAccessiblePosts(HttpServletRequest request,
-                                               int page, int size) {
-    String token = request.getHeader("Authorization");
-    String userId = customJwtDecoder.decode(token.substring(7)).getClaims()
-        .get("userId").toString();
-    Pageable pageable = PageRequest.of(page,
-        size, Sort.by("createdAt").descending());
-    Page<Post> postPage =
-        postRepository.findAllVisiblePosts(userId, pageable);
+  public PageResponse<PostResponseDto> getVisiblePosts(
+      int page, int size) {
 
-    // Map Post -> PostResponseDto
-    List<PostResponseDto> postResponses = postPage.getContent().stream()
-        .map(post -> {
-          ProfileResponseDto profile = profileServiceClient
-              .getUserProfileById(post.getUserId()).getResult();
+    String userId = AuthenticationHelper.getMyUserId();
 
-          return PostResponseDto.builder()
-              .postId(post.getPostId())
-              .userId(post.getUserId())
-              .username(profile.getUsername())
-              .avatarUrl(profile.getAvatarUrl())
-              .orgId(post.getOrgId())
-              .postType(post.getPostType())
-              .title(post.getTitle())
-              .content(post.getContent())
-              .allowComment(post.getAllowComment())
-              .hashtag(post.getHashtag())
-              .status(post.getStatus())
-              .accesses(post.getAccesses())
-              .createdAt(post.getCreatedAt().toString())
-              .build();
-        })
-        .toList();
+    Pageable pageable =
+        PageRequest.of(Math.max(1, page) - 1, size,
+            Sort.by("createdAt").descending());
 
-    return PageResponse.<PostResponseDto>builder()
-        .currentPage(postPage.getNumber())
-        .totalPages(postPage.getTotalPages())
-        .pageSize(postPage.getSize())
-        .totalElements(postPage.getTotalElements())
-        .data(postResponses)
-        .build();
+    Page<PostResponseDto> postPage = postRepository
+        .findAllVisiblePosts(userId, pageable)
+        .map(postHelper::toPostResponseDtoFromPost);
+
+    return PageResponseUtils.toPageResponse(postPage, Math.max(1, page));
   }
 
-  public PageResponse<?> SeachPosts(String searchText,
-                                    HttpServletRequest request,
-                                    int page,
-                                    int size) {
-    String token = request.getHeader("Authorization");
-    String userId = customJwtDecoder.decode(token.substring(7)).getClaims()
-        .get("userId").toString();
-    Pageable pageable = PageRequest.of(page,
-        size, Sort.by("created_at").descending());
-    Page<Post> postPage =
-        postRepository.searchVisiblePosts(searchText, userId, pageable);
+  public PageResponse<PostResponseDto> searchVisiblePosts(
+      String searchText,
+      int page, int size) {
+    String userId = AuthenticationHelper.getMyUserId();
 
-    return PageResponse.<Post>builder()
-        .currentPage(postPage.getNumber())
-        .totalPages(postPage.getTotalPages())
-        .pageSize(postPage.getSize())
-        .totalElements(postPage.getTotalElements())
-        .data(postPage.getContent())
-        .build();
+    Pageable pageable =
+        PageRequest.of(Math.max(1, page) - 1, size);
+
+    Page<PostResponseDto> postPage = postRepository
+        .searchVisiblePosts(searchText, userId, pageable)
+        .map(postHelper::toPostResponseDtoFromPost);
+
+    return PageResponseUtils.toPageResponse(postPage, Math.max(1, page));
   }
 
-  public PostResponseDto getPostByIdIfAccessible(String postId,
-                                                 HttpServletRequest request) {
-    String token = request.getHeader("Authorization");
-    String userId = customJwtDecoder.decode(token.substring(7))
-        .getClaims()
-        .get("userId").toString();
+  public PostResponseDto getPostDetail(
+      String postId) {
+    String userId = AuthenticationHelper.getMyUserId();
 
-    Optional<Post> optionalPost = postRepository.findById(postId);
-    if (optionalPost.isEmpty()) {
-      throw new AppException(ErrorCode.POST_NOT_FOUND);
-    }
-    if (optionalPost.get().getAccesses().contains(userId)) {
+    Post post = postRepository.findById(postId)
+        .orElseThrow(() -> new AppException(ErrorCode.POST_NOT_FOUND));
+
+    if (!postHelper.canView(post, userId)) {
       throw new AppException(ErrorCode.POST_NOT_AUTHORIZED);
     }
 
-    ProfileResponseDto profile =
-        profileServiceClient.getUserProfileById(optionalPost.get().getUserId())
-            .getResult();
-
-    return PostResponseDto.builder()
-        .postId(optionalPost.get().getPostId())
-        .userId(optionalPost.get().getUserId())
-        .username(profile.getUsername())
-        .avatarUrl(profile.getAvatarUrl())
-        .orgId(optionalPost.get().getOrgId())
-        .postType(optionalPost.get().getPostType())
-        .title(optionalPost.get().getTitle())
-        .content(optionalPost.get().getContent())
-        .allowComment(optionalPost.get().getAllowComment())
-        .hashtag(optionalPost.get().getHashtag())
-        .status(optionalPost.get().getStatus())
-        .accesses(optionalPost.get().getAccesses())
-        .createdAt(optionalPost.get().getCreatedAt().toString())
-        .build();
+    return postHelper.toPostResponseDtoFromPost(post);
   }
 
-  public void createPost(PostRequestDto postRequestDto,
-                         HttpServletRequest request) {
-    String token = request.getHeader("Authorization");
-    String userId = customJwtDecoder.decode(token.substring(7))
-        .getClaims()
-        .get("userId")
-        .toString();
+  public void createPost(
+      PostRequestDto postRequestDto) {
+    String userId = AuthenticationHelper.getMyUserId();
 
     List<String> fileUrls = Collections.emptyList();
-
-    var fileDoc = postRequestDto.getFileDocument();
+    AddFileDocumentDto fileDoc = postRequestDto.getFileDocument();
     if (fileDoc != null && fileDoc.getFile() != null &&
         !fileDoc.getFile().isEmpty()) {
 
@@ -218,40 +136,32 @@ public class PostService {
     postRepository.save(post);
   }
 
-  public void updatePost(PostRequestDto postRequestDto,
-                         HttpServletRequest request) {
-    String token = request.getHeader("Authorization");
-    String userId = customJwtDecoder.decode(token.substring(7))
-        .getClaims()
-        .get("userId").toString();
-    String username = customJwtDecoder.decode(token.substring(7))
-        .getClaims()
-        .get("username").toString();
+  public void updatePost(
+      String postId,
+      PostRequestDto postRequestDto) {
+    String userId = AuthenticationHelper.getMyUserId();
 
-    Optional<Post> optionalPost =
-        postRepository.findById(postRequestDto.getPostId());
-    if (optionalPost.isEmpty()) {
-      throw new AppException(ErrorCode.POST_NOT_FOUND);
-    }
-
-    Post existingPost = optionalPost.get();
+    Post existingPost = postRepository.findById(postId)
+        .orElseThrow(() -> new AppException(ErrorCode.POST_NOT_FOUND));
 
     // Chỉ cho phép người tạo hoặc admin chỉnh sửa
     if (!existingPost.getUserId().equals(userId) &&
-        !"admin".equals(username)) {
+        !AuthenticationHelper.getMyRoles().contains("ADMIN")) {
       throw new AppException(ErrorCode.UNAUTHORIZED);
     }
 
     // Danh sách ảnh sau khi chỉnh sửa
     List<String> updatedImageUrls = new ArrayList<>();
+    List<String> existingImages =
+        Optional.ofNullable(existingPost.getImagesUrls())
+            .orElse(Collections.emptyList());
 
     // 1. Giữ lại ảnh cũ mà người dùng vẫn muốn giữ
-    if (postRequestDto.getOldImgesUrls() != null &&
-        !postRequestDto.getOldImgesUrls().isEmpty()) {
+    if (postRequestDto.getOldImagesUrls() != null &&
+        !postRequestDto.getOldImagesUrls().isEmpty()) {
       updatedImageUrls.addAll(
           existingPost.getImagesUrls().stream()
-              .filter(url -> postRequestDto.getOldImgesUrls()
-                  .contains(url))
+              .filter(postRequestDto.getOldImagesUrls()::contains)
               .toList()
       );
     }
@@ -280,19 +190,14 @@ public class PostService {
     // 3. Cập nhật các field khác
     postMapper.updatePostRequestDtoToPost(postRequestDto, existingPost);
     existingPost.setImagesUrls(updatedImageUrls);
-
     postRepository.save(existingPost);
   }
 
 
-  public void deletePost(String postId, HttpServletRequest request) {
-    String token = request.getHeader("Authorization");
-    String deletedBy =
-        customJwtDecoder.decode(token.substring(7)).getClaims()
-            .get("username").toString();
+  public void deletePost(String postId) {
+    String deletedBy = AuthenticationHelper.getMyUsername();
     Post post = postRepository.findById(postId)
-        .orElseThrow(() -> new IllegalArgumentException(
-            "Post not found with id: " + postId));
+        .orElseThrow(() -> new AppException(ErrorCode.POST_NOT_FOUND));
     post.markDeleted(deletedBy);
     postRepository.save(post);
   }
@@ -304,7 +209,5 @@ public class PostService {
       return false;
     }
   }
-
-
 }
 

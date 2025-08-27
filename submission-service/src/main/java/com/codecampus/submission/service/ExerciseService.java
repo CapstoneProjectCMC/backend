@@ -4,6 +4,7 @@ import com.codecampus.submission.constant.sort.SortField;
 import com.codecampus.submission.constant.submission.ExerciseType;
 import com.codecampus.submission.constant.submission.SubmissionStatus;
 import com.codecampus.submission.dto.common.PageResponse;
+import com.codecampus.submission.dto.data.ExerciseSummaryDto;
 import com.codecampus.submission.dto.request.CreateExerciseRequest;
 import com.codecampus.submission.dto.request.UpdateExerciseRequest;
 import com.codecampus.submission.dto.request.coding.CreateCodingExerciseRequest;
@@ -13,6 +14,7 @@ import com.codecampus.submission.dto.response.coding.coding_detail.ExerciseCodin
 import com.codecampus.submission.dto.response.quiz.ExerciseQuizResponse;
 import com.codecampus.submission.dto.response.quiz.quiz_detail.ExerciseQuizDetailResponse;
 import com.codecampus.submission.dto.response.quiz.quiz_detail.QuizDetailSliceDetailResponse;
+import com.codecampus.submission.entity.Assignment;
 import com.codecampus.submission.entity.CodingDetail;
 import com.codecampus.submission.entity.Exercise;
 import com.codecampus.submission.entity.QuizDetail;
@@ -45,6 +47,8 @@ import com.codecampus.submission.service.cache.UserSummaryCacheService;
 import com.codecampus.submission.service.grpc.GrpcCodingClient;
 import com.codecampus.submission.service.grpc.GrpcQuizClient;
 import com.codecampus.submission.service.kafka.ExerciseEventProducer;
+import com.codecampus.submission.service.kafka.ExerciseStatusEventProducer;
+import dtos.ExerciseStatusDto;
 import dtos.UserSummary;
 import java.time.Instant;
 import java.util.Map;
@@ -83,6 +87,7 @@ public class ExerciseService {
   GrpcQuizClient grpcQuizClient;
   GrpcCodingClient grpcCodingClient;
   ExerciseEventProducer exerciseEventProducer;
+  ExerciseStatusEventProducer exerciseStatusEventProducer;
 
   ExerciseMapper exerciseMapper;
   SubmissionMapper submissionMapper;
@@ -96,9 +101,11 @@ public class ExerciseService {
   public Exercise createExercise(
       CreateExerciseRequest request,
       boolean returnExercise) {
+    String userId = AuthenticationHelper.getMyUserId();
+
     Exercise exercise = exerciseRepository
         .save(exerciseMapper.toExerciseFromCreateExerciseRequest(
-            request, AuthenticationHelper.getMyUserId()));
+            request, userId));
     if (exercise.getExerciseType() == ExerciseType.QUIZ) {
       grpcQuizClient.pushExercise(exercise);
     } else if (exercise.getExerciseType() == ExerciseType.CODING) {
@@ -106,6 +113,17 @@ public class ExerciseService {
     }
 
     exerciseEventProducer.publishCreatedExerciseEvent(exercise);
+
+    ExerciseStatusDto exerciseStatusDto = new ExerciseStatusDto(
+        exercise.getId(),
+        userId, // chính giáo viên / creator
+        /* created   */ true,
+        /* completed */ false,
+        /* completedAt */ null,
+        /* attempts   */ null,
+        /* bestScore  */ null,
+        /* totalPts   */ null);
+    exerciseStatusEventProducer.publishUpsert(exerciseStatusDto);
 
     if (returnExercise) {
       return exercise;
@@ -117,12 +135,13 @@ public class ExerciseService {
   public Exercise createQuizExercise(
       CreateQuizExerciseRequest request,
       boolean returnExercise) {
+
     Exercise exercise =
         createExercise(
             request.createExerciseRequest(),
             true
         );
-    exerciseRepository.saveAndFlush(exercise);
+    exerciseRepository.save(exercise);
 
     quizService.addQuizDetail(
         exercise.getId(),
@@ -144,7 +163,7 @@ public class ExerciseService {
       boolean returnExercise) {
     Exercise exercise = createExercise(
         request.createExerciseRequest(), true);
-    exerciseRepository.saveAndFlush(exercise);
+    exerciseRepository.save(exercise);
 
     // đẩy coding detail
     codingService.addCodingDetail(
@@ -268,9 +287,22 @@ public class ExerciseService {
   public void softDeleteExercise(String exerciseId) {
     Exercise exercise = exerciseHelper
         .getExerciseOrThrow(exerciseId);
+    String userId = AuthenticationHelper.getMyUserId();
     String by = AuthenticationHelper.getMyUsername();
     exerciseHelper.markExerciseDeletedRecursively(exercise, by);
     exerciseRepository.save(exercise);
+
+    ExerciseStatusDto exerciseStatusDto =
+        new ExerciseStatusDto(
+            exerciseId, userId,
+            /* created   */ null,
+            /* completed */ null,
+            /* completedAt */ null,
+            /* attempts   */ null,
+            /* bestScore  */ null,
+            /* totalPts   */ null);
+
+    exerciseStatusEventProducer.publishDeleted(exerciseStatusDto);
 
     exerciseEventProducer.publishDeletedExerciseEvent(exercise);
     if (exercise.getExerciseType() ==
@@ -392,5 +424,57 @@ public class ExerciseService {
 
     return exerciseHelper.toExerciseCodingDetailResponseFromExerciseCodingDetailSliceDetailResponseAndUserSummary(
         exercise, slice, userSummary);
+  }
+
+  @Transactional(readOnly = true)
+  public ExerciseSummaryDto getExerciseSummary(
+      String exerciseId) {
+    Exercise exercise = exerciseHelper.getExerciseOrThrow(exerciseId);
+    String me = AuthenticationHelper.getMyUserId();
+
+    boolean created = me != null && me.equals(exercise.getUserId());
+    boolean completed = assignmentRepository
+        .findByExerciseIdAndStudentId(exerciseId, me)
+        .map(Assignment::isCompleted)
+        .orElse(false);
+
+
+    return exerciseMapper.toExerciseSyncDtoFromExercise(
+        exercise, created, completed);
+  }
+
+  @Transactional(readOnly = true)
+  public ExerciseStatusDto getExerciseStatus(
+      String exerciseId,
+      String studentId) {
+
+    Exercise exercise = exerciseRepository
+        .findById(exerciseId)
+        .orElse(null);
+
+    boolean created =
+        exercise != null && studentId != null &&
+            studentId.equals(exercise.getUserId());
+
+    Optional<Assignment> assignment = assignmentRepository
+        .findByExerciseIdAndStudentId(exerciseId,
+            studentId);
+
+    boolean completed =
+        assignment
+            .map(Assignment::isCompleted)
+            .orElse(false);
+
+    return new ExerciseStatusDto(
+        exerciseId,
+        studentId,
+        created,
+        completed,
+        /* completedAt */ null,
+        // có thể tra từ Submission đầu PASSED nếu muốn
+        /* attempts   */ null,
+        /* bestScore  */ null,
+        /* totalPts   */ null
+    );
   }
 }
