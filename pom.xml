@@ -19,6 +19,7 @@
     <name>CodeCampus :: Microservices</name>
 
     <modules>
+        <module>payment-service</module>
         <module>common-protos</module>
         <module>common-events</module>
         <module>common-dtos</module>

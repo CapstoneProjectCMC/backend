@@ -122,6 +122,26 @@ services:
       retries: 5
     networks: [ backend ]
 
+  payment-db:
+    image: bitnami/postgresql:latest
+    container_name: payment-db
+    restart: unless-stopped
+    environment:
+        - POSTGRESQL_USERNAME=${PAYMENT_USERNAME}
+        - POSTGRESQL_PASSWORD=${PAYMENT_DB_PASSWORD}
+        - POSTGRESQL_DATABASE=${PAYMENT_DATABASE}
+        - POSTGRESQL_POSTGRES_PASSWORD=${PAYMENT_DB_PASSWORD}
+    ports:
+      - "5440:5432"
+    volumes:
+      - payment_pg_data:/bitnami/postgresql
+    healthcheck:
+      test: [ "CMD-SHELL","pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: [ backend ]
+
   # ----------  Kafka  ----------
   kafka:
     image: bitnami/kafka:latest
@@ -356,6 +376,7 @@ networks:
     name: codecampus_backend
 
 volumes:
+  payment_pg_data:
   identity_pg_data:
   submission_pg_data:
   quiz_pg_data:
