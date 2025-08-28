@@ -15,6 +15,10 @@ server:
 spring:
   application:
     name: profile-service
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
   neo4j:
     uri: neo4j://localhost:7687
     authentication:

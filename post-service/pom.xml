@@ -120,47 +120,6 @@
             <artifactId>spring-kafka</artifactId>
         </dependency>
 
-        <!-- ===== gRPC & Protobuf ===== -->
-        <dependency>
-            <groupId>net.devh</groupId>
-            <artifactId>grpc-server-spring-boot-starter</artifactId>
-            <version>${grpc.server.starter.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.grpc</groupId>
-            <artifactId>grpc-services</artifactId>
-            <version>${grpc.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.grpc</groupId>
-            <artifactId>grpc-stub</artifactId>
-            <version>${grpc.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.grpc</groupId>
-            <artifactId>grpc-netty-shaded</artifactId>
-            <version>${grpc.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.grpc</groupId>
-            <artifactId>grpc-protobuf</artifactId>
-            <version>${grpc.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.grpc</groupId>
-            <artifactId>grpc-census</artifactId>
-            <version>${grpc.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.protobuf</groupId>
-            <artifactId>protobuf-java</artifactId>
-            <version>${protobuf.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.codecampus</groupId>
-            <artifactId>common-protos</artifactId>
-            <version>${project.version}</version>
-        </dependency>
         <dependency>
             <groupId>com.codecampus</groupId>
             <artifactId>common-events</artifactId>

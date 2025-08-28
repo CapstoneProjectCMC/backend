@@ -5,7 +5,6 @@ import com.codecampus.chat.dto.common.PageResponse;
 import com.codecampus.chat.dto.request.ChatMessageRequest;
 import com.codecampus.chat.dto.response.ChatMessageResponse;
 import com.codecampus.chat.service.ChatMessageService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -27,11 +26,11 @@ public class ChatMessageController {
   ChatMessageService chatMessageService;
 
   @PostMapping("/message")
-  ApiResponse<ChatMessageResponse> createChatMessage(
-      @RequestBody @Valid ChatMessageRequest request)
-      throws JsonProcessingException {
-    return ApiResponse.<ChatMessageResponse>builder()
-        .result(chatMessageService.createChatMessage(request))
+  ApiResponse<Void> createChatMessage(
+      @RequestBody @Valid ChatMessageRequest request) {
+    chatMessageService.createChatMessage(request);
+    return ApiResponse.<Void>builder()
+        .message("Chat thành công!")
         .build();
   }
 

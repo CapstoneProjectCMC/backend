@@ -28,7 +28,10 @@ public class PostResponseDto {
   Boolean allowComment;
   String hashtag;
   String status;
-  List<String> imagesUrls;
+  List<String> fileUrls;
   List<PostAccess> accesses;
   String createdAt;
+  long commentCount;
+  long upvoteCount;
+  long downvoteCount;
 }

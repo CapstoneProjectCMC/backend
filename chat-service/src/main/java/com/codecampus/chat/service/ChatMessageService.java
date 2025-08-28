@@ -2,11 +2,14 @@ package com.codecampus.chat.service;
 
 import com.codecampus.chat.dto.common.ApiResponse;
 import com.codecampus.chat.dto.common.PageResponse;
+import com.codecampus.chat.dto.events.MessageCreatedEvent;
 import com.codecampus.chat.dto.request.ChatMessageRequest;
 import com.codecampus.chat.dto.response.ChatMessageResponse;
+import com.codecampus.chat.dto.response.ConversationResponse;
 import com.codecampus.chat.dto.response.UserProfileResponse;
 import com.codecampus.chat.entity.ChatMessage;
 import com.codecampus.chat.entity.Conversation;
+import com.codecampus.chat.entity.ConversationMember;
 import com.codecampus.chat.entity.ParticipantInfo;
 import com.codecampus.chat.entity.WebSocketSession;
 import com.codecampus.chat.exception.AppException;
@@ -16,6 +19,7 @@ import com.codecampus.chat.helper.ChatMessageHelper;
 import com.codecampus.chat.helper.PageResponseHelper;
 import com.codecampus.chat.mapper.ChatMessageMapper;
 import com.codecampus.chat.repository.ChatMessageRepository;
+import com.codecampus.chat.repository.ConversationMemberRepository;
 import com.codecampus.chat.repository.ConversationRepository;
 import com.codecampus.chat.repository.WebSocketSessionRepository;
 import com.codecampus.chat.repository.httpClient.ProfileClient;
@@ -51,6 +55,7 @@ public class ChatMessageService {
   ChatMessageRepository chatMessageRepository;
   ConversationRepository conversationRepository;
   WebSocketSessionRepository webSocketSessionRepository;
+  ConversationMemberRepository conversationMemberRepository;
   ProfileClient profileClient;
 
   ObjectMapper objectMapper;
@@ -66,12 +71,16 @@ public class ChatMessageService {
     // Validate conversationId
     String userId = AuthenticationHelper.getMyUserId();
 
-    conversationRepository
+    Conversation conversation = conversationRepository
         .findById(conversationId)
-        .orElseThrow(
-            () -> new AppException(ErrorCode.CONVERSATION_NOT_FOUND)
-        )
-        .getParticipants()
+        .orElseThrow(() -> new AppException(ErrorCode.CONVERSATION_NOT_FOUND));
+
+    if (Boolean.TRUE.equals(conversation.getDeleted())) {
+      throw new AppException(ErrorCode.CONVERSATION_NOT_FOUND);
+    }
+
+    // kiểm tra tham gia
+    conversation.getParticipants()
         .stream()
         .filter(
             participantInfo -> userId.equals(
@@ -83,21 +92,34 @@ public class ChatMessageService {
                 ErrorCode.CONVERSATION_NOT_FOUND)
         );
 
+    // lấy lastReadAt
+    Instant lastReadAt = conversationMemberRepository
+        .findByConversationIdAndUserId(conversationId, userId)
+        .map(ConversationMember::getLastReadAt)
+        .orElse(null);
+
     Pageable pageable = PageRequest.of(page - 1, size,
         Sort.by(Sort.Direction.DESC, "createdDate"));
+
     Page<ChatMessage> pageData =
         chatMessageRepository.findAllByConversationIdOrderByCreatedDateDesc(
             conversationId,
             pageable);
 
-    Page<ChatMessageResponse> out = pageData.map(
-        chatMessageHelper::toChatMessageResponseFromChatMessage);
+    Page<ChatMessageResponse> out = pageData.map(msg -> {
+      ChatMessageResponse r = chatMessageHelper
+          .toChatMessageResponseFromChatMessage(msg);
+      boolean isRead = (lastReadAt != null && (msg.getCreatedDate() == null
+          || !msg.getCreatedDate().isAfter(lastReadAt)));
+      r.setRead(isRead);
+      return r;
+    });
+
     return PageResponseHelper.toPageResponse(out, page);
   }
 
-  public ChatMessageResponse createChatMessage(
-      ChatMessageRequest chatMessageRequest)
-      throws JsonProcessingException {
+  public void createChatMessage(
+      ChatMessageRequest chatMessageRequest) {
 
     String userId = AuthenticationHelper.getMyUserId();
 
@@ -106,6 +128,10 @@ public class ChatMessageService {
         .findById(chatMessageRequest.conversationId())
         .orElseThrow(() -> new AppException(
             ErrorCode.CONVERSATION_NOT_FOUND));
+
+    if (Boolean.TRUE.equals(conversation.getDeleted())) {
+      throw new AppException(ErrorCode.CONVERSATION_NOT_FOUND);
+    }
 
     conversation.getParticipants().stream()
         .filter(
@@ -162,6 +188,7 @@ public class ChatMessageService {
     conversation.setModifiedDate(chatMessage.getCreatedDate());
     conversationRepository.save(conversation);
 
+    // Đẩy sự kiện tin nhắn mới
     // Publish socket event to clients is conversation
     // Get participants userIds;
     List<String> userIds = conversation
@@ -180,6 +207,13 @@ public class ChatMessageService {
     ChatMessageResponse chatMessageResponse =
         chatMessageMapper.toChatMessageResponseFromChatMessage(
             chatMessage);
+    chatMessageResponse.setMe(true);
+    chatMessageResponse.setRead(true);
+
+    ConversationResponse convSnap =
+        chatMessageHelper.toConversationResponseFromConversation(conversation);
+
+    ChatMessage finalChatMessage = chatMessage;
     socketIOServer.getAllClients().forEach(
         socketIOClient -> {
           WebSocketSession wsSession = webSocketSessions.get(
@@ -189,11 +223,21 @@ public class ChatMessageService {
             String message;
 
             try {
-              chatMessageResponse.setMe(
-                  wsSession.getUserId().equals(userId));
-              message = objectMapper.writeValueAsString(
-                  chatMessageResponse);
-              socketIOClient.sendEvent("message", message);
+              ChatMessageResponse perRecipient =
+                  chatMessageMapper.toChatMessageResponseFromChatMessage(
+                      finalChatMessage);
+              perRecipient.setMe(wsSession.getUserId().equals(userId));
+              perRecipient.setRead(wsSession.getUserId().equals(userId));
+
+              var event = MessageCreatedEvent.builder()
+                  .type("message_created")
+                  .at(finalChatMessage.getCreatedDate())
+                  .conversation(convSnap)
+                  .message(perRecipient)
+                  .build();
+
+              socketIOClient.sendEvent("message_created",
+                  objectMapper.writeValueAsString(event));
             } catch (JsonProcessingException e) {
               throw new RuntimeException(e);
             }
@@ -201,8 +245,8 @@ public class ChatMessageService {
         }
     );
 
-    // Convert to Response
-    return chatMessageHelper
-        .toChatMessageResponseFromChatMessage(chatMessage);
+    //    // Convert to Response
+    //    return chatMessageHelper
+    //        .toChatMessageResponseFromChatMessage(chatMessage);
   }
 }

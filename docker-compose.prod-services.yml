@@ -151,6 +151,17 @@ services:
     ports: [ "8090:8090" ]
     networks: [ backend ]
 
+  payment-service:
+    image: ${DOCKERHUB_USER}/codecampus-payment-service:${IMAGE_TAG:-latest}
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - PAYMENT_DATABASE=${PAYMENT_DATABASE}
+      - PAYMENT_USERNAME=${PAYMENT_USERNAME}
+      - PAYMENT_DB_PASSWORD=${PAYMENT_DB_PASSWORD}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    ports: [ "8090:8090" ]
+    networks: [ backend ]
+
   file-service:
     build:
       context: .

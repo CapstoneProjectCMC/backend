@@ -17,7 +17,8 @@ public interface PostRepository
         LEFT JOIN p.accesses pa
         WHERE p.deletedAt IS NULL
           AND (
-               p.postType = 'Global'
+               p.userId = :userId
+               OR p.postType = 'Global'
                OR p.isPublic = true
                OR (pa.userId = :userId AND (pa.isExcluded IS NULL OR pa.isExcluded = false))
           )
@@ -34,7 +35,8 @@ public interface PostRepository
       WHERE p.deleted_at IS NULL
         AND p.search_vector @@ plainto_tsquery('simple', :searchText)
         AND (
-             p.post_type = 'Global'
+             p.user_id = :userId
+             OR p.post_type = 'Global'
              OR p.is_public = true
              OR (pa.user_id = :userId AND (pa.is_excluded IS NULL OR pa.is_excluded = false))
         )

@@ -20,4 +20,5 @@ public class ChatMessageResponse {
   String message;
   ParticipantInfo sender;
   Instant createdDate;
+  boolean read;
 }

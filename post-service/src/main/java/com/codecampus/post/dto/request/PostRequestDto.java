@@ -1,7 +1,6 @@
 package com.codecampus.post.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,7 +21,6 @@ public class PostRequestDto {
   String title;
   String orgId;
   String content;
-  List<String> oldImagesUrls;
   Boolean isPublic;
   Boolean allowComment;
   String postType;

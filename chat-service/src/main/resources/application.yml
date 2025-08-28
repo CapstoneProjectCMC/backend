@@ -22,10 +22,14 @@ spring:
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
-
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
 app:
   event:
     profile-events: "profile-events"
   services:
     profile: http://localhost:8081/profile
     identity: http://localhost:8080/identity
+    file: http://localhost:8082/file

@@ -35,6 +35,9 @@ public class AuthenticationRequestInterceptor
         (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
 
     if (attributes == null) {
+      // Có thể là async thread / scheduler -> không gắn auth
+      log.debug(
+          "[Feign] No servlet request available -> skip Authorization header");
       return;
     }
 
@@ -43,6 +46,7 @@ public class AuthenticationRequestInterceptor
     log.info("Header: {}", authHeader);
     if (StringUtils.hasText(authHeader)) {
       requestTemplate.header("Authorization", authHeader);
+      log.debug("[Feign] Propagated Authorization header");
     }
   }
 }

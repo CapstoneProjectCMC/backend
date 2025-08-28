@@ -16,17 +16,18 @@
           <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct/1.6.3/mapstruct-1.6.3.jar" />
         </processorPath>
         <module name="submission-service" />
-        <module name="post-service" />
         <module name="coding-service" />
-        <module name="search-service" />
         <module name="common-dtos" />
-        <module name="quiz-service" />
         <module name="chat-service" />
         <module name="profile-service" />
-        <module name="identity-service" />
         <module name="ai-service" />
-        <module name="common-events" />
         <module name="notification-service" />
+        <module name="post-service" />
+        <module name="payment-service" />
+        <module name="search-service" />
+        <module name="quiz-service" />
+        <module name="identity-service" />
+        <module name="common-events" />
       </profile>
       <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
@@ -56,6 +57,7 @@
       <module name="gateway-service" options="-parameters" />
       <module name="identity-service" options="-parameters --enable-preview -Amapstruct.defaultComponentModel=spring -Amapstruct.verbose=true" />
       <module name="notification-service" options="-parameters --enable-preview -Amapstruct.defaultComponentModel=spring -Amapstruct.verbose=true" />
+      <module name="payment-service" options="-parameters --enable-preview -Amapstruct.defaultComponentModel=spring -Amapstruct.verbose=true" />
       <module name="post-service" options="-parameters --enable-preview -Amapstruct.defaultComponentModel=spring -Amapstruct.verbose=true" />
       <module name="profile-service" options="-parameters --enable-preview -Amapstruct.defaultComponentModel=spring -Amapstruct.verbose=true" />
       <module name="quiz-service" options="-parameters --enable-preview -Amapstruct.defaultComponentModel=spring -Amapstruct.verbose=true" />

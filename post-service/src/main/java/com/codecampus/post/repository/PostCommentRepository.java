@@ -32,5 +32,8 @@ public interface PostCommentRepository
   Page<PostComment> findReplies(
       @Param("parentId") String parentId,
       Pageable pageable);
+
+  long countByPost_PostIdAndDeletedAtIsNull(
+      String postId);
 }
 

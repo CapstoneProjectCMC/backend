@@ -1,12 +1,12 @@
 package com.codecampus.post.constant.exception;
 
 import static com.sun.source.doctree.DocTree.Kind.AUTHOR;
-import static io.grpc.Status.NOT_FOUND;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CONFLICT;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 import lombok.NoArgsConstructor;
 

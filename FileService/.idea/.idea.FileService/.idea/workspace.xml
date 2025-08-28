@@ -13,25 +13,46 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b5542390-86ea-4e7c-8261-890d4e9fdf28" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../chat-service/src/main/java/com/codecampus/chat/configuration/config/FeignMultipartConfiguration.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../chat-service/src/main/java/com/codecampus/chat/constant/event/EventType.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../chat-service/src/main/java/com/codecampus/chat/constant/file/FileType.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../chat-service/src/main/java/com/codecampus/chat/dto/events/ConversationMetaDiff.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../chat-service/src/main/java/com/codecampus/chat/dto/events/EventEnvelope.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../chat-service/src/main/java/com/codecampus/chat/dto/events/MembersChangedData.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../chat-service/src/main/java/com/codecampus/chat/dto/events/MessageCreatedEvent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../chat-service/src/main/java/com/codecampus/chat/dto/events/MessageReadData.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../chat-service/src/main/java/com/codecampus/chat/dto/events/MuteData.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../chat-service/src/main/java/com/codecampus/chat/dto/events/RoleChangeData.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../chat-service/src/main/java/com/codecampus/chat/dto/request/GroupUpdateRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../chat-service/src/main/java/com/codecampus/chat/dto/request/MarkReadRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../chat-service/src/main/java/com/codecampus/chat/dto/request/MemberMuteRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../chat-service/src/main/java/com/codecampus/chat/dto/request/MembersUpdateRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../chat-service/src/main/java/com/codecampus/chat/dto/request/MuteRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../chat-service/src/main/java/com/codecampus/chat/dto/request/RoleUpdateRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../chat-service/src/main/java/com/codecampus/chat/dto/response/UploadedFileResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../chat-service/src/main/java/com/codecampus/chat/entity/ConversationMember.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../chat-service/src/main/java/com/codecampus/chat/helper/ConversationHelper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../chat-service/src/main/java/com/codecampus/chat/helper/EventHelper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../chat-service/src/main/java/com/codecampus/chat/helper/WebSocketHelper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../chat-service/src/main/java/com/codecampus/chat/repository/ConversationMemberRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../chat-service/src/main/java/com/codecampus/chat/repository/httpClient/FileClient.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../chat-service/src/main/java/com/codecampus/chat/service/GroupImageService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.FileService/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.FileService/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../identity-service/src/main/java/com/codecampus/identity/controller/authentication/PasswordResetController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../identity-service/src/main/java/com/codecampus/identity/controller/authentication/PasswordResetController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../identity-service/src/main/java/com/codecampus/identity/dto/request/authentication/ForgotPasswordRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../identity-service/src/main/java/com/codecampus/identity/dto/request/authentication/ForgotPasswordRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../identity-service/src/main/java/com/codecampus/identity/dto/request/authentication/ResetPasswordRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../identity-service/src/main/java/com/codecampus/identity/dto/request/authentication/ResetPasswordRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../identity-service/src/main/java/com/codecampus/identity/dto/request/authentication/VerifyPasswordResetRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../identity-service/src/main/java/com/codecampus/identity/dto/request/authentication/VerifyPasswordResetRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../identity-service/src/main/java/com/codecampus/identity/entity/account/PasswordResetToken.java" beforeDir="false" afterPath="$PROJECT_DIR$/../identity-service/src/main/java/com/codecampus/identity/entity/account/PasswordResetToken.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../identity-service/src/main/java/com/codecampus/identity/repository/account/PasswordResetTokenRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/../identity-service/src/main/java/com/codecampus/identity/repository/account/PasswordResetTokenRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../identity-service/src/main/java/com/codecampus/identity/service/authentication/PasswordResetService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../identity-service/src/main/java/com/codecampus/identity/service/authentication/PasswordResetService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../identity-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../identity-service/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../profile-service/src/main/java/com/codecampus/profile/dto/response/file/UploadedFileResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/../profile-service/src/main/java/com/codecampus/profile/dto/response/file/UploadedFileResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../profile-service/src/main/java/com/codecampus/profile/dto/response/org/PrimaryOrgDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/../profile-service/src/main/java/com/codecampus/profile/dto/response/org/PrimaryOrgDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../profile-service/src/main/java/com/codecampus/profile/repository/UserProfileRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/../profile-service/src/main/java/com/codecampus/profile/repository/UserProfileRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../profile-service/src/main/java/com/codecampus/profile/repository/client/FileClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/../profile-service/src/main/java/com/codecampus/profile/repository/client/FileClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../profile-service/src/main/java/com/codecampus/profile/service/ExerciseService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../profile-service/src/main/java/com/codecampus/profile/service/ExerciseService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../profile-service/src/main/java/com/codecampus/profile/service/FamilyService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../profile-service/src/main/java/com/codecampus/profile/service/FamilyService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../profile-service/src/main/java/com/codecampus/profile/service/PostService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../profile-service/src/main/java/com/codecampus/profile/service/PostService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../profile-service/src/main/java/com/codecampus/profile/service/ProfileImageService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../profile-service/src/main/java/com/codecampus/profile/service/ProfileImageService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../profile-service/src/main/java/com/codecampus/profile/service/ResourceService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../profile-service/src/main/java/com/codecampus/profile/service/ResourceService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../profile-service/src/main/java/com/codecampus/profile/service/SocialService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../profile-service/src/main/java/com/codecampus/profile/service/SocialService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FileService.Api/appsettings.Development.json" beforeDir="false" afterPath="$PROJECT_DIR$/FileService.Api/appsettings.Development.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../chat-service/src/main/java/com/codecampus/chat/controller/ConversationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../chat-service/src/main/java/com/codecampus/chat/controller/ConversationController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../chat-service/src/main/java/com/codecampus/chat/dto/response/ChatMessageResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/../chat-service/src/main/java/com/codecampus/chat/dto/response/ChatMessageResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../chat-service/src/main/java/com/codecampus/chat/dto/response/ConversationResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/../chat-service/src/main/java/com/codecampus/chat/dto/response/ConversationResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../chat-service/src/main/java/com/codecampus/chat/entity/Conversation.java" beforeDir="false" afterPath="$PROJECT_DIR$/../chat-service/src/main/java/com/codecampus/chat/entity/Conversation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../chat-service/src/main/java/com/codecampus/chat/exception/ErrorCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/../chat-service/src/main/java/com/codecampus/chat/exception/ErrorCode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../chat-service/src/main/java/com/codecampus/chat/helper/ChatMessageHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/../chat-service/src/main/java/com/codecampus/chat/helper/ChatMessageHelper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../chat-service/src/main/java/com/codecampus/chat/repository/ChatMessageRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/../chat-service/src/main/java/com/codecampus/chat/repository/ChatMessageRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../chat-service/src/main/java/com/codecampus/chat/repository/ConversationRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/../chat-service/src/main/java/com/codecampus/chat/repository/ConversationRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../chat-service/src/main/java/com/codecampus/chat/repository/WebSocketSessionRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/../chat-service/src/main/java/com/codecampus/chat/repository/WebSocketSessionRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../chat-service/src/main/java/com/codecampus/chat/service/ChatMessageService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../chat-service/src/main/java/com/codecampus/chat/service/ChatMessageService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../chat-service/src/main/java/com/codecampus/chat/service/ConversationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../chat-service/src/main/java/com/codecampus/chat/service/ConversationService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../chat-service/src/main/resources/application-docker.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../chat-service/src/main/resources/application-docker.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../chat-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../chat-service/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../profile-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../profile-service/src/main/resources/application.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,25 +89,25 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    ".NET Launch Settings Profile.FileService.Api: FileService.Api.Development.executor": "Debug",
-    ".NET Launch Settings Profile.FileService.Api: IIS Express.executor": "Debug",
-    ".NET Launch Settings Profile.FileService.Api: http.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "XThreadsFramesViewSplitterKey": "0.105919",
-    "git-widget-placeholder": "main",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.sourceCode.C#",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;.NET Launch Settings Profile.FileService.Api: FileService.Api.Development.executor&quot;: &quot;Debug&quot;,
+    &quot;.NET Launch Settings Profile.FileService.Api: IIS Express.executor&quot;: &quot;Debug&quot;,
+    &quot;.NET Launch Settings Profile.FileService.Api: http.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;XThreadsFramesViewSplitterKey&quot;: &quot;0.105919&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.sourceCode.C#&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected=".NET Launch Settings Profile.FileService.Api: FileService.Api.Development">
     <configuration name="FileService.Api: FileService.Api.Development" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
       <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/FileService.Api/FileService.Api.csproj" />
@@ -201,7 +222,8 @@
       <workItem from="1755941810793" duration="2669000" />
       <workItem from="1755945729996" duration="127000" />
       <workItem from="1755945872388" duration="636000" />
-      <workItem from="1756296024284" duration="738000" />
+      <workItem from="1756296024284" duration="1441000" />
+      <workItem from="1756304618856" duration="3998000" />
     </task>
     <servers />
   </component>
