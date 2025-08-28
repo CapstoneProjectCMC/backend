@@ -10,6 +10,7 @@ using OrganizationService.Service.Interfaces;
 namespace OrganizationService.Api.Controllers
 {
     [Authorize]
+    [AllowAnonymous]
     [Authorize(Policy = "AdminOnly")]
     [Route("api/[controller]")]
     [ApiController]
