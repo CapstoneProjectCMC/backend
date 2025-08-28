@@ -33,7 +33,7 @@ namespace OrganizationService.Service.Implementation
             _userContext = userContext ?? throw new ArgumentNullException(nameof(userContext));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _logger.LogInformation($"FileServiceClient initialized with BaseUrl: {_fileServiceBaseUrl}");
-            _logger.LogInformation($"UserContext: UserId: {_userContext.UserId}, Role: {_userContext.Role}, Token: {(string.IsNullOrEmpty(_userContext.Token) ? "null" : _userContext.Token.Substring(0, Math.Min(10, _userContext.Token.Length)) + "...")}");
+            _logger.LogInformation($"UserContext: UserId: {_userContext.UserId}, Role: {_userContext.Roles}, Token: {(string.IsNullOrEmpty(_userContext.Token) ? "null" : _userContext.Token.Substring(0, Math.Min(10, _userContext.Token.Length)) + "...")}");
         }
 
         private void AddAuthHeader()
@@ -42,18 +42,18 @@ namespace OrganizationService.Service.Implementation
             if (string.IsNullOrEmpty(_userContext.Token))
             {
                 _logger.LogError("UploadLogoAsync: No Bearer token provided. File Service requires authentication.");
-                throw new ErrorException(StatusCodeEnum.A02, "No authentication token provided for File Service.");
+                throw new ErrorException(StatusCodeEnum.D04);
             }
 
             // Log roles từ token
-            string roles = _userContext.Role ?? "none";
+            var roles = _userContext.Roles ?? new List<string>();
             if (!string.IsNullOrEmpty(_userContext.Token))
             {
                 try
                 {
                     var handler = new JwtSecurityTokenHandler();
                     var token = handler.ReadJwtToken(_userContext.Token);
-                    roles = string.Join(", ", token.Claims.Where(c => c.Type == "role" || c.Type == ClaimTypes.Role).Select(c => c.Value));
+                    roles = token.Claims.Where(c => c.Type == "role" || c.Type == ClaimTypes.Role).Select(c => c.Value).ToList();
                 }
                 catch (Exception ex)
                 {
@@ -72,16 +72,16 @@ namespace OrganizationService.Service.Implementation
         {
             //kiểm tra file
             if (logoFile == null || logoFile.Length == 0)
-                throw new ErrorException(Core.Enums.StatusCodeEnum.A01, "Logo file is empty or null");
+                throw new ErrorException(Core.Enums.StatusCodeEnum.D05);
 
             // Kiểm tra định dạng file
-            var validExtensions = new[] { ".png", ".jpg", ".jpeg" };
+            var validExtensions = new[] { ".png", ".jpg", ".jpeg", "webp", ".gif" };
             if (!validExtensions.Contains(Path.GetExtension(logoFile.FileName).ToLower()))
-                throw new ErrorException(Core.Enums.StatusCodeEnum.A01, "Invalid file format. Only PNG, JPG, JPEG are allowed.");
+                throw new ErrorException(Core.Enums.StatusCodeEnum.D06);
 
             if (logoFile.Length > 5 * 1024 * 1024) // 5MB
             {
-                throw new ErrorException(StatusCodeEnum.A01, "Logo file is too large.");
+                throw new ErrorException(StatusCodeEnum.D07);
             }
 
             //kiểm tra Token
@@ -108,7 +108,7 @@ namespace OrganizationService.Service.Implementation
             {
                 var errorContent = await response.Content.ReadAsStringAsync();
                 _logger.LogError($"UploadLogoAsync failed: {response.StatusCode}, Content: {errorContent}");
-                throw new ErrorException(StatusCodeEnum.A01, $"UploadLogoAsync failed: {response.StatusCode}, Content: {errorContent}");
+                throw new ErrorException(StatusCodeEnum.D03, $"UploadLogoAsync failed: {response.StatusCode}, Content: {errorContent}");
             }
 
             var json = await response.Content.ReadAsStringAsync();
@@ -116,14 +116,14 @@ namespace OrganizationService.Service.Implementation
 
             var parsed = JObject.Parse(json);
 
-            var fileId = parsed["result"]?["id"]?.ToString();
+            var fileId = parsed["result"]?["fileId"]?.ToString();
             var url = parsed["result"]?["url"]?.ToString();
 
             _logger.LogInformation($"Parsed fileId: {fileId}, url: {url}");
 
             if (string.IsNullOrEmpty(fileId) || string.IsNullOrEmpty(url))
             {
-                throw new Exception($"File Service did not return a valid result. Raw response: {json}");
+                throw new ErrorException(StatusCodeEnum.D08, $"File Service did not return a valid result. Raw response: {json}");
             }
 
             return new FileUploadResult
@@ -131,7 +131,6 @@ namespace OrganizationService.Service.Implementation
                 FileId = Guid.Parse(fileId),
                 Url = url
             };
-
         }
 
         public async Task<FileUploadResult> UpdateLogoAsync(Guid? orgId, Guid fileId, IFormFile logo)

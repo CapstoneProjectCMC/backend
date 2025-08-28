@@ -19,5 +19,14 @@ namespace OrganizationService.Service.Dtos.Organization
         public Guid? LogoId { get; set; }
         public string? LogoUrl { get; set; }
         public OrganizationStatus Status { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public Guid CreatedBy { get; set; }
+
+        //vai trò của tổ chức
+        public string? OrganizationRole { get; set; }
+        //tên người tạo
+        public string? Username { get; set; }
+
+
     }
 }

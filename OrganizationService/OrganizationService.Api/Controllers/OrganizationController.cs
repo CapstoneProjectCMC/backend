@@ -36,7 +36,7 @@ namespace OrganizationService.Api.Controllers
             return Success(listResult);
         }
 
-        //get project by id
+        //get organization by id
         [HttpGet("{id}")]
         public async Task<IActionResult> GetOrganizationById(Guid id)
         {
@@ -44,15 +44,15 @@ namespace OrganizationService.Api.Controllers
             return Success(result);
         }
 
-        //add project
+        //add organization
         [HttpPost("add")]
         public async Task<IActionResult> AddOrganization([FromForm] CreateOrganizationRequest addOrgModel)
         {
-            await _organizationService.CreateAsync(addOrgModel);
-            return Success();
+            var result = await _organizationService.CreateAsync(addOrgModel);
+            return Success(result);
         }
 
-        //edit project
+        //edit organization
         [HttpPut("edit/{orgId}")]
         public async Task<IActionResult> EditDetailOrganization(Guid orgId, [FromForm] UpdateOrganizationRequest editOrgModel)
         {
@@ -60,20 +60,12 @@ namespace OrganizationService.Api.Controllers
             return Success(result);
         }
 
-        //delete project
+        //delete organization
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteOrganization(Guid id)
         {
             var result = await _organizationService.DeleteAsync(id);
             return Success(result);
-        }
-
-        [HttpPost("org/upload-logo")]
-        public async Task<IActionResult> UploadLogo(IFormFile logoFile, Guid orgId)
-        {
-            var url = await _fileServiceClient.UploadLogoAsync(logoFile, orgId);
-
-            return Success(new { LogoUrl = url });
         }
     }
 }
