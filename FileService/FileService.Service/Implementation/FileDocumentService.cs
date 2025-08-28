@@ -208,7 +208,7 @@ namespace FileService.Service.Implementation
                 };
 
                 // Call Identity Service to get user info
-                model.UserProfile = await _identityServiceClient.GetUserProfileAsync(filesItem.CreatedBy.ToString()) ?? new UserProfileResponse();
+               model.UserProfile = await _identityServiceClient.GetUserProfileAsync(filesItem.CreatedBy.ToString()) ?? new UserProfileResponse();
 
                 result.Add(model);
             }
@@ -302,7 +302,7 @@ namespace FileService.Service.Implementation
             };
 
             // Call Identity Service to get user info
-            model.UserProfile = await _identityServiceClient.GetUserProfileAsync(file.CreatedBy.ToString()) ?? new UserProfileResponse();
+           model.UserProfile = await _identityServiceClient.GetUserProfileAsync(file.CreatedBy.ToString()) ?? new UserProfileResponse();
             return model;
         }
 

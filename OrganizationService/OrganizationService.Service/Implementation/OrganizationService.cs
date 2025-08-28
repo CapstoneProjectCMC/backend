@@ -100,10 +100,11 @@ namespace OrganizationService.Service.Implementation
 
         public async Task<OrganizationDto> CreateAsync(CreateOrganizationRequest request)
         {
-            var existingOrg = await _organizationRepository.FindAsync(o => o.Name.ToLower() == request.Name.ToLower());
+            var requestName = request.Name.ToLower().Trim();
+            var existingOrg = await _organizationRepository.FindAsync(o => o.Name.ToLower().Trim() == request.Name.ToLower().Trim());
+            Console.WriteLine($"Request Name: {requestName}, Existing Name: {existingOrg?.Name}");
             if (existingOrg != null)
                 throw new ErrorException(Core.Enums.StatusCodeEnum.D02);
-
 
             var entity = new Organization
             {
@@ -152,7 +153,7 @@ namespace OrganizationService.Service.Implementation
             await _unitOfWork.SaveChangesAsync();
 
             //publish event after organization is created
-            await _orgEventPublisher.PublishAsync(new {
+             _orgEventPublisher.PublishAsync(new {
                 type = "CREATED",
                 id = entity.Id,
                 scopeType = "ORGANIZATION",
@@ -211,7 +212,8 @@ namespace OrganizationService.Service.Implementation
                     phone = entity.Phone,
                     address = entity.Address,
                     status = entity.Status.ToString(),
-                    updatedAt = entity.UpdatedAt
+                    updatedAt = entity.UpdatedAt,
+                    updatedBy = _userContext.UserId
                 }
             });
 
@@ -231,7 +233,8 @@ namespace OrganizationService.Service.Implementation
                 LogoId = entity.Logo,
                 LogoUrl = entity.LogoUrl,
                 Status = entity.Status,
-                OrganizationRole = _userContext.OrganizationRole
+                OrganizationRole = _userContext.OrganizationRole,
+                CreatedBy = _userContext.UserId
             };
         }
 
