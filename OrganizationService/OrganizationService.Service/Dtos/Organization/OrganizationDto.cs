@@ -24,9 +24,5 @@ namespace OrganizationService.Service.Dtos.Organization
 
         //vai trò của tổ chức
         public string? OrganizationRole { get; set; }
-        //tên người tạo
-        public string? Username { get; set; }
-
-
     }
 }
