@@ -12,6 +12,7 @@ namespace OrganizationService.Api.Controllers
 {
     [Authorize]
     [Authorize(Policy = "AdminOnly")]
+    [AllowAnonymous]
     [Route("api/[controller]")]
     [ApiController]
     public class GradeController : BaseApiController

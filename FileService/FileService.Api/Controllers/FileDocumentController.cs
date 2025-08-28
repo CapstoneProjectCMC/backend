@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace FileService.Api.Controllers
 {
     [Authorize]
+    [AllowAnonymous]
     [Authorize(Policy = "AdminOnly")]
     // [Authorize(Policy = "Permission")]
     // [Authorize(Roles = "ADMIN")]
