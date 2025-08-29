@@ -4,6 +4,7 @@ import static com.codecampus.identity.constant.authentication.AuthenticationCons
 import static com.codecampus.identity.constant.authentication.AuthenticationConstant.TEACHER_ROLE;
 
 import com.codecampus.identity.dto.data.BulkImportResult;
+import com.codecampus.identity.dto.request.authentication.ChangePasswordRequest;
 import com.codecampus.identity.dto.request.authentication.PasswordCreationRequest;
 import com.codecampus.identity.dto.request.authentication.UserCreationRequest;
 import com.codecampus.identity.dto.request.authentication.UserUpdateRequest;
@@ -168,6 +169,17 @@ public class UserService {
     userRepository.save(user);
   }
 
+  public void changeMyPassword(ChangePasswordRequest req) {
+    var user = userHelper.getUserById(AuthenticationHelper.getMyUserId());
+    if (!passwordEncoder.matches(req.getOldPassword(), user.getPassword())) {
+      throw new AppException(
+          ErrorCode.INVALID_CREDENTIALS);
+    }
+    user.setPassword(passwordEncoder.encode(req.getNewPassword()));
+    userRepository.save(user);
+    userEventProducer.publishUpdatedUserEvent(user);
+  }
+
   /**
    * Cập nhật thông tin người dùng theo ID.
    *
@@ -249,12 +261,24 @@ public class UserService {
       MultipartFile file) {
     int total = 0, created = 0, skipped = 0;
     List<String> errors = new ArrayList<>();
+    // gom các yêu cầu membership để gọi 1 lượt
+    List<CreateOrganizationMemberRequest>
+        pendingMemberships = new ArrayList<>();
 
     try (Workbook wb = new XSSFWorkbook(file.getInputStream())) {
       Sheet sheet = wb.getSheetAt(0);
-      // Header: username,email,firstName,lastName,displayName,
-      // role(ADMIN|TEACHER|STUDENT),
-      // organizationId,organizationMemberRole
+      // Header đề xuất (giữ tương thích cũ):
+      // 0 username
+      // 1 email
+      // 2 firstName
+      // 3 lastName
+      // 4 displayName
+      // 5 role(ADMIN|TEACHER|STUDENT)  -> role hệ thống (User.roles)
+      // 6 organizationId               -> nếu có: tạo membership ORGANIZATION
+      // 7 organizationMemberRole       -> Admin|Teacher|Student (mặc định Student)
+      // 8 scopeType (optional)         -> Organization|Grade|Class (ưu tiên hơn cột 6/7 nếu có scopeId)
+      // 9 scopeId (optional)           -> GUID của Organization/Grade/Class
+
       for (int i = 1; i <= sheet.getLastRowNum(); i++) {
         total++;
         Row r = sheet.getRow(i);
@@ -268,15 +292,15 @@ public class UserService {
         String firstName = getString(r, 2);
         String lastName = getString(r, 3);
         String display = getString(r, 4);
-        String roleName =
-            Optional.of(getString(r, 5))
-                .filter(s -> !s.isBlank())
-                .orElse(STUDENT_ROLE)
-                .toUpperCase(Locale.ROOT);
+        String roleName = Optional.of(getString(r, 5)).filter(s -> !s.isBlank())
+            .orElse(STUDENT_ROLE).toUpperCase(Locale.ROOT);
         String orgId = getString(r, 6);
-        String orgMember = getString(r, 7);
+        String orgMember = getString(r, 7);   // "Admin" | "Teacher" | "Student"
+        String scopeType = getString(r, 8);
+        String scopeId = getString(r, 9);
 
-        if (email == null || username == null) {
+        if (email == null || email.isBlank() || username == null ||
+            username.isBlank()) {
           skipped++;
           errors.add("Row " + (i + 1) + ": missing username/email");
           continue;
@@ -289,10 +313,8 @@ public class UserService {
 
         Role role = roleRepository
             .findById(roleName)
-            .orElseGet(
-                () -> roleRepository.save(
-                    Role.builder().name(roleName).description(roleName)
-                        .build()));
+            .orElseGet(() -> roleRepository.save(
+                Role.builder().name(roleName).description(roleName).build()));
 
         User user = userRepository.save(User.builder()
             .username(username)
@@ -302,28 +324,89 @@ public class UserService {
             .enabled(true)
             .build());
 
-        // gửi event kèm dữ liệu profile
-        UserCreationRequest userCreationRequest =
-            UserCreationRequest.builder()
-                .username(username)
-                .email(email)
-                .firstName(firstName)
-                .lastName(lastName)
-                .displayName(display)
-                .organizationId(orgId)
-                .organizationMemberRole(orgMember)
-                .build();
+        // Gửi event đăng ký kèm profile
+        UserCreationRequest userCreationRequest = UserCreationRequest.builder()
+            .username(username).email(email).firstName(firstName)
+            .lastName(lastName).displayName(display)
+            .organizationId(orgId)                      // để backward compat
+            .organizationMemberRole(orgMember)
+            .build();
         UserProfileCreationPayload profilePayload =
             userPayloadMapper.toUserProfileCreationPayloadFromUserCreationRequest(
                 userCreationRequest);
         userEventProducer.publishRegisteredUserEvent(user, profilePayload);
 
+        // Tạo yêu cầu membership (ưu tiên scopeType/scopeId nếu có)
+        String resolveScopeType = !scopeId.isBlank()
+            ? scopeType.isBlank() ? "Organization" :
+            scopeType
+            : null;
+
+        if (resolveScopeType != null) {
+          pendingMemberships.add(
+              buildMembership(user.getId(), resolveScopeType, scopeId,
+                  orgMember));
+        } else if (orgId != null && !orgId.isBlank()) {
+          // giữ tương thích cũ: cột 6/7 -> Organization
+          pendingMemberships.add(
+              buildMembership(user.getId(), "Organization", orgId, orgMember));
+        }
+
         created++;
+      }
+
+      // gọi bulk một lần (nhanh và hợp lý nhất)
+      if (!pendingMemberships.isEmpty()) {
+        try {
+          organizationClient.bulkCreateMembership(pendingMemberships);
+        } catch (Exception ex) {
+          errors.add("Bulk membership failed: " + ex.getMessage());
+          // fallback: thử từng cái (không bắt buộc)
+          for (var req : pendingMemberships) {
+            try {
+              organizationClient.createMembershipV2(req);
+            } catch (Exception ex2) {
+              errors.add("Membership fail for userId=" + req.getUserId() +
+                  " scopeId=" + req.getScopeId() + ": " + ex2.getMessage());
+            }
+          }
+        }
       }
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
     return new BulkImportResult(total, created, skipped, errors);
+  }
+
+  // helper
+  private CreateOrganizationMemberRequest buildMembership(
+      String userId, String scopeType, String scopeId, String roleText) {
+
+    // Chuẩn hóa role cho OrganizationService v2
+    String normalized =
+        (roleText == null || roleText.isBlank()) ? "Student" : roleText.trim();
+    if (normalized.equalsIgnoreCase("SUPERADMIN")) {
+      normalized = "SuperAdmin";
+    }
+    if (normalized.equalsIgnoreCase("ADMIN")) {
+      normalized = "Admin";
+    }
+    if (normalized.equalsIgnoreCase("TEACHER")) {
+      normalized = "Teacher";
+    }
+    if (normalized.equalsIgnoreCase("STUDENT")) {
+      normalized = "Student";
+    }
+
+    com.codecampus.identity.dto.request.org.CreateOrganizationMemberRequest
+        req =
+        new com.codecampus.identity.dto.request.org.CreateOrganizationMemberRequest();
+    req.setUserId(userId);
+    req.setScopeType(scopeType); // Organization|Grade|Class
+    req.setScopeId(scopeId);
+    req.setRole(normalized);     // "Admin"/"Teacher"/"Student"/"SuperAdmin"
+    req.setActive(true);
+    return req;
   }
 
   @PreAuthorize("hasRole('ADMIN')")

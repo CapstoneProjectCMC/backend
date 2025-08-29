@@ -159,7 +159,18 @@ services:
       - PAYMENT_USERNAME=${PAYMENT_USERNAME}
       - PAYMENT_DB_PASSWORD=${PAYMENT_DB_PASSWORD}
       - REDIS_PASSWORD=${REDIS_PASSWORD}
-    ports: [ "8090:8090" ]
+    ports: [ "8091:8091" ]
+    networks: [ backend ]
+
+  organization-service:
+    image: ${DOCKERHUB_USER}/codecampus-organization-service:${IMAGE_TAG:-latest}
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - ORGANIZATION_DATABASE=${ORGANIZATION_DATABASE}
+      - ORGANIZATION_USERNAME=${ORGANIZATION_USERNAME}
+      - ORGANIZATION_DB_PASSWORD=${ORGANIZATION_DB_PASSWORD}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    ports: [ "8092:8092" ]
     networks: [ backend ]
 
   file-service:

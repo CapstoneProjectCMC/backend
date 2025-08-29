@@ -33,7 +33,12 @@ builder.Services.Configure<AppSettings>(appSettingsSection);
 var appSettings = appSettingsSection?.Get<AppSettings>();
 builder.Services.AddSingleton(appSettings ?? new AppSettings());
 
-builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+builder.Services.AddControllers().AddJsonOptions(x =>
+{
+    x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    x.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+    x.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+});
 
 builder.Services.AddHttpContextAccessor();
 

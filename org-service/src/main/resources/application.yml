@@ -1,0 +1,40 @@
+server:
+  port: 8092
+  servlet:
+    context-path: /org
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5441/org_db
+    username: postgres_org
+    password: dinhanst2832004
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+  kafka:
+    bootstrap-servers: localhost:9094
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+  #      acks: all
+  #      retries: 3
+  #      # optional: gi?m latency
+  #      linger-ms: 5            # g?p record <= 5 MS r?i m?i g?i
+  #      batch-size: 16384       # 16 KB
+  #      compression-type: lz4   # n�n nh? ? gi?m b?ng th�ng
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+
+
+app:
+  event:
+    organization-events: "organization-events"
+    organization-member-events: "organization-member-events"
+  services:
+    file: http://localhost:8082/file

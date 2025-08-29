@@ -4,6 +4,7 @@ import com.codecampus.identity.configuration.config.AuthenticationRequestInterce
 import com.codecampus.identity.dto.common.ApiResponse;
 import com.codecampus.identity.dto.request.org.CreateOrganizationMemberRequest;
 import com.codecampus.identity.dto.response.org.PrimaryOrgResponse;
+import java.util.List;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,4 +31,17 @@ public interface OrganizationClient {
       produces = MediaType.APPLICATION_JSON_VALUE)
   ApiResponse<Void> createMembership(
       @RequestBody CreateOrganizationMemberRequest request);
+
+  @PostMapping(
+      value = "/add-v2",
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE
+  )
+  ApiResponse<Void> createMembershipV2(
+      @RequestBody CreateOrganizationMemberRequest request);
+
+  // bulk
+  @PostMapping(value = "/bulk-add", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  ApiResponse<Void> bulkCreateMembership(
+      @RequestBody List<CreateOrganizationMemberRequest> requests);
 }

@@ -134,9 +134,19 @@ spring:
             - name: RateLimiter
               args:
                 routeId: post_service
-        - id: organization_service
+        - id: payment_service
           #          uri: https://localhost:8091
           uri: http://localhost:8091
+          predicates:
+            - Path=${app.api-prefix}/payment/**
+          filters:
+            - StripPrefix=2
+            - name: RateLimiter
+              args:
+                routeId: payment_service
+        - id: organization_service
+          #          uri: https://localhost:8092
+          uri: http://localhost:8092
           predicates:
             - Path=${app.api-prefix}/org/**
           filters:
@@ -197,6 +207,14 @@ rate-limiter:
       refillTokens: 125
       refillDuration: 60
     post_service:
+      capacity: 125
+      refillTokens: 125
+      refillDuration: 60
+    payment_service:
+      capacity: 125
+      refillTokens: 125
+      refillDuration: 60
+    organization_service:
       capacity: 125
       refillTokens: 125
       refillDuration: 60
