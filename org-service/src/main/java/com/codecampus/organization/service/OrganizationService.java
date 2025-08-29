@@ -1,26 +1,28 @@
 package com.codecampus.organization.service;
 
-import com.codecampus.constant.ScopeType;
+import com.codecampus.organization.dto.common.PageResponse;
 import com.codecampus.organization.dto.request.CreateOrganizationForm;
 import com.codecampus.organization.dto.request.UpdateOrganizationForm;
 import com.codecampus.organization.dto.response.OrganizationResponse;
 import com.codecampus.organization.entity.Organization;
+import com.codecampus.organization.exception.AppException;
+import com.codecampus.organization.exception.ErrorCode;
 import com.codecampus.organization.helper.AuthenticationHelper;
 import com.codecampus.organization.helper.OrganizationHelper;
+import com.codecampus.organization.helper.PageResponseHelper;
 import com.codecampus.organization.mapper.OrganizationMapper;
 import com.codecampus.organization.repository.OrganizationRepository;
 import com.codecampus.organization.service.kafka.OrganizationEventProducer;
-import events.org.OrganizationEvent;
 import events.org.data.OrganizationPayload;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 @Service
 @RequiredArgsConstructor
@@ -28,12 +30,13 @@ import org.springframework.util.StringUtils;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class OrganizationService {
   OrganizationRepository organizationRepository;
+  BlockService blockService;
   OrganizationMapper organizationMapper;
   OrganizationEventProducer eventProducer;
   OrganizationHelper organizationHelper;
 
   @Transactional
-  public OrganizationResponse createOrganization(
+  public void create(
       CreateOrganizationForm form) {
 
     String logoUrl = organizationHelper.uploadIfAny(form.getLogo());
@@ -53,88 +56,55 @@ public class OrganizationService {
     // publish CREATED
     OrganizationPayload payload =
         organizationMapper.toOrganizationPayloadFromOrganization(o);
-    eventProducer.publish(OrganizationEvent.builder()
-        .type(OrganizationEvent.Type.CREATED)
-        .id(o.getId())
-        .scopeType(ScopeType.Organization)
-        .payload(payload)
-        .build());
-
-    return organizationMapper.toOrganizationResponseFromOrganization(o);
+    eventProducer.publishCreated(o.getId(), payload);
   }
 
   @Transactional
-  public OrganizationResponse updateOrganization(
+  public void update(
       String id,
       UpdateOrganizationForm form) {
     Organization o = organizationRepository.findById(id)
         .orElseThrow(
-            () -> new IllegalArgumentException("Organization not found"));
+            () -> new AppException(ErrorCode.ORGANIZATION_NOT_FOUND));
+    String logoUrl = organizationHelper.uploadIfAny(form.getLogo());
 
-    if (StringUtils.hasText(form.getDescription())) {
-      o.setDescription(form.getDescription());
-    }
-    if (StringUtils.hasText(form.getEmail())) {
-      o.setEmail(form.getEmail());
-    }
-    if (StringUtils.hasText(form.getPhone())) {
-      o.setPhone(form.getPhone());
-    }
-    if (StringUtils.hasText(form.getAddress())) {
-      o.setAddress(form.getAddress());
-    }
-    if (StringUtils.hasText(form.getStatus())) {
-      o.setStatus(form.getStatus());
-    }
-
-    if (form.getLogo() != null && !form.getLogo().isEmpty()) {
-      String logoUrl = organizationHelper.uploadIfAny(form.getLogo());
-      o.setLogoUrl(logoUrl);
-    }
+    organizationMapper
+        .patchUpdateOrganizationFromUpdateOrganizationForm(form, o);
+    o.setLogoUrl(logoUrl);
 
     o = organizationRepository.save(o);
 
     // publish UPDATED
     OrganizationPayload payload =
         organizationMapper.toOrganizationPayloadFromOrganization(o);
-    eventProducer.publish(OrganizationEvent.builder()
-        .type(OrganizationEvent.Type.UPDATED)
-        .id(o.getId())
-        .scopeType(ScopeType.Organization)
-        .payload(payload)
-        .build());
-
-    return organizationMapper.toOrganizationResponseFromOrganization(o);
+    eventProducer.publishUpdated(o.getId(), payload);
   }
 
   @Transactional
-  public void deleteOrganization(String id) {
+  public void delete(String id) {
     String deletedBy = AuthenticationHelper.getMyUsername();
     Organization o = organizationRepository.findById(id)
         .orElseThrow(
-            () -> new IllegalArgumentException("Organization not found"));
+            () -> new AppException(ErrorCode.ORGANIZATION_NOT_FOUND));
     o.markDeleted(deletedBy);
     organizationRepository.save(o);
 
-    eventProducer.publish(OrganizationEvent.builder()
-        .type(OrganizationEvent.Type.DELETED)
-        .id(o.getId())
-        .scopeType(ScopeType.Organization)
-        .payload(null)
-        .build());
+    eventProducer.publishDeleted(o.getId());
   }
 
-  public List<OrganizationResponse> getAllOrganizations() {
-    return organizationRepository.findAll()
-        .stream()
-        .map(organizationMapper::toOrganizationResponseFromOrganization)
-        .collect(Collectors.toList());
+  public PageResponse<OrganizationResponse> list(
+      int page, int size) {
+    Pageable pageable = PageRequest.of(Math.max(page - 1, 0), size);
+    Page<Organization> data = organizationRepository.findAll(pageable);
+    Page<OrganizationResponse> mapped =
+        data.map(organizationMapper::toOrganizationResponseFromOrganization);
+    return PageResponseHelper.toPageResponse(mapped, page);
   }
 
-  public OrganizationResponse getOrganizationById(String id) {
+  public OrganizationResponse get(String id) {
     return organizationRepository.findById(id)
         .map(organizationMapper::toOrganizationResponseFromOrganization)
         .orElseThrow(
-            () -> new IllegalArgumentException("Organization not found"));
+            () -> new AppException(ErrorCode.ORGANIZATION_NOT_FOUND));
   }
 }

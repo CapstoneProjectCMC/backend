@@ -1,5 +1,6 @@
 package com.codecampus.identity.service.account;
 
+import static com.codecampus.identity.constant.authentication.AuthenticationConstant.ADMIN_ROLE;
 import static com.codecampus.identity.constant.authentication.AuthenticationConstant.STUDENT_ROLE;
 import static com.codecampus.identity.constant.authentication.AuthenticationConstant.TEACHER_ROLE;
 
@@ -8,7 +9,9 @@ import com.codecampus.identity.dto.request.authentication.ChangePasswordRequest;
 import com.codecampus.identity.dto.request.authentication.PasswordCreationRequest;
 import com.codecampus.identity.dto.request.authentication.UserCreationRequest;
 import com.codecampus.identity.dto.request.authentication.UserUpdateRequest;
+import com.codecampus.identity.dto.request.org.BulkAddMembersRequest;
 import com.codecampus.identity.dto.request.org.CreateOrganizationMemberRequest;
+import com.codecampus.identity.dto.request.org.MemberInfo;
 import com.codecampus.identity.entity.account.Role;
 import com.codecampus.identity.entity.account.User;
 import com.codecampus.identity.exception.AppException;
@@ -16,13 +19,10 @@ import com.codecampus.identity.exception.ErrorCode;
 import com.codecampus.identity.helper.AuthenticationHelper;
 import com.codecampus.identity.helper.UserHelper;
 import com.codecampus.identity.mapper.authentication.UserMapper;
-import com.codecampus.identity.mapper.client.UserProfileMapper;
 import com.codecampus.identity.mapper.kafka.UserPayloadMapper;
 import com.codecampus.identity.repository.account.RoleRepository;
 import com.codecampus.identity.repository.account.UserRepository;
 import com.codecampus.identity.repository.httpclient.org.OrganizationClient;
-import com.codecampus.identity.repository.httpclient.profile.ProfileClient;
-import com.codecampus.identity.service.authentication.OtpService;
 import com.codecampus.identity.service.kafka.UserEventProducer;
 import events.user.data.UserProfileCreationPayload;
 import jakarta.servlet.http.HttpServletResponse;
@@ -73,16 +73,13 @@ import org.springframework.web.multipart.MultipartFile;
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserService {
-  OtpService otpService;
   UserRepository userRepository;
   RoleRepository roleRepository;
 
   UserMapper userMapper;
-  UserProfileMapper userProfileMapper;
   UserPayloadMapper userPayloadMapper;
 
   PasswordEncoder passwordEncoder;
-  ProfileClient profileClient;
   OrganizationClient organizationClient;
   AuthenticationHelper authenticationHelper;
   UserHelper userHelper;
@@ -106,8 +103,15 @@ public class UserService {
     createCommonUser(userCreationRequest, TEACHER_ROLE);
   }
 
+  @PreAuthorize("hasRole('ADMIN')")
   @Transactional
-  public void createCommonUser(
+  public void createAdmin(
+      UserCreationRequest userCreationRequest) {
+    createCommonUser(userCreationRequest, ADMIN_ROLE);
+  }
+
+  @Transactional
+  public User createCommonUser(
       UserCreationRequest request,
       String roleName) {
     authenticationHelper.checkExistsUsernameEmail(
@@ -125,29 +129,48 @@ public class UserService {
 
     try {
       user = userRepository.save(user);
-      if (StringUtils.hasText(request.getOrganizationId())) {
-        CreateOrganizationMemberRequest
-            createOrganizationMemberRequest =
-            new CreateOrganizationMemberRequest();
-        createOrganizationMemberRequest.setUserId(user.getId());
-        createOrganizationMemberRequest.setScopeId(
-            request.getOrganizationId());
-        createOrganizationMemberRequest.setRole(
-            StringUtils.hasText(request.getOrganizationMemberRole())
-                ? request.getOrganizationMemberRole()
-                : "Student"
-        );
-        organizationClient.createMembership(
-            createOrganizationMemberRequest);
-      }
       UserProfileCreationPayload profilePayload =
           userPayloadMapper.toUserProfileCreationPayloadFromUserCreationRequest(
               request);
       userEventProducer.publishRegisteredUserEvent(
           user, profilePayload);
+
+      return user;
     } catch (DataIntegrityViolationException e) {
       throw new AppException(ErrorCode.USER_ALREADY_EXISTS);
     }
+  }
+
+  @PreAuthorize("hasRole('ADMIN')")
+  @Transactional
+  public User createUserOrg(
+      UserCreationRequest request,
+      String roleName,
+      String orgId,
+      String orgMemberRole,
+      String blockId,
+      String blockRole) {
+
+    User user = createCommonUser(request, roleName);
+    var orgRequest = new CreateOrganizationMemberRequest();
+    orgRequest.setUserId(user.getId());
+    orgRequest.setScopeType("Organization");
+    orgRequest.setScopeId(orgId);
+    orgRequest.setRole(orgMemberRole == null ? "Student" : orgMemberRole);
+    orgRequest.setActive(true);
+    organizationClient.addToOrg(orgId, orgRequest);
+
+    if (blockId != null && !blockId.isBlank()) {
+      var bRequest = new CreateOrganizationMemberRequest();
+      bRequest.setUserId(user.getId());
+      bRequest.setScopeType("Grade");
+      bRequest.setScopeId(blockId);
+      bRequest.setRole(blockRole == null ? orgRequest.getRole() : blockRole);
+      bRequest.setActive(true);
+      organizationClient.addToBlock(blockId, bRequest);
+    }
+
+    return user;
   }
 
   /**
@@ -262,8 +285,8 @@ public class UserService {
     int total = 0, created = 0, skipped = 0;
     List<String> errors = new ArrayList<>();
     // gom các yêu cầu membership để gọi 1 lượt
-    List<CreateOrganizationMemberRequest>
-        pendingMemberships = new ArrayList<>();
+    List<CreateOrganizationMemberRequest> bulkOrg = new ArrayList<>();
+    List<CreateOrganizationMemberRequest> bulkBlock = new ArrayList<>();
 
     try (Workbook wb = new XSSFWorkbook(file.getInputStream())) {
       Sheet sheet = wb.getSheetAt(0);
@@ -343,34 +366,28 @@ public class UserService {
             : null;
 
         if (resolveScopeType != null) {
-          pendingMemberships.add(
-              buildMembership(user.getId(), resolveScopeType, scopeId,
-                  orgMember));
+          if ("Grade".equalsIgnoreCase(resolveScopeType)) {
+            bulkBlock.add(
+                buildMembership(user.getId(), "Grade", scopeId, orgMember));
+          } else {
+            bulkOrg.add(buildMembership(user.getId(), "Organization", scopeId,
+                orgMember));
+          }
         } else if (orgId != null && !orgId.isBlank()) {
-          // giữ tương thích cũ: cột 6/7 -> Organization
-          pendingMemberships.add(
+          bulkOrg.add(
               buildMembership(user.getId(), "Organization", orgId, orgMember));
         }
 
         created++;
       }
 
-      // gọi bulk một lần (nhanh và hợp lý nhất)
-      if (!pendingMemberships.isEmpty()) {
-        try {
-          organizationClient.bulkCreateMembership(pendingMemberships);
-        } catch (Exception ex) {
-          errors.add("Bulk membership failed: " + ex.getMessage());
-          // fallback: thử từng cái (không bắt buộc)
-          for (var req : pendingMemberships) {
-            try {
-              organizationClient.createMembershipV2(req);
-            } catch (Exception ex2) {
-              errors.add("Membership fail for userId=" + req.getUserId() +
-                  " scopeId=" + req.getScopeId() + ": " + ex2.getMessage());
-            }
-          }
-        }
+      if (!bulkOrg.isEmpty()) {
+        organizationClient.bulkAddToOrg(resolveOrgIdFromList(bulkOrg),
+            mapToBulk(bulkOrg));
+      }
+      if (!bulkBlock.isEmpty()) {
+        organizationClient.bulkAddToBlock(resolveBlockIdFromList(bulkBlock),
+            mapToBulk(bulkBlock));
       }
     } catch (Exception e) {
       throw new RuntimeException(e);
@@ -379,6 +396,32 @@ public class UserService {
   }
 
   // helper
+
+  private String resolveOrgIdFromList(
+      List<CreateOrganizationMemberRequest> list) {
+    return list.getFirst().getScopeId(); // giả định 1 file import cho 1 org
+  }
+
+  private String resolveBlockIdFromList(
+      List<CreateOrganizationMemberRequest> list) {
+    return list.getFirst().getScopeId();
+  }
+
+  private BulkAddMembersRequest mapToBulk(
+      List<CreateOrganizationMemberRequest> list) {
+    var items = list.stream().map(req ->
+        MemberInfo.builder()
+            .userId(req.getUserId())
+            .role(req.getRole())
+            .active(req.isActive())
+            .build()
+    ).toList();
+    return BulkAddMembersRequest.builder()
+        .members(items)
+        .active(true)
+        .build();
+  }
+
   private CreateOrganizationMemberRequest buildMembership(
       String userId, String scopeType, String scopeId, String roleText) {
 

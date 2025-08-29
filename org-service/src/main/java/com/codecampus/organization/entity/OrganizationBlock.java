@@ -7,7 +7,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,8 +23,7 @@ import org.hibernate.annotations.Where;
 @Builder
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 @Entity
-@Table(name = "organization_blocks",
-    uniqueConstraints = @UniqueConstraint(columnNames = {"org_id", "code"}))
+@Table(name = "organization_blocks")
 @SQLDelete(sql = "UPDATE organization_blocks SET deleted_by = 'system', deleted_at = now() WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
 public class OrganizationBlock extends AuditMetadata {
@@ -36,11 +34,12 @@ public class OrganizationBlock extends AuditMetadata {
   @Column(name = "org_id", nullable = false)
   String orgId;
 
-  @Column(nullable = false, length = 150)
+  @Column(nullable = false, length = 255)
   String name;
 
-  @Column(nullable = false, length = 50)
+  @Column(nullable = false, length = 100)
   String code; // ví dụ: G10, SCI, HR...
 
+  @Column(length = 1000)
   String description;
 }

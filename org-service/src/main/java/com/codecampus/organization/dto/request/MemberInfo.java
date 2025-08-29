@@ -5,18 +5,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
 @AllArgsConstructor
-public class UpdateOrganizationForm {
-  String description;
-  String email;
-  String phone;
-  String address;
-  String status;
-
-  MultipartFile logo;
+public class MemberInfo {
+  String userId;
+  String role; // ưu tiên role của item
+  Boolean active; // nếu null => dùng active ở ngoài
 }

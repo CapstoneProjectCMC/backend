@@ -94,7 +94,6 @@
                 <artifactId>mapstruct</artifactId>
                 <version>${mapstruct.version}</version>
             </dependency>
-
             <!-- ========== BOMs (import scoped) ========= -->
             <dependency>
                 <groupId>org.springframework.cloud</groupId>

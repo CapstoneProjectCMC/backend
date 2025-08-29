@@ -10,12 +10,8 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateOrganizationRequest {
+public class UpdateBlockRequest {
   String name;
+  String code;
   String description;
-  String logoUrl;
-  String email;
-  String phone;
-  String address;
-  String status;
 }

@@ -11,7 +11,6 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateBlockRequest {
-  String orgId;
   String name;
   String code;
   String description;

@@ -1,11 +1,12 @@
 package com.codecampus.organization.mapper;
 
-import com.codecampus.organization.dto.request.UpdateOrganizationRequest;
+import com.codecampus.organization.dto.request.UpdateOrganizationForm;
 import com.codecampus.organization.dto.response.OrganizationResponse;
 import com.codecampus.organization.entity.Organization;
 import events.org.data.OrganizationPayload;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
@@ -13,8 +14,10 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 public interface OrganizationMapper {
 
   @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-  void patchUpdateOrganizationFromUpdateOrganizationRequest(
-      UpdateOrganizationRequest request,
+  @Mapping(target = "logoUrl", ignore = true)
+  @Mapping(target = "name", ignore = true)
+  void patchUpdateOrganizationFromUpdateOrganizationForm(
+      UpdateOrganizationForm request,
       @MappingTarget Organization organization);
 
   default OrganizationPayload toOrganizationPayloadFromOrganization(

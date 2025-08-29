@@ -1,22 +1,17 @@
 package com.codecampus.organization.mapper;
 
-import com.codecampus.organization.dto.response.BlockResponse;
+import com.codecampus.organization.dto.request.UpdateBlockRequest;
 import com.codecampus.organization.entity.OrganizationBlock;
+import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 
 @Mapper(componentModel = "spring")
 public interface OrganizationBlockMapper {
 
-  default BlockResponse toBlockResponseFromOrganizationBlock(
-      OrganizationBlock b) {
-    return BlockResponse.builder()
-        .id(b.getId())
-        .orgId(b.getOrgId())
-        .name(b.getName())
-        .code(b.getCode())
-        .description(b.getDescription())
-        .createdAt(b.getCreatedAt())
-        .updatedAt(b.getUpdatedAt())
-        .build();
-  }
+  @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+  void patchUpdateOrganizationBlockFromUpdateBlockRequest(
+      UpdateBlockRequest request,
+      @MappingTarget OrganizationBlock organizationBlock);
 }

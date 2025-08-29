@@ -10,7 +10,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -27,11 +26,7 @@ import org.hibernate.annotations.Where;
 @Builder
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 @Entity
-@Table(
-    name = "organization_members",
-    uniqueConstraints = @UniqueConstraint(columnNames = {"user_id",
-        "scope_type", "scope_id"})
-)
+@Table(name = "organization_members")
 @SQLDelete(sql = "UPDATE organization_members SET deleted_by = 'system', deleted_at = now() WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
 public class OrganizationMember extends AuditMetadata {

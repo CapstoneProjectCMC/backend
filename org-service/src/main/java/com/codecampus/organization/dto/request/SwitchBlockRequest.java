@@ -5,18 +5,16 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
 @AllArgsConstructor
-public class UpdateOrganizationForm {
-  String description;
-  String email;
-  String phone;
-  String address;
-  String status;
-
-  MultipartFile logo;
+public class SwitchBlockRequest {
+  String fromBlockId;
+  String toBlockId;
+  /**
+   * Optional: nếu truyền sẽ override role ở block mới (mặc định giữ role cũ hoặc Student)
+   */
+  String role;
 }

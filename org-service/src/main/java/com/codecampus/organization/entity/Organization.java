@@ -31,13 +31,24 @@ public class Organization extends AuditMetadata {
   @GeneratedValue(strategy = GenerationType.UUID)
   String id;
 
-  @Column(nullable = false, unique = true, length = 150)
+  @Column(nullable = false, length = 255)
   String name;
 
+  @Column(length = 2000)
   String description;
+
+  @Column(length = 512)
   String logoUrl;
+
+  @Column(length = 255)
   String email;
+
+  @Column(length = 100)
   String phone;
+
+  @Column(length = 500)
   String address;
-  String status;     // Active/Inactive/Archived...
+
+  @Column(length = 50)
+  String status; // Active/Inactive/Archived
 }
