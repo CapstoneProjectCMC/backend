@@ -267,55 +267,6 @@ namespace FileService.Service.Implementation
             return result;
         }
 
-        public async Task<FileDocumentModel> GetVideoDetailById(Guid videoId)
-        {
-            var video = await _fileDocumentRepository.GetByIdAsync(videoId);
-            if (video == null || video.IsRemoved)
-                throw new ErrorException(StatusCodeEnum.A02);
-
-            var tags = video.TagIds.Any()
-                ? await _tagRepository.FilterAsync(Builders<Tags>.Filter.In(t => t.Id, video.TagIds))
-                : new List<Tags>();
-
-            var tagDict = tags.ToDictionary(t => t.Id, t => new TagModel { Id = t.Id, Name = t.Label });
-
-            //lấy thông tin người tạo
-            var user = await _identityServiceClient.GetUserProfileAsync(video.CreatedBy.ToString());
-
-            // Tạo publicUrl URL từ MinIO
-            var publicUrl = await _minioService.GetPublicFileUrlAsync(video.Url.TrimStart('/')); // Loại bỏ '/' đầu nếu có
-
-            var result = new FileDocumentModel
-            {
-                Id = video.Id,
-                FileName = video.FileName,
-                FileType = video.FileType,
-                Url = publicUrl,
-                Size = video.Size,
-                Checksum = video.Checksum,
-                Category = video.Category,
-                IsActive = video.IsActive,
-                Tags = video.TagIds.Select(id => tagDict.ContainsKey(id) ? tagDict[id] : new TagModel { Id = id, Name = "[Unknown]" }).ToList(),
-                ViewCount = video.ViewCount,
-                Rating = video.Rating,
-                Description = video.Description,
-                OrgId = video.OrgId,
-                ThumbnailUrl = video.ThumbnailUrl,
-                Duration = video.Duration,
-                IsLectureVideo = video.IsLectureVideo,
-                IsTextbook = video.IsTextbook,
-                TranscodingStatus = video.TranscodingStatus,
-                AssociatedResourceIds = video.AssociatedResourceIds,
-                HlsUrl = video.HlsUrl,
-                CreatedAt = video.CreatedAt,
-                CreatedBy = video.CreatedBy,
-                OrganizationId = _userContext.OrganizationId,
-                UserProfile = user ?? new UserProfileResponse()
-            };
-
-            return result;
-        }
-
         public async Task<FileUploadResult> AddFileAsync(AddFileDocumentDto dto)
         {
             if (dto.File.FileName.Length > 255)

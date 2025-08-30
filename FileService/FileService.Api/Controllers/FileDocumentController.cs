@@ -53,13 +53,6 @@ namespace FileService.Api.Controllers
             return Success(result);
         }
 
-        [HttpGet("video/{videoId}")]
-        public async Task<IActionResult> GetVideoById(Guid videoId)
-        {
-            var result = await _fileDocumentService.GetFileDetailById(videoId);
-            return Success(result);
-        }
-
         [HttpPost("add")]
         public async Task<IActionResult> AddFile([FromForm] AddFileDocumentDto dto)
         {
