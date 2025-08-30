@@ -153,7 +153,7 @@ namespace OrganizationService.Service.Implementation
             await _unitOfWork.SaveChangesAsync();
 
             //publish event after organization is created
-             _orgEventPublisher.PublishAsync(new {
+            await _orgEventPublisher.PublishAsync(new {
                 type = "CREATED",
                 id = entity.Id,
                 scopeType = "ORGANIZATION",

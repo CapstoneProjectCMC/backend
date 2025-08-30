@@ -1,4 +1,5 @@
 ﻿using FileService.Core.ApiModels;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
 namespace FileService.Api.Middlewares
@@ -6,17 +7,41 @@ namespace FileService.Api.Middlewares
     public class UserContextMiddleware
     {
         private readonly RequestDelegate _next;
-        public UserContextMiddleware(RequestDelegate next)
+        private readonly ILogger<UserContextMiddleware> _logger;
+        public UserContextMiddleware(RequestDelegate next, ILogger<UserContextMiddleware> logger)
         {
             _next = next;
+            _logger = logger;
         }
 
         public async Task InvokeAsync(HttpContext httpContext, AppSettings appsettings, UserContext userContext)
         {
+            // lấy token từ header Authorization
+            var token = httpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            if (!string.IsNullOrEmpty(token))
+            {
+                userContext.Token = token;
+                try
+                {
+                    var handler = new JwtSecurityTokenHandler();
+                    var jwtToken = handler.ReadJwtToken(token);
+                    var roles = string.Join(", ", jwtToken.Claims.Where(c => c.Type == "role" || c.Type == ClaimTypes.Role).Select(c => c.Value));
+                    _logger.LogInformation($"UserContextMiddleware: Token: {token.Substring(0, Math.Min(10, token.Length))}..., Roles: {roles}");
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogWarning($"UserContextMiddleware: Failed to parse JWT token: {ex.Message}");
+                }
+            }
+            else
+            {
+                _logger.LogWarning("UserContextMiddleware: No Bearer token provided in Authorization header");
+            }
+
             var userId = httpContext.User.Claims.FirstOrDefault(c => c.Type == "userId")?.Value;
             var email = httpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
             var sessionId = httpContext.User.Claims.FirstOrDefault(c => c.Type == "sessionId")?.Value;
-            var roles = httpContext.User.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToList();
+            var role = httpContext.User.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToList();
             var userType = httpContext.User.Claims.FirstOrDefault(c => c.Type == "userType")?.Value;
             var username = httpContext.User.Claims.FirstOrDefault(c => c.Type == "username")?.Value;
             var permissions = httpContext.User.Claims.Where(c => c.Type == "permissions").Select(c => c.Value).ToList();
@@ -44,9 +69,9 @@ namespace FileService.Api.Middlewares
                 userContext.SessionId = sid;
             }
 
-            if (roles != null && roles.Any())
+            if (role != null && role.Any())
             {
-                userContext.Roles = roles;
+                userContext.Roles = role;
             }
 
             if (!string.IsNullOrEmpty(username))

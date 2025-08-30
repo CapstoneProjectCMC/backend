@@ -26,7 +26,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 var config = builder.Configuration;
 
-var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+//var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
 // Add services to the container.
 var appSettingsSection = builder.Configuration.GetSection("AppSettings");
@@ -74,6 +74,7 @@ builder.Services.AddScoped<IFileDocumentService, FileDocumentService>();
 builder.Services.AddScoped<IFfmpegService, FfmpegService>();
 builder.Services.AddScoped<IMinioService, MinioService>();
 builder.Services.AddScoped<ITagService, TagService>();
+builder.Services.AddScoped<IIdentityServiceClient, IdentityServiceClient>();
 
 
 builder.Services.Configure<IdentityOptions>(options =>
