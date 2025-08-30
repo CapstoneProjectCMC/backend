@@ -46,10 +46,17 @@ namespace FileService.Api.Controllers
             return Success(files);
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetFileById(Guid id)
+        [HttpGet("file/{fileId}")]
+        public async Task<IActionResult> GetFileById(Guid fileId)
         {
-            var result = await _fileDocumentService.GetFileDetailById(id);
+            var result = await _fileDocumentService.GetFileDetailById(fileId);
+            return Success(result);
+        }
+
+        [HttpGet("video/{videoId}")]
+        public async Task<IActionResult> GetVideoById(Guid videoId)
+        {
+            var result = await _fileDocumentService.GetFileDetailById(videoId);
             return Success(result);
         }
 

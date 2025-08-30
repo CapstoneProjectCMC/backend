@@ -3,17 +3,32 @@ using FileService.Core.Exceptions;
 using MongoDB.Driver.Linq;
 using System;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace FileService.Core.ApiModels
 {
     public class PaginatedList<T>
     {
-        public IReadOnlyCollection<T> Datas{ get; }
-        public int CurrentPage { get; }
-        public int TotalPages { get; }
-        public int PageSize { get; } 
-        public int TotalElements { get; }
+        [JsonPropertyName("data")]
+        public IReadOnlyCollection<T> Datas{ get; set; }
+        public int CurrentPage { get; set; }
+        public int TotalPages { get; set; }
+        public int PageSize { get; set; } 
+        public int TotalElements { get; set; }
+
+        // Empty constructor for json deserialization
+        public PaginatedList() { }
+
+        //using when paginated data from external source like other microservice 
+        public void SetFromExternalSource(IReadOnlyCollection<T> items, int totalCount, int currentPage, int pageSize)
+        {
+            Datas = items;
+            TotalElements = totalCount;
+            CurrentPage = currentPage;
+            PageSize = pageSize;
+            TotalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+        }
 
         public PaginatedList(IReadOnlyCollection<T> items, int count, int currentPage, int pageSize)
         {

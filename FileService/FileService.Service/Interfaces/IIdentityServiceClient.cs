@@ -10,6 +10,6 @@ namespace FileService.Service.Interfaces
     public interface IIdentityServiceClient
     {
         Task<UserProfileResponse?> GetUserProfileAsync(string userId);
-        Task<List<UserProfileResponse>> GetAllUserProfilesAsync(int page, int size);
+        Task<List<UserProfileResponse>> GetAllUserProfilesAsync();
     }
 }

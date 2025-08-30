@@ -72,7 +72,10 @@ namespace FileService.Core.Enums
         [Description("Internal Server Error")]
         InternalServerError = 500,
 
-        [Description("Sai định dạng, không truy vấn được")]
-        D01 = 4008218
+        [Description("Không tìm thấy tài nguyên hoặc sai định dạng, không truy vấn được")]
+        D01 = 4008218,
+
+        [Description("No authentication token provided")]
+        D02 = 4018219,
     }
 }
