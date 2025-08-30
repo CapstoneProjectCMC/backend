@@ -24,6 +24,9 @@ BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard
 
 var builder = WebApplication.CreateBuilder(args);
 
+//env trong docker override fle json
+builder.Configuration.AddEnvironmentVariables();
+
 var config = builder.Configuration;
 
 //var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";

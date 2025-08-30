@@ -182,6 +182,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Staging
       - MongoDbSettings__ConnectionStrings=mongodb://${FILE_USERNAME}:${FILE_PASSWORD}@file-db:27017/${FILE_DATABASE}?authSource=${FILE_DATABASE}
       - MongoDbSettings__DatabaseName=${FILE_DATABASE}
+      - AppSettings__ApiSettings__UserServiceBaseUrl=http://profile-service:8081
       - AppSettings__MinioConfig__Endpoint=minio
       - AppSettings__MinioConfig__PublicEndpoint=localhost
       - AppSettings__MinioConfig__Port=9000
