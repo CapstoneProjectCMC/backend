@@ -45,7 +45,7 @@ public class OrganizationMember extends AuditMetadata {
   String scopeId; // id của Organization hoặc Block
 
   @Column(nullable = false, length = 32)
-  String role; // SuperAdmin|Admin|Teacher|Student
+  String role; // ADMIN|TEACHER|STUDENT
 
   @Column(nullable = false)
   boolean isActive = true;

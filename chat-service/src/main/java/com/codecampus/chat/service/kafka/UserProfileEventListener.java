@@ -3,7 +3,7 @@ package com.codecampus.chat.service.kafka;
 import com.codecampus.chat.entity.Conversation;
 import com.codecampus.chat.mapper.UserMapper;
 import com.codecampus.chat.repository.ConversationRepository;
-import com.codecampus.chat.service.cache.UserSummaryCacheService;
+import com.codecampus.chat.service.cache.UserProfileSummaryCacheService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dtos.UserProfileSummary;
 import events.user.UserProfileEvent;
@@ -23,7 +23,7 @@ public class UserProfileEventListener {
 
   ObjectMapper objectMapper;
   UserMapper userMapper;
-  UserSummaryCacheService cache;
+  UserProfileSummaryCacheService cache;
   ConversationRepository conversationRepository;
 
   @KafkaListener(

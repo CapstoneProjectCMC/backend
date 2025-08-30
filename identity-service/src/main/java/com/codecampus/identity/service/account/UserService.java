@@ -10,6 +10,7 @@ import com.codecampus.identity.dto.request.authentication.PasswordCreationReques
 import com.codecampus.identity.dto.request.authentication.UserCreationRequest;
 import com.codecampus.identity.dto.request.authentication.UserUpdateRequest;
 import com.codecampus.identity.dto.request.org.BulkAddMembersRequest;
+import com.codecampus.identity.dto.request.org.BulkUserCreationRequest;
 import com.codecampus.identity.dto.request.org.CreateOrganizationMemberRequest;
 import com.codecampus.identity.dto.request.org.MemberInfo;
 import com.codecampus.identity.entity.account.Role;
@@ -30,9 +31,11 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -174,6 +177,262 @@ public class UserService {
   }
 
   /**
+   * Tạo nhiều user (JSON) và gắn membership vào Organization/Block theo yêu cầu.
+   * - Nếu truyền cả orgId & blockId: add vào org trước, sau đó add vào block.
+   * - Nếu chỉ truyền orgId: add vào org.
+   * - Nếu chỉ truyền blockId: add vào block (service sẽ tự đảm bảo add vào org của block).
+   */
+  @PreAuthorize("hasRole('ADMIN')")
+  @Transactional
+  public BulkImportResult bulkCreateUsersAndAssign(
+      BulkUserCreationRequest req) {
+    int total = 0, created = 0, skipped = 0;
+    java.util.List<String> errors = new java.util.ArrayList<>();
+
+    String defaultRoleName =
+        req.getDefaultRole() == null || req.getDefaultRole().isBlank()
+            ? STUDENT_ROLE
+            : req.getDefaultRole().toUpperCase(Locale.ROOT);
+
+    java.util.List<MemberInfo> orgMembers = new java.util.ArrayList<>();
+    java.util.List<MemberInfo> blockMembers = new java.util.ArrayList<>();
+
+    for (UserCreationRequest u : req.getUsers()) {
+      total++;
+      try {
+        // tạo user với role hệ thống
+        User user = createCommonUser(
+            // đảm bảo password có trong request; nếu không, dùng tempPassword
+            userHelper.ensurePassword(u),
+            defaultRoleName
+        );
+
+        // gom membership để gọi bulk 1 lượt
+        if (req.getOrgId() != null && !req.getOrgId().isBlank()) {
+          orgMembers.add(MemberInfo.builder()
+              .userId(user.getId())
+              .role(userHelper.normalizeOrgRole(req.getOrgMemberRole()))
+              .active(true)
+              .build());
+        }
+        if (req.getBlockId() != null && !req.getBlockId().isBlank()) {
+          blockMembers.add(MemberInfo.builder()
+              .userId(user.getId())
+              .role(userHelper.normalizeOrgRole(
+                  req.getBlockRole() != null ? req.getBlockRole()
+                      : req.getOrgMemberRole()))
+              .active(true)
+              .build());
+        }
+
+        created++;
+      } catch (Exception ex) {
+        skipped++;
+        errors.add("User " + u.getUsername() + "/" + u.getEmail() + ": " +
+            ex.getMessage());
+      }
+    }
+
+    // gọi org-service bulk (nếu có)
+    if (!orgMembers.isEmpty()) {
+      organizationClient.bulkAddToOrg(
+          req.getOrgId(),
+          BulkAddMembersRequest.builder()
+              .active(true)
+              .defaultRole(null) // đã set trên từng item
+              .members(orgMembers)
+              .build()
+      );
+    }
+    if (!blockMembers.isEmpty()) {
+      organizationClient.bulkAddToBlock(
+          req.getBlockId(),
+          BulkAddMembersRequest.builder()
+              .active(true)
+              .defaultRole(null)
+              .members(blockMembers)
+              .build()
+      );
+    }
+
+    return new BulkImportResult(total, created, skipped, errors);
+  }
+
+  /**
+   * Import users từ Excel, sau đó add tất cả vào 1 Organization cố định.
+   * File header tương tự /users/import, chỉ cần "username", "email", có thể bỏ cột orgId.
+   */
+  @PreAuthorize("hasRole('ADMIN')")
+  @Transactional
+  public BulkImportResult importUsersToOrg(String orgId, String orgMemberRole,
+                                           MultipartFile file) {
+    int total = 0, created = 0, skipped = 0;
+    java.util.List<String> errors = new java.util.ArrayList<>();
+    java.util.List<MemberInfo> members = new java.util.ArrayList<>();
+
+    try (Workbook wb = new XSSFWorkbook(file.getInputStream())) {
+      Sheet sheet = wb.getSheetAt(0);
+
+      for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+        total++;
+        Row r = sheet.getRow(i);
+        if (r == null) {
+          skipped++;
+          continue;
+        }
+
+        String username = getString(r, 0);
+        String email = getString(r, 1);
+        String firstName = getString(r, 2);
+        String lastName = getString(r, 3);
+        String display = getString(r, 4);
+        String roleName = Optional.of(getString(r, 5)).filter(s -> !s.isBlank())
+            .orElse(STUDENT_ROLE).toUpperCase(Locale.ROOT);
+
+        if (email.isBlank() || username.isBlank()) {
+          skipped++;
+          errors.add("Row " + (i + 1) + ": missing username/email");
+          continue;
+        }
+        if (userRepository.findByUsername(username).isPresent() ||
+            userRepository.findByEmail(email).isPresent()) {
+          skipped++;
+          continue;
+        }
+
+        Role role = roleRepository
+            .findById(roleName)
+            .orElseGet(() -> roleRepository.save(
+                Role.builder().name(roleName).description(roleName).build()));
+
+        User user = userRepository.save(User.builder()
+            .username(username)
+            .email(email)
+            .password(passwordEncoder.encode(tempPassword))
+            .roles(Set.of(role))
+            .enabled(true)
+            .build());
+
+        // event register + profile
+        UserCreationRequest userCreationRequest = UserCreationRequest.builder()
+            .username(username).email(email).firstName(firstName)
+            .lastName(lastName).displayName(display).build();
+        UserProfileCreationPayload profilePayload =
+            userPayloadMapper.toUserProfileCreationPayloadFromUserCreationRequest(
+                userCreationRequest);
+        userEventProducer.publishRegisteredUserEvent(user, profilePayload);
+
+        members.add(MemberInfo.builder()
+            .userId(user.getId())
+            .role(userHelper.normalizeOrgRole(orgMemberRole))
+            .active(true)
+            .build());
+
+        created++;
+      }
+
+      if (!members.isEmpty()) {
+        organizationClient.bulkAddToOrg(orgId,
+            BulkAddMembersRequest.builder()
+                .active(true)
+                .defaultRole(null)
+                .members(members)
+                .build());
+      }
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+    return new BulkImportResult(total, created, skipped, errors);
+  }
+
+  /**
+   * Import users từ Excel, sau đó add tất cả vào 1 Block cố định.
+   * Organization service sẽ tự đảm bảo join org (nếu user chưa ở org của block).
+   */
+  @PreAuthorize("hasRole('ADMIN')")
+  @Transactional
+  public BulkImportResult importUsersToBlock(String blockId, String blockRole,
+                                             MultipartFile file) {
+    int total = 0, created = 0, skipped = 0;
+    java.util.List<String> errors = new java.util.ArrayList<>();
+    java.util.List<MemberInfo> members = new java.util.ArrayList<>();
+
+    try (Workbook wb = new XSSFWorkbook(file.getInputStream())) {
+      Sheet sheet = wb.getSheetAt(0);
+
+      for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+        total++;
+        Row r = sheet.getRow(i);
+        if (r == null) {
+          skipped++;
+          continue;
+        }
+
+        String username = getString(r, 0);
+        String email = getString(r, 1);
+        String firstName = getString(r, 2);
+        String lastName = getString(r, 3);
+        String display = getString(r, 4);
+        String roleName = Optional.of(getString(r, 5)).filter(s -> !s.isBlank())
+            .orElse(STUDENT_ROLE).toUpperCase(Locale.ROOT);
+
+        if (email.isBlank() || username.isBlank()) {
+          skipped++;
+          errors.add("Row " + (i + 1) + ": missing username/email");
+          continue;
+        }
+        if (userRepository.findByUsername(username).isPresent() ||
+            userRepository.findByEmail(email).isPresent()) {
+          skipped++;
+          continue;
+        }
+
+        Role role = roleRepository
+            .findById(roleName)
+            .orElseGet(() -> roleRepository.save(
+                Role.builder().name(roleName).description(roleName).build()));
+
+        User user = userRepository.save(User.builder()
+            .username(username)
+            .email(email)
+            .password(passwordEncoder.encode(tempPassword))
+            .roles(Set.of(role))
+            .enabled(true)
+            .build());
+
+        // event register + profile
+        UserCreationRequest userCreationRequest = UserCreationRequest.builder()
+            .username(username).email(email).firstName(firstName)
+            .lastName(lastName).displayName(display).build();
+        UserProfileCreationPayload profilePayload =
+            userPayloadMapper.toUserProfileCreationPayloadFromUserCreationRequest(
+                userCreationRequest);
+        userEventProducer.publishRegisteredUserEvent(user, profilePayload);
+
+        members.add(MemberInfo.builder()
+            .userId(user.getId())
+            .role(userHelper.normalizeOrgRole(blockRole))
+            .active(true)
+            .build());
+
+        created++;
+      }
+
+      if (!members.isEmpty()) {
+        organizationClient.bulkAddToBlock(blockId,
+            BulkAddMembersRequest.builder()
+                .active(true)
+                .defaultRole(null)
+                .members(members)
+                .build());
+      }
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+    return new BulkImportResult(total, created, skipped, errors);
+  }
+
+  /**
    * Tạo hoặc cập nhật mật khẩu cho người dùng hiện tại.
    * <p>
    * - Ném lỗi nếu đã tồn tại mật khẩu.
@@ -280,178 +539,181 @@ public class UserService {
   }
 
   @PreAuthorize("hasRole('ADMIN')")
-  public BulkImportResult importUsers(
-      MultipartFile file) {
+  @Transactional
+  public BulkImportResult importUsers(MultipartFile file) {
     int total = 0, created = 0, skipped = 0;
     List<String> errors = new ArrayList<>();
-    // gom các yêu cầu membership để gọi 1 lượt
-    List<CreateOrganizationMemberRequest> bulkOrg = new ArrayList<>();
-    List<CreateOrganizationMemberRequest> bulkBlock = new ArrayList<>();
+
+    // Gom membership theo từng scope để gọi bulk theo nhóm
+    Map<String, List<MemberInfo>> orgMembersByOrgId = new HashMap<>();
+    Map<String, List<MemberInfo>> blockMembersByBlockId = new HashMap<>();
 
     try (Workbook wb = new XSSFWorkbook(file.getInputStream())) {
       Sheet sheet = wb.getSheetAt(0);
-      // Header đề xuất (giữ tương thích cũ):
-      // 0 username
-      // 1 email
-      // 2 firstName
-      // 3 lastName
-      // 4 displayName
-      // 5 role(ADMIN|TEACHER|STUDENT)  -> role hệ thống (User.roles)
-      // 6 organizationId               -> nếu có: tạo membership ORGANIZATION
-      // 7 organizationMemberRole       -> Admin|Teacher|Student (mặc định Student)
-      // 8 scopeType (optional)         -> Organization|Grade|Class (ưu tiên hơn cột 6/7 nếu có scopeId)
-      // 9 scopeId (optional)           -> GUID của Organization/Grade/Class
+
+      // Chỉ số cột (0-based)
+      final int IDX_USERNAME = 0; // A
+      final int IDX_EMAIL = 1; // B
+      final int IDX_FIRST_NAME = 2; // C
+      final int IDX_LAST_NAME = 3; // D
+      final int IDX_DISPLAY_NAME = 4; // E
+      final int IDX_USER_ROLE = 5; // F -> ADMIN|TEACHER|STUDENT
+      final int IDX_ORG_ID = 6; // G
+      final int IDX_ORG_MEMBER_ROLE = 7; // H -> Admin|Teacher|Student
+      final int IDX_BLOCK_ID = 8; // I
+      final int IDX_BLOCK_ROLE = 9; // J -> Admin|Teacher|Student
+      final int IDX_ACTIVE = 10; // K -> true|false
 
       for (int i = 1; i <= sheet.getLastRowNum(); i++) {
         total++;
         Row r = sheet.getRow(i);
         if (r == null) {
           skipped++;
+          errors.add("Row " + (i + 1) + ": empty row");
           continue;
         }
 
-        String username = getString(r, 0);
-        String email = getString(r, 1);
-        String firstName = getString(r, 2);
-        String lastName = getString(r, 3);
-        String display = getString(r, 4);
-        String roleName = Optional.of(getString(r, 5)).filter(s -> !s.isBlank())
-            .orElse(STUDENT_ROLE).toUpperCase(Locale.ROOT);
-        String orgId = getString(r, 6);
-        String orgMember = getString(r, 7);   // "Admin" | "Teacher" | "Student"
-        String scopeType = getString(r, 8);
-        String scopeId = getString(r, 9);
+        try {
+          // Đọc dữ liệu
+          String username = getString(r, IDX_USERNAME);
+          String email = getString(r, IDX_EMAIL);
+          String firstName = getString(r, IDX_FIRST_NAME);
+          String lastName = getString(r, IDX_LAST_NAME);
+          String displayName = getString(r, IDX_DISPLAY_NAME);
+          String userRoleRaw = getString(r, IDX_USER_ROLE);
 
-        if (email == null || email.isBlank() || username == null ||
-            username.isBlank()) {
-          skipped++;
-          errors.add("Row " + (i + 1) + ": missing username/email");
-          continue;
-        }
-        if (userRepository.findByUsername(username).isPresent() ||
-            userRepository.findByEmail(email).isPresent()) {
-          skipped++;
-          continue;
-        }
+          String orgId = getString(r, IDX_ORG_ID);
+          String orgRoleRaw = getString(r, IDX_ORG_MEMBER_ROLE);
 
-        Role role = roleRepository
-            .findById(roleName)
-            .orElseGet(() -> roleRepository.save(
-                Role.builder().name(roleName).description(roleName).build()));
+          String blockId = getString(r, IDX_BLOCK_ID);
+          String blockRoleRaw = getString(r, IDX_BLOCK_ROLE);
 
-        User user = userRepository.save(User.builder()
-            .username(username)
-            .email(email)
-            .password(passwordEncoder.encode(tempPassword))
-            .roles(Set.of(role))
-            .enabled(true)
-            .build());
+          Boolean active = parseBoolean(getString(r, IDX_ACTIVE), true);
 
-        // Gửi event đăng ký kèm profile
-        UserCreationRequest userCreationRequest = UserCreationRequest.builder()
-            .username(username).email(email).firstName(firstName)
-            .lastName(lastName).displayName(display)
-            .organizationId(orgId)                      // để backward compat
-            .organizationMemberRole(orgMember)
-            .build();
-        UserProfileCreationPayload profilePayload =
-            userPayloadMapper.toUserProfileCreationPayloadFromUserCreationRequest(
-                userCreationRequest);
-        userEventProducer.publishRegisteredUserEvent(user, profilePayload);
-
-        // Tạo yêu cầu membership (ưu tiên scopeType/scopeId nếu có)
-        String resolveScopeType = !scopeId.isBlank()
-            ? scopeType.isBlank() ? "Organization" :
-            scopeType
-            : null;
-
-        if (resolveScopeType != null) {
-          if ("Grade".equalsIgnoreCase(resolveScopeType)) {
-            bulkBlock.add(
-                buildMembership(user.getId(), "Grade", scopeId, orgMember));
-          } else {
-            bulkOrg.add(buildMembership(user.getId(), "Organization", scopeId,
-                orgMember));
+          // Validate tối thiểu
+          if (username.isBlank() || email.isBlank()) {
+            skipped++;
+            errors.add("Row " + (i + 1) + ": missing username/email");
+            continue;
           }
-        } else if (orgId != null && !orgId.isBlank()) {
-          bulkOrg.add(
-              buildMembership(user.getId(), "Organization", orgId, orgMember));
+
+          // Skip nếu user đã tồn tại
+          if (userRepository.existsByUsernameOrEmail(username, email)) {
+            skipped++;
+            continue;
+          }
+
+          // Xác định ROLE hệ thống cho user
+          String roleName = (userRoleRaw == null || userRoleRaw.isBlank())
+              ? STUDENT_ROLE
+              : userRoleRaw.trim().toUpperCase(Locale.ROOT);
+
+          Role sysRole = roleRepository
+              .findById(roleName)
+              .orElseGet(() -> roleRepository.save(
+                  Role.builder().name(roleName).description(roleName).build()));
+
+          // Tạo user (password tạm), enable = true
+          User user = userRepository.save(User.builder()
+              .username(username)
+              .email(email)
+              .password(passwordEncoder.encode(tempPassword))
+              .roles(Set.of(sysRole))
+              .enabled(true)
+              .build());
+
+          // Gửi event đăng ký kèm profile payload
+          UserCreationRequest createReq = UserCreationRequest.builder()
+              .username(username)
+              .email(email)
+              .firstName(firstName)
+              .lastName(lastName)
+              .displayName(displayName)
+              .build();
+
+          UserProfileCreationPayload profilePayload =
+              userPayloadMapper.toUserProfileCreationPayloadFromUserCreationRequest(
+                  createReq);
+          userEventProducer.publishRegisteredUserEvent(user, profilePayload);
+
+          // Gom membership theo nhóm (org / block)
+          if (orgId != null && !orgId.isBlank()) {
+            String orgMemberRole = userHelper.normalizeOrgRole(orgRoleRaw);
+            orgMembersByOrgId
+                .computeIfAbsent(orgId, k -> new ArrayList<>())
+                .add(MemberInfo.builder()
+                    .userId(user.getId())
+                    .role(orgMemberRole)
+                    .active(active)
+                    .build());
+          }
+
+          if (blockId != null && !blockId.isBlank()) {
+            String blockMemberRole = userHelper.normalizeOrgRole(blockRoleRaw);
+            blockMembersByBlockId
+                .computeIfAbsent(blockId, k -> new ArrayList<>())
+                .add(MemberInfo.builder()
+                    .userId(user.getId())
+                    .role(blockMemberRole)
+                    .active(active)
+                    .build());
+          }
+
+          created++;
+        } catch (Exception exRow) {
+          skipped++;
+          errors.add("Row " + (i + 1) + ": " + exRow.getMessage());
         }
-
-        created++;
       }
 
-      if (!bulkOrg.isEmpty()) {
-        organizationClient.bulkAddToOrg(resolveOrgIdFromList(bulkOrg),
-            mapToBulk(bulkOrg));
+      // Bulk add vào ORG theo từng orgId
+      for (Map.Entry<String, List<MemberInfo>> e : orgMembersByOrgId.entrySet()) {
+        try {
+          BulkAddMembersRequest req = BulkAddMembersRequest.builder()
+              .active(
+                  true)             // default cho member nào không set active
+              .defaultRole("Student")   // default cho member nào không set role
+              .members(e.getValue())
+              .build();
+          organizationClient.bulkAddToOrg(e.getKey(), req);
+        } catch (Exception ex) {
+          errors.add("Bulk add members to org " + e.getKey() + " failed: " +
+              ex.getMessage());
+        }
       }
-      if (!bulkBlock.isEmpty()) {
-        organizationClient.bulkAddToBlock(resolveBlockIdFromList(bulkBlock),
-            mapToBulk(bulkBlock));
+
+      // Bulk add vào BLOCK theo từng blockId
+      for (Map.Entry<String, List<MemberInfo>> e : blockMembersByBlockId.entrySet()) {
+        try {
+          BulkAddMembersRequest req = BulkAddMembersRequest.builder()
+              .active(true)
+              .defaultRole("Student")
+              .members(e.getValue())
+              .build();
+          organizationClient.bulkAddToBlock(e.getKey(), req);
+        } catch (Exception ex) {
+          errors.add("Bulk add members to block " + e.getKey() + " failed: " +
+              ex.getMessage());
+        }
       }
-    } catch (Exception e) {
+
+    } catch (IOException e) {
       throw new RuntimeException(e);
     }
+
     return new BulkImportResult(total, created, skipped, errors);
   }
 
+  /* ===== Helpers (nếu bạn chưa có) ===== */
+
+  private Boolean parseBoolean(String raw, boolean dft) {
+    if (raw == null || raw.isBlank()) {
+      return dft;
+    }
+    return "true".equalsIgnoreCase(raw) || "1".equals(raw);
+  }
+
   // helper
-
-  private String resolveOrgIdFromList(
-      List<CreateOrganizationMemberRequest> list) {
-    return list.getFirst().getScopeId(); // giả định 1 file import cho 1 org
-  }
-
-  private String resolveBlockIdFromList(
-      List<CreateOrganizationMemberRequest> list) {
-    return list.getFirst().getScopeId();
-  }
-
-  private BulkAddMembersRequest mapToBulk(
-      List<CreateOrganizationMemberRequest> list) {
-    var items = list.stream().map(req ->
-        MemberInfo.builder()
-            .userId(req.getUserId())
-            .role(req.getRole())
-            .active(req.isActive())
-            .build()
-    ).toList();
-    return BulkAddMembersRequest.builder()
-        .members(items)
-        .active(true)
-        .build();
-  }
-
-  private CreateOrganizationMemberRequest buildMembership(
-      String userId, String scopeType, String scopeId, String roleText) {
-
-    // Chuẩn hóa role cho OrganizationService v2
-    String normalized =
-        (roleText == null || roleText.isBlank()) ? "Student" : roleText.trim();
-    if (normalized.equalsIgnoreCase("SUPERADMIN")) {
-      normalized = "SuperAdmin";
-    }
-    if (normalized.equalsIgnoreCase("ADMIN")) {
-      normalized = "Admin";
-    }
-    if (normalized.equalsIgnoreCase("TEACHER")) {
-      normalized = "Teacher";
-    }
-    if (normalized.equalsIgnoreCase("STUDENT")) {
-      normalized = "Student";
-    }
-
-    com.codecampus.identity.dto.request.org.CreateOrganizationMemberRequest
-        req =
-        new com.codecampus.identity.dto.request.org.CreateOrganizationMemberRequest();
-    req.setUserId(userId);
-    req.setScopeType(scopeType); // Organization|Grade|Class
-    req.setScopeId(scopeId);
-    req.setRole(normalized);     // "Admin"/"Teacher"/"Student"/"SuperAdmin"
-    req.setActive(true);
-    return req;
-  }
-
   @PreAuthorize("hasRole('ADMIN')")
   public void exportUsers(HttpServletResponse response) {
     // Tạo file excel, không xuất password

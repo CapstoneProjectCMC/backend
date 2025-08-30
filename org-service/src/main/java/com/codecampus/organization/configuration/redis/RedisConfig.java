@@ -1,0 +1,59 @@
+package com.codecampus.organization.configuration.redis;
+
+import dtos.UserProfileSummary;
+import org.redisson.Redisson;
+import org.redisson.api.RedissonClient;
+import org.redisson.config.Config;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
+
+@Configuration
+public class RedisConfig {
+  @Bean
+  public RedisConnectionFactory redisConnectionFactory(
+      @Value("${spring.data.redis.host}") String host,
+      @Value("${spring.data.redis.port}") int port,
+      @Value("${spring.data.redis.password:}") String password) {
+    LettuceConnectionFactory cf = new LettuceConnectionFactory(host, port);
+    if (password != null && !password.isBlank()) {
+      cf.setPassword(password);
+    }
+    return cf;
+  }
+
+  @Bean
+  public RedisTemplate<String, UserProfileSummary> userProfileSummaryRedisTemplate(
+      RedisConnectionFactory cf) {
+    RedisTemplate<String, UserProfileSummary> tpl = new RedisTemplate<>();
+    tpl.setConnectionFactory(cf);
+    StringRedisSerializer k = new StringRedisSerializer();
+    GenericJackson2JsonRedisSerializer v =
+        new GenericJackson2JsonRedisSerializer();
+    tpl.setKeySerializer(k);
+    tpl.setHashKeySerializer(k);
+    tpl.setValueSerializer(v);
+    tpl.setHashValueSerializer(v);
+    tpl.afterPropertiesSet();
+    return tpl;
+  }
+
+  @Bean(destroyMethod = "shutdown")
+  public RedissonClient redissonClient(
+      @Value("${spring.data.redis.host}") String host,
+      @Value("${spring.data.redis.port}") int port,
+      @Value("${spring.data.redis.password:}") String password) {
+    Config config = new Config();
+    config.useSingleServer()
+        .setAddress("redis://" + host + ":" + port)
+        .setPassword((password == null || password.isBlank()) ? null : password)
+        .setConnectionPoolSize(16)
+        .setConnectionMinimumIdleSize(4);
+    return Redisson.create(config);
+  }
+}

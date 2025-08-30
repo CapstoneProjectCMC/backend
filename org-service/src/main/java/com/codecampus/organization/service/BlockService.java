@@ -2,7 +2,7 @@ package com.codecampus.organization.service;
 
 import com.codecampus.constant.ScopeType;
 import com.codecampus.organization.dto.common.PageResponse;
-import com.codecampus.organization.dto.request.BlockWithMembersPageResponse;
+import com.codecampus.organization.dto.request.BlockWithMembersResponse;
 import com.codecampus.organization.dto.request.CreateBlockRequest;
 import com.codecampus.organization.dto.request.UpdateBlockRequest;
 import com.codecampus.organization.dto.response.MemberInBlockResponse;
@@ -16,6 +16,7 @@ import com.codecampus.organization.mapper.OrganizationBlockMapper;
 import com.codecampus.organization.repository.OrganizationBlockRepository;
 import com.codecampus.organization.repository.OrganizationMemberRepository;
 import com.codecampus.organization.repository.OrganizationRepository;
+import com.codecampus.organization.service.cache.UserProfileSummaryCacheService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -36,6 +37,7 @@ public class BlockService {
   OrganizationBlockMapper mapper;
   OrganizationRepository orgRepo;
   OrganizationMemberRepository memberRepo;
+  UserProfileSummaryCacheService cache;
 
   @Transactional
   public void createBlock(
@@ -76,7 +78,7 @@ public class BlockService {
   }
 
 
-  public PageResponse<BlockWithMembersPageResponse> getBlocksOfOrg(
+  public PageResponse<BlockWithMembersResponse> getBlocksOfOrg(
       String orgId,
       int blocksPage, int blocksSize,
       int membersPage, int membersSize,
@@ -90,7 +92,7 @@ public class BlockService {
     var memberPg = PageRequest.of(Math.max(membersPage - 1, 0), membersSize,
         Sort.by("createdAt").descending());
 
-    java.util.List<BlockWithMembersPageResponse> data =
+    java.util.List<BlockWithMembersResponse> data =
         new java.util.ArrayList<>();
 
     for (OrganizationBlock b : blockPage.getContent()) {
@@ -103,11 +105,13 @@ public class BlockService {
 
       Page<MemberInBlockResponse> mapped = memPage.map(m ->
           MemberInBlockResponse.builder()
-              .userId(m.getUserId()).role(m.getRole()).active(m.isActive())
+              .user(cache.getOrLoad(m.getUserId()))
+              .role(m.getRole())
+              .active(m.isActive())
               .build()
       );
 
-      data.add(BlockWithMembersPageResponse.builder()
+      data.add(BlockWithMembersResponse.builder()
           .id(b.getId())
           .orgId(b.getOrgId())
           .name(b.getName())
@@ -129,11 +133,13 @@ public class BlockService {
 
       Page<MemberInBlockResponse> mapped = unassigned.map(m ->
           MemberInBlockResponse.builder()
-              .userId(m.getUserId()).role(m.getRole()).active(m.isActive())
+              .user(cache.getOrLoad(m.getUserId()))
+              .role(m.getRole())
+              .active(m.isActive())
               .build()
       );
 
-      data.add(BlockWithMembersPageResponse.builder()
+      data.add(BlockWithMembersResponse.builder()
           .id("virtual-unassigned-" + orgId)
           .orgId(orgId)
           .name("Unassigned")
@@ -145,7 +151,7 @@ public class BlockService {
     }
 
     // Trả PageResponse cho blocks (không tính block ảo vào totalElements để không sai trang)
-    return PageResponse.<BlockWithMembersPageResponse>builder()
+    return PageResponse.<BlockWithMembersResponse>builder()
         .currentPage(blocksPage)
         .pageSize(blockPage.getSize())
         .totalPages(blockPage.getTotalPages())
@@ -154,7 +160,7 @@ public class BlockService {
         .build();
   }
 
-  public BlockWithMembersPageResponse getBlock(
+  public BlockWithMembersResponse getBlock(
       String blockId,
       int memberPage, int memberSize,
       boolean activeOnly) {
@@ -172,11 +178,13 @@ public class BlockService {
 
     Page<MemberInBlockResponse> mapped = memPage.map(m ->
         MemberInBlockResponse.builder()
-            .userId(m.getUserId()).role(m.getRole()).active(m.isActive())
+            .user(cache.getOrLoad(m.getUserId()))
+            .role(m.getRole())
+            .active(m.isActive())
             .build()
     );
 
-    return BlockWithMembersPageResponse.builder()
+    return BlockWithMembersResponse.builder()
         .id(b.getId())
         .orgId(b.getOrgId())
         .name(b.getName())

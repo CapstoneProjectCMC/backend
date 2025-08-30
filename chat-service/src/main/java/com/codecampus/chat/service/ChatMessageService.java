@@ -23,7 +23,7 @@ import com.codecampus.chat.repository.ConversationMemberRepository;
 import com.codecampus.chat.repository.ConversationRepository;
 import com.codecampus.chat.repository.WebSocketSessionRepository;
 import com.codecampus.chat.repository.httpClient.ProfileClient;
-import com.codecampus.chat.service.cache.UserSummaryCacheService;
+import com.codecampus.chat.service.cache.UserProfileSummaryCacheService;
 import com.corundumstudio.socketio.SocketIOServer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -62,7 +62,7 @@ public class ChatMessageService {
   ChatMessageMapper chatMessageMapper;
 
   ChatMessageHelper chatMessageHelper;
-  UserSummaryCacheService cache;
+  UserProfileSummaryCacheService cache;
 
   public PageResponse<ChatMessageResponse> getChatMessages(
       String conversationId,

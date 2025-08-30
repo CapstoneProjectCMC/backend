@@ -16,9 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 @FeignClient(
     name = "organization-service",
     url = "${app.services.organization}",
-    configuration = {AuthenticationRequestInterceptor.class},
-    path = "/api/OrganizationMember"
-)
+    configuration = {AuthenticationRequestInterceptor.class})
 public interface OrganizationClient {
   /**
    * GET /member/{memberId}/primary-org
@@ -69,7 +67,7 @@ public interface OrganizationClient {
    * GET /user/{userId}/blocks
    */
   @GetMapping(
-      value = "/user/{userId}/blocks",
+      value = "/member/{userId}/blocks",
       produces = MediaType.APPLICATION_JSON_VALUE)
   ApiResponse<BlocksOfUserResponse> getBlocksOfUser(
       @PathVariable String userId);

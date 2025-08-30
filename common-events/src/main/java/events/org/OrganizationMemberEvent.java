@@ -16,7 +16,7 @@ public class OrganizationMemberEvent {
   String userId;         // GUID
   ScopeType scopeType;
   String scopeId;        // GUID
-  String role;           // SuperAdmin|Admin|Teacher|Student
+  String role;           // ADMIN | TEACHER | STUDENT
   boolean isActive;
   Instant at;
 

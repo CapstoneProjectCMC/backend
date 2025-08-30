@@ -1,7 +1,8 @@
-package com.codecampus.organization.dto.response;
+package com.codecampus.organization.dto.request;
 
+import com.codecampus.organization.dto.common.PageResponse;
+import com.codecampus.organization.dto.response.MemberInBlockResponse;
 import java.time.Instant;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,12 +13,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BlockWithMembersResponse {
-  String id;         // với block ảo “Unassigned” có thể để null hoặc "virtual"
+  String id;
   String orgId;
   String name;
   String code;
   String description;
   Instant createdAt;
   Instant updatedAt;
-  List<MemberInBlockResponse> members;
+
+  // Phân trang thành viên trong block
+  PageResponse<MemberInBlockResponse> members;
 }

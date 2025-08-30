@@ -44,7 +44,7 @@ main() {
 #    echo "Building $svc..."
 #    build_push_java "$svc"
 #  done
-  for svc in gateway-service; do
+  for svc in org-service; do
     echo "Building $svc..."
     build_push_java "$svc"
   done

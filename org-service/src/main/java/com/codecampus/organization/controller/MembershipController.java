@@ -195,7 +195,7 @@ public class MembershipController {
   /**
    * Dành cho identity lấy block_ids user đang tham gia để put vào JWT
    */
-  @GetMapping("/user/{userId}/blocks")
+  @GetMapping("/member/{userId}/blocks")
   ApiResponse<BlocksOfUserResponse> listActiveBlocksOfUser(
       @PathVariable String userId) {
     return ApiResponse.<BlocksOfUserResponse>builder()

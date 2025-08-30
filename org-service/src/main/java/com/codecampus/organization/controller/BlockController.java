@@ -1,7 +1,7 @@
 package com.codecampus.organization.controller;
 
 import com.codecampus.organization.dto.common.ApiResponse;
-import com.codecampus.organization.dto.request.BlockWithMembersPageResponse;
+import com.codecampus.organization.dto.request.BlockWithMembersResponse;
 import com.codecampus.organization.dto.request.CreateBlockRequest;
 import com.codecampus.organization.dto.request.UpdateBlockRequest;
 import com.codecampus.organization.service.BlockService;
@@ -57,12 +57,12 @@ public class BlockController {
   }
 
   @GetMapping("/block/{blockId}")
-  public ApiResponse<BlockWithMembersPageResponse> getBlock(
+  public ApiResponse<BlockWithMembersResponse> getBlock(
       @PathVariable String blockId,
       @RequestParam(defaultValue = "1") int membersPage,
       @RequestParam(defaultValue = "10") int membersSize,
       @RequestParam(defaultValue = "true") boolean activeOnly) {
-    return ApiResponse.<BlockWithMembersPageResponse>builder()
+    return ApiResponse.<BlockWithMembersResponse>builder()
         .message("Get các thông tin của khối thành công!")
         .result(blockService.getBlock(
             blockId,

@@ -24,15 +24,14 @@ public class OrganizationMemberHelper {
   OrganizationMemberEventProducer eventProducer;
 
   public String normalizeRole(String role) {
-    if (role == null) {
-      return "Student";
+    if (role == null || role.isBlank()) {
+      return "STUDENT";
     }
-    return switch (role.toLowerCase(Locale.ROOT)) {
-      case "superadmin" -> "SuperAdmin";
-      case "admin" -> "Admin";
-      case "teacher" -> "Teacher";
-      case "student" -> "Student";
-      default -> role;
+    return switch (role.trim().toUpperCase(Locale.ROOT)) {
+      case "ADMIN" -> "ADMIN";
+      case "TEACHER" -> "TEACHER";
+      case "STUDENT" -> "STUDENT";
+      default -> role.trim().toUpperCase(Locale.ROOT);
     };
   }
 

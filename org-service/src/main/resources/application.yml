@@ -30,6 +30,12 @@ spring:
     multipart:
       max-file-size: 50MB
       max-request-size: 50MB
+  data:
+    redis:
+      host: localhost # dịch vụ trong compose
+      port: 6379
+      password: dinhanst2832004
+      timeout: 3000ms
 
 
 app:
@@ -38,3 +44,4 @@ app:
     organization-member-events: "organization-member-events"
   services:
     file: http://localhost:8082/file
+    profile: http://localhost:8081/profile

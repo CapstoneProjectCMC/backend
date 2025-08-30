@@ -3,7 +3,9 @@ package com.codecampus.organization.service;
 import com.codecampus.organization.dto.common.PageResponse;
 import com.codecampus.organization.dto.request.CreateOrganizationForm;
 import com.codecampus.organization.dto.request.UpdateOrganizationForm;
+import com.codecampus.organization.dto.response.BlockResponse;
 import com.codecampus.organization.dto.response.OrganizationResponse;
+import com.codecampus.organization.dto.response.OrganizationWithBlocksResponse;
 import com.codecampus.organization.entity.Organization;
 import com.codecampus.organization.exception.AppException;
 import com.codecampus.organization.exception.ErrorCode;
@@ -11,6 +13,7 @@ import com.codecampus.organization.helper.AuthenticationHelper;
 import com.codecampus.organization.helper.OrganizationHelper;
 import com.codecampus.organization.helper.PageResponseHelper;
 import com.codecampus.organization.mapper.OrganizationMapper;
+import com.codecampus.organization.repository.OrganizationBlockRepository;
 import com.codecampus.organization.repository.OrganizationRepository;
 import com.codecampus.organization.service.kafka.OrganizationEventProducer;
 import events.org.data.OrganizationPayload;
@@ -30,6 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class OrganizationService {
   OrganizationRepository organizationRepository;
+  OrganizationBlockRepository blockRepository;
   BlockService blockService;
   OrganizationMapper organizationMapper;
   OrganizationEventProducer eventProducer;
@@ -92,19 +96,48 @@ public class OrganizationService {
     eventProducer.publishDeleted(o.getId());
   }
 
-  public PageResponse<OrganizationResponse> list(
-      int page, int size) {
-    Pageable pageable = PageRequest.of(Math.max(page - 1, 0), size);
-    Page<Organization> data = organizationRepository.findAll(pageable);
-    Page<OrganizationResponse> mapped =
-        data.map(organizationMapper::toOrganizationResponseFromOrganization);
-    return PageResponseHelper.toPageResponse(mapped, page);
-  }
-
   public OrganizationResponse get(String id) {
     return organizationRepository.findById(id)
         .map(organizationMapper::toOrganizationResponseFromOrganization)
         .orElseThrow(
             () -> new AppException(ErrorCode.ORGANIZATION_NOT_FOUND));
+  }
+
+  public PageResponse<OrganizationWithBlocksResponse> list(
+      int orgPage, int orgSize,
+      int blocksPage, int blocksSize) {
+
+    Pageable orgPg = PageRequest.of(Math.max(orgPage - 1, 0), orgSize);
+    Page<Organization> orgs = organizationRepository.findAll(orgPg);
+
+    var out = orgs.map(o -> {
+      // page blocks của từng org
+      Pageable blkPg = PageRequest.of(Math.max(blocksPage - 1, 0), blocksSize,
+          org.springframework.data.domain.Sort.by("createdAt").descending());
+      var blockPage = blockRepository
+          .findByOrgId(o.getId(), blkPg)
+          .map(b -> BlockResponse.builder()
+              .id(b.getId()).orgId(b.getOrgId())
+              .name(b.getName()).code(b.getCode())
+              .description(b.getDescription())
+              .createdAt(b.getCreatedAt()).updatedAt(b.getUpdatedAt())
+              .build());
+
+      return OrganizationWithBlocksResponse.builder()
+          .id(o.getId())
+          .name(o.getName())
+          .description(o.getDescription())
+          .logoUrl(o.getLogoUrl())
+          .email(o.getEmail())
+          .phone(o.getPhone())
+          .address(o.getAddress())
+          .status(o.getStatus())
+          .createdAt(o.getCreatedAt())
+          .updatedAt(o.getUpdatedAt())
+          .blocks(PageResponseHelper.toPageResponse(blockPage, blocksPage))
+          .build();
+    });
+
+    return PageResponseHelper.toPageResponse(out, orgPage);
   }
 }

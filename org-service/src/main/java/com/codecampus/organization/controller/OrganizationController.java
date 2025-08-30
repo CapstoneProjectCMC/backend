@@ -2,11 +2,12 @@ package com.codecampus.organization.controller;
 
 import com.codecampus.organization.dto.common.ApiResponse;
 import com.codecampus.organization.dto.common.PageResponse;
-import com.codecampus.organization.dto.request.BlockWithMembersPageResponse;
+import com.codecampus.organization.dto.request.BlockWithMembersResponse;
 import com.codecampus.organization.dto.request.CreateOrganizationForm;
 import com.codecampus.organization.dto.request.UpdateOrganizationForm;
 import com.codecampus.organization.dto.response.MemberInBlockResponse;
 import com.codecampus.organization.dto.response.OrganizationResponse;
+import com.codecampus.organization.dto.response.OrganizationWithBlocksResponse;
 import com.codecampus.organization.service.BlockService;
 import com.codecampus.organization.service.MembershipService;
 import com.codecampus.organization.service.OrganizationService;
@@ -66,16 +67,6 @@ public class OrganizationController {
         .build();
   }
 
-  @GetMapping("/organizations")
-  ApiResponse<PageResponse<OrganizationResponse>> list(
-      @RequestParam(defaultValue = "1") int page,
-      @RequestParam(defaultValue = "10") int size) {
-    return ApiResponse.<PageResponse<OrganizationResponse>>builder()
-        .message("Get các tổ chức thành công!")
-        .result(organizationService.list(page, size))
-        .build();
-  }
-
   @GetMapping("/organization/{orgId}")
   ApiResponse<OrganizationResponse> get(
       @PathVariable("orgId") String orgId) {
@@ -85,8 +76,23 @@ public class OrganizationController {
         .build();
   }
 
+  @GetMapping("/organizations")
+  ApiResponse<PageResponse<OrganizationWithBlocksResponse>> list(
+      @RequestParam(defaultValue = "1") int orgPage,
+      @RequestParam(defaultValue = "10") int orgSize,
+      @RequestParam(defaultValue = "1") int blocksPage,
+      @RequestParam(defaultValue = "10") int blocksSize
+  ) {
+    return ApiResponse.<PageResponse<OrganizationWithBlocksResponse>>builder()
+        .message("Get tất cả tổ chức kèm blocks!")
+        .result(organizationService.list(
+            orgPage, orgSize,
+            blocksPage, blocksSize))
+        .build();
+  }
+
   @GetMapping("/{orgId}/blocks")
-  ApiResponse<PageResponse<BlockWithMembersPageResponse>> getBlocksOfOrg(
+  ApiResponse<PageResponse<BlockWithMembersResponse>> getBlocksOfOrg(
       @PathVariable String orgId,
       @RequestParam(defaultValue = "1") int blocksPage,
       @RequestParam(defaultValue = "10") int blocksSize,
@@ -94,7 +100,7 @@ public class OrganizationController {
       @RequestParam(defaultValue = "10") int membersSize,
       @RequestParam(defaultValue = "true") boolean activeOnlyMembers,
       @RequestParam(defaultValue = "true") boolean includeUnassigned) {
-    return ApiResponse.<PageResponse<BlockWithMembersPageResponse>>builder()
+    return ApiResponse.<PageResponse<BlockWithMembersResponse>>builder()
         .message("Get thông tin các khối trong tổ chức thành công!")
         .result(blockService.getBlocksOfOrg(orgId, blocksPage, blocksSize,
             membersPage, membersSize, activeOnlyMembers, includeUnassigned))

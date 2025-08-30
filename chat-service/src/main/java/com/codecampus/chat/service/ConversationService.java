@@ -25,7 +25,7 @@ import com.codecampus.chat.helper.WebSocketHelper;
 import com.codecampus.chat.repository.ChatMessageRepository;
 import com.codecampus.chat.repository.ConversationMemberRepository;
 import com.codecampus.chat.repository.ConversationRepository;
-import com.codecampus.chat.service.cache.UserSummaryCacheService;
+import com.codecampus.chat.service.cache.UserProfileSummaryCacheService;
 import dtos.UserProfileSummary;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -60,7 +60,7 @@ public class ConversationService {
   ChatMessageHelper chatMessageHelper;
   ConversationHelper conversationHelper;
   EventHelper eventHelper;
-  UserSummaryCacheService cache;
+  UserProfileSummaryCacheService cache;
   WebSocketHelper push;
 
   public ConversationResponse getConversationById(String conversationId) {

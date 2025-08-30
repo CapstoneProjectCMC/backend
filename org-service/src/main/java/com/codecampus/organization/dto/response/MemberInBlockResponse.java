@@ -1,5 +1,6 @@
 package com.codecampus.organization.dto.response;
 
+import dtos.UserProfileSummary;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MemberInBlockResponse {
-  String userId;
+  UserProfileSummary user;
   String role;
   boolean active;
 }

@@ -1,26 +1,31 @@
-package com.codecampus.organization.dto.request;
+package com.codecampus.organization.dto.response;
+
 
 import com.codecampus.organization.dto.common.PageResponse;
-import com.codecampus.organization.dto.response.MemberInBlockResponse;
 import java.time.Instant;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.FieldDefaults;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class BlockWithMembersPageResponse {
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class OrganizationWithBlocksResponse {
   String id;
-  String orgId;
   String name;
-  String code;
   String description;
+  String logoUrl;
+  String email;
+  String phone;
+  String address;
+  String status;
   Instant createdAt;
   Instant updatedAt;
 
-  // Phân trang thành viên trong block
-  PageResponse<MemberInBlockResponse> members;
+  PageResponse<BlockResponse> blocks;
 }

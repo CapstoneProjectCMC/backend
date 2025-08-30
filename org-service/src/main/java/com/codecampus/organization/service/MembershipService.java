@@ -16,6 +16,7 @@ import com.codecampus.organization.helper.OrganizationMemberHelper;
 import com.codecampus.organization.helper.PageResponseHelper;
 import com.codecampus.organization.repository.OrganizationBlockRepository;
 import com.codecampus.organization.repository.OrganizationMemberRepository;
+import com.codecampus.organization.service.cache.UserProfileSummaryCacheService;
 import com.codecampus.organization.service.kafka.OrganizationMemberEventProducer;
 import events.org.OrganizationMemberEvent;
 import java.time.Instant;
@@ -47,6 +48,7 @@ public class MembershipService {
   OrganizationBlockRepository blockRepository;
   OrganizationMemberEventProducer eventProducer;
   OrganizationMemberHelper organizationMemberHelper;
+  UserProfileSummaryCacheService cache;
 
   @Transactional
   public void addToOrg(
@@ -96,7 +98,7 @@ public class MembershipService {
       String blockId,
       String role,
       boolean active) {
-    // đảm bảo user đang ở trong org của block (nếu chưa -> auto join org với role Student)
+    // đảm bảo user đang ở trong org của block (nếu chưa -> auto join org với role STUDENT)
     String orgId = blockRepository.findById(blockId)
         .orElseThrow(() -> new AppException(ErrorCode.GRADE_NOT_FOUND))
         .getOrgId();
@@ -104,7 +106,7 @@ public class MembershipService {
     if (memberRepository.findActiveOrgsOfUser(userId).stream()
         .noneMatch(m -> m.getScopeId().equals(orgId))) {
       addToOrg(userId, orgId,
-          role != null ? role : "Student",
+          role != null ? role : "STUDENT",
           true);
     }
 
@@ -168,7 +170,9 @@ public class MembershipService {
 
     Page<MemberInBlockResponse> mapped =
         data.map(m -> MemberInBlockResponse.builder()
-            .userId(m.getUserId()).role(m.getRole()).active(m.isActive())
+            .user(cache.getOrLoad(m.getUserId()))
+            .role(m.getRole())
+            .active(m.isActive())
             .build());
 
     return PageResponseHelper.toPageResponse(mapped, page);
@@ -205,12 +209,12 @@ public class MembershipService {
         .findByUserIdAndScopeTypeAndScopeId(userId, ScopeType.Organization,
             from.getOrgId());
     if (orgMem.isEmpty()) {
-      // auto-join org với role Student nếu chưa có
+      // auto-join org với role STUDENT nếu chưa có
       OrganizationMember join = OrganizationMember.builder()
           .userId(userId)
           .scopeType(ScopeType.Organization)
           .scopeId(from.getOrgId())
-          .role(role != null ? role : "Student")
+          .role(role != null ? role : "STUDENT")
           .isActive(true)
           .build();
       memberRepository.save(join);
@@ -227,7 +231,7 @@ public class MembershipService {
             .scopeId(toBlockId)
             .build());
     toMem.setRole(role != null ? organizationMemberHelper.normalizeRole(role) :
-        (toMem.getRole() == null ? "Student" : toMem.getRole()));
+        (toMem.getRole() == null ? "STUDENT" : toMem.getRole()));
     toMem.setActive(true);
     boolean isNew = toMem.getId() == null;
     memberRepository.save(toMem);
@@ -329,7 +333,9 @@ public class MembershipService {
 
     Page<MemberInBlockResponse> mapped = p.map(m ->
         MemberInBlockResponse.builder()
-            .userId(m.getUserId()).role(m.getRole()).active(m.isActive())
+            .user(cache.getOrLoad(m.getUserId()))
+            .role(m.getRole())
+            .active(m.isActive())
             .build());
 
     return PageResponseHelper.toPageResponse(mapped, page);
@@ -346,7 +352,7 @@ public class MembershipService {
       Sheet sheet = wb.getSheetAt(0);
       // Định dạng file:
       // cột A=userId,
-      // B=role(Admin|Teacher|Student),
+      // B=role(Admin|Teacher|STUDENT),
       // C=active(true|false)
       for (int i = 1; i <= sheet.getLastRowNum(); i++) {
         total++;

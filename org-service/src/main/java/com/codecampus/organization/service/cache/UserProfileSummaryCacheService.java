@@ -1,9 +1,9 @@
-package com.codecampus.chat.service.cache;
+package com.codecampus.organization.service.cache;
 
-import com.codecampus.chat.dto.common.ApiResponse;
-import com.codecampus.chat.dto.response.UserProfileResponse;
-import com.codecampus.chat.mapper.UserMapper;
-import com.codecampus.chat.repository.httpClient.ProfileClient;
+import com.codecampus.organization.dto.common.ApiResponse;
+import com.codecampus.organization.dto.response.UserProfileResponse;
+import com.codecampus.organization.mapper.UserMapper;
+import com.codecampus.organization.repository.client.ProfileClient;
 import dtos.UserProfileSummary;
 import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class UserSummaryCacheService {
+public class UserProfileSummaryCacheService {
   Duration TTL = Duration.ofHours(6);
   String KEY_PREFIX = "userprofile:summary:";
 
@@ -38,8 +38,8 @@ public class UserSummaryCacheService {
     return redis.opsForValue().get(KEY_PREFIX + userId);
   }
 
-  public void put(String userId, UserProfileSummary userProfileSummary) {
-    redis.opsForValue().set(KEY_PREFIX + userId, userProfileSummary, TTL);
+  public void put(String userId, UserProfileSummary s) {
+    redis.opsForValue().set(KEY_PREFIX + userId, s, TTL);
   }
 
   public void evict(String userId) {
@@ -59,9 +59,7 @@ public class UserSummaryCacheService {
       return cached;
     }
 
-    String lockName = "lock:user:" + userId;
-    RLock lock = redisson.getLock(lockName);
-
+    RLock lock = redisson.getLock("lock:user:" + userId);
     try {
       if (lock.tryLock(2, 10, TimeUnit.SECONDS)) {
         cached = get(userId);
@@ -70,24 +68,19 @@ public class UserSummaryCacheService {
         }
 
         ApiResponse<UserProfileResponse> api =
-            profileClient.getUserProfileByUserId(userId);
-        UserProfileResponse profile =
-            api != null ? api.getResult() : null;
-
-        UserProfileSummary summary = (profile == null) ? null :
-            userMapper.toUserProfileSummaryFromUserProfileResponse(
-                profile);
-
+            profileClient.internalGetUserProfileByUserId(userId);
+        UserProfileResponse profile = api != null ? api.getResult() : null;
+        UserProfileSummary summary = (profile == null) ? null
+            : userMapper.toUserProfileSummaryFromUserProfileResponse(profile);
         if (summary != null) {
           put(userId, summary);
         }
         return summary;
       }
-    } catch (InterruptedException e) {
+    } catch (InterruptedException ie) {
       Thread.currentThread().interrupt();
     } catch (Exception ex) {
-      log.warn("[UserCache] getOrLoad error {}: {}", userId,
-          ex.getMessage());
+      log.warn("[UserCache] error {}: {}", userId, ex.getMessage());
     } finally {
       if (lock.isHeldByCurrentThread()) {
         lock.unlock();
@@ -97,14 +90,12 @@ public class UserSummaryCacheService {
     // fallback
     try {
       ApiResponse<UserProfileResponse> api =
-          profileClient.getUserProfileByUserId(userId);
+          profileClient.internalGetUserProfileByUserId(userId);
       return userMapper.toUserProfileSummaryFromUserProfileResponse(
           api.getResult());
     } catch (Exception ex) {
-      log.warn("[UserCache] fallback call error {}: {}", userId,
-          ex.getMessage());
+      log.warn("[UserCache] fallback error {}: {}", userId, ex.getMessage());
       return null;
     }
   }
 }
-
