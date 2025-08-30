@@ -55,9 +55,9 @@ public class OrganizationEventListener {
 
   private String toOrgIdFromScopeType(ScopeType scopeType, String id) {
     return switch (scopeType) {
-      case ORGANIZATION -> "ORG:" + id;
-      case GRADE -> "GRADE:" + id;
-      case CLASS -> "CLASS:" + id;
+      case Organization -> "ORG:" + id;
+      case Grade -> "GRADE:" + id;
+      case Class -> "CLASS:" + id;
     };
   }
 }

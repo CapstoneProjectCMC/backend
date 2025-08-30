@@ -1,13 +1,17 @@
 package com.codecampus.identity.service.account;
 
+import static com.codecampus.identity.constant.authentication.AuthenticationConstant.ADMIN_ROLE;
 import static com.codecampus.identity.constant.authentication.AuthenticationConstant.STUDENT_ROLE;
 import static com.codecampus.identity.constant.authentication.AuthenticationConstant.TEACHER_ROLE;
 
 import com.codecampus.identity.dto.data.BulkImportResult;
+import com.codecampus.identity.dto.request.authentication.ChangePasswordRequest;
 import com.codecampus.identity.dto.request.authentication.PasswordCreationRequest;
 import com.codecampus.identity.dto.request.authentication.UserCreationRequest;
 import com.codecampus.identity.dto.request.authentication.UserUpdateRequest;
+import com.codecampus.identity.dto.request.org.BulkAddMembersRequest;
 import com.codecampus.identity.dto.request.org.CreateOrganizationMemberRequest;
+import com.codecampus.identity.dto.request.org.MemberInfo;
 import com.codecampus.identity.entity.account.Role;
 import com.codecampus.identity.entity.account.User;
 import com.codecampus.identity.exception.AppException;
@@ -15,13 +19,10 @@ import com.codecampus.identity.exception.ErrorCode;
 import com.codecampus.identity.helper.AuthenticationHelper;
 import com.codecampus.identity.helper.UserHelper;
 import com.codecampus.identity.mapper.authentication.UserMapper;
-import com.codecampus.identity.mapper.client.UserProfileMapper;
 import com.codecampus.identity.mapper.kafka.UserPayloadMapper;
 import com.codecampus.identity.repository.account.RoleRepository;
 import com.codecampus.identity.repository.account.UserRepository;
 import com.codecampus.identity.repository.httpclient.org.OrganizationClient;
-import com.codecampus.identity.repository.httpclient.profile.ProfileClient;
-import com.codecampus.identity.service.authentication.OtpService;
 import com.codecampus.identity.service.kafka.UserEventProducer;
 import events.user.data.UserProfileCreationPayload;
 import jakarta.servlet.http.HttpServletResponse;
@@ -72,16 +73,13 @@ import org.springframework.web.multipart.MultipartFile;
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserService {
-  OtpService otpService;
   UserRepository userRepository;
   RoleRepository roleRepository;
 
   UserMapper userMapper;
-  UserProfileMapper userProfileMapper;
   UserPayloadMapper userPayloadMapper;
 
   PasswordEncoder passwordEncoder;
-  ProfileClient profileClient;
   OrganizationClient organizationClient;
   AuthenticationHelper authenticationHelper;
   UserHelper userHelper;
@@ -105,8 +103,15 @@ public class UserService {
     createCommonUser(userCreationRequest, TEACHER_ROLE);
   }
 
+  @PreAuthorize("hasRole('ADMIN')")
   @Transactional
-  public void createCommonUser(
+  public void createAdmin(
+      UserCreationRequest userCreationRequest) {
+    createCommonUser(userCreationRequest, ADMIN_ROLE);
+  }
+
+  @Transactional
+  public User createCommonUser(
       UserCreationRequest request,
       String roleName) {
     authenticationHelper.checkExistsUsernameEmail(
@@ -124,29 +129,48 @@ public class UserService {
 
     try {
       user = userRepository.save(user);
-      if (StringUtils.hasText(request.getOrganizationId())) {
-        CreateOrganizationMemberRequest
-            createOrganizationMemberRequest =
-            new CreateOrganizationMemberRequest();
-        createOrganizationMemberRequest.setUserId(user.getId());
-        createOrganizationMemberRequest.setScopeId(
-            request.getOrganizationId());
-        createOrganizationMemberRequest.setRole(
-            StringUtils.hasText(request.getOrganizationMemberRole())
-                ? request.getOrganizationMemberRole()
-                : "Student"
-        );
-        organizationClient.createMembership(
-            createOrganizationMemberRequest);
-      }
       UserProfileCreationPayload profilePayload =
           userPayloadMapper.toUserProfileCreationPayloadFromUserCreationRequest(
               request);
       userEventProducer.publishRegisteredUserEvent(
           user, profilePayload);
+
+      return user;
     } catch (DataIntegrityViolationException e) {
       throw new AppException(ErrorCode.USER_ALREADY_EXISTS);
     }
+  }
+
+  @PreAuthorize("hasRole('ADMIN')")
+  @Transactional
+  public User createUserOrg(
+      UserCreationRequest request,
+      String roleName,
+      String orgId,
+      String orgMemberRole,
+      String blockId,
+      String blockRole) {
+
+    User user = createCommonUser(request, roleName);
+    var orgRequest = new CreateOrganizationMemberRequest();
+    orgRequest.setUserId(user.getId());
+    orgRequest.setScopeType("Organization");
+    orgRequest.setScopeId(orgId);
+    orgRequest.setRole(orgMemberRole == null ? "Student" : orgMemberRole);
+    orgRequest.setActive(true);
+    organizationClient.addToOrg(orgId, orgRequest);
+
+    if (blockId != null && !blockId.isBlank()) {
+      var bRequest = new CreateOrganizationMemberRequest();
+      bRequest.setUserId(user.getId());
+      bRequest.setScopeType("Grade");
+      bRequest.setScopeId(blockId);
+      bRequest.setRole(blockRole == null ? orgRequest.getRole() : blockRole);
+      bRequest.setActive(true);
+      organizationClient.addToBlock(blockId, bRequest);
+    }
+
+    return user;
   }
 
   /**
@@ -166,6 +190,17 @@ public class UserService {
 
     user.setPassword(passwordEncoder.encode(request.getPassword()));
     userRepository.save(user);
+  }
+
+  public void changeMyPassword(ChangePasswordRequest req) {
+    var user = userHelper.getUserById(AuthenticationHelper.getMyUserId());
+    if (!passwordEncoder.matches(req.getOldPassword(), user.getPassword())) {
+      throw new AppException(
+          ErrorCode.INVALID_CREDENTIALS);
+    }
+    user.setPassword(passwordEncoder.encode(req.getNewPassword()));
+    userRepository.save(user);
+    userEventProducer.publishUpdatedUserEvent(user);
   }
 
   /**
@@ -249,12 +284,24 @@ public class UserService {
       MultipartFile file) {
     int total = 0, created = 0, skipped = 0;
     List<String> errors = new ArrayList<>();
+    // gom các yêu cầu membership để gọi 1 lượt
+    List<CreateOrganizationMemberRequest> bulkOrg = new ArrayList<>();
+    List<CreateOrganizationMemberRequest> bulkBlock = new ArrayList<>();
 
     try (Workbook wb = new XSSFWorkbook(file.getInputStream())) {
       Sheet sheet = wb.getSheetAt(0);
-      // Header: username,email,firstName,lastName,displayName,
-      // role(ADMIN|TEACHER|STUDENT),
-      // organizationId,organizationMemberRole
+      // Header đề xuất (giữ tương thích cũ):
+      // 0 username
+      // 1 email
+      // 2 firstName
+      // 3 lastName
+      // 4 displayName
+      // 5 role(ADMIN|TEACHER|STUDENT)  -> role hệ thống (User.roles)
+      // 6 organizationId               -> nếu có: tạo membership ORGANIZATION
+      // 7 organizationMemberRole       -> Admin|Teacher|Student (mặc định Student)
+      // 8 scopeType (optional)         -> Organization|Grade|Class (ưu tiên hơn cột 6/7 nếu có scopeId)
+      // 9 scopeId (optional)           -> GUID của Organization/Grade/Class
+
       for (int i = 1; i <= sheet.getLastRowNum(); i++) {
         total++;
         Row r = sheet.getRow(i);
@@ -268,15 +315,15 @@ public class UserService {
         String firstName = getString(r, 2);
         String lastName = getString(r, 3);
         String display = getString(r, 4);
-        String roleName =
-            Optional.of(getString(r, 5))
-                .filter(s -> !s.isBlank())
-                .orElse(STUDENT_ROLE)
-                .toUpperCase(Locale.ROOT);
+        String roleName = Optional.of(getString(r, 5)).filter(s -> !s.isBlank())
+            .orElse(STUDENT_ROLE).toUpperCase(Locale.ROOT);
         String orgId = getString(r, 6);
-        String orgMember = getString(r, 7);
+        String orgMember = getString(r, 7);   // "Admin" | "Teacher" | "Student"
+        String scopeType = getString(r, 8);
+        String scopeId = getString(r, 9);
 
-        if (email == null || username == null) {
+        if (email == null || email.isBlank() || username == null ||
+            username.isBlank()) {
           skipped++;
           errors.add("Row " + (i + 1) + ": missing username/email");
           continue;
@@ -289,10 +336,8 @@ public class UserService {
 
         Role role = roleRepository
             .findById(roleName)
-            .orElseGet(
-                () -> roleRepository.save(
-                    Role.builder().name(roleName).description(roleName)
-                        .build()));
+            .orElseGet(() -> roleRepository.save(
+                Role.builder().name(roleName).description(roleName).build()));
 
         User user = userRepository.save(User.builder()
             .username(username)
@@ -302,28 +347,109 @@ public class UserService {
             .enabled(true)
             .build());
 
-        // gửi event kèm dữ liệu profile
-        UserCreationRequest userCreationRequest =
-            UserCreationRequest.builder()
-                .username(username)
-                .email(email)
-                .firstName(firstName)
-                .lastName(lastName)
-                .displayName(display)
-                .organizationId(orgId)
-                .organizationMemberRole(orgMember)
-                .build();
+        // Gửi event đăng ký kèm profile
+        UserCreationRequest userCreationRequest = UserCreationRequest.builder()
+            .username(username).email(email).firstName(firstName)
+            .lastName(lastName).displayName(display)
+            .organizationId(orgId)                      // để backward compat
+            .organizationMemberRole(orgMember)
+            .build();
         UserProfileCreationPayload profilePayload =
             userPayloadMapper.toUserProfileCreationPayloadFromUserCreationRequest(
                 userCreationRequest);
         userEventProducer.publishRegisteredUserEvent(user, profilePayload);
 
+        // Tạo yêu cầu membership (ưu tiên scopeType/scopeId nếu có)
+        String resolveScopeType = !scopeId.isBlank()
+            ? scopeType.isBlank() ? "Organization" :
+            scopeType
+            : null;
+
+        if (resolveScopeType != null) {
+          if ("Grade".equalsIgnoreCase(resolveScopeType)) {
+            bulkBlock.add(
+                buildMembership(user.getId(), "Grade", scopeId, orgMember));
+          } else {
+            bulkOrg.add(buildMembership(user.getId(), "Organization", scopeId,
+                orgMember));
+          }
+        } else if (orgId != null && !orgId.isBlank()) {
+          bulkOrg.add(
+              buildMembership(user.getId(), "Organization", orgId, orgMember));
+        }
+
         created++;
+      }
+
+      if (!bulkOrg.isEmpty()) {
+        organizationClient.bulkAddToOrg(resolveOrgIdFromList(bulkOrg),
+            mapToBulk(bulkOrg));
+      }
+      if (!bulkBlock.isEmpty()) {
+        organizationClient.bulkAddToBlock(resolveBlockIdFromList(bulkBlock),
+            mapToBulk(bulkBlock));
       }
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
     return new BulkImportResult(total, created, skipped, errors);
+  }
+
+  // helper
+
+  private String resolveOrgIdFromList(
+      List<CreateOrganizationMemberRequest> list) {
+    return list.getFirst().getScopeId(); // giả định 1 file import cho 1 org
+  }
+
+  private String resolveBlockIdFromList(
+      List<CreateOrganizationMemberRequest> list) {
+    return list.getFirst().getScopeId();
+  }
+
+  private BulkAddMembersRequest mapToBulk(
+      List<CreateOrganizationMemberRequest> list) {
+    var items = list.stream().map(req ->
+        MemberInfo.builder()
+            .userId(req.getUserId())
+            .role(req.getRole())
+            .active(req.isActive())
+            .build()
+    ).toList();
+    return BulkAddMembersRequest.builder()
+        .members(items)
+        .active(true)
+        .build();
+  }
+
+  private CreateOrganizationMemberRequest buildMembership(
+      String userId, String scopeType, String scopeId, String roleText) {
+
+    // Chuẩn hóa role cho OrganizationService v2
+    String normalized =
+        (roleText == null || roleText.isBlank()) ? "Student" : roleText.trim();
+    if (normalized.equalsIgnoreCase("SUPERADMIN")) {
+      normalized = "SuperAdmin";
+    }
+    if (normalized.equalsIgnoreCase("ADMIN")) {
+      normalized = "Admin";
+    }
+    if (normalized.equalsIgnoreCase("TEACHER")) {
+      normalized = "Teacher";
+    }
+    if (normalized.equalsIgnoreCase("STUDENT")) {
+      normalized = "Student";
+    }
+
+    com.codecampus.identity.dto.request.org.CreateOrganizationMemberRequest
+        req =
+        new com.codecampus.identity.dto.request.org.CreateOrganizationMemberRequest();
+    req.setUserId(userId);
+    req.setScopeType(scopeType); // Organization|Grade|Class
+    req.setScopeId(scopeId);
+    req.setRole(normalized);     // "Admin"/"Teacher"/"Student"/"SuperAdmin"
+    req.setActive(true);
+    return req;
   }
 
   @PreAuthorize("hasRole('ADMIN')")

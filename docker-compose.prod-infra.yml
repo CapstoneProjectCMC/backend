@@ -127,10 +127,10 @@ services:
     container_name: payment-db
     restart: unless-stopped
     environment:
-        - POSTGRESQL_USERNAME=${PAYMENT_USERNAME}
-        - POSTGRESQL_PASSWORD=${PAYMENT_DB_PASSWORD}
-        - POSTGRESQL_DATABASE=${PAYMENT_DATABASE}
-        - POSTGRESQL_POSTGRES_PASSWORD=${PAYMENT_DB_PASSWORD}
+      - POSTGRESQL_USERNAME=${PAYMENT_USERNAME}
+      - POSTGRESQL_PASSWORD=${PAYMENT_DB_PASSWORD}
+      - POSTGRESQL_DATABASE=${PAYMENT_DATABASE}
+      - POSTGRESQL_POSTGRES_PASSWORD=${PAYMENT_DB_PASSWORD}
     ports:
       - "5440:5432"
     volumes:
@@ -142,9 +142,29 @@ services:
       retries: 5
     networks: [ backend ]
 
+  organization-db:
+    image: bitnami/postgresql:latest
+    container_name: organization-db
+    restart: unless-stopped
+    environment:
+      - POSTGRESQL_USERNAME=${ORGANIZATION_USERNAME}
+      - POSTGRESQL_PASSWORD=${ORGANIZATION_DB_PASSWORD}
+      - POSTGRESQL_DATABASE=${ORGANIZATION_DATABASE}
+      - POSTGRESQL_POSTGRES_PASSWORD=${ORGANIZATION_DB_PASSWORD}
+    ports:
+      - "5441:5432"
+    volumes:
+      - organization_pg_data:/bitnami/postgresql
+    healthcheck:
+      test: [ "CMD-SHELL","pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: [ backend ]
+
   # ----------  Kafka  ----------
   kafka:
-    image: bitnami/kafka:latest
+    image: bitnamilegacy/kafka:latest
     container_name: kafka
     restart: unless-stopped
     environment:
@@ -376,6 +396,7 @@ networks:
     name: codecampus_backend
 
 volumes:
+  organization_pg_data:
   payment_pg_data:
   identity_pg_data:
   submission_pg_data:

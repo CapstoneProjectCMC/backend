@@ -9,7 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AddFileDocumentDto {
   private MultipartFile file;
-  private String category; // enum truyền dạng string
+  private String category;
   private String description;
   private List<String> tags;
   private boolean isLectureVideo = false;

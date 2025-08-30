@@ -108,9 +108,19 @@ spring:
             - name: RateLimiter
               args:
                 routeId: post_service
+        - id: payment_service
+          #          uri: https://payment-service:8091
+          uri: http://payment-service:8091
+          predicates:
+            - Path=${app.api-prefix}/payment/**
+          filters:
+            - StripPrefix=2
+            - name: RateLimiter
+              args:
+                routeId: payment_service
         - id: organization_service
-          #          uri: https://organization-service:8091
-          uri: http://organization-service:8091
+          #          uri: https://organization-service:8092
+          uri: http://organization-service:8092
           predicates:
             - Path=${app.api-prefix}/org/**
           filters:

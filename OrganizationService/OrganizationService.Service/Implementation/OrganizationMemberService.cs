@@ -297,5 +297,84 @@ namespace OrganizationService.Service.Implementation
                 ScopeName = orgName
             };
         }
+        
+        public async Task<OrganizationMemberDto> CreateOrUpdateAsync(CreateOrganizationMemberRequest request)
+        {
+            // tìm membership trùng (UserId, ScopeType, ScopeId)
+            var existed = await _organizationMemberRepository.AsNoTracking
+                .FirstOrDefaultAsync(x => !x.IsDeleted
+                    && x.UserId == request.UserId
+                    && x.ScopeType == request.ScopeType
+                    && x.ScopeId == request.ScopeId);
+
+            var now = DateTime.UtcNow;
+            if (existed == null)
+            {
+                var entity = new OrganizationMember
+                {
+                    Id = Guid.NewGuid(),
+                    UserId = request.UserId,
+                    ScopeType = request.ScopeType,
+                    ScopeId = request.ScopeId,
+                    Role = request.Role,
+                    IsActive = request.IsActive,
+                    CreatedAt = now
+                };
+                await _organizationMemberRepository.CreateAsync(entity);
+                await _unitOfWork.SaveChangesAsync();
+
+                var orgName = (await _organizationRepository.FindByIdAsync(entity.ScopeId))?.Name ?? string.Empty;
+                await _orgMemberEventPublisher.PublishAsync(new {
+                    type = "ADDED",
+                    userId = entity.UserId,
+                    scopeType = entity.ScopeType.ToString().ToUpper(),
+                    scopeId = entity.ScopeId,
+                    role = entity.Role.ToString(),
+                    isActive = entity.IsActive,
+                    at = now
+                });
+                return new OrganizationMemberDto {
+                    Id = entity.Id, UserId = entity.UserId, ScopeType = entity.ScopeType, ScopeId = entity.ScopeId,
+                    Role = entity.Role, IsActive = entity.IsActive, ScopeName = orgName
+                };
+            }
+            else
+            {
+                // cập nhật idempotent
+                var entity = await _organizationMemberRepository.FindByIdAsync(existed.Id);
+                entity.Role = request.Role;
+                entity.IsActive = request.IsActive;
+                entity.UpdatedAt = now;
+                _organizationMemberRepository.Update(entity);
+                await _unitOfWork.SaveChangesAsync();
+
+                var orgName = (await _organizationRepository.FindByIdAsync(entity.ScopeId))?.Name ?? string.Empty;
+                await _orgMemberEventPublisher.PublishAsync(new {
+                    type = "UPDATED",
+                    userId = entity.UserId,
+                    scopeType = entity.ScopeType.ToString().ToUpper(),
+                    scopeId = entity.ScopeId,
+                    role = entity.Role.ToString(),
+                    isActive = entity.IsActive,
+                    at = now
+                });
+                return new OrganizationMemberDto {
+                    Id = entity.Id, UserId = entity.UserId, ScopeType = entity.ScopeType, ScopeId = entity.ScopeId,
+                    Role = entity.Role, IsActive = entity.IsActive, ScopeName = orgName
+                };
+            }
+        }
+
+        public async Task<IEnumerable<OrganizationMemberDto>> BulkCreateOrUpdateAsync(IEnumerable<CreateOrganizationMemberRequest> requests)
+        {
+            var result = new List<OrganizationMemberDto>();
+            foreach (var r in requests)
+            {
+                var one = await CreateOrUpdateAsync(r);
+                result.Add(one);
+            }
+            return result;
+        }
+
     }
 }

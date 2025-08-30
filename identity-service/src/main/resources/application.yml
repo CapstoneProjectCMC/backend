@@ -53,7 +53,7 @@ spring:
 app:
   services:
     profile: http://localhost:8081/profile
-    organization: http://localhost:8091/org
+    organization: http://localhost:8092/org
   otp:
     expiry-minutes: 5
   jwt:

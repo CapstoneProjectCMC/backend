@@ -12,7 +12,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CreateOrganizationMemberRequest {
   String userId;
-  String scopeType = "Organization"; // cố định "Organization"
+  String scopeType = "Organization";
   String scopeId; // orgId
   String role; // "ADMIN" | "TEACHER" | "STUDENT"
   boolean isActive = true;
