@@ -44,7 +44,7 @@ namespace FileService.Service.Implementation
             _httpClient = httpClient;
             _cache = cache;
             _logger = logger;
-            _baseUrl = configuration["ApiSettings:UserServiceBaseUrl"];
+            _baseUrl = configuration["Appsettings:ApiSettings:UserServiceBaseUrl"];
         }
 
         public async Task<UserProfileResponse?> GetUserProfileAsync(string userId)
