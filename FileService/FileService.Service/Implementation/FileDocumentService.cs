@@ -132,10 +132,7 @@ namespace FileService.Service.Implementation
 
             //call API Profile Service
             var users = await _identityServiceClient.GetAllUserProfilesAsync();
-            //var userDict = users.ToDictionary(u => Guid.Parse(u.UserId), u => u);
-            var userDict = users
-                .Where(u => Guid.TryParse(u.UserId, out _))
-                .ToDictionary(u => Guid.Parse(u.UserId), u => u);
+            var userDict = users.ToDictionary(u => Guid.Parse(u.UserId), u => u);
 
             //build result
             var resultTasks = videos.Select(async videosItem =>
