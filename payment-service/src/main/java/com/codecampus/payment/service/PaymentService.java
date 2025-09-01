@@ -23,7 +23,6 @@ import com.codecampus.payment.service.cache.UserSummaryCacheService;
 import dtos.UserSummary;
 import java.time.Instant;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.AccessLevel;
@@ -72,15 +71,14 @@ public class PaymentService {
       throw new AppException(ErrorCode.INVALID_REQUEST);
     }
 
-    // Idempotent: nếu đã có transactionId này thì trả lại biên lai cũ
-    Optional<PaymentTransaction> existed =
-        transactionRepository.findById(request.getTransactionId());
-    if (existed.isPresent()) {
-      Wallet w = walletRepository.findByUserId(userId)
-          .orElseThrow(() -> new AppException(ErrorCode.WALLET_NOT_FOUND));
-      UserSummary us = userSummaryCacheService.getOrLoad(userId);
-      return paymentHelper.toPaymentReceiptDto(existed.get(), w.getBalance(),
-          null, us);
+    if (transactionRepository.existsById(request.getTransactionId())) {
+      throw new AppException(ErrorCode.DUPLICATE_TRANSACTION_ID);
+    }
+
+    if (!paymentHelper.isBlank(request.getReferenceId())
+        &&
+        transactionRepository.existsByReferenceCode(request.getReferenceId())) {
+      throw new AppException(ErrorCode.DUPLICATE_REFERENCE_CODE);
     }
 
     // lock ví (tạo nếu chưa có)
@@ -126,14 +124,14 @@ public class PaymentService {
       throw new AppException(ErrorCode.INVALID_REQUEST);
     }
 
-    Optional<PaymentTransaction> existed =
-        transactionRepository.findById(request.getTransactionId());
-    if (existed.isPresent()) {
-      Wallet w = walletRepository.findByUserId(userId)
-          .orElseThrow(() -> new AppException(ErrorCode.WALLET_NOT_FOUND));
-      UserSummary us = userSummaryCacheService.getOrLoad(userId);
-      return paymentHelper.toPaymentReceiptDto(existed.get(), w.getBalance(),
-          null, us);
+    if (transactionRepository.existsById(request.getTransactionId())) {
+      throw new AppException(ErrorCode.DUPLICATE_TRANSACTION_ID);
+    }
+
+    if (!paymentHelper.isBlank(request.getReferenceId())
+        &&
+        transactionRepository.existsByReferenceCode(request.getReferenceId())) {
+      throw new AppException(ErrorCode.DUPLICATE_REFERENCE_CODE);
     }
 
     Wallet wallet = walletRepository.findByUserIdForUpdate(userId)

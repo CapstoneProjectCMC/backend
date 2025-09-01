@@ -10,9 +10,12 @@ import com.codecampus.identity.exception.AppException;
 import com.codecampus.identity.exception.ErrorCode;
 import com.codecampus.identity.repository.account.PasswordResetTokenRepository;
 import com.codecampus.identity.repository.account.UserRepository;
+import com.codecampus.identity.service.kafka.NotificationEventProducer;
 import com.codecampus.identity.service.kafka.UserEventProducer;
+import events.notification.NotificationEvent;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Map;
 import java.util.Random;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +38,7 @@ public class PasswordResetService {
   PasswordResetTokenRepository tokenRepository;
   PasswordEncoder passwordEncoder;
   UserEventProducer userEventProducer;
+  NotificationEventProducer notificationEventProducer;
 
   @Value("${spring.mail.username}")
   @NonFinal
@@ -118,6 +122,16 @@ public class PasswordResetService {
 
     token.setConsumed(true);
     tokenRepository.save(token);
+
+    notificationEventProducer.publish(NotificationEvent.builder()
+        .channel("SOCKET")
+        .recipient(user.getId())
+        .templateCode("PASSWORD_RESET_SUCCESS")
+        .param(Map.of())
+        .subject("Đặt lại mật khẩu thành công")
+        .body("Mật khẩu của bạn đã được thay đổi.")
+        .build()
+    );
   }
 
   /* helpers */

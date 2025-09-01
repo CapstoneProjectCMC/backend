@@ -1,12 +1,9 @@
 package com.codecampus.post.service;
 
 
-import com.codecampus.post.dto.common.ApiResponse;
 import com.codecampus.post.dto.common.PageResponse;
-import com.codecampus.post.dto.request.AddFileDocumentDto;
 import com.codecampus.post.dto.request.PostRequestDto;
 import com.codecampus.post.dto.response.PostResponseDto;
-import com.codecampus.post.dto.response.file.UploadedFileResponse;
 import com.codecampus.post.entity.Post;
 import com.codecampus.post.exception.AppException;
 import com.codecampus.post.exception.ErrorCode;
@@ -15,6 +12,7 @@ import com.codecampus.post.helper.PostHelper;
 import com.codecampus.post.mapper.PostMapper;
 import com.codecampus.post.repository.PostRepository;
 import com.codecampus.post.repository.httpClient.FileServiceClient;
+import com.codecampus.post.service.kafka.PostEventProducer;
 import com.codecampus.post.utils.PageResponseUtils;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,6 +37,7 @@ public class PostService {
   PostMapper postMapper;
   FileServiceClient fileServiceClient;
   PostHelper postHelper;
+  PostEventProducer postEventProducer;
 
   public PageResponse<PostResponseDto> getAllMyPosts(
       int page, int size) {
@@ -104,29 +103,16 @@ public class PostService {
       PostRequestDto postRequestDto) {
     String userId = AuthenticationHelper.getMyUserId();
 
-    List<String> fileUrls = Collections.emptyList();
-    AddFileDocumentDto fileDoc = postRequestDto.getFileDocument();
-    if (fileDoc != null && fileDoc.getFile() != null &&
-        !fileDoc.getFile().isEmpty()) {
-
-      // Upload file
-      var api = fileServiceClient.uploadFile(fileDoc);
-
-      // Nếu API C# trả result là String URL
-      String uploadedUrl = Optional.ofNullable(api)
-          .map(com.codecampus.post.dto.common.ApiResponse::getResult)
-          .map(UploadedFileResponse::getUrl)
-          .orElse(null);
-
-      fileUrls =
-          uploadedUrl != null ? List.of(uploadedUrl) : Collections.emptyList();
-    }
+    List<String> fileUrls =
+        postHelper.uploadAll(postRequestDto.getFileDocument());
 
     Post post = postMapper.toPostFromPostRequestDto(postRequestDto);
     post.setFileUrls(fileUrls);
     post.setUserId(userId);
 
     postRepository.save(post);
+
+    postEventProducer.publishCreated(post);
   }
 
   public void updatePost(
@@ -149,18 +135,10 @@ public class PostService {
             .orElse(Collections.emptyList())
     );
 
-    // Nếu có file mới thì upload và append
-    if (postRequestDto.getFileDocument() != null &&
-        postRequestDto.getFileDocument().getFile() != null &&
-        !postRequestDto.getFileDocument().getFile().isEmpty()) {
-
-      var api = fileServiceClient
-          .uploadFile(postRequestDto.getFileDocument());
-
-      Optional.ofNullable(api)
-          .map(ApiResponse::getResult)
-          .map(UploadedFileResponse::getUrl)
-          .ifPresent(updatedFileUrls::add);
+    List<String> newUrls = postHelper.uploadAll(
+        postRequestDto.getFileDocument());
+    if (newUrls != null && !newUrls.isEmpty()) {
+      updatedFileUrls.addAll(newUrls);
     }
 
     // Cập nhật các field đơn khác
@@ -168,6 +146,8 @@ public class PostService {
 
     existingPost.setFileUrls(updatedFileUrls);
     postRepository.save(existingPost);
+
+    postEventProducer.publishUpdated(existingPost);
   }
 
 
@@ -177,6 +157,8 @@ public class PostService {
         .orElseThrow(() -> new AppException(ErrorCode.POST_NOT_FOUND));
     post.markDeleted(deletedBy);
     postRepository.save(post);
+
+    postEventProducer.publishDeleted(post);
   }
 }
 

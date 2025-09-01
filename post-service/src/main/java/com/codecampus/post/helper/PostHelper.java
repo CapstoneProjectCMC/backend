@@ -1,11 +1,19 @@
 package com.codecampus.post.helper;
 
+import com.codecampus.post.dto.common.ApiResponse;
+import com.codecampus.post.dto.request.AddFileDocumentDto;
 import com.codecampus.post.dto.response.PostResponseDto;
+import com.codecampus.post.dto.response.file.UploadedFileResponse;
 import com.codecampus.post.entity.Post;
 import com.codecampus.post.repository.PostCommentRepository;
 import com.codecampus.post.repository.PostReactionRepository;
+import com.codecampus.post.repository.httpClient.FileServiceClient;
 import com.codecampus.post.service.cache.UserSummaryCacheService;
 import dtos.UserSummary;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -19,6 +27,7 @@ public class PostHelper {
   UserSummaryCacheService userSummaryCacheService;
   PostCommentRepository postCommentRepository;
   PostReactionRepository postReactionRepository;
+  FileServiceClient fileServiceClient;
 
   public PostResponseDto toPostResponseDtoFromPost(Post post) {
     UserSummary summary = userSummaryCacheService.getOrLoad(post.getUserId());
@@ -68,5 +77,39 @@ public class PostHelper {
     return acc.stream()
         .anyMatch(a -> userId != null && userId.equals(a.getUserId())
             && (a.getIsExcluded() == null || !a.getIsExcluded()));
+  }
+
+  public List<String> uploadAll(AddFileDocumentDto fileDoc) {
+    if (fileDoc == null) {
+      return Collections.emptyList();
+    }
+
+    List<String> urls = new ArrayList<>();
+
+    // Nhiều file
+    if (fileDoc.getFiles() != null && !fileDoc.getFiles().isEmpty()) {
+      for (var f : fileDoc.getFiles()) {
+        if (f == null || f.isEmpty()) {
+          continue;
+        }
+
+        AddFileDocumentDto one = new AddFileDocumentDto();
+        one.setFiles(List.of(f));
+        one.setCategory(fileDoc.getCategory());
+        one.setDescription(fileDoc.getDescription());
+        one.setTags(fileDoc.getTags());
+        one.setLectureVideo(fileDoc.isLectureVideo());
+        one.setTextbook(fileDoc.isTextbook());
+        one.setOrgId(fileDoc.getOrgId());
+
+        var api = fileServiceClient.uploadFile(one);
+        Optional.ofNullable(api)
+            .map(ApiResponse::getResult)
+            .map(UploadedFileResponse::getUrl)
+            .ifPresent(urls::add);
+      }
+    }
+
+    return urls;
   }
 }

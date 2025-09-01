@@ -23,16 +23,20 @@ import com.codecampus.identity.mapper.kafka.UserPayloadMapper;
 import com.codecampus.identity.repository.account.RoleRepository;
 import com.codecampus.identity.repository.account.UserRepository;
 import com.codecampus.identity.repository.httpclient.org.OrganizationClient;
+import com.codecampus.identity.service.kafka.NotificationEventProducer;
 import com.codecampus.identity.service.kafka.UserEventProducer;
+import events.notification.NotificationEvent;
 import events.user.data.UserProfileCreationPayload;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -84,6 +88,7 @@ public class UserService {
   AuthenticationHelper authenticationHelper;
   UserHelper userHelper;
   UserEventProducer userEventProducer;
+  NotificationEventProducer notificationEventProducer;
 
   @Value("${app.init.tempPassword}")
   @NonFinal
@@ -190,6 +195,17 @@ public class UserService {
 
     user.setPassword(passwordEncoder.encode(request.getPassword()));
     userRepository.save(user);
+
+    notificationEventProducer.publish(NotificationEvent.builder()
+        .channel("SOCKET")
+        .recipient(user.getId())
+        .templateCode("PASSWORD_CREATED")
+        .param(Map.of())
+        .subject("Tạo mật khẩu thành công")
+        .body(
+            "Bạn đã tạo mật khẩu cho tài khoản. Từ giờ có thể đăng nhập bằng email/mật khẩu.")
+        .build()
+    );
   }
 
   public void changeMyPassword(ChangePasswordRequest req) {
@@ -269,7 +285,7 @@ public class UserService {
   @PreAuthorize("hasRole('ADMIN')")
   @Transactional
   public void restoreUser(String userId) {
-    User user = userRepository.findById(userId)
+    User user = userRepository.findByIdIncludingDeleted(userId)
         .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
     if (user.getDeletedAt() != null) {
       user.setDeletedAt(null);
@@ -277,6 +293,23 @@ public class UserService {
       userRepository.save(user);
       userEventProducer.publishRestoredUserEvent(user);
     }
+
+    // Gửi thông báo realtime + email
+    Map<String, Object> param = new HashMap<>();
+    param.put("email", user.getEmail());
+    param.put("displayName",
+        user.getUsername() != null ? user.getUsername() : user.getEmail());
+
+    notificationEventProducer.publish(NotificationEvent.builder()
+        .channel("SOCKET, EMAIL")
+        .recipient(user.getId())
+        .templateCode("ACCOUNT_RESTORED")
+        .param(Map.of())
+        .subject("Tài khoản đã được khôi phục")
+        .body(
+            "Xin chào {{displayName}}, tài khoản của bạn đã được khôi phục và có thể sử dụng lại..")
+        .build()
+    );
   }
 
   @PreAuthorize("hasRole('ADMIN')")

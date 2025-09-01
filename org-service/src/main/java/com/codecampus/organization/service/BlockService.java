@@ -12,7 +12,7 @@ import com.codecampus.organization.exception.AppException;
 import com.codecampus.organization.exception.ErrorCode;
 import com.codecampus.organization.helper.AuthenticationHelper;
 import com.codecampus.organization.helper.PageResponseHelper;
-import com.codecampus.organization.mapper.OrganizationBlockMapper;
+import com.codecampus.organization.mapper.BlockMapper;
 import com.codecampus.organization.repository.OrganizationBlockRepository;
 import com.codecampus.organization.repository.OrganizationMemberRepository;
 import com.codecampus.organization.repository.OrganizationRepository;
@@ -33,7 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class BlockService {
   OrganizationBlockRepository blockRepo;
-  OrganizationBlockMapper mapper;
+  BlockMapper mapper;
   OrganizationRepository orgRepo;
   OrganizationMemberRepository memberRepo;
 

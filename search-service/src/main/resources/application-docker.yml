@@ -23,3 +23,5 @@ logging:
 app:
   services:
     profile: http://profile-service:8081/profile
+    post: http://post-service:8090/post
+    organization: http://organization-service:8092/org

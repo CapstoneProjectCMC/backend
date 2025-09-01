@@ -1,6 +1,7 @@
 package com.codecampus.post.dto.response;
 
 import dtos.UserSummary;
+import java.time.Instant;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -22,5 +23,6 @@ public class CommentResponseDto {
   String content;
   List<CommentResponseDto> replies;
   UserSummary user;
+  Instant createdAt;
 }
 

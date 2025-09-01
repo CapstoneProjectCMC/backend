@@ -20,3 +20,4 @@ app:
   services:
     profile: http://profile-service:8081/profile
     file: http://file-service:8082/file
+    identity: http://identity-service:8080/identity

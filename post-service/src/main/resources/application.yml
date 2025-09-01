@@ -44,5 +44,8 @@ app:
   services:
     profile: http://localhost:8081/profile
     file: http://localhost:8082/file
+    identity: http://localhost:8080/identity
   event:
     profile-events: "profile-events"
+    post-events: "post-events"
+    post-access-events: "post-access-events"

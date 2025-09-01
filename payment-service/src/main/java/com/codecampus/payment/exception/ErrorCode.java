@@ -26,6 +26,12 @@ public enum ErrorCode {
   // 400 - Bad Request
   INVALID_REQUEST(4009101, BAD_REQUEST_STATUS, "Request không hợp lệ!",
       BAD_REQUEST),
+  DUPLICATE_TRANSACTION_ID(4009102, BAD_REQUEST_STATUS,
+      "Mã giao dịch bị trùng!",
+      BAD_REQUEST),
+  DUPLICATE_REFERENCE_CODE(4009103, BAD_REQUEST_STATUS,
+      "Mã tham chiếu bị trùng!",
+      BAD_REQUEST),
 
   // 401 - Unauthorized
   UNAUTHENTICATED(4019101, UNAUTHORIZED_STATUS, "Chưa xác thực!",

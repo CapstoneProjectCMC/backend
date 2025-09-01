@@ -67,6 +67,7 @@ app:
   event:
     user-events: "user-events"
     user-registrations: "user-registrations"
+    notification-events: "notification-events"
   init:
     admin:
       username: admin

@@ -21,6 +21,10 @@ public class PaymentHelper {
     return (currency == null || currency.isBlank()) ? "VND" : currency;
   }
 
+  public boolean isBlank(String s) {
+    return s == null || s.isBlank();
+  }
+
   public PaymentReceiptDto toPaymentReceiptDto(
       PaymentTransaction tx,
       Double balanceAfter,

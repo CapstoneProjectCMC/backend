@@ -102,7 +102,7 @@ public class AssignmentHelper {
       return null; // chưa có dữ liệu
     }
     return switch (a.getExercise().getExerciseType()) {
-      case QUIZ -> (s.bestScore() * 100.0 / s.totalPoints()) >= 85.0;
+      case QUIZ -> (s.bestScore() * 100.0 / s.totalPoints()) >= 70.0;
       case CODING -> s.bestScore().equals(s.totalPoints());
     };
   }

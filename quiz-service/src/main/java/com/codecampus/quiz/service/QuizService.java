@@ -309,7 +309,7 @@ public class QuizService {
 
     boolean passed = quizSubmission.getTotalPoints() > 0
         && (quizSubmission.getScore() * 100) >=
-        (85 * quizSubmission.getTotalPoints());
+        (70 * quizSubmission.getTotalPoints());
 
     quizSubmissionRepository.save(quizSubmission);
 

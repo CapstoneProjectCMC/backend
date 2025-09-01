@@ -14,9 +14,9 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @AllArgsConstructor
 public class NotificationEvent {
-  String channel;
-  String recipient;
-  String templateCode;
+  String channel; // "SOCKET"
+  String recipient; // userId
+  String templateCode; // ví dụ: ASSIGNMENT_ASSIGNED, SUBMISSION_PASSED
   Map<String, Object> param;
   String subject;
   String body;

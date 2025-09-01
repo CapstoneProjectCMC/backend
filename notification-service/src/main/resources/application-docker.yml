@@ -2,3 +2,11 @@ server:
   port: 8088
   servlet:
     context-path: /notification
+
+spring:
+  data:
+    mongodb:
+      uri: mongodb://${NOTIFICATION_USERNAME}:${NOTIFICATION_PASSWORD}@chat-db:27017/${NOTIFICATION_DATABASE}?authSource=${NOTIFICATION_DATABASE}
+      auto-index-creation: true
+  kafka:
+    bootstrap-servers: http://kafka:9092

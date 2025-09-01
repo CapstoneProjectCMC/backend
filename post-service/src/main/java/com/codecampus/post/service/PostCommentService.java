@@ -42,6 +42,7 @@ public class PostCommentService {
   UserBulkLoader userBulkLoader;
   PostHelper postHelper;
   CommentHelper commentHelper;
+  WebsocketRealtimeService realtime;
 
   @Transactional
   public CommentCreatedDto addTopLevelComment(
@@ -59,8 +60,11 @@ public class PostCommentService {
     comment.setPost(post);
     comment.setUserId(userId);
     comment.setContent(content);
-    return commentMapper.toCreatedDtoFromPostComment(
-        postCommentRepository.save(comment));
+
+    PostComment saved = postCommentRepository.save(comment);
+    realtime.commentCreated(postId, commentHelper.toCommentResponseDto(saved));
+
+    return commentMapper.toCreatedDtoFromPostComment(saved);
   }
 
 
@@ -86,8 +90,11 @@ public class PostCommentService {
     comment.setUserId(userId);
     comment.setContent(content);
     comment.setParentComment(parent);
-    return commentMapper.toCreatedDtoFromPostComment(
-        postCommentRepository.save(comment));
+
+    PostComment saved = postCommentRepository.save(comment);
+    realtime.commentCreated(postId, commentHelper.toCommentResponseDto(saved));
+
+    return commentMapper.toCreatedDtoFromPostComment(saved);
   }
 
   @Transactional(readOnly = true)
@@ -144,7 +151,10 @@ public class PostCommentService {
       throw new AppException(ErrorCode.UNAUTHORIZED);
     }
     comment.setContent(newContent);
-    postCommentRepository.save(comment);
+    PostComment saved = postCommentRepository.save(comment);
+
+    realtime.commentUpdated(saved.getPost().getPostId(),
+        commentHelper.toCommentResponseDto(saved));
   }
 
   @Transactional
@@ -156,6 +166,15 @@ public class PostCommentService {
       comment.markDeleted(by);
       postCommentRepository.save(comment);
     }
+
+    realtime.commentDeleted(comment.getPost().getPostId(),
+        comment.getCommentId());
+  }
+
+  @Transactional(readOnly = true)
+  public long countByPost(String postId) {
+    return postCommentRepository
+        .countByPost_PostIdAndDeletedAtIsNull(postId);
   }
 }
 

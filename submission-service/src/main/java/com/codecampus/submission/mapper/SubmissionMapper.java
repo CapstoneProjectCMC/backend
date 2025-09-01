@@ -50,7 +50,7 @@ public interface SubmissionMapper {
     SubmissionStatus status;
     if (score == 0) {
       status = SubmissionStatus.FAILED;
-    } else if (ratio >= 0.85) {
+    } else if (ratio >= 0.7) {
       status = SubmissionStatus.PASSED; // >=85% là pass
     } else {
       status = SubmissionStatus.PARTIAL;
@@ -87,7 +87,7 @@ public interface SubmissionMapper {
     Integer score = submission.getScore();
     boolean pass = totalPoints != null && totalPoints > 0
         && score != null
-        && (score * 100) >= (85 * totalPoints); // ≥85%
+        && (score * 100) >= (70 * totalPoints); // ≥70%
 
     return new QuizAttemptHistoryResponse(
         submission.getId(),
@@ -151,7 +151,7 @@ public interface SubmissionMapper {
     if (exercise.getExerciseType() == ExerciseType.QUIZ) {
       passed = totalPoints != null && totalPoints > 0
           && score != null
-          && (score * 100) >= (85 * totalPoints); // ≥85%
+          && (score * 100) >= (70 * totalPoints); // ≥70%
     } else { // CODING
       passed = score != null
           && score.equals(totalPoints);           // pass hết testcase

@@ -1,7 +1,7 @@
 package com.codecampus.post.repository.httpClient;
 
-import com.codecampus.post.config.FeignConfig.AuthenticationRequestInterceptor;
-import com.codecampus.post.config.FeignConfig.FeignMultipartConfiguration;
+import com.codecampus.post.config.feign_config.AuthenticationRequestInterceptor;
+import com.codecampus.post.config.feign_config.FeignMultipartConfiguration;
 import com.codecampus.post.dto.common.ApiResponse;
 import com.codecampus.post.dto.request.AddFileDocumentDto;
 import com.codecampus.post.dto.response.file.UploadedFileResponse;

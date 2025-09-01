@@ -34,6 +34,9 @@ public enum ErrorCode {
   PARTICIPANT_NULL(4008906, BAD_REQUEST_STATUS,
       "Người tham gia đoạn chat null!",
       BAD_REQUEST),
+  OWNER_MUST_TRANSFER(4008907, BAD_REQUEST_STATUS,
+      "Chuyển quyền trước khi rời!",
+      BAD_REQUEST),
 
 
   // 401 - Unauthorized

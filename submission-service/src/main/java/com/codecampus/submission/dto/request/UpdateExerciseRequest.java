@@ -9,6 +9,7 @@ public record UpdateExerciseRequest(
     String title,
     String description,
     Difficulty difficulty,
+    String orgId,
     BigDecimal cost,
     Boolean freeForOrg,
     Instant startTime,
