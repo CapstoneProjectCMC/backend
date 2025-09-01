@@ -124,7 +124,12 @@ services:
     image: ${DOCKERHUB_USER}/codecampus-notification-service:${IMAGE_TAG:-latest}
     environment:
       - SPRING_PROFILES_ACTIVE=docker
-    ports: [ "8088:8088" ]
+      - NOTIFICATION_USERNAME=${NOTIFICATION_USERNAME}
+      - NOTIFICATION_PASSWORD=${NOTIFICATION_PASSWORD}
+      - NOTIFICATION_DATABASE=${NOTIFICATION_DATABASE}
+    ports:
+      - "8088:8088"
+      - "4101:4101"
     networks: [ backend ]
 
   chat-service:
@@ -148,7 +153,9 @@ services:
       - POST_USERNAME=${POST_USERNAME}
       - POST_DB_PASSWORD=${POST_DB_PASSWORD}
       - REDIS_PASSWORD=${REDIS_PASSWORD}
-    ports: [ "8090:8090" ]
+    ports:
+      - "8090:8090"
+      - "4100:4100"
     networks: [ backend ]
 
   payment-service:

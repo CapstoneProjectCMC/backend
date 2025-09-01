@@ -10,7 +10,9 @@ import com.codecampus.submission.repository.AssignmentRepository;
 import com.codecampus.submission.service.grpc.GrpcCodingClient;
 import com.codecampus.submission.service.grpc.GrpcQuizClient;
 import com.codecampus.submission.service.kafka.ExerciseStatusEventProducer;
+import com.codecampus.submission.service.kafka.NotificationEventProducer;
 import dtos.ExerciseStatusDto;
+import events.notification.NotificationEvent;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +38,7 @@ public class AssignmentService {
   ExerciseHelper exerciseHelper;
 
   ExerciseStatusEventProducer exerciseStatusEventProducer;
+  NotificationEventProducer notificationEventProducer;
 
   GrpcQuizClient grpcQuizClient;
   GrpcCodingClient grpcCodingClient;
@@ -69,6 +72,20 @@ public class AssignmentService {
         /* bestScore  */ null,
         /* totalPts   */ null);
     exerciseStatusEventProducer.publishUpsert(exerciseStatusDto);
+
+    NotificationEvent evt = NotificationEvent.builder()
+        .channel("SOCKET") // hoặc "EMAIL", "PUSH" nếu sau này mở rộng
+        .recipient(studentId) // userId đích
+        .templateCode("ASSIGNMENT_ASSIGNED") // code template
+        .subject("Bạn được giao bài tập mới")
+        .body("Bạn vừa được giao bài: " + exercise.getTitle())
+        .param(Map.of(
+            "exerciseId", exercise.getId(),
+            "exerciseTitle", exercise.getTitle(),
+            "dueAt", dueAt
+        ))
+        .build();
+    notificationEventProducer.publish(evt);
 
     return assignment;
   }
@@ -166,6 +183,9 @@ public class AssignmentService {
   public void markCompleted(
       String exerciseId,
       String studentId) {
+
+    Exercise exercise = exerciseHelper.getExerciseOrThrow(exerciseId);
+
     assignmentRepository.findByExerciseIdAndStudentId(exerciseId, studentId)
         .ifPresent(a -> {
           a.setCompleted(true);

@@ -20,4 +20,5 @@ public class AuthenticationResponse {
   Instant refreshExpiry;
   boolean authenticated;
   boolean enabled;
+  boolean needPasswordSetup;
 }

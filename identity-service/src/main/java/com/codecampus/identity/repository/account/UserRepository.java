@@ -30,4 +30,10 @@ public interface UserRepository
   boolean existsByEmail(String email);
 
   boolean existsByUsername(String username);
+
+  @Query(
+      value = "SELECT * FROM users WHERE id = :id",
+      nativeQuery = true
+  )
+  Optional<User> findByIdIncludingDeleted(@Param("id") String id);
 }

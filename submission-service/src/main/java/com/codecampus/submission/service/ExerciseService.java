@@ -48,8 +48,10 @@ import com.codecampus.submission.service.grpc.GrpcCodingClient;
 import com.codecampus.submission.service.grpc.GrpcQuizClient;
 import com.codecampus.submission.service.kafka.ExerciseEventProducer;
 import com.codecampus.submission.service.kafka.ExerciseStatusEventProducer;
+import com.codecampus.submission.service.kafka.NotificationEventProducer;
 import dtos.ExerciseStatusDto;
 import dtos.UserSummary;
+import events.notification.NotificationEvent;
 import java.time.Instant;
 import java.util.Map;
 import java.util.Optional;
@@ -88,6 +90,7 @@ public class ExerciseService {
   GrpcCodingClient grpcCodingClient;
   ExerciseEventProducer exerciseEventProducer;
   ExerciseStatusEventProducer exerciseStatusEventProducer;
+  NotificationEventProducer notificationEventProducer;
 
   ExerciseMapper exerciseMapper;
   SubmissionMapper submissionMapper;
@@ -141,7 +144,7 @@ public class ExerciseService {
             request.createExerciseRequest(),
             true
         );
-    exerciseRepository.save(exercise);
+    exerciseRepository.saveAndFlush(exercise);
 
     quizService.addQuizDetail(
         exercise.getId(),
@@ -163,7 +166,7 @@ public class ExerciseService {
       boolean returnExercise) {
     Exercise exercise = createExercise(
         request.createExerciseRequest(), true);
-    exerciseRepository.save(exercise);
+    exerciseRepository.saveAndFlush(exercise);
 
     // đẩy coding detail
     codingService.addCodingDetail(
@@ -205,6 +208,20 @@ public class ExerciseService {
         quizSubmissionDto.getExerciseId(),
         quizSubmissionDto.getStudentId()
     );
+
+    NotificationEvent evt = NotificationEvent.builder()
+        .channel("SOCKET")
+        .recipient(submission.getUserId())
+        .templateCode("SUBMISSION_PASSED")
+        .subject("Bạn đã nộp bài")
+        .body("Bạn vừa nộp: " + exercise.getTitle())
+        .param(Map.of(
+            "exerciseId", exercise.getId(),
+            "submissionId", submission.getId(),
+            "score", submission.getScore()
+        ))
+        .build();
+    notificationEventProducer.publish(evt);
 
     // Cập nhật xếp hạng contest
     contestService.updateRankingOnSubmission(submission);
@@ -264,6 +281,20 @@ public class ExerciseService {
     assignmentService.markCompleted(
         exercise.getId(),
         submission.getUserId());
+
+    NotificationEvent evt = NotificationEvent.builder()
+        .channel("SOCKET")
+        .recipient(submission.getUserId())
+        .templateCode("SUBMISSION_PASSED")
+        .subject("Bạn đã nộp bài")
+        .body("Bạn vừa nộp: " + exercise.getTitle())
+        .param(Map.of(
+            "exerciseId", exercise.getId(),
+            "submissionId", submission.getId(),
+            "score", submission.getScore()
+        ))
+        .build();
+    notificationEventProducer.publish(evt);
 
     contestService.updateRankingOnSubmission(submission);
   }

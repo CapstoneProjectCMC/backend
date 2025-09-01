@@ -9,9 +9,12 @@ import com.codecampus.identity.exception.AppException;
 import com.codecampus.identity.exception.ErrorCode;
 import com.codecampus.identity.repository.account.OtpVerificationRepository;
 import com.codecampus.identity.repository.account.UserRepository;
+import com.codecampus.identity.service.kafka.NotificationEventProducer;
 import com.codecampus.identity.service.kafka.UserEventProducer;
+import events.notification.NotificationEvent;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Map;
 import java.util.Random;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -43,6 +46,7 @@ public class OtpService {
   UserRepository userRepository;
 
   UserEventProducer userEventProducer;
+  NotificationEventProducer notificationEventProducer;
 
   @Value("${app.otp.expiry-minutes}")
   @NonFinal
@@ -143,6 +147,16 @@ public class OtpService {
 
     userEventProducer.publishUpdatedUserEvent(user);
     otpRepository.save(otp);
+
+    notificationEventProducer.publish(NotificationEvent.builder()
+        .channel("SOCKET")
+        .recipient(user.getId())
+        .templateCode("ACCOUNT_ACTIVATED")
+        .param(Map.of())
+        .subject("Tài khoản đã được kích hoạt")
+        .body("Chúc mừng! Tài khoản của bạn đã được kích hoạt thành công.")
+        .build()
+    );
   }
 
   /**

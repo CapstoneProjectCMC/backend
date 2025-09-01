@@ -36,5 +36,7 @@ app:
   event:
     organization-events: "organization-events"
     organization-member-events: "organization-member-events"
+    exercise-events: "exercise-events"
+    post-events: "post-events"
   services:
     file: http://localhost:8082/file

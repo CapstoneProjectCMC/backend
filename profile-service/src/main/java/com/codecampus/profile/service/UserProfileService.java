@@ -20,7 +20,6 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 /**
@@ -117,7 +116,6 @@ public class UserProfileService {
    * @param size số phần tử mỗi trang
    * @return PageResponse chứa danh sách UserProfileResponse và thông tin phân trang
    */
-  @PreAuthorize("hasRole('ADMIN')")
   public PageResponse<UserProfileResponse> getAllUserProfiles(
       int page, int size) {
     Pageable pageable = PageRequest.of(page - 1, size);

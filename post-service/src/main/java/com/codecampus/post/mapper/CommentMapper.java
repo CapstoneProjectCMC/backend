@@ -13,6 +13,7 @@ public interface CommentMapper {
         .parentCommentId(c.getParentComment() == null ? null
             : c.getParentComment().getCommentId())
         .content(c.getContent())
+        .createdAt(c.getCreatedAt() != null ? c.getCreatedAt() : null)
         .build();
   }
 }

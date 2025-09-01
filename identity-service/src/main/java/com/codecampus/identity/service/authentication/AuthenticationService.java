@@ -488,6 +488,9 @@ public class AuthenticationService {
     SignedJWT refreshToken =
         generateToken(user, REFRESH_DURATION, "refresh_token");
 
+    boolean needPasswordSetup =
+        (user.getPassword() == null || user.getPassword().isBlank());
+
     return AuthenticationResponse.builder()
         .accessToken(accessToken.serialize())
         .refreshToken(refreshToken.serialize())
