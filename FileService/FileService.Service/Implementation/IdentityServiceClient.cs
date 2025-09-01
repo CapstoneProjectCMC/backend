@@ -44,7 +44,7 @@ namespace FileService.Service.Implementation
             _httpClient = httpClient;
             _cache = cache;
             _logger = logger;
-            _baseUrl = configuration["Appsettings:ApiSettings:UserServiceBaseUrl"];
+            _baseUrl = configuration["AppSettings:ApiSettings:UserServiceBaseUrl"];
         }
 
         public async Task<UserProfileResponse?> GetUserProfileAsync(string userId)
@@ -53,12 +53,6 @@ namespace FileService.Service.Implementation
             {
                 return cachedUser;
             }
-
-            if (string.IsNullOrEmpty(_userContext.Token))
-                throw new ErrorException(StatusCodeEnum.D02);
-
-            _httpClient.DefaultRequestHeaders.Authorization =
-                new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _userContext.Token);
 
             var request = new HttpRequestMessage(HttpMethod.Get, $"{_baseUrl}/profile/internal/user/{userId}");
             var response = await _httpClient.SendAsync(request);
@@ -88,13 +82,6 @@ namespace FileService.Service.Implementation
 
         public async Task<List<UserProfileResponse>> GetAllUserProfilesAsync()
         {
-            if (string.IsNullOrEmpty(_userContext.Token))
-                throw new ErrorException(StatusCodeEnum.D02);
-
-            // Thêm Bearer token
-            _httpClient.DefaultRequestHeaders.Authorization =
-                new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _userContext.Token);
-
             int page = 1;
             int size = 10;
             var allUsers = new List<UserProfileResponse>();
