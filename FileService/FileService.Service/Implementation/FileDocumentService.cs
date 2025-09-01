@@ -63,7 +63,7 @@ namespace FileService.Service.Implementation
             // Validate PageIndex and PageSize
             ValidatePagingModel(fileDocumentDto);
 
-            var items = await _fileDocumentRepository.FilterAsync(x => !x.IsDeleted || !x.IsActive || !x.IsRemoved);
+            var items = await _fileDocumentRepository.FilterAsync(x => !x.IsDeleted && x.IsActive && !x.IsRemoved);
 
             items = items.OrderByDescending(x => x.CreatedAt).ToList();
 
@@ -77,7 +77,11 @@ namespace FileService.Service.Implementation
 
             //call API Profile Service
             var users = await _identityServiceClient.GetAllUserProfilesAsync();
-            var userDict = users.ToDictionary(u => Guid.Parse(u.UserId), u => u);
+            //  var userDict = users.ToDictionary(u => Guid.Parse(u.UserId), u => u);
+            var userDict = users
+                .Where(u => Guid.TryParse(u.UserId, out _))
+                .ToDictionary(u => Guid.Parse(u.UserId), u => u);
+
 
             //build result
             var resultTasks = items.Select(async file =>
@@ -111,7 +115,11 @@ namespace FileService.Service.Implementation
                     OrganizationId = _userContext.OrganizationId,
 
                     //map CreatedBy -> User
-                    UserProfile = userDict.GetValueOrDefault(file.CreatedBy, new UserProfileResponse())
+                    UserProfile = userDict.GetValueOrDefault(file.CreatedBy, new UserProfileResponse
+                    {
+                        UserId = file.CreatedBy.ToString(),
+                        DisplayName = "[Unknown User]"
+                    })
                 };
             });
 
@@ -131,7 +139,10 @@ namespace FileService.Service.Implementation
 
             //call API Profile Service
             var users = await _identityServiceClient.GetAllUserProfilesAsync();
-            var userDict = users.ToDictionary(u => Guid.Parse(u.UserId), u => u);
+            //var userDict = users.ToDictionary(u => Guid.Parse(u.UserId), u => u);
+            var userDict = users
+                .Where(u => Guid.TryParse(u.UserId, out _))
+                .ToDictionary(u => Guid.Parse(u.UserId), u => u);
 
             //build result
             var resultTasks = videos.Select(async videosItem =>
@@ -163,7 +174,11 @@ namespace FileService.Service.Implementation
                     OrganizationId = _userContext.OrganizationId,
 
                     //map CreatedBy -> User
-                    UserProfile = userDict.GetValueOrDefault(videosItem.CreatedBy, new UserProfileResponse())
+                    UserProfile = userDict.GetValueOrDefault(videosItem.CreatedBy, new UserProfileResponse
+                    {
+                        UserId = videosItem.CreatedBy.ToString(),
+                        DisplayName = "[Unknown User]"
+                    })
                 };
             });
             return (await Task.WhenAll(resultTasks)).ToList();
@@ -181,7 +196,10 @@ namespace FileService.Service.Implementation
 
             //call API Profile Service
             var users = await _identityServiceClient.GetAllUserProfilesAsync();
-            var userDict = users.ToDictionary(u => Guid.Parse(u.UserId), u => u);
+            //var userDict = users.ToDictionary(u => Guid.Parse(u.UserId), u => u);
+            var userDict = users
+                .Where(u => Guid.TryParse(u.UserId, out _))
+                .ToDictionary(u => Guid.Parse(u.UserId), u => u);
 
             //build result
             var resultTasks = files.Select(async filesItem =>
@@ -213,7 +231,12 @@ namespace FileService.Service.Implementation
                     OrganizationId = _userContext.OrganizationId,
 
                     //map CreatedBy -> User
-                    UserProfile = userDict.GetValueOrDefault(filesItem.CreatedBy, new UserProfileResponse())
+                  //  UserProfile = userDict.GetValueOrDefault(filesItem.CreatedBy, new UserProfileResponse())
+                    UserProfile = userDict.GetValueOrDefault(filesItem.CreatedBy, new UserProfileResponse
+                    {
+                        UserId = filesItem.CreatedBy.ToString(),
+                        DisplayName = "[Unknown User]"
+                    })
                 };
             });
             return (await Task.WhenAll(resultTasks)).ToList();
@@ -232,6 +255,21 @@ namespace FileService.Service.Implementation
 
             //lấy thông tin người tạo
             var user = await _identityServiceClient.GetUserProfileAsync(file.CreatedBy.ToString());
+
+            // so sánh CreatedBy và UserId
+            UserProfileResponse userProfile = null;
+            if (user != null && Guid.TryParse(user.UserId, out var parsedUserId) && parsedUserId == file.CreatedBy)
+            {
+                userProfile = user;
+            }
+            else
+            {
+                userProfile = new UserProfileResponse
+                {
+                    UserId = file.CreatedBy.ToString(),
+                    DisplayName = "[Unknown User]"
+                };
+            }
 
             // Tạo publicUrl URL từ MinIO
             var publicUrl = await _minioService.GetPublicFileUrlAsync(file.Url.TrimStart('/')); // Loại bỏ '/' đầu nếu có
@@ -260,55 +298,6 @@ namespace FileService.Service.Implementation
                 HlsUrl = file.HlsUrl,
                 CreatedAt = file.CreatedAt,
                 CreatedBy = file.CreatedBy,
-                OrganizationId = _userContext.OrganizationId,
-                UserProfile = user ?? new UserProfileResponse()
-            };
-
-            return result;
-        }
-
-        public async Task<FileDocumentModel> GetVideoDetailById(Guid videoId)
-        {
-            var video = await _fileDocumentRepository.GetByIdAsync(videoId);
-            if (video == null || video.IsRemoved)
-                throw new ErrorException(StatusCodeEnum.A02);
-
-            var tags = video.TagIds.Any()
-                ? await _tagRepository.FilterAsync(Builders<Tags>.Filter.In(t => t.Id, video.TagIds))
-                : new List<Tags>();
-
-            var tagDict = tags.ToDictionary(t => t.Id, t => new TagModel { Id = t.Id, Name = t.Label });
-
-            //lấy thông tin người tạo
-            var user = await _identityServiceClient.GetUserProfileAsync(video.CreatedBy.ToString());
-
-            // Tạo publicUrl URL từ MinIO
-            var publicUrl = await _minioService.GetPublicFileUrlAsync(video.Url.TrimStart('/')); // Loại bỏ '/' đầu nếu có
-
-            var result = new FileDocumentModel
-            {
-                Id = video.Id,
-                FileName = video.FileName,
-                FileType = video.FileType,
-                Url = publicUrl,
-                Size = video.Size,
-                Checksum = video.Checksum,
-                Category = video.Category,
-                IsActive = video.IsActive,
-                Tags = video.TagIds.Select(id => tagDict.ContainsKey(id) ? tagDict[id] : new TagModel { Id = id, Name = "[Unknown]" }).ToList(),
-                ViewCount = video.ViewCount,
-                Rating = video.Rating,
-                Description = video.Description,
-                OrgId = video.OrgId,
-                ThumbnailUrl = video.ThumbnailUrl,
-                Duration = video.Duration,
-                IsLectureVideo = video.IsLectureVideo,
-                IsTextbook = video.IsTextbook,
-                TranscodingStatus = video.TranscodingStatus,
-                AssociatedResourceIds = video.AssociatedResourceIds,
-                HlsUrl = video.HlsUrl,
-                CreatedAt = video.CreatedAt,
-                CreatedBy = video.CreatedBy,
                 OrganizationId = _userContext.OrganizationId,
                 UserProfile = user ?? new UserProfileResponse()
             };
