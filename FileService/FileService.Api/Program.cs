@@ -104,7 +104,7 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuer = false,
         ValidateAudience = false,
         ValidateLifetime = false,
-        ValidateIssuerSigningKey = true,
+        ValidateIssuerSigningKey = false,
         ValidIssuer = appSettings.Jwt.Issuer,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(appSettings.Jwt.Key)),
 
