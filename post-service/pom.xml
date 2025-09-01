@@ -33,7 +33,6 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
 
         <!-- Library versions -->
-        <grpc.version>1.72.0</grpc.version>
         <protobuf.version>4.30.2</protobuf.version>
         <spring-cloud.version>2024.0.1</spring-cloud.version>
 
@@ -45,7 +44,6 @@
         <nimbus-jose.version>10.3</nimbus-jose.version>
         <security-oauth2-jose.version>6.5.0</security-oauth2-jose.version>
         <jacoco.version>0.8.13</jacoco.version>
-        <grpc.server.starter.version>3.1.0.RELEASE</grpc.server.starter.version>
         <redisson.version>3.50.0</redisson.version>
         <socketio.version>2.0.13</socketio.version>
 
@@ -193,11 +191,6 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.springframework.grpc</groupId>
-            <artifactId>spring-grpc-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.springframework.kafka</groupId>
             <artifactId>spring-kafka-test</artifactId>
             <scope>test</scope>
@@ -319,6 +312,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <!-- version kế thừa từ spring-boot-starter-parent -->
                 <configuration>
+                    <mainClass>com.codecampus.post.PostServiceApplication</mainClass>
                     <excludes>
                         <exclude>
                             <groupId>org.projectlombok</groupId>

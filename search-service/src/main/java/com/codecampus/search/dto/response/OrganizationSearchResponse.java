@@ -27,5 +27,5 @@ public class OrganizationSearchResponse {
   Instant updatedAt;
 
   // hydrate từ org-service khi cần
-  PageResponse<BlockWithMembersPageResponse> blocks;
+  PageResponse<BlockWithMembersWithUserPageResponse> blocks;
 }

@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>payment-service</artifactId>
-    <name>post</name>
+    <name>payment</name>
     <description>Payment Service Repository</description>
     <url/>
     <licenses>
@@ -298,6 +298,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <!-- version kế thừa từ spring-boot-starter-parent -->
                 <configuration>
+                    <mainClass>com.codecampus.payment.PaymentServiceApplication</mainClass>
                     <excludes>
                         <exclude>
                             <groupId>org.projectlombok</groupId>

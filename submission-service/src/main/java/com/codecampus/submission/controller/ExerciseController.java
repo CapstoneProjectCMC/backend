@@ -7,8 +7,8 @@ import com.codecampus.submission.dto.request.CreateExerciseRequest;
 import com.codecampus.submission.dto.request.UpdateExerciseRequest;
 import com.codecampus.submission.dto.request.coding.CreateCodingExerciseRequest;
 import com.codecampus.submission.dto.request.quiz.CreateQuizExerciseRequest;
+import com.codecampus.submission.dto.response.ExerciseResponse;
 import com.codecampus.submission.dto.response.coding.coding_detail.ExerciseCodingDetailResponse;
-import com.codecampus.submission.dto.response.quiz.ExerciseQuizResponse;
 import com.codecampus.submission.dto.response.quiz.quiz_detail.ExerciseQuizDetailResponse;
 import com.codecampus.submission.service.ExerciseService;
 import jakarta.validation.Valid;
@@ -90,13 +90,13 @@ public class ExerciseController {
   }
 
   @GetMapping("/exercises")
-  ApiResponse<PageResponse<ExerciseQuizResponse>> getAllExercises(
+  ApiResponse<PageResponse<ExerciseResponse>> getAllExercises(
       @RequestParam(defaultValue = "1") int page,
       @RequestParam(defaultValue = "10") int size,
       @RequestParam(defaultValue = "CREATED_AT") SortField sortBy,
       @RequestParam(defaultValue = "false") boolean asc
   ) {
-    return ApiResponse.<PageResponse<ExerciseQuizResponse>>builder()
+    return ApiResponse.<PageResponse<ExerciseResponse>>builder()
         .result(exerciseService.getAllExercises(
             page, size,
             sortBy, asc)
@@ -106,12 +106,12 @@ public class ExerciseController {
   }
 
   @GetMapping("/exercises/self")
-  ApiResponse<PageResponse<ExerciseQuizResponse>> getExercisesOf(
+  ApiResponse<PageResponse<ExerciseResponse>> getExercisesOf(
       @RequestParam(defaultValue = "1") int page,
       @RequestParam(defaultValue = "10") int size,
       @RequestParam(defaultValue = "CREATED_AT") SortField sortBy,
       @RequestParam(defaultValue = "false") boolean asc) {
-    return ApiResponse.<PageResponse<ExerciseQuizResponse>>builder()
+    return ApiResponse.<PageResponse<ExerciseResponse>>builder()
         .result(exerciseService.getExercisesOf(
             page, size,
             sortBy, asc)

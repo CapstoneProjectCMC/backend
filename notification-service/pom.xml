@@ -65,10 +65,6 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
         <dependency>
@@ -256,6 +252,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <!-- version kế thừa từ spring-boot-starter-parent -->
                 <configuration>
+                    <mainClass>com.codecampus.notification.NotificationApplication</mainClass>
                     <excludes>
                         <exclude>
                             <groupId>org.projectlombok</groupId>

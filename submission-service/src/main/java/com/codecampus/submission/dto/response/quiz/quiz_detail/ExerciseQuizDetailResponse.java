@@ -28,6 +28,7 @@ public record ExerciseQuizDetailResponse(
     Set<String> tags,
     boolean allowAiQuestion,
     boolean visibility,
+    Boolean purchased,
     QuizDetailSliceDetailResponse quizDetail,
     // audit
     String createdBy,

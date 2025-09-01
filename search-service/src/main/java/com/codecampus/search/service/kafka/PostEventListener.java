@@ -41,7 +41,8 @@ public class PostEventListener {
               postMapper.toPostDocumentFromPostPayload(evt.getPayload());
           // load access (để lọc visible)
           PageResponse<PostAccessResponseDto> page =
-              accessClient.getAccessByPost(evt.getId(), 1, 1000).getResult();
+              accessClient.internalGetAccessByPost(evt.getId(), 1, 1000)
+                  .getResult();
           if (page != null && page.getData() != null) {
             Set<String> allow = page.getData().stream()
                 .filter(a -> !a.isExcluded())

@@ -78,8 +78,8 @@ public interface OrganizationMemberRepository
       """)
   Page<OrganizationMember> findUnassignedActiveMembersOfOrg(
       @Param("orgId") String orgId,
-      @Param("blockIds") java.util.List<String> blockIds,
-      org.springframework.data.domain.Pageable pageable);
+      @Param("blockIds") List<String> blockIds,
+      Pageable pageable);
 
 
   // Unassigned members (không lọc active ở cấp org)
@@ -97,8 +97,8 @@ public interface OrganizationMemberRepository
       """)
   Page<OrganizationMember> findUnassignedMembersOfOrg(
       @Param("orgId") String orgId,
-      @Param("blockIds") java.util.List<String> blockIds,
-      org.springframework.data.domain.Pageable pageable);
+      @Param("blockIds") List<String> blockIds,
+      Pageable pageable);
 
   @Query(value = """
       select * from organization_members 

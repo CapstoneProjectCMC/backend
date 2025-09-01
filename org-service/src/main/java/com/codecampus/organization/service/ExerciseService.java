@@ -9,7 +9,6 @@ import com.codecampus.organization.helper.PageResponseHelper;
 import com.codecampus.organization.mapper.ExerciseMapper;
 import com.codecampus.organization.repository.OrganizationExerciseRepository;
 import com.codecampus.organization.repository.OrganizationRepository;
-import dtos.ExerciseSummary;
 import events.exercise.data.ExercisePayload;
 import java.util.Objects;
 import lombok.AccessLevel;
@@ -101,7 +100,7 @@ public class ExerciseService {
   }
 
   @Transactional(readOnly = true)
-  public PageResponse<ExerciseSummary> listExercisesOfOrg(
+  public PageResponse<OrganizationExercise> listExercisesOfOrg(
       String orgId, int page, int size) {
     // ensure org exists
     organizationRepository.findById(orgId)
@@ -110,9 +109,8 @@ public class ExerciseService {
     Pageable pageable = PageRequest.of(Math.max(page - 1, 0), Math.max(size, 1),
         Sort.by(Sort.Order.desc("createdAt")));
 
-    Page<ExerciseSummary> mapped = orgExerciseRepo
-        .findByOrgId(orgId, pageable)
-        .map(mapper::toExerciseSummary);
+    Page<OrganizationExercise> mapped = orgExerciseRepo
+        .findByOrgId(orgId, pageable);
 
     return PageResponseHelper.toPageResponse(mapped, page);
   }

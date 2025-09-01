@@ -28,6 +28,7 @@ public record ExerciseCodingDetailResponse(
     Set<String> tags,
     boolean allowAiQuestion,
     boolean visibility,
+    Boolean purchased,
 
     /* ------ phần mới cho coding ------ */
     CodingDetailSliceDetailResponse codingDetail,

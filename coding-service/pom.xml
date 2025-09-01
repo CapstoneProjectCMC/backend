@@ -348,6 +348,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <!-- version kế thừa từ spring-boot-starter-parent -->
                 <configuration>
+                    <mainClass>com.codecampus.coding.CodingApplication</mainClass>
                     <excludes>
                         <exclude>
                             <groupId>org.projectlombok</groupId>

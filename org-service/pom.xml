@@ -47,6 +47,7 @@
         <projectlombok-lombok.version>1.18.38</projectlombok-lombok.version>
         <apache.poi.version>5.4.1</apache.poi.version>
         <apache.poi.ooxml.version>5.4.1</apache.poi.ooxml.version>
+        <redisson.version>3.50.0</redisson.version>
 
         <!-- Build-plugin -->
         <protobuf.plugin.version>0.6.1</protobuf.plugin.version>
@@ -85,12 +86,24 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.springframework/spring-core -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
+        </dependency>
+
+        <!-- ===== Redisson ===== -->
+        <!-- https://mvnrepository.com/artifact/org.redisson/redisson -->
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson</artifactId>
+            <version>${redisson.version}</version>
         </dependency>
 
         <!-- ========= Spring Cloud / Integration ========= -->
@@ -315,6 +328,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <!-- version kế thừa từ spring-boot-starter-parent -->
                 <configuration>
+                    <mainClass>com.codecampus.organization.OrgServiceApplication</mainClass>
                     <excludes>
                         <exclude>
                             <groupId>org.projectlombok</groupId>

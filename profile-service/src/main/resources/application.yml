@@ -46,6 +46,7 @@ app:
     file: http://localhost:8082/file
     organization: http://localhost:8091/org
     submission: http://localhost:8083/submission
+    post: http://localhost:8090/post
   event:
     user-events: "user-events"
     user-registrations: "user-registrations"
@@ -56,3 +57,4 @@ app:
     contest-events: "contest-events"
     exercise-status-events: "exercise-status-events"
     contest-status-events: "contest-status-events"
+    post-events: "post-events"

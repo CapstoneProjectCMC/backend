@@ -54,6 +54,16 @@ public class UserController {
         .build();
   }
 
+  @PreAuthorize("hasRole('ADMIN')")
+  @PostMapping("/admin")
+  ApiResponse<Void> createAdmin(
+      @RequestBody @Valid UserCreationRequest request) {
+    userService.createAdmin(request);
+    return ApiResponse.<Void>builder()
+        .message("Create Admin successful")
+        .build();
+  }
+
 
   @PostMapping("/user/create-password")
   ApiResponse<Void> createPassword(

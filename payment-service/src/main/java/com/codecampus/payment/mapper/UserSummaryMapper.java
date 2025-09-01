@@ -16,9 +16,9 @@ public interface UserSummaryMapper {
         .userId(p.getUserId())
         .username(p.getUsername())
         .email(p.getEmail())
-        .displayName(p.getDisplayName())
-        .avatarUrl(p.getAvatarUrl())
-        .active(p.getActive())
+        .displayName(p.getDisplayName() != null ? p.getDisplayName() : "")
+        .avatarUrl(p.getAvatarUrl() != null ? p.getAvatarUrl() : "")
+        .active(p.getActive() != null ? p.getActive() : Boolean.TRUE)
         .roles(p.getRoles())
         .build();
   }

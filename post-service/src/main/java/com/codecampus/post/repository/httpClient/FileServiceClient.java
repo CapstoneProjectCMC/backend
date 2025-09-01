@@ -1,7 +1,7 @@
 package com.codecampus.post.repository.httpClient;
 
-import com.codecampus.post.config.feign_config.AuthenticationRequestInterceptor;
-import com.codecampus.post.config.feign_config.FeignMultipartConfiguration;
+import com.codecampus.post.config.feign.AuthenticationRequestInterceptor;
+import com.codecampus.post.config.feign.FeignConfiguration;
 import com.codecampus.post.dto.common.ApiResponse;
 import com.codecampus.post.dto.request.AddFileDocumentDto;
 import com.codecampus.post.dto.response.file.UploadedFileResponse;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 @FeignClient(
     name = "file-service",
     url = "${app.services.file}",
-    configuration = {FeignMultipartConfiguration.class,
+    configuration = {FeignConfiguration.class,
         AuthenticationRequestInterceptor.class})
 public interface FileServiceClient {
 

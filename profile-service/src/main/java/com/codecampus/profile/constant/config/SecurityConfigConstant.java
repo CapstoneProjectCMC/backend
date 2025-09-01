@@ -20,6 +20,7 @@ public class SecurityConfigConstant {
       "/actuator/**",
       "/internal/user",
       "/internal/user/**",
+      "/users/**"
   };
 
   // FRONTEND ENDPOINT

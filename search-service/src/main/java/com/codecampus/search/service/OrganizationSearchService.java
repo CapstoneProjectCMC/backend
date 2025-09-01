@@ -3,11 +3,22 @@ package com.codecampus.search.service;
 import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.Operator;
 import com.codecampus.search.dto.common.PageResponse;
+import com.codecampus.search.dto.response.BlockWithMembersPageResponse;
+import com.codecampus.search.dto.response.BlockWithMembersWithUserPageResponse;
+import com.codecampus.search.dto.response.MemberInBlockResponse;
+import com.codecampus.search.dto.response.MemberInBlockWithUserResponse;
 import com.codecampus.search.dto.response.OrganizationSearchResponse;
 import com.codecampus.search.entity.OrganizationDocument;
 import com.codecampus.search.helper.SearchHelper;
 import com.codecampus.search.repository.client.OrganizationClient;
+import com.codecampus.search.service.cache.UserBulkLoader;
+import dtos.UserSummary;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -29,6 +40,7 @@ public class OrganizationSearchService {
 
   ElasticsearchOperations es;
   OrganizationClient organizationClient;
+  UserBulkLoader userBulkLoader;
 
   public PageResponse<OrganizationSearchResponse> search(
       String q, String status,
@@ -38,11 +50,24 @@ public class OrganizationSearchService {
       int membersPage, int membersSize,
       boolean activeOnlyMembers, boolean includeUnassigned) {
 
-    NativeQuery query = new NativeQueryBuilder()
-        .withQuery(qb -> qb.bool(b -> buildQuery(q, status, b)))
+    boolean hasQ = SearchHelper.hasText(q);
+    boolean hasStatus = SearchHelper.hasText(status);
+
+    NativeQueryBuilder nqb = new NativeQueryBuilder()
         .withPageable(PageRequest.of(Math.max(1, page) - 1, size,
-            Sort.by(Sort.Order.desc("createdAt"))))
-        .build();
+            Sort.by(Sort.Order.desc("createdAt"))));
+
+    if (!hasQ && !hasStatus) {
+      nqb.withQuery(qb -> qb.bool(b -> {
+        b.must(m -> m.matchAll(ma -> ma));
+        b.mustNot(mn -> mn.exists(e -> e.field("deletedAt")));
+        return b;
+      }));
+    } else {
+      nqb.withQuery(qb -> qb.bool(b -> buildQuery(q, status, b)));
+    }
+
+    NativeQuery query = nqb.build();
 
     SearchHits<OrganizationDocument> hits =
         es.search(query, OrganizationDocument.class);
@@ -66,10 +91,85 @@ public class OrganizationSearchService {
               .build();
 
           if (includeBlocks) {
-            var api = organizationClient.getBlocksOfOrg(
+            var api = organizationClient.internalGetBlocksOfOrg(
                 doc.getId(), blocksPage, blocksSize, membersPage, membersSize,
                 activeOnlyMembers, includeUnassigned);
-            res.setBlocks(api != null ? api.getResult() : null);
+
+            PageResponse<BlockWithMembersPageResponse> raw =
+                (api != null) ? api.getResult() : null;
+
+            if (raw != null && raw.getData() != null) {
+              // 1) Thu thập toàn bộ userId của tất cả block trên trang này
+              Set<String> userIds = raw.getData().stream()
+                  .flatMap(b -> {
+                    var mp = b.getMembers();
+                    if (mp == null || mp.getData() == null) {
+                      return Stream.empty();
+                    }
+                    return mp.getData().stream();
+                  })
+                  .map(MemberInBlockResponse::getUserId)
+                  .filter(Objects::nonNull)
+                  .collect(Collectors.toSet());
+
+              // 2) Bulk load UserSummary từ cache
+              Map<String, UserSummary> userMap =
+                  userBulkLoader.loadAll(userIds);
+
+              // 3) Map sang DTO có UserSummary
+              List<BlockWithMembersWithUserPageResponse> newBlocks =
+                  raw.getData().stream()
+                      .map(b -> {
+                        PageResponse<MemberInBlockWithUserResponse> members =
+                            (b.getMembers() == null)
+                                ?
+                                PageResponse.<MemberInBlockWithUserResponse>builder()
+                                    .build()
+                                :
+                                PageResponse.<MemberInBlockWithUserResponse>builder()
+                                    .currentPage(
+                                        b.getMembers().getCurrentPage())
+                                    .totalPages(b.getMembers().getTotalPages())
+                                    .pageSize(b.getMembers().getPageSize())
+                                    .totalElements(
+                                        b.getMembers().getTotalElements())
+                                    .data(
+                                        (b.getMembers().getData() == null) ?
+                                            List.of() :
+                                            b.getMembers().getData().stream()
+                                                .map(
+                                                    m -> MemberInBlockWithUserResponse.builder()
+                                                        .user(userMap.get(
+                                                            m.getUserId())) // <--- thay userId bằng cache
+                                                        .role(m.getRole())
+                                                        .active(m.isActive())
+                                                        .build())
+                                                .toList()
+                                    )
+                                    .build();
+
+                        return BlockWithMembersWithUserPageResponse.builder()
+                            .id(b.getId())
+                            .orgId(b.getOrgId())
+                            .name(b.getName())
+                            .code(b.getCode())
+                            .description(b.getDescription())
+                            .createdAt(b.getCreatedAt())
+                            .updatedAt(b.getUpdatedAt())
+                            .members(members)
+                            .build();
+                      })
+                      .toList();
+
+              res.setBlocks(
+                  PageResponse.<BlockWithMembersWithUserPageResponse>builder()
+                      .currentPage(raw.getCurrentPage())
+                      .totalPages(raw.getTotalPages())
+                      .pageSize(raw.getPageSize())
+                      .totalElements(raw.getTotalElements())
+                      .data(newBlocks)
+                      .build());
+            }
           }
           return res;
         }).toList();

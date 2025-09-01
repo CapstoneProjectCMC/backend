@@ -67,5 +67,7 @@ app:
     exercise-status-events: "exercise-status-events"
     contest-status-events: "contest-status-events"
     notification-events: "notification-events"
+    exercise-purchased-events: "exercise-purchased-events"
   services:
     profile: http://localhost:8081/profile
+    payment: http://localhost:8091/payment

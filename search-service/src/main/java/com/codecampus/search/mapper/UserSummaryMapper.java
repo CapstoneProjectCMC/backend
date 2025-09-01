@@ -15,9 +15,12 @@ public interface UserSummaryMapper {
         .userId(userProfileResponse.getUserId())
         .username(userProfileResponse.getUsername())
         .email(userProfileResponse.getEmail())
-        .displayName(userProfileResponse.getDisplayName())
-        .avatarUrl(userProfileResponse.getAvatarUrl())
-        .active(userProfileResponse.isActive())
+        .displayName(userProfileResponse.getDisplayName() != null ?
+            userProfileResponse.getDisplayName() : "")
+        .avatarUrl(userProfileResponse.getAvatarUrl() != null ?
+            userProfileResponse.getAvatarUrl() : "")
+        .active(userProfileResponse.getActive() != null ?
+            userProfileResponse.getActive() : Boolean.TRUE)
         .roles(userProfileResponse.getRoles())
         .build();
   }

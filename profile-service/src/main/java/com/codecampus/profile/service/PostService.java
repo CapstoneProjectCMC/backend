@@ -7,11 +7,11 @@ import com.codecampus.profile.entity.Post;
 import com.codecampus.profile.entity.properties.post.Reaction;
 import com.codecampus.profile.entity.properties.post.ReportedPost;
 import com.codecampus.profile.entity.properties.post.SavedPost;
-import com.codecampus.profile.exception.AppException;
-import com.codecampus.profile.exception.ErrorCode;
 import com.codecampus.profile.helper.AuthenticationHelper;
+import com.codecampus.profile.mapper.PostMapper;
 import com.codecampus.profile.repository.PostRepository;
 import com.codecampus.profile.repository.UserProfileRepository;
+import com.codecampus.profile.service.cache.PostCacheService;
 import java.time.Instant;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +29,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class PostService {
   UserProfileRepository userProfileRepository;
   PostRepository postRepository;
-  UserProfileService userProfileService;
+  PostCacheService postCacheService;
+  PostMapper postMapper;
 
   @Transactional
   public void savePost(String postId) {
@@ -85,9 +86,13 @@ public class PostService {
   }
 
   public Post getPost(String postId) {
-    return postRepository.findByPostId(postId)
-        .orElseThrow(
-            () -> new AppException(ErrorCode.POST_NOT_FOUND)
-        );
+    return postRepository.findByPostId(postId).orElseGet(() -> {
+      // fallback từ cache/REST
+      dtos.PostSummary sum = postCacheService.getOrLoad(postId);
+      Post node = (sum == null)
+          ? Post.builder().postId(postId).build()
+          : postMapper.toPostFromPostSummary(sum);
+      return postRepository.save(node);
+    });
   }
 }

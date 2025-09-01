@@ -3,9 +3,9 @@ package com.codecampus.organization.service;
 import com.codecampus.constant.ScopeType;
 import com.codecampus.organization.dto.common.PageResponse;
 import com.codecampus.organization.dto.request.BulkAddMembersRequest;
-import com.codecampus.organization.dto.response.BlocksOfUserResponse;
+import com.codecampus.organization.dto.response.BlocksOfUserWithMemberResponse;
 import com.codecampus.organization.dto.response.ImportMembersResult;
-import com.codecampus.organization.dto.response.MemberInBlockResponse;
+import com.codecampus.organization.dto.response.MemberInBlockWithMemberResponse;
 import com.codecampus.organization.dto.response.PrimaryOrgResponse;
 import com.codecampus.organization.entity.OrganizationBlock;
 import com.codecampus.organization.entity.OrganizationMember;
@@ -16,12 +16,19 @@ import com.codecampus.organization.helper.OrganizationMemberHelper;
 import com.codecampus.organization.helper.PageResponseHelper;
 import com.codecampus.organization.repository.OrganizationBlockRepository;
 import com.codecampus.organization.repository.OrganizationMemberRepository;
+import com.codecampus.organization.service.cache.UserBulkLoader;
+import com.codecampus.organization.service.cache.UserSummaryCacheService;
 import com.codecampus.organization.service.kafka.OrganizationMemberEventProducer;
+import dtos.UserSummary;
 import events.org.OrganizationMemberEvent;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -47,6 +54,8 @@ public class MembershipService {
   OrganizationBlockRepository blockRepository;
   OrganizationMemberEventProducer eventProducer;
   OrganizationMemberHelper organizationMemberHelper;
+  UserBulkLoader userBulkLoader;
+  UserSummaryCacheService userSummaryCacheService;
 
   @Transactional
   public void addToOrg(
@@ -155,7 +164,7 @@ public class MembershipService {
         .build());
   }
 
-  public PageResponse<MemberInBlockResponse> listOrgMembers(
+  public PageResponse<MemberInBlockWithMemberResponse> listOrgMembers(
       String orgId, int page, int size, boolean activeOnly) {
     Pageable pageable = PageRequest.of(Math.max(page - 1, 0), size,
         Sort.by("createdAt").descending());
@@ -166,10 +175,18 @@ public class MembershipService {
         orgId,
         pageable);
 
-    Page<MemberInBlockResponse> mapped =
-        data.map(m -> MemberInBlockResponse.builder()
-            .userId(m.getUserId()).role(m.getRole()).active(m.isActive())
-            .build());
+    Set<String> uids = data.getContent().stream()
+        .map(OrganizationMember::getUserId)
+        .collect(Collectors.toSet());
+    Map<String, UserSummary> summaries = userBulkLoader.loadAll(uids);
+
+    Page<MemberInBlockWithMemberResponse> mapped = data.map(m ->
+        MemberInBlockWithMemberResponse.builder()
+            .user(summaries.get(m.getUserId()))
+            .role(m.getRole())
+            .active(m.isActive())
+            .build()
+    );
 
     return PageResponseHelper.toPageResponse(mapped, page);
   }
@@ -315,11 +332,11 @@ public class MembershipService {
         });
   }
 
-  public PageResponse<MemberInBlockResponse> listUnassignedMembers(
+  public PageResponse<MemberInBlockWithMemberResponse> listUnassignedMembers(
       String orgId, int page, int size, boolean activeOnly) {
     var pageable = PageRequest.of(Math.max(page - 1, 0), size,
         Sort.by("createdAt").descending());
-    java.util.List<String> blockIds = blockRepository.findBlockIdsOfOrg(orgId);
+    List<String> blockIds = blockRepository.findBlockIdsOfOrg(orgId);
 
     Page<OrganizationMember> p = activeOnly
         ? memberRepository.findUnassignedActiveMembersOfOrg(orgId, blockIds,
@@ -327,10 +344,19 @@ public class MembershipService {
         :
         memberRepository.findUnassignedMembersOfOrg(orgId, blockIds, pageable);
 
-    Page<MemberInBlockResponse> mapped = p.map(m ->
-        MemberInBlockResponse.builder()
-            .userId(m.getUserId()).role(m.getRole()).active(m.isActive())
-            .build());
+
+    Set<String> uids = p.getContent().stream()
+        .map(OrganizationMember::getUserId)
+        .collect(Collectors.toSet());
+    Map<String, UserSummary> summaries = userBulkLoader.loadAll(uids);
+
+    Page<MemberInBlockWithMemberResponse> mapped = p.map(m ->
+        MemberInBlockWithMemberResponse.builder()
+            .user(summaries.get(m.getUserId()))
+            .role(m.getRole())
+            .active(m.isActive())
+            .build()
+    );
 
     return PageResponseHelper.toPageResponse(mapped, page);
   }
@@ -340,7 +366,7 @@ public class MembershipService {
       String orgId,
       MultipartFile file) {
     int total = 0, added = 0, skipped = 0;
-    java.util.List<String> errors = new java.util.ArrayList<>();
+    List<String> errors = new ArrayList<>();
 
     try (Workbook wb = new XSSFWorkbook(file.getInputStream())) {
       Sheet sheet = wb.getSheetAt(0);
@@ -384,7 +410,7 @@ public class MembershipService {
       String blockId,
       MultipartFile file) {
     int total = 0, added = 0, skipped = 0;
-    java.util.List<String> errors = new java.util.ArrayList<>();
+    List<String> errors = new ArrayList<>();
 
     try (Workbook wb = new XSSFWorkbook(file.getInputStream())) {
       Sheet sheet = wb.getSheetAt(0);
@@ -444,12 +470,12 @@ public class MembershipService {
   /**
    * Danh sách block đang ACTIVE của 1 user
    */
-  public BlocksOfUserResponse listActiveBlocksOfUser(
+  public BlocksOfUserWithMemberResponse listActiveBlocksOfUser(
       String userId) {
     var list = memberRepository
         .findByUserIdAndScopeTypeAndIsActiveIsTrue(userId, ScopeType.Grade);
-    return BlocksOfUserResponse.builder()
-        .userId(userId)
+    return BlocksOfUserWithMemberResponse.builder()
+        .user(userSummaryCacheService.getOrLoad(userId))
         .blockIds(list.stream().map(OrganizationMember::getScopeId).toList())
         .build();
   }

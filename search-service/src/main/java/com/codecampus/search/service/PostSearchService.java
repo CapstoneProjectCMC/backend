@@ -22,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.elasticsearch.client.elc.NativeQuery;
 import org.springframework.data.elasticsearch.client.elc.NativeQueryBuilder;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
@@ -54,8 +55,9 @@ public class PostSearchService {
     HighlightQuery highlight = buildHighlight();
 
     NativeQuery query = new NativeQueryBuilder()
-        .withQuery(q -> q.bool(b -> buildQuery(r, viewerId, viewerOrgId, b)))
-        .withPageable(PageRequest.of(Math.max(1, r.page()) - 1, r.size()))
+        .withQuery(q -> q.bool(b -> buildQuery(r, viewerOrgId, viewerId, b)))
+        .withPageable(PageRequest.of(Math.max(1, r.page()) - 1, r.size(),
+            Sort.by(Sort.Order.desc("createdAt"))))
         .withHighlightQuery(highlight)
         .build();
 
@@ -74,9 +76,10 @@ public class PostSearchService {
         .map(SearchHit::getContent)
         .map(doc -> {
           long comments = Optional.ofNullable(
-              statsClient.commentCount(doc.getId()).getResult()).orElse(0L);
+                  statsClient.internalCommentCount(doc.getId()).getResult())
+              .orElse(0L);
           Map<String, Long> react = Optional.ofNullable(
-                  statsClient.reactionCounts(doc.getId()).getResult())
+                  statsClient.internalReactionCounts(doc.getId()).getResult())
               .orElse(Map.of());
           return PostSearchResponse.builder()
               .postId(doc.getId())
@@ -149,29 +152,27 @@ public class PostSearchService {
     b.mustNot(mn -> mn.exists(e -> e.field("deletedAt")));
 
     b.filter(f -> f.bool(v -> {
+      // công khai hoặc Global
       v.should(s -> s.term(t -> t.field("isPublic").value(true)));
       v.should(s -> s.term(t -> t.field("postType").value("Global")));
+
+      // theo org
       if (viewerOrgId != null && !viewerOrgId.isBlank()) {
         v.should(s -> s.term(t -> t.field("orgId").value(viewerOrgId)));
       }
-      return v;
-    }));
 
-    // visibility như DB: owner OR isPublic OR Global OR (allow contains viewer & not in exclude)
-    b.filter(f -> f.bool(v -> {
-      v.should(s -> s.term(t -> t.field("isPublic").value(true)));
-      v.should(s -> s.term(t -> t.field("postType").value("Global")));
+      // theo user
       if (viewerId != null && !viewerId.isBlank()) {
-        v.should(s -> s.term(t -> t.field("userId").value(viewerId)));
+        v.should(s -> s.term(t -> t.field("userId").value(viewerId))); // owner
         v.should(s -> s.bool(bb -> bb
-            .must(m1 -> m1.terms(
-                ts -> ts.field("allowUserIds").terms(tv -> tv.value(
-                    List.of(FieldValue.of(viewerId))))))
-            .mustNot(mn -> mn.terms(
-                ts -> ts.field("excludeUserIds").terms(tv -> tv.value(
-                    List.of(FieldValue.of(viewerId))))))
+            .must(m1 -> m1.terms(ts -> ts.field("allowUserIds")
+                .terms(tv -> tv.value(List.of(FieldValue.of(viewerId))))))
+            .mustNot(mn -> mn.terms(ts -> ts.field("excludeUserIds")
+                .terms(tv -> tv.value(List.of(FieldValue.of(viewerId))))))
         ));
       }
+
+      v.minimumShouldMatch("1");
       return v;
     }));
 

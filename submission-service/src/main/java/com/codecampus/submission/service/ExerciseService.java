@@ -9,9 +9,9 @@ import com.codecampus.submission.dto.request.CreateExerciseRequest;
 import com.codecampus.submission.dto.request.UpdateExerciseRequest;
 import com.codecampus.submission.dto.request.coding.CreateCodingExerciseRequest;
 import com.codecampus.submission.dto.request.quiz.CreateQuizExerciseRequest;
+import com.codecampus.submission.dto.response.ExerciseResponse;
 import com.codecampus.submission.dto.response.coding.coding_detail.CodingDetailSliceDetailResponse;
 import com.codecampus.submission.dto.response.coding.coding_detail.ExerciseCodingDetailResponse;
-import com.codecampus.submission.dto.response.quiz.ExerciseQuizResponse;
 import com.codecampus.submission.dto.response.quiz.quiz_detail.ExerciseQuizDetailResponse;
 import com.codecampus.submission.dto.response.quiz.quiz_detail.QuizDetailSliceDetailResponse;
 import com.codecampus.submission.entity.Assignment;
@@ -42,6 +42,7 @@ import com.codecampus.submission.repository.QuestionRepository;
 import com.codecampus.submission.repository.SubmissionRepository;
 import com.codecampus.submission.repository.SubmissionResultRepository;
 import com.codecampus.submission.repository.TestCaseRepository;
+import com.codecampus.submission.repository.client.PaymentClient;
 import com.codecampus.submission.service.cache.UserBulkLoader;
 import com.codecampus.submission.service.cache.UserSummaryCacheService;
 import com.codecampus.submission.service.grpc.GrpcCodingClient;
@@ -88,6 +89,7 @@ public class ExerciseService {
 
   GrpcQuizClient grpcQuizClient;
   GrpcCodingClient grpcCodingClient;
+  PaymentClient paymentClient;
   ExerciseEventProducer exerciseEventProducer;
   ExerciseStatusEventProducer exerciseStatusEventProducer;
   NotificationEventProducer notificationEventProducer;
@@ -345,7 +347,7 @@ public class ExerciseService {
     }
   }
 
-  public PageResponse<ExerciseQuizResponse> getAllExercises(
+  public PageResponse<ExerciseResponse> getAllExercises(
       int page, int size,
       SortField sortBy, boolean asc) {
 
@@ -365,16 +367,24 @@ public class ExerciseService {
         .collect(Collectors.toSet());
     Map<String, UserSummary> summaries = userBulkLoader.loadAll(userIds);
 
-    Page<ExerciseQuizResponse> out = pageData
+    String me = AuthenticationHelper.getMyUserId();
+    Map<String, Boolean> purchasedMap = (me == null)
+        ? java.util.Collections.emptyMap()
+        : purchasedBulk(me, pageData.stream().map(Exercise::getId).toList());
+
+    Page<ExerciseResponse> out = pageData
         .map(
-            e -> exerciseHelper.toExerciseQuizResponseFromExerciseAndUserSummary(
-                e, summaries.get(e.getUserId())))
+            e -> exerciseHelper.toExerciseResponseFromExerciseAndUserSummary(
+                e,
+                summaries.get(e.getUserId()),
+                Boolean.TRUE.equals(purchasedMap.get(e.getId()))
+            ))
         .map(a -> a); // no-op để giữ Page map
 
     return PageResponseHelper.toPageResponse(out, page);
   }
 
-  public PageResponse<ExerciseQuizResponse> getExercisesOf(
+  public PageResponse<ExerciseResponse> getExercisesOf(
       int page, int size,
       SortField sortBy, boolean asc) {
 
@@ -391,10 +401,18 @@ public class ExerciseService {
         .collect(java.util.stream.Collectors.toSet());
     Map<String, UserSummary> summaries = userBulkLoader.loadAll(userIds);
 
-    Page<ExerciseQuizResponse> out = pageData
+    String me = AuthenticationHelper.getMyUserId();
+    Map<String, Boolean> purchasedMap = (me == null)
+        ? java.util.Collections.emptyMap()
+        : purchasedBulk(me, pageData.stream().map(Exercise::getId).toList());
+
+    Page<ExerciseResponse> out = pageData
         .map(
-            e -> exerciseHelper.toExerciseQuizResponseFromExerciseAndUserSummary(
-                e, summaries.get(e.getUserId())));
+            e -> exerciseHelper.toExerciseResponseFromExerciseAndUserSummary(
+                e,
+                summaries.get(e.getUserId()),
+                Boolean.TRUE.equals(purchasedMap.get(e.getId()))
+            ));
 
     return PageResponseHelper.toPageResponse(out, page);
   }
@@ -425,8 +443,11 @@ public class ExerciseService {
     UserSummary userSummary =
         userSummaryCacheService.getOrLoad(exercise.getUserId());
 
+    String me = AuthenticationHelper.getMyUserId();
+    boolean purchased = (me != null) && purchasedBy(me, exerciseId);
+
     return exerciseHelper.toExerciseQuizDetailResponseFromExerciseQuizDetailSliceDetailResponseAndUserSummary(
-        exercise, qSlice, userSummary);
+        exercise, qSlice, userSummary, purchased);
   }
 
   @Transactional(readOnly = true)
@@ -453,8 +474,11 @@ public class ExerciseService {
     UserSummary userSummary =
         userSummaryCacheService.getOrLoad(exercise.getUserId());
 
+    String me = AuthenticationHelper.getMyUserId();
+    boolean purchased = (me != null) && purchasedBy(me, exerciseId);
+
     return exerciseHelper.toExerciseCodingDetailResponseFromExerciseCodingDetailSliceDetailResponseAndUserSummary(
-        exercise, slice, userSummary);
+        exercise, slice, userSummary, purchased);
   }
 
   @Transactional(readOnly = true)
@@ -469,9 +493,10 @@ public class ExerciseService {
         .map(Assignment::isCompleted)
         .orElse(false);
 
+    boolean purchased = (me != null) && purchasedBy(me, exerciseId);
 
     return exerciseMapper.toExerciseSyncDtoFromExercise(
-        exercise, created, completed);
+        exercise, created, completed, purchased);
   }
 
   @Transactional(readOnly = true)
@@ -508,4 +533,35 @@ public class ExerciseService {
         /* totalPts   */ null
     );
   }
+
+
+  private boolean purchasedBy(
+      String userId, String exerciseId) {
+    try {
+      var api =
+          paymentClient.internalHasPurchased(userId, exerciseId, "EXERCISE");
+      return api != null && Boolean.TRUE.equals(api.getResult());
+    } catch (Exception ex) {
+      log.warn("[Exercise] check purchased error userId={}, exerciseId={}: {}",
+          userId, exerciseId, ex.getMessage());
+      return false; // fallback an toàn
+    }
+  }
+
+  private Map<String, Boolean> purchasedBulk(String userId,
+                                             java.util.List<String> exerciseIds) {
+    try {
+      var api =
+          paymentClient.internalHasPurchasedBulk(userId, "EXERCISE",
+              exerciseIds);
+      return api != null && api.getResult() != null ? api.getResult() :
+          java.util.Collections.emptyMap();
+    } catch (Exception ex) {
+      log.warn(
+          "[Exercise] bulk check purchased error userId={}, ids={}, err={}",
+          userId, exerciseIds.size(), ex.getMessage());
+      return java.util.Collections.emptyMap();
+    }
+  }
+
 }

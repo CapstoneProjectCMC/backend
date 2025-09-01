@@ -2,10 +2,12 @@ package com.codecampus.organization.service;
 
 import com.codecampus.constant.ScopeType;
 import com.codecampus.organization.dto.common.PageResponse;
-import com.codecampus.organization.dto.request.BlockWithMembersPageResponse;
 import com.codecampus.organization.dto.request.CreateBlockRequest;
 import com.codecampus.organization.dto.request.UpdateBlockRequest;
+import com.codecampus.organization.dto.response.BlockWithMembersPageResponse;
+import com.codecampus.organization.dto.response.BlockWithMembersWithMemberPageResponse;
 import com.codecampus.organization.dto.response.MemberInBlockResponse;
+import com.codecampus.organization.dto.response.MemberInBlockWithMemberResponse;
 import com.codecampus.organization.entity.OrganizationBlock;
 import com.codecampus.organization.entity.OrganizationMember;
 import com.codecampus.organization.exception.AppException;
@@ -16,6 +18,13 @@ import com.codecampus.organization.mapper.BlockMapper;
 import com.codecampus.organization.repository.OrganizationBlockRepository;
 import com.codecampus.organization.repository.OrganizationMemberRepository;
 import com.codecampus.organization.repository.OrganizationRepository;
+import com.codecampus.organization.service.cache.UserBulkLoader;
+import dtos.UserSummary;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -36,6 +45,7 @@ public class BlockService {
   BlockMapper mapper;
   OrganizationRepository orgRepo;
   OrganizationMemberRepository memberRepo;
+  UserBulkLoader userBulkLoader;
 
   @Transactional
   public void createBlock(
@@ -90,16 +100,16 @@ public class BlockService {
     var memberPg = PageRequest.of(Math.max(membersPage - 1, 0), membersSize,
         Sort.by("createdAt").descending());
 
-    java.util.List<BlockWithMembersPageResponse> data =
-        new java.util.ArrayList<>();
+    List<BlockWithMembersPageResponse> data =
+        new ArrayList<>();
 
+    // 1) Map từng block thật + members
     for (OrganizationBlock b : blockPage.getContent()) {
       Page<OrganizationMember> memPage = activeOnlyMembers
-          ?
-          memberRepo.findByScopeTypeAndScopeIdAndIsActiveIsTrue(ScopeType.Grade,
-              b.getId(), memberPg)
-          : memberRepo.findByScopeTypeAndScopeId(ScopeType.Grade, b.getId(),
-          memberPg);
+          ? memberRepo.findByScopeTypeAndScopeIdAndIsActiveIsTrue(
+          ScopeType.Grade, b.getId(), memberPg)
+          : memberRepo.findByScopeTypeAndScopeId(
+          ScopeType.Grade, b.getId(), memberPg);
 
       Page<MemberInBlockResponse> mapped = memPage.map(m ->
           MemberInBlockResponse.builder()
@@ -119,9 +129,10 @@ public class BlockService {
           .build());
     }
 
-    // Append block ảo UNASSIGNED
+    // 2) Thêm block ảo UNASSIGNED nếu được yêu cầu
     if (includeUnassigned) {
-      java.util.List<String> blockIds = blockRepo.findBlockIdsOfOrg(orgId);
+      List<String> blockIds = blockRepo.findBlockIdsOfOrg(orgId);
+
       Page<OrganizationMember> unassigned = activeOnlyMembers
           ?
           memberRepo.findUnassignedActiveMembersOfOrg(orgId, blockIds, memberPg)
@@ -129,7 +140,9 @@ public class BlockService {
 
       Page<MemberInBlockResponse> mapped = unassigned.map(m ->
           MemberInBlockResponse.builder()
-              .userId(m.getUserId()).role(m.getRole()).active(m.isActive())
+              .userId(m.getUserId())
+              .role(m.getRole())
+              .active(m.isActive())
               .build()
       );
 
@@ -144,7 +157,8 @@ public class BlockService {
           .build());
     }
 
-    // Trả PageResponse cho blocks (không tính block ảo vào totalElements để không sai trang)
+    // 3) Trả PageResponse cho blocks
+    // (không tính block ảo vào totalElements để không sai trang)
     return PageResponse.<BlockWithMembersPageResponse>builder()
         .currentPage(blocksPage)
         .pageSize(blockPage.getSize())
@@ -154,7 +168,103 @@ public class BlockService {
         .build();
   }
 
-  public BlockWithMembersPageResponse getBlock(
+  public PageResponse<BlockWithMembersWithMemberPageResponse> getBlocksOfOrgWithMembers(
+      String orgId,
+      int blocksPage, int blocksSize,
+      int membersPage, int membersSize,
+      boolean activeOnlyMembers,
+      boolean includeUnassigned) {
+
+    Pageable blocksPg = PageRequest.of(Math.max(blocksPage - 1, 0), blocksSize,
+        Sort.by("createdAt").descending());
+    Page<OrganizationBlock> blockPage = blockRepo.findByOrgId(orgId, blocksPg);
+
+    var memberPg = PageRequest.of(Math.max(membersPage - 1, 0), membersSize,
+        Sort.by("createdAt").descending());
+
+    List<BlockWithMembersWithMemberPageResponse> data =
+        new ArrayList<>();
+
+    // 1) Map từng block thật + members
+    for (OrganizationBlock b : blockPage.getContent()) {
+      Page<OrganizationMember> memPage = activeOnlyMembers
+          ? memberRepo.findByScopeTypeAndScopeIdAndIsActiveIsTrue(
+          ScopeType.Grade, b.getId(), memberPg)
+          : memberRepo.findByScopeTypeAndScopeId(
+          ScopeType.Grade, b.getId(), memberPg);
+
+      Set<String> uids = memPage.getContent()
+          .stream().map(OrganizationMember::getUserId)
+          .collect(java.util.stream.Collectors.toSet());
+      Map<String, UserSummary> summaries =
+          userBulkLoader.loadAll(uids);
+
+      Page<MemberInBlockWithMemberResponse> mapped = memPage.map(m ->
+          MemberInBlockWithMemberResponse.builder()
+              .user(summaries.get(m.getUserId()))
+              .role(m.getRole())
+              .active(m.isActive())
+              .build()
+      );
+
+      data.add(BlockWithMembersWithMemberPageResponse.builder()
+          .id(b.getId())
+          .orgId(b.getOrgId())
+          .name(b.getName())
+          .code(b.getCode())
+          .description(b.getDescription())
+          .createdAt(b.getCreatedAt())
+          .updatedAt(b.getUpdatedAt())
+          .members(PageResponseHelper.toPageResponse(mapped, membersPage))
+          .build());
+    }
+
+    // 2) Thêm block ảo UNASSIGNED nếu được yêu cầu
+    if (includeUnassigned) {
+      List<String> blockIds = blockRepo.findBlockIdsOfOrg(orgId);
+
+      Page<OrganizationMember> unassigned = activeOnlyMembers
+          ?
+          memberRepo.findUnassignedActiveMembersOfOrg(orgId, blockIds, memberPg)
+          : memberRepo.findUnassignedMembersOfOrg(orgId, blockIds, memberPg);
+
+      Set<String> uids2 = unassigned.getContent().stream()
+          .map(OrganizationMember::getUserId)
+          .collect(Collectors.toSet());
+      Map<String, UserSummary> summaries2 =
+          userBulkLoader.loadAll(uids2);
+
+      Page<MemberInBlockWithMemberResponse> mapped = unassigned.map(m ->
+          MemberInBlockWithMemberResponse.builder()
+              .user(summaries2.get(m.getUserId()))
+              .role(m.getRole())
+              .active(m.isActive())
+              .build()
+      );
+
+      data.add(BlockWithMembersWithMemberPageResponse.builder()
+          .id("virtual-unassigned-" + orgId)
+          .orgId(orgId)
+          .name("Unassigned")
+          .code("UNASSIGNED")
+          .description(
+              "Members thuộc organization nhưng chưa nằm trong block nào")
+          .members(PageResponseHelper.toPageResponse(mapped, membersPage))
+          .build());
+    }
+
+    // 3) Trả PageResponse cho blocks
+    // (không tính block ảo vào totalElements để không sai trang)
+    return PageResponse.<BlockWithMembersWithMemberPageResponse>builder()
+        .currentPage(blocksPage)
+        .pageSize(blockPage.getSize())
+        .totalPages(blockPage.getTotalPages())
+        .totalElements(blockPage.getTotalElements())
+        .data(data)
+        .build();
+  }
+
+  public BlockWithMembersWithMemberPageResponse getBlock(
       String blockId,
       int memberPage, int memberSize,
       boolean activeOnly) {
@@ -170,13 +280,20 @@ public class BlockService {
         : memberRepo.findByScopeTypeAndScopeId(ScopeType.Grade, blockId,
         pageable);
 
-    Page<MemberInBlockResponse> mapped = memPage.map(m ->
-        MemberInBlockResponse.builder()
-            .userId(m.getUserId()).role(m.getRole()).active(m.isActive())
+    java.util.Set<String> uids = memPage.getContent().stream()
+        .map(OrganizationMember::getUserId)
+        .collect(java.util.stream.Collectors.toSet());
+    java.util.Map<String, UserSummary> summaries = userBulkLoader.loadAll(uids);
+
+    Page<MemberInBlockWithMemberResponse> mapped = memPage.map(m ->
+        MemberInBlockWithMemberResponse.builder()
+            .user(summaries.get(m.getUserId()))
+            .role(m.getRole())
+            .active(m.isActive())
             .build()
     );
 
-    return BlockWithMembersPageResponse.builder()
+    return BlockWithMembersWithMemberPageResponse.builder()
         .id(b.getId())
         .orgId(b.getOrgId())
         .name(b.getName())

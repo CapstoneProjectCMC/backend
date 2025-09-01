@@ -43,6 +43,7 @@ spring:
 app:
   event:
     profile-events: "profile-events"
+    exercise-purchased-events: "exercise-purchased-events"
   services:
     profile: http://localhost:8081/profile
     file: http://localhost:8082/file

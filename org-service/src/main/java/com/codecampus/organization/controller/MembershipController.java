@@ -6,9 +6,9 @@ import com.codecampus.organization.dto.common.PageResponse;
 import com.codecampus.organization.dto.request.BulkAddMembersRequest;
 import com.codecampus.organization.dto.request.CreateOrganizationMemberRequest;
 import com.codecampus.organization.dto.request.SwitchBlockRequest;
-import com.codecampus.organization.dto.response.BlocksOfUserResponse;
+import com.codecampus.organization.dto.response.BlocksOfUserWithMemberResponse;
 import com.codecampus.organization.dto.response.ImportMembersResult;
-import com.codecampus.organization.dto.response.MemberInBlockResponse;
+import com.codecampus.organization.dto.response.MemberInBlockWithMemberResponse;
 import com.codecampus.organization.dto.response.PrimaryOrgResponse;
 import com.codecampus.organization.service.MembershipService;
 import lombok.AccessLevel;
@@ -66,12 +66,12 @@ public class MembershipController {
   }
 
   @GetMapping("/{orgId}/members")
-  ApiResponse<PageResponse<MemberInBlockResponse>> listOrgMembers(
+  ApiResponse<PageResponse<MemberInBlockWithMemberResponse>> listOrgMembers(
       @PathVariable String orgId,
       @RequestParam(defaultValue = "1") int page,
       @RequestParam(defaultValue = "10") int size,
       @RequestParam(defaultValue = "true") boolean activeOnly) {
-    return ApiResponse.<PageResponse<MemberInBlockResponse>>builder()
+    return ApiResponse.<PageResponse<MemberInBlockWithMemberResponse>>builder()
         .message("Get toàn bộ member trong tổ chức!")
         .result(membershipService.listOrgMembers(orgId, page, size,
             activeOnly))
@@ -195,10 +195,10 @@ public class MembershipController {
   /**
    * Dành cho identity lấy block_ids user đang tham gia để put vào JWT
    */
-  @GetMapping("/user/{userId}/blocks")
-  ApiResponse<BlocksOfUserResponse> listActiveBlocksOfUser(
+  @GetMapping("/member/{userId}/blocks")
+  ApiResponse<BlocksOfUserWithMemberResponse> listActiveBlocksOfUser(
       @PathVariable String userId) {
-    return ApiResponse.<BlocksOfUserResponse>builder()
+    return ApiResponse.<BlocksOfUserWithMemberResponse>builder()
         .message("Get các block đang active của user thành công!")
         .result(membershipService.listActiveBlocksOfUser(userId))
         .build();

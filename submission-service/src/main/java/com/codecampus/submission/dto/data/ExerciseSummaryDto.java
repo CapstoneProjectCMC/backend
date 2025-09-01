@@ -11,6 +11,7 @@ public record ExerciseSummaryDto(
     boolean visibility,
     String orgId,
     boolean created,
-    boolean completed
+    boolean completed,
+    boolean purchased
 ) {
 }

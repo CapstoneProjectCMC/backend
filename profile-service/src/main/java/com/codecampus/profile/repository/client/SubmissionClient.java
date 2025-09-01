@@ -1,5 +1,6 @@
 package com.codecampus.profile.repository.client;
 
+import com.codecampus.profile.config.AuthenticationRequestInterceptor;
 import com.codecampus.profile.dto.common.ApiResponse;
 import dtos.ContestStatusDto;
 import dtos.ContestSummary;
@@ -13,7 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(
     name = "submission-service",
     url = "${app.services.submission}",
-    path = "/internal"
+    path = "/internal",
+    configuration = AuthenticationRequestInterceptor.class
 )
 public interface SubmissionClient {
   @GetMapping("/exercise/{exerciseId}/summary")

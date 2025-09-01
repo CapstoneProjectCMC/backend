@@ -1,0 +1,65 @@
+syntax = "proto3";
+package submission;
+option java_multiple_files = true;
+option java_package = "com.codecampus.submission.grpc";
+option java_outer_classname = "SubmissionSyncProto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+message QuizSubmissionAnswerDto {
+  string questionId = 1;
+  string selectedOptionId = 2; // rỗng nếu FILL_BLANK
+  string answerText = 3;
+  bool   correct = 4;
+}
+
+message QuizSubmissionDto {
+  string id = 1;
+  string exerciseId = 2;
+  string studentId = 3;
+  int32  score = 4;
+  int32  totalPoints = 5;
+  google.protobuf.Timestamp submittedAt = 6;
+  repeated QuizSubmissionAnswerDto answers = 7;
+  int32 timeTakenSeconds = 8;
+}
+
+message CodeSubmissionDto {
+  string id = 1;
+  string exerciseId = 2;
+  string studentId = 3;
+  int32 score = 4; //
+  int32 totalPoints = 5; //
+  string language = 6;
+  string sourceCode = 7;
+  google.protobuf.Timestamp submittedAt = 8;
+  int32 timeTakenSeconds = 9;
+  repeated TestCaseResultSyncDto results = 10;
+  int32 peakMemoryMb = 11;
+  float cpus = 12;
+  int32 memoryMb = 13;
+}
+
+message TestCaseResultSyncDto {
+  string testCaseId = 1;
+  bool passed = 2;
+  int32 runtimeMs = 3;
+  int32 memoryMb = 4;
+  string output = 5;
+  string errorMessage = 6;
+}
+
+service SubmissionSyncService {
+  rpc CreateQuizSubmission(CreateQuizSubmissionRequest)
+      returns (google.protobuf.Empty);
+  rpc CreateCodeSubmission (CreateCodeSubmissionRequest)
+      returns (google.protobuf.Empty);
+}
+
+message CreateQuizSubmissionRequest {
+  QuizSubmissionDto submission = 1;
+}
+
+message CreateCodeSubmissionRequest {
+  CodeSubmissionDto submission = 1;
+}

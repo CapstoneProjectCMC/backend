@@ -10,3 +10,6 @@ spring:
       auto-index-creation: true
   kafka:
     bootstrap-servers: http://kafka:9092
+app:
+  services:
+    identity: http://identity-service:8080/identity

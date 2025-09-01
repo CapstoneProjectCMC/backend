@@ -14,6 +14,7 @@ import com.codecampus.post.repository.PostRepository;
 import com.codecampus.post.repository.httpClient.FileServiceClient;
 import com.codecampus.post.service.kafka.PostEventProducer;
 import com.codecampus.post.utils.PageResponseUtils;
+import dtos.PostSummary;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -159,6 +160,12 @@ public class PostService {
     postRepository.save(post);
 
     postEventProducer.publishDeleted(post);
+  }
+
+  public PostSummary getPostSummary(String postId) {
+    Post post = postRepository.findById(postId)
+        .orElseThrow(() -> new AppException(ErrorCode.POST_NOT_FOUND));
+    return postMapper.toPostSummaryFromPost(post);
   }
 }
 

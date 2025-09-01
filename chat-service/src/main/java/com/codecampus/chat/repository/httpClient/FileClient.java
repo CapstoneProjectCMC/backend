@@ -1,7 +1,7 @@
 package com.codecampus.chat.repository.httpClient;
 
-import com.codecampus.chat.configuration.config.AuthenticationRequestInterceptor;
-import com.codecampus.chat.configuration.config.FeignMultipartConfiguration;
+import com.codecampus.chat.configuration.feign.AuthenticationRequestInterceptor;
+import com.codecampus.chat.configuration.feign.FeignConfiguration;
 import com.codecampus.chat.constant.file.FileType;
 import com.codecampus.chat.dto.common.ApiResponse;
 import com.codecampus.chat.dto.response.UploadedFileResponse;
@@ -16,7 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
     name = "file-service",
     url = "${app.services.file}",
     configuration = {AuthenticationRequestInterceptor.class,
-        FeignMultipartConfiguration.class}
+        FeignConfiguration.class}
 )
 public interface FileClient {
 

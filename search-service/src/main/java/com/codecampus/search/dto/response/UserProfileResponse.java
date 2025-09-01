@@ -15,7 +15,7 @@ public class UserProfileResponse {
 
   String username;
   String email;
-  boolean active;
+  Boolean active;
   Set<String> roles;
 
   String firstName;
@@ -24,7 +24,7 @@ public class UserProfileResponse {
   String bio;
   Boolean gender;
   String displayName;
-  int education;
+  Integer education;
   String[] links;
   String city;
   String avatarUrl;

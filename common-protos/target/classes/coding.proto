@@ -1,0 +1,164 @@
+syntax = "proto3";
+
+package coding;
+option java_multiple_files = true;
+option java_package = "com.codecampus.coding.grpc";
+option java_outer_classname = "CodingProto";
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+message CodingExerciseDto {
+  string id = 1;
+  string title = 2;
+  string description = 3;
+  bool publicAccessible = 4;
+  string createdBy = 5;
+}
+
+message CodingDetailDto {
+  string exerciseId = 1; // = id của exercise
+  repeated string allowedLanguages = 2;
+  string input = 3;
+  string output = 4;
+  int32  timeLimit = 5;
+  int32  memoryLimit = 6;
+  int32  maxSubmissions = 7;
+  string topic = 8;
+  string constraintText = 9;
+  string codeTemplate = 10;
+  string solution = 11;
+  repeated TestCaseDto testcases = 12;
+}
+
+message TestCaseDto {
+  string id = 1;
+  string exerciseId = 2;
+  string input = 3;
+  string expectedOutput = 4;
+  bool sample = 5;
+  string note = 6;
+}
+
+message SoftDeleteRequest {
+  string id = 1;
+}
+
+message SoftDeleteTestCaseRequest {
+  string exerciseId = 1;
+  string testCaseId = 2;
+}
+
+message SubmitCodeRequest {
+  string exerciseId = 1;
+  string studentId = 2;
+  string language = 3;
+  string sourceCode = 4;
+  int32 timeTakenSeconds = 5;
+}
+
+message TestCaseResultDto {
+  string testCaseId = 1;
+  bool passed = 2;
+  int32 runtimeMs = 3;
+  int32 memoryMb = 4;
+  string output = 5;
+  string errorMessage = 6;
+}
+
+message SubmitCodeResponse {
+  string submissionId = 1;
+  int32 score = 2;
+  int32 totalPoints = 3;
+  bool passed = 4;
+  repeated TestCaseResultDto results = 5;
+  int32 memoryMb = 6;
+  float cpus = 7;
+  int32 peakMemoryMb = 8;
+}
+
+message LoadCodingRequest {
+  string exerciseId = 1;
+  string studentId = 2;   // gửi kèm để check assignment
+}
+
+message CodingDetailLoadResponse {
+  string topic = 1;
+  repeated string allowedLanguages = 2;
+  string input = 3;
+  string output = 4;
+  string constraintText = 5;
+  int32 timeLimit = 6;
+  int32 memoryLimit = 7;
+  int32 maxSubmissions = 8;
+  string codeTemplate = 9;
+  repeated TestCaseDtoLoadResponse testcases = 10;
+}
+
+message LoadCodingResponse {
+  CodingExerciseDto exercise = 1;
+  CodingDetailLoadResponse detail = 2;
+}
+
+message TestCaseDtoLoadResponse {
+  string id = 1;
+  string input = 2;
+  string expectedOutput = 3;   // sẽ "" nếu !sample
+  bool sample = 4;
+  string note = 5;
+}
+
+message AssignmentDto {
+  string id = 1;
+  string exerciseId = 2;
+  string studentId = 3;
+  google.protobuf.Timestamp dueAt = 4;
+  bool completed = 5;
+}
+
+message UpsertAssignmentRequest {
+  AssignmentDto assignment = 1;
+}
+
+message SoftDeleteAssignmentRequest {
+  string id = 1;
+}
+
+service CodingSyncService {
+  rpc CreateCodingExercise(CreateCodingExerciseRequest)
+      returns (google.protobuf.Empty);
+  rpc AddCodingDetail(AddCodingDetailRequest)
+      returns (google.protobuf.Empty);
+  rpc AddTestCase(AddTestCaseRequest)
+      returns (google.protobuf.Empty);
+  rpc SoftDeleteExercise (SoftDeleteRequest)
+      returns (google.protobuf.Empty);
+  rpc SoftDeleteTestCase (SoftDeleteTestCaseRequest)
+      returns (google.protobuf.Empty);
+  rpc UpsertAssignment(UpsertAssignmentRequest)
+      returns (google.protobuf.Empty);
+  rpc SoftDeleteAssignment (SoftDeleteAssignmentRequest)
+      returns (google.protobuf.Empty);
+}
+
+service CodingPlayService {
+  rpc SubmitCode(SubmitCodeRequest)
+      returns (SubmitCodeResponse);
+  rpc LoadCoding(LoadCodingRequest)
+      returns (LoadCodingResponse);
+}
+
+message CreateCodingExerciseRequest {
+  CodingExerciseDto exercise = 1;
+}
+
+message AddCodingDetailRequest {
+  string exerciseId = 1;
+  CodingDetailDto codingDetail = 2;
+}
+
+message AddTestCaseRequest {
+  string exerciseId = 1;
+  TestCaseDto testCase = 2;
+}
+

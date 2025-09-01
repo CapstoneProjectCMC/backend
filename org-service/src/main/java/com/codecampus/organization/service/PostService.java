@@ -8,7 +8,6 @@ import com.codecampus.organization.helper.PageResponseHelper;
 import com.codecampus.organization.mapper.PostMapper;
 import com.codecampus.organization.repository.OrganizationPostRepository;
 import com.codecampus.organization.repository.OrganizationRepository;
-import dtos.PostSummary;
 import events.post.data.PostPayload;
 import java.util.Objects;
 import lombok.AccessLevel;
@@ -91,7 +90,7 @@ public class PostService {
   }
 
   @Transactional(readOnly = true)
-  public PageResponse<PostSummary> listPostsOfOrg(
+  public PageResponse<OrganizationPost> listPostsOfOrg(
       String orgId,
       int page, int size) {
     organizationRepository.findById(orgId)
@@ -100,8 +99,8 @@ public class PostService {
     Pageable pageable = PageRequest.of(Math.max(page - 1, 0), Math.max(size, 1),
         Sort.by(Sort.Order.desc("createdAt")));
 
-    Page<PostSummary> mapped =
-        orgPostRepo.findByOrgId(orgId, pageable).map(mapper::toPostSummary);
+    Page<OrganizationPost> mapped =
+        orgPostRepo.findByOrgId(orgId, pageable);
 
     return PageResponseHelper.toPageResponse(mapped, page);
   }

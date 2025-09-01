@@ -37,6 +37,7 @@ app:
     post-events: "post-events"
     post-access-events: "post-access-events"
     organization-events: "organization-events"
+    exercise-purchased-events: "exercise-purchased-events"
   services:
     profile: http://localhost:8081/profile
     post: http://localhost:8090/post

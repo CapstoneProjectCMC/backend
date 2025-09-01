@@ -10,7 +10,7 @@ spring:
     name: notification-service
   data:
     mongodb:
-      uri: mongodb://mongodb_notification:dinhanst2832004@localhost:27019/notification_db?authSource=notification_db
+      uri: mongodb://mongodb_notification:dinhanst2832004@localhost:27018/notification_db?authSource=notification_db
       auto-index-creation: true
   kafka:
     bootstrap-servers: localhost:9094
@@ -30,5 +30,7 @@ spring:
             enable: true
 
 app:
+  services:
+    identity: http://localhost:8080/identity
   event:
     notification-events: "notification-events"

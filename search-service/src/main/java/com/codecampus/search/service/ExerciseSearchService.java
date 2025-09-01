@@ -49,6 +49,7 @@ public class ExerciseSearchService {
       ExerciseSearchRequest request) {
 
     String viewerOrgId = AuthenticationHelper.getOrgId();
+    String viewerUserId = AuthenticationHelper.getUserId();
 
     HighlightQuery
         highlightQuery = buildHighLightQuery();
@@ -96,8 +97,12 @@ public class ExerciseSearchService {
           ExerciseSearchResponse base =
               exerciseMapper.toExerciseSearchResponseFromExerciseDocument(
                   doc);
+
+          boolean purchased = isPurchased(viewerUserId, viewerOrgId, doc);
+
           return base.toBuilder()
               .user(summaries.get(doc.getUserId()))
+              .purchased(purchased)
               .build();
         })
         .toList();
@@ -208,5 +213,27 @@ public class ExerciseSearchService {
     }));
 
     return builder;
+  }
+
+  private boolean isPurchased(String viewerUserId, String viewerOrgId,
+                              ExerciseDocument doc) {
+    // 1) Chủ bài/author luôn có quyền (coi như purchased)
+    if (viewerUserId != null && viewerUserId.equals(doc.getUserId())) {
+      return true;
+    }
+    // 2) Bài miễn phí (cost=0 hoặc null)
+    if (doc.getCost() == null || doc.getCost() <= 0.0) {
+      return true;
+    }
+    // 3) Free cho org và viewer thuộc đúng org
+    if (Boolean.TRUE.equals(doc.getFreeForOrg())
+        && viewerOrgId != null
+        && viewerOrgId.equals(doc.getOrgId())) {
+      return true;
+    }
+    // 4) Đã mua theo event (buyerUserIds chứa viewer)
+    return viewerUserId != null
+        && doc.getBuyerUserIds() != null
+        && doc.getBuyerUserIds().contains(viewerUserId);
   }
 }

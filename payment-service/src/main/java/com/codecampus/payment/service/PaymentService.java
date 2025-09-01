@@ -20,8 +20,11 @@ import com.codecampus.payment.repository.PurchaseRepository;
 import com.codecampus.payment.repository.WalletRepository;
 import com.codecampus.payment.service.cache.UserBulkLoader;
 import com.codecampus.payment.service.cache.UserSummaryCacheService;
+import com.codecampus.payment.service.kafka.ExercisePurchasedEventProducer;
 import dtos.UserSummary;
+import events.payment.ExercisePurchasedEvent;
 import java.time.Instant;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -47,6 +50,7 @@ public class PaymentService {
   PaymentHelper paymentHelper;
 
   UserSummaryCacheService userSummaryCacheService;
+  ExercisePurchasedEventProducer exercisePurchasedEventProducer;
   UserBulkLoader userBulkLoader;
 
   /**
@@ -174,6 +178,28 @@ public class PaymentService {
         .build();
     purchaseRepository.save(purchase);
 
+    if ("EXERCISE".equalsIgnoreCase(request.getItemType())) {
+      ExercisePurchasedEvent event = ExercisePurchasedEvent.builder()
+          .transactionId(tx.getTransactionId())
+          .referenceCode(tx.getReferenceCode())
+          .userId(userId)
+          .username(username)
+          .exerciseId(request.getItemId())
+          .price(request.getItemPrice())
+          .currency(tx.getCurrency())
+          .paidAt(tx.getPaidAt())
+          .build();
+
+      try {
+        exercisePurchasedEventProducer.publish(event);
+      } catch (Exception e) {
+        // Không rollback thanh toán; chỉ log lỗi phát event
+        log.error(
+            "[Payment->Submission] publish ExercisePurchasedEvent failed: {}",
+            e.getMessage(), e);
+      }
+    }
+
     UserSummary us = userSummaryCacheService.getOrLoad(userId);
     return paymentHelper.toPaymentReceiptDto(tx, wallet.getBalance(), purchase,
         us);
@@ -224,5 +250,31 @@ public class PaymentService {
         .orElseThrow(() -> new AppException(ErrorCode.WALLET_NOT_FOUND));
     UserSummary us = userSummaryCacheService.getOrLoad(userId);
     return paymentHelper.toWalletView(w, us);
+  }
+
+  @Transactional(readOnly = true)
+  public boolean hasPurchased(
+      String userId,
+      String itemId,
+      String itemType) {
+    return purchaseRepository.existsByUserIdAndItemIdAndItemType(
+        userId, itemId, itemType);
+  }
+
+  @Transactional(readOnly = true)
+  public Map<String, Boolean> hasPurchasedBulk(
+      String userId,
+      List<String> itemIds,
+      String itemType) {
+    if (itemIds == null || itemIds.isEmpty()) {
+      return Map.of();
+    }
+    var found =
+        purchaseRepository.findByUserIdAndItemIdInAndItemType(
+            userId, itemIds, itemType);
+    var set = found.stream().map(Purchase::getItemId)
+        .collect(Collectors.toSet());
+    return itemIds.stream().distinct()
+        .collect(Collectors.toMap(id -> id, set::contains));
   }
 }

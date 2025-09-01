@@ -1,5 +1,6 @@
 package com.codecampus.search.repository.client;
 
+import com.codecampus.search.configuration.config.AuthenticationRequestInterceptor;
 import com.codecampus.search.dto.common.ApiResponse;
 import com.codecampus.search.dto.common.PageResponse;
 import com.codecampus.search.dto.response.BlockWithMembersPageResponse;
@@ -10,12 +11,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @FeignClient(
     name = "organization-service",
-    url = "${app.services.organization}"
+    url = "${app.services.organization}",
+    configuration = AuthenticationRequestInterceptor.class,
+    path = "/internal"
 )
 public interface OrganizationClient {
 
   @GetMapping("/{orgId}/blocks")
-  ApiResponse<PageResponse<BlockWithMembersPageResponse>> getBlocksOfOrg(
+  ApiResponse<PageResponse<BlockWithMembersPageResponse>> internalGetBlocksOfOrg(
       @PathVariable("orgId") String orgId,
       @RequestParam(defaultValue = "1") int blocksPage,
       @RequestParam(defaultValue = "10") int blocksSize,

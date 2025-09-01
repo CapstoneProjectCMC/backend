@@ -1,7 +1,7 @@
 package com.codecampus.profile.repository.client;
 
 import com.codecampus.profile.config.AuthenticationRequestInterceptor;
-import com.codecampus.profile.config.FeignMultipartConfiguration;
+import com.codecampus.profile.config.FeignConfiguration;
 import com.codecampus.profile.constant.file.FileType;
 import com.codecampus.profile.dto.common.ApiResponse;
 import com.codecampus.profile.dto.response.file.UploadedFileResponse;
@@ -19,7 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
     name = "file-service",
     url = "${app.services.file}",
     configuration = {AuthenticationRequestInterceptor.class,
-        FeignMultipartConfiguration.class})
+        FeignConfiguration.class})
 public interface FileClient {
 
   @PostMapping(

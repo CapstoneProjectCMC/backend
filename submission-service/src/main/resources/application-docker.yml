@@ -29,3 +29,4 @@ spring:
 app:
   services:
     profile: http://profile-service:8081/profile
+    payment: http://payment-service:8091/payment

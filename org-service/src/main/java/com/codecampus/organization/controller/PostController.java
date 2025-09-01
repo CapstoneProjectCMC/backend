@@ -2,8 +2,8 @@ package com.codecampus.organization.controller;
 
 import com.codecampus.organization.dto.common.ApiResponse;
 import com.codecampus.organization.dto.common.PageResponse;
+import com.codecampus.organization.entity.OrganizationPost;
 import com.codecampus.organization.service.PostService;
-import dtos.PostSummary;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -21,11 +21,11 @@ public class PostController {
   PostService service;
 
   @GetMapping("/{orgId}/posts")
-  public ApiResponse<PageResponse<PostSummary>> listPostsOfOrg(
+  public ApiResponse<PageResponse<OrganizationPost>> listPostsOfOrg(
       @PathVariable String orgId,
       @RequestParam(defaultValue = "1") int page,
       @RequestParam(defaultValue = "20") int size) {
-    return ApiResponse.<PageResponse<PostSummary>>builder()
+    return ApiResponse.<PageResponse<OrganizationPost>>builder()
         .result(service.listPostsOfOrg(orgId, page, size))
         .build();
   }

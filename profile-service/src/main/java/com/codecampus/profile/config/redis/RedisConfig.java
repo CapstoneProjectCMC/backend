@@ -4,6 +4,7 @@ import dtos.ContestStatusDto;
 import dtos.ContestSummary;
 import dtos.ExerciseStatusDto;
 import dtos.ExerciseSummary;
+import dtos.PostSummary;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
@@ -50,6 +51,21 @@ public class RedisConfig {
     var keySer = new StringRedisSerializer();
     var valSer = new GenericJackson2JsonRedisSerializer();
     tpl.setConnectionFactory(cf);
+    tpl.setKeySerializer(keySer);
+    tpl.setHashKeySerializer(keySer);
+    tpl.setValueSerializer(valSer);
+    tpl.setHashValueSerializer(valSer);
+    tpl.afterPropertiesSet();
+    return tpl;
+  }
+
+  @Bean
+  public RedisTemplate<String, PostSummary> postRedisTemplate(
+      RedisConnectionFactory cf) {
+    RedisTemplate<String, PostSummary> tpl = new RedisTemplate<>();
+    tpl.setConnectionFactory(cf);
+    var keySer = new StringRedisSerializer();
+    var valSer = new GenericJackson2JsonRedisSerializer();
     tpl.setKeySerializer(keySer);
     tpl.setHashKeySerializer(keySer);
     tpl.setValueSerializer(valSer);

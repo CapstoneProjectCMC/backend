@@ -1,6 +1,6 @@
 package com.codecampus.identity.repository.httpclient.org;
 
-import com.codecampus.identity.configuration.config.AuthenticationRequestInterceptor;
+import com.codecampus.identity.configuration.feign.AuthenticationRequestInterceptor;
 import com.codecampus.identity.dto.common.ApiResponse;
 import com.codecampus.identity.dto.request.org.BulkAddMembersRequest;
 import com.codecampus.identity.dto.request.org.CreateOrganizationMemberRequest;
@@ -16,21 +16,24 @@ import org.springframework.web.bind.annotation.RequestBody;
 @FeignClient(
     name = "organization-service",
     url = "${app.services.organization}",
-    configuration = {AuthenticationRequestInterceptor.class},
-    path = "/api/OrganizationMember"
+    configuration = {AuthenticationRequestInterceptor.class}
 )
 public interface OrganizationClient {
   /**
    * GET /member/{memberId}/primary-org
    */
-  @GetMapping(value = "/member/{memberId}/primary-org", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(
+      value = "/member/{memberId}/primary-org",
+      produces = MediaType.APPLICATION_JSON_VALUE)
   ApiResponse<PrimaryOrgResponse> getPrimaryOrg(
       @PathVariable("memberId") String userId);
 
   /**
    * POST /{orgId}/member
    */
-  @PostMapping(value = "/{orgId}/member", consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(
+      value = "/{orgId}/member",
+      consumes = MediaType.APPLICATION_JSON_VALUE)
   ApiResponse<Void> addToOrg(
       @PathVariable String orgId,
       @RequestBody CreateOrganizationMemberRequest request);
@@ -38,7 +41,9 @@ public interface OrganizationClient {
   /**
    * POST /block/{blockId}/member
    */
-  @PostMapping(value = "/block/{blockId}/member", consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(
+      value = "/block/{blockId}/member",
+      consumes = MediaType.APPLICATION_JSON_VALUE)
   ApiResponse<Void> addToBlock(
       @PathVariable String blockId,
       @RequestBody CreateOrganizationMemberRequest request);
@@ -69,7 +74,7 @@ public interface OrganizationClient {
    * GET /user/{userId}/blocks
    */
   @GetMapping(
-      value = "/user/{userId}/blocks",
+      value = "/member/{userId}/blocks",
       produces = MediaType.APPLICATION_JSON_VALUE)
   ApiResponse<BlocksOfUserResponse> getBlocksOfUser(
       @PathVariable String userId);

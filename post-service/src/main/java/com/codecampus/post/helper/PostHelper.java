@@ -94,7 +94,7 @@ public class PostHelper {
         }
 
         AddFileDocumentDto one = new AddFileDocumentDto();
-        one.setFiles(List.of(f));
+        one.setFile(f);
         one.setCategory(fileDoc.getCategory());
         one.setDescription(fileDoc.getDescription());
         one.setTags(fileDoc.getTags());

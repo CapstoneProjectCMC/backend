@@ -2,10 +2,10 @@ package com.codecampus.organization.controller;
 
 import com.codecampus.organization.dto.common.ApiResponse;
 import com.codecampus.organization.dto.common.PageResponse;
-import com.codecampus.organization.dto.request.BlockWithMembersPageResponse;
 import com.codecampus.organization.dto.request.CreateOrganizationForm;
 import com.codecampus.organization.dto.request.UpdateOrganizationForm;
-import com.codecampus.organization.dto.response.MemberInBlockResponse;
+import com.codecampus.organization.dto.response.BlockWithMembersWithMemberPageResponse;
+import com.codecampus.organization.dto.response.MemberInBlockWithMemberResponse;
 import com.codecampus.organization.dto.response.OrganizationResponse;
 import com.codecampus.organization.service.BlockService;
 import com.codecampus.organization.service.MembershipService;
@@ -86,7 +86,7 @@ public class OrganizationController {
   }
 
   @GetMapping("/{orgId}/blocks")
-  ApiResponse<PageResponse<BlockWithMembersPageResponse>> getBlocksOfOrg(
+  ApiResponse<PageResponse<BlockWithMembersWithMemberPageResponse>> getBlocksOfOrg(
       @PathVariable String orgId,
       @RequestParam(defaultValue = "1") int blocksPage,
       @RequestParam(defaultValue = "10") int blocksSize,
@@ -94,20 +94,21 @@ public class OrganizationController {
       @RequestParam(defaultValue = "10") int membersSize,
       @RequestParam(defaultValue = "true") boolean activeOnlyMembers,
       @RequestParam(defaultValue = "true") boolean includeUnassigned) {
-    return ApiResponse.<PageResponse<BlockWithMembersPageResponse>>builder()
+    return ApiResponse.<PageResponse<BlockWithMembersWithMemberPageResponse>>builder()
         .message("Get thông tin các khối trong tổ chức thành công!")
-        .result(blockService.getBlocksOfOrg(orgId, blocksPage, blocksSize,
+        .result(blockService.getBlocksOfOrgWithMembers(orgId, blocksPage,
+            blocksSize,
             membersPage, membersSize, activeOnlyMembers, includeUnassigned))
         .build();
   }
 
   @GetMapping("/{orgId}/members/unassigned")
-  ApiResponse<PageResponse<MemberInBlockResponse>> listUnassignedMembers(
+  ApiResponse<PageResponse<MemberInBlockWithMemberResponse>> listUnassignedMembers(
       @PathVariable String orgId,
       @RequestParam(defaultValue = "1") int page,
       @RequestParam(defaultValue = "10") int size,
       @RequestParam(defaultValue = "true") boolean activeOnly) {
-    return ApiResponse.<PageResponse<MemberInBlockResponse>>builder()
+    return ApiResponse.<PageResponse<MemberInBlockWithMemberResponse>>builder()
         .message("Get members thuộc tổ chức nhưng chưa ở block nào!")
         .result(membershipService.listUnassignedMembers(orgId, page, size,
             activeOnly))

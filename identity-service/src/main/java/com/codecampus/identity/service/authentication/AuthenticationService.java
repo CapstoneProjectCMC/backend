@@ -501,6 +501,7 @@ public class AuthenticationService {
                 .toInstant())
         .authenticated(true)
         .enabled(user.isEnabled())
+        .needPasswordSetup(needPasswordSetup)
         .build();
   }
 }

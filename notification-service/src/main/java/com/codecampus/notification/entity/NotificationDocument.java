@@ -1,7 +1,6 @@
 package com.codecampus.notification.entity;
 
 
-import jakarta.persistence.Id;
 import java.time.Instant;
 import java.util.Map;
 import lombok.AccessLevel;
@@ -11,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "notifications")

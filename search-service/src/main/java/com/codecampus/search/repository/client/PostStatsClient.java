@@ -8,15 +8,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 @FeignClient(
     name = "post-service-stats",
-    url = "${app.services.post}"
+    url = "${app.services.post}",
+    path = "internal"
 )
 public interface PostStatsClient {
 
   @GetMapping("/{postId}/reactions/count")
-  ApiResponse<Map<String, Long>> reactionCounts(
+  ApiResponse<Map<String, Long>> internalReactionCounts(
       @PathVariable("postId") String postId);
 
   @GetMapping("/{postId}/comments/count")
-  ApiResponse<Long> commentCount(
+  ApiResponse<Long> internalCommentCount(
       @PathVariable("postId") String postId);
 }
