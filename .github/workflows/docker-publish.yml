@@ -55,10 +55,10 @@ jobs:
 
       - name: Build & Push ${{ matrix.module }}
         env:
-          DOCKERHUB_USER: yunomix2834
-          DOCKERHUB_TOKEN: dckr_pat_jwDE4gMMqQZ7y3-e3dZFmsMDYKM
-          IMAGE_TAG: 0.1.0
-          DOCKER_PLATFORMS: linux/amd64                       # đổi thành "linux/amd64,linux/arm64" nếu muốn multi-arch
+          DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+          IMAGE_TAG: ${{ env.IMAGE_TAG }}
+          DOCKER_PLATFORMS: linux/amd64
         run: |
           chmod +x ./build-image-github.sh
           ./build-image-github.sh ${{ matrix.module }}

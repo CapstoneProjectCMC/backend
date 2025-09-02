@@ -21,6 +21,7 @@ COPY notification-service/pom.xml notification-service/pom.xml
 COPY chat-service/pom.xml chat-service/pom.xml
 COPY post-service/pom.xml post-service/pom.xml
 COPY payment-service/pom.xml payment-service/pom.xml
+COPY org-service/pom.xml org-service/pom.xml
 
 
 

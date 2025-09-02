@@ -38,13 +38,11 @@ jobs:
             **/target/surefire-reports/**
             **/target/failsafe-reports/**
           if-no-files-found: ignore
-          
+
       - name: SonarQube Scan
         env:
-          #          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          #          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-          SONAR_TOKEN: f3d4a7c57b1c39eaebcc3d05496d56ca407d7872
-          SONAR_HOST_URL: https://sonarcloud.io
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         run: |
           if [ -z "$SONAR_TOKEN" ] || [ -z "$SONAR_HOST_URL" ]; then
             echo "SONAR_* secrets chưa được cấu hình => bỏ qua phân tích Sonar."
