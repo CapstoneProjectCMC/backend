@@ -1,0 +1,64 @@
+name: Build & Push Docker Images
+
+on:
+  push:
+    branches: [ "main" ]
+    tags: [ "v*.*.*" ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+concurrency:
+  group: docker-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-push:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        module:
+          - identity-service
+          - submission-service
+          - quiz-service
+          - coding-service
+          - ai-service
+          - search-service
+          - notification-service
+          - chat-service
+          - post-service
+          - profile-service
+          - payment-service
+          - gateway-service
+          - org-service
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU (multi-arch)
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Derive IMAGE_TAG
+        run: |
+          if [ "${GITHUB_REF_TYPE}" = "tag" ]; then
+            echo "IMAGE_TAG=${GITHUB_REF_NAME#v}" >> $GITHUB_ENV
+          else
+            echo "IMAGE_TAG=${GITHUB_SHA::12}" >> $GITHUB_ENV
+          fi
+
+      - name: Build & Push ${{ matrix.module }}
+        env:
+          DOCKERHUB_USER: yunomix2834
+          DOCKERHUB_TOKEN: dckr_pat_jwDE4gMMqQZ7y3-e3dZFmsMDYKM
+          IMAGE_TAG: 0.1.0
+          DOCKER_PLATFORMS: linux/amd64                       # đổi thành "linux/amd64,linux/arm64" nếu muốn multi-arch
+        run: |
+          chmod +x ./build-image-github.sh
+          ./build-image-github.sh ${{ matrix.module }}
