@@ -39,15 +39,36 @@ jobs:
             **/target/failsafe-reports/**
           if-no-files-found: ignore
 
-      - name: SonarQube Scan
+      - name: SonarQube / SonarCloud Scan
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}
+          SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
         run: |
           if [ -z "$SONAR_TOKEN" ] || [ -z "$SONAR_HOST_URL" ]; then
             echo "SONAR_* secrets chưa được cấu hình => bỏ qua phân tích Sonar."
             exit 0
           fi
-          mvn -B -DskipTests=true \
-            -Dsonar.coverage.jacoco.xmlReportPaths='**/target/site/**/jacoco*.xml' \
-            sonar:sonar
+
+          # Đường dẫn report JaCoCo aggregate (được tạo ở bước 'verify' của root pom)
+          JACOCO_XML="target/site/jacoco-aggregate/jacoco.xml"
+
+          if echo "$SONAR_HOST_URL" | grep -qi "sonarcloud.io"; then
+            # SonarCloud cần organization + projectKey
+            if [ -z "$SONAR_ORGANIZATION" ] || [ -z "$SONAR_PROJECT_KEY" ]; then
+              echo "Thiếu SONAR_ORGANIZATION hoặc SONAR_PROJECT_KEY cho SonarCloud."
+              exit 1
+            fi
+            mvn -B -DskipTests=true \
+              -Dsonar.organization="$SONAR_ORGANIZATION" \
+              -Dsonar.projectKey="$SONAR_PROJECT_KEY" \
+              -Dsonar.coverage.jacoco.xmlReportPaths="$JACOCO_XML" \
+              sonar:sonar
+          else
+            # SonarQube self-hosted: KHÔNG dùng sonar.organization
+            mvn -B -DskipTests=true \
+              -Dsonar.coverage.jacoco.xmlReportPaths="$JACOCO_XML" \
+              sonar:sonar
+          fi
+
