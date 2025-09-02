@@ -189,7 +189,7 @@ public class UserService {
   public void createPassword(PasswordCreationRequest request) {
     User user = userHelper.getUserById(AuthenticationHelper.getMyUserId());
 
-    if (StringUtils.hasText(request.getPassword())) {
+    if (!StringUtils.hasText(request.getPassword())) {
       throw new AppException(ErrorCode.PASSWORD_ALREADY_EXISTS);
     }
 

@@ -170,7 +170,7 @@ services:
     networks: [ backend ]
 
   organization-service:
-    image: ${DOCKERHUB_USER}/codecampus-organization-service:${IMAGE_TAG:-latest}
+    image: ${DOCKERHUB_USER}/codecampus-org-service:${IMAGE_TAG:-latest}
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - ORGANIZATION_DATABASE=${ORGANIZATION_DATABASE}
