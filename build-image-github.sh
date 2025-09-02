@@ -32,7 +32,7 @@ extra_tags_args() {
     args+=(-t "${repo}:${version}")
   fi
   if [ "${GITHUB_REF_NAME:-}" = "main" ]; then
-    args+=(-t "${repo}:latest}")
+    args+=(-t "${repo}:latest")
   fi
   printf '%s ' "${args[@]}"
 }
