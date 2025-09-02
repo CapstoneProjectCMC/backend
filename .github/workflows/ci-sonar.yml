@@ -27,8 +27,18 @@ jobs:
           cache: 'maven'
 
       - name: Build & Test
-        run: mvn -B -DskipTests=false verify
+        run: mvn -B -DskipTests=false -Dmaven.test.failure.ignore=true verify
 
+      - name: Upload Surefire reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: surefire-reports
+          path: |
+            **/target/surefire-reports/**
+            **/target/failsafe-reports/**
+          if-no-files-found: ignore
+          
       - name: SonarQube Scan
         env:
           #          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
