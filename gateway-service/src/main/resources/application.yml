@@ -1,12 +1,15 @@
 server:
   port: 8888
-#  ssl:
-#    enabled: true
-#    key-alias: gateway-https
-#    key-store: classpath:ssl/gateway.jks
-#    key-store-password: dinhanst2832004
-#    key-store-type: JKS
-
+  ssl:
+    enabled: true
+    key-store: classpath:ssl/gateway.p12
+    key-store-type: PKCS12
+    key-store-password: changeit
+    key-alias: gateway-https
+    client-auth: need
+    trust-store: classpath:ssl/truststore.p12
+    trust-store-type: PKCS12
+    trust-store-password: changeit
 app:
   api-prefix: /api/v1
 
@@ -15,18 +18,27 @@ spring:
     name: api-gateway
   cloud:
     gateway:
+      # XỬ LÝ CORS TOÀN CỤC
+      globalcors:
+        add-to-simple-url-handler-mapping: true
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins:
+              - http://localhost:4200
+            allowedMethods: [ GET, POST, PUT, PATCH, DELETE, OPTIONS ]
+            allowedHeaders: [ "*" ]
+            allowCredentials: true
       httpclient:
-      #        ssl:
-      #          trusted-x509-certificates:
-      #            - classpath:ssl/identity.pem
-      #            - classpath:ssl/profile.pem
-      #            - classpath:ssl/submission.pem
-      #            - classpath:ssl/coding.pem
-
+        ssl:
+          key-store: classpath:ssl/gateway.p12
+          key-store-type: PKCS12
+          key-store-password: changeit
+          trusted-x509-certificates:
+            - classpath:ssl/ca.crt
       routes:
         - id: identity_service
           #          uri: https://localhost:8080
-          uri: http://localhost:8080
+          uri: https://localhost:8080
           predicates:
             - Path=${app.api-prefix}/identity/**
           filters:
@@ -36,7 +48,7 @@ spring:
                 routeId: identity_service
         - id: profile_service
           #          uri: https://localhost:8081
-          uri: http://localhost:8081
+          uri: https://localhost:8081
           predicates:
             - Path=${app.api-prefix}/profile/**
           filters:
@@ -46,7 +58,7 @@ spring:
                 routeId: profile_service
         - id: file_service
           # uri: https://localhost:80820
-          uri: http://localhost:8082
+          uri: https://localhost:8082
           predicates:
             - Path=${app.api-prefix}/file/**
           filters:
@@ -56,7 +68,7 @@ spring:
                 routeId: file_service
         - id: submission_service
           #          uri: https://localhost:8083
-          uri: http://localhost:8083
+          uri: https://localhost:8083
           predicates:
             - Path=${app.api-prefix}/submission/**
           filters:
@@ -66,7 +78,7 @@ spring:
                 routeId: submission_service
         - id: coding_service
           #          uri: https://localhost:8084
-          uri: http://localhost:8084
+          uri: https://localhost:8084
           predicates:
             - Path=${app.api-prefix}/coding/**
           filters:
@@ -76,7 +88,7 @@ spring:
                 routeId: coding_service
         - id: quiz_service
           #          uri: https://localhost:8085
-          uri: http://localhost:8085
+          uri: https://localhost:8085
           predicates:
             - Path=${app.api-prefix}/quiz/**
           filters:
@@ -86,7 +98,7 @@ spring:
                 routeId: quiz_service
         - id: ai_service
           #          uri: https://localhost:8086
-          uri: http://localhost:8086
+          uri: https://localhost:8086
           predicates:
             - Path=${app.api-prefix}/ai/**
           filters:
@@ -96,7 +108,7 @@ spring:
                 routeId: ai_service
         - id: search_service
           #          uri: https://localhost:8087
-          uri: http://localhost:8087
+          uri: https://localhost:8087
           predicates:
             - Path=${app.api-prefix}/search/**
           filters:
@@ -106,7 +118,7 @@ spring:
                 routeId: search_service
         - id: notification_service
           #          uri: https://localhost:8088
-          uri: http://localhost:8088
+          uri: https://localhost:8088
           predicates:
             - Path=${app.api-prefix}/notification/**
           filters:
@@ -116,7 +128,7 @@ spring:
                 routeId: notification_service
         - id: chat_service
           #          uri: https://localhost:8089
-          uri: http://localhost:8089
+          uri: https://localhost:8089
           predicates:
             - Path=${app.api-prefix}/chat/**
           filters:
@@ -126,7 +138,7 @@ spring:
                 routeId: chat_service
         - id: post_service
           #          uri: https://localhost:8090
-          uri: http://localhost:8090
+          uri: https://localhost:8090
           predicates:
             - Path=${app.api-prefix}/post/**
           filters:
@@ -136,7 +148,7 @@ spring:
                 routeId: post_service
         - id: payment_service
           #          uri: https://localhost:8091
-          uri: http://localhost:8091
+          uri: https://localhost:8091
           predicates:
             - Path=${app.api-prefix}/payment/**
           filters:
@@ -146,7 +158,7 @@ spring:
                 routeId: payment_service
         - id: organization_service
           #          uri: https://localhost:8092
-          uri: http://localhost:8092
+          uri: https://localhost:8092
           predicates:
             - Path=${app.api-prefix}/org/**
           filters:
@@ -157,7 +169,7 @@ spring:
 
 identity:
   service:
-    base-url: http://localhost:8080/identity
+    base-url: https://localhost:8080/identity
 
 # Cấu hình rate limiter
 rate-limiter:

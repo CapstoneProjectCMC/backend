@@ -1,15 +1,24 @@
 package com.codecampus.gateway.configuration.client;
 
 import com.codecampus.gateway.repository.client.IdentityClient;
+import io.netty.handler.ssl.SslContext;
+import io.netty.handler.ssl.SslContextBuilder;
+import java.io.InputStream;
+import java.security.KeyStore;
 import java.util.List;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.TrustManagerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.reactive.CorsWebFilter;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.support.WebClientAdapter;
 import org.springframework.web.service.invoker.HttpServiceProxyFactory;
+import reactor.netty.http.client.HttpClient;
 
 /**
  * Lớp cấu hình các bean liên quan đến WebClient và CORS cho Gateway.
@@ -30,9 +39,44 @@ public class WebClientConfiguration {
    */
   @Bean
   WebClient webClient(IdentityServiceProperties props) {
-    return WebClient.builder()
-        .baseUrl(props.getBaseUrl())
-        .build();
+    try {
+      // ---- KeyStore (client-cert) cho mTLS ----
+      var ksRes = new ClassPathResource("ssl/gateway.p12");
+      KeyStore ks = KeyStore.getInstance("PKCS12");
+      try (InputStream is = ksRes.getInputStream()) {
+        ks.load(is, "changeit".toCharArray());
+      }
+      KeyManagerFactory kmf = KeyManagerFactory.getInstance(
+          KeyManagerFactory.getDefaultAlgorithm());
+      kmf.init(ks, "changeit".toCharArray());
+
+      // ---- TrustStore (tin CA của server) ----
+      var tsRes = new ClassPathResource("ssl/truststore.p12");
+      KeyStore ts = KeyStore.getInstance("PKCS12");
+      try (InputStream is = tsRes.getInputStream()) {
+        ts.load(is, "changeit".toCharArray());
+      }
+      TrustManagerFactory tmf = TrustManagerFactory.getInstance(
+          TrustManagerFactory.getDefaultAlgorithm());
+      tmf.init(ts);
+
+      // ---- SSL context cho Reactor Netty ----
+      SslContext sslContext = SslContextBuilder.forClient()
+          .keyManager(kmf)      // bắt buộc nếu Identity bật client-auth
+          .trustManager(tmf)
+          .build();
+
+      HttpClient httpClient = HttpClient.create()
+          .secure(ssl -> ssl.sslContext(sslContext));
+
+      return WebClient.builder()
+          .baseUrl(props.getBaseUrl()) // ví dụ: https://localhost:8080/identity
+          .clientConnector(new ReactorClientHttpConnector(httpClient))
+          .build();
+
+    } catch (Exception e) {
+      throw new IllegalStateException("Cannot build WebClient with TLS/mTLS", e);
+    }
   }
 
   /**

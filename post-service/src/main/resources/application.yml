@@ -2,6 +2,16 @@ server:
   port: 8090
   servlet:
     context-path: /post
+  ssl:
+    enabled: true
+    key-store: classpath:ssl/post.p12
+    key-store-type: PKCS12
+    key-store-password: changeit
+    key-alias: post-https
+    client-auth: need
+    trust-store: classpath:ssl/truststore.p12
+    trust-store-type: PKCS12
+    trust-store-password: changeit
 
 spring:
   application:
@@ -42,9 +52,9 @@ spring:
 
 app:
   services:
-    profile: http://localhost:8081/profile
-    file: http://localhost:8082/file
-    identity: http://localhost:8080/identity
+    profile: https://localhost:8081/profile
+    file: https://localhost:8082/file
+    identity: https://localhost:8080/identity
   event:
     profile-events: "profile-events"
     post-events: "post-events"

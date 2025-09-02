@@ -1,9 +1,17 @@
 server:
   port: 8087
-  #  http:
-  #    port: 8007
   servlet:
     context-path: /search
+  ssl:
+    enabled: true
+    key-store: classpath:ssl/search.p12
+    key-store-type: PKCS12
+    key-store-password: changeit
+    key-alias: search-https
+    client-auth: need
+    trust-store: classpath:ssl/truststore.p12
+    trust-store-type: PKCS12
+    trust-store-password: changeit
 
 spring:
   application:
@@ -39,6 +47,6 @@ app:
     organization-events: "organization-events"
     exercise-purchased-events: "exercise-purchased-events"
   services:
-    profile: http://localhost:8081/profile
-    post: http://localhost:8090/post
-    organization: http://localhost:8092/org
+    profile: https://localhost:8081/profile
+    post: https://localhost:8090/post
+    organization: https://localhost:8092/org

@@ -1,16 +1,17 @@
 server:
   port: 8081
-  #  http:
-  #    port: 8001
   servlet:
     context-path: /profile
-#  ssl:
-#    enabled: true
-#    key-alias: profile-https
-#    key-store: classpath:ssl/profile.jks
-#    key-store-type: JKS
-#    key-store-password: dinhanst2832004
-#    key-password: dinhanst2832004
+  ssl:
+    enabled: true
+    key-store: classpath:ssl/profile.p12
+    key-store-type: PKCS12
+    key-store-password: changeit
+    key-alias: profile-https
+    client-auth: need
+    trust-store: classpath:ssl/truststore.p12
+    trust-store-type: PKCS12
+    trust-store-password: changeit
 
 spring:
   application:
@@ -43,10 +44,10 @@ spring:
 
 app:
   services:
-    file: http://localhost:8082/file
-    organization: http://localhost:8091/org
-    submission: http://localhost:8083/submission
-    post: http://localhost:8090/post
+    file: https://localhost:8082/file
+    organization: https://localhost:8091/org
+    submission: https://localhost:8083/submission
+    post: https://localhost:8090/post
   event:
     user-events: "user-events"
     user-registrations: "user-registrations"

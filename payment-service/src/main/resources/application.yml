@@ -2,6 +2,16 @@ server:
   port: 8091
   servlet:
     context-path: /payment
+  ssl:
+    enabled: true
+    key-store: classpath:ssl/payment.p12
+    key-store-type: PKCS12
+    key-store-password: changeit
+    key-alias: payment-https
+    client-auth: need
+    trust-store: classpath:ssl/truststore.p12
+    trust-store-type: PKCS12
+    trust-store-password: changeit
 
 spring:
   application:
@@ -45,8 +55,8 @@ app:
     profile-events: "profile-events"
     exercise-purchased-events: "exercise-purchased-events"
   services:
-    profile: http://localhost:8081/profile
-    file: http://localhost:8082/file
-    organization: http://localhost:8091/org
+    profile: https://localhost:8081/profile
+    file: https://localhost:8082/file
+    organization: https://localhost:8091/org
 
 
