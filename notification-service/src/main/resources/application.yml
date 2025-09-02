@@ -2,16 +2,16 @@ server:
   port: 8088
   servlet:
     context-path: /notification
-  ssl:
-    enabled: true
-    key-store: classpath:ssl/notification.p12
-    key-store-type: PKCS12
-    key-store-password: changeit
-    key-alias: notification-https
-    client-auth: need
-    trust-store: classpath:ssl/truststore.p12
-    trust-store-type: PKCS12
-    trust-store-password: changeit
+#  ssl:
+#    enabled: true
+#    key-store: classpath:ssl/notification.p12
+#    key-store-type: PKCS12
+#    key-store-password: changeit
+#    key-alias: notification-https
+#    client-auth: need
+#    trust-store: classpath:ssl/truststore.p12
+#    trust-store-type: PKCS12
+#    trust-store-password: changeit
 
 spring:
   application:
@@ -39,6 +39,6 @@ spring:
 
 app:
   services:
-    identity: https://localhost:8080/identity
+    identity: http://localhost:8080/identity
   event:
     notification-events: "notification-events"

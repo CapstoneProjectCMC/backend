@@ -2,16 +2,16 @@ server:
   port: 8083
   servlet:
     context-path: /submission
-  ssl:
-    enabled: true
-    key-store: classpath:ssl/submission.p12
-    key-store-type: PKCS12
-    key-store-password: changeit
-    key-alias: submission-https
-    client-auth: need
-    trust-store: classpath:ssl/truststore.p12
-    trust-store-type: PKCS12
-    trust-store-password: changeit
+#  ssl:
+#    enabled: true
+#    key-store: classpath:ssl/submission.p12
+#    key-store-type: PKCS12
+#    key-store-password: changeit
+#    key-alias: submission-https
+#    client-auth: need
+#    trust-store: classpath:ssl/truststore.p12
+#    trust-store-type: PKCS12
+#    trust-store-password: changeit
 
 grpc:
   server:
@@ -70,5 +70,5 @@ app:
     notification-events: "notification-events"
     exercise-purchased-events: "exercise-purchased-events"
   services:
-    profile: https://localhost:8081/profile
-    payment: https://localhost:8091/payment
+    profile: http://localhost:8081/profile
+    payment: http://localhost:8091/payment

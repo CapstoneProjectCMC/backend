@@ -2,16 +2,16 @@ server:
   port: 8092
   servlet:
     context-path: /org
-  ssl:
-    enabled: true
-    key-store: classpath:ssl/organization.p12
-    key-store-type: PKCS12
-    key-store-password: changeit
-    key-alias: organization-https
-    client-auth: need
-    trust-store: classpath:ssl/truststore.p12
-    trust-store-type: PKCS12
-    trust-store-password: changeit
+#  ssl:
+#    enabled: true
+#    key-store: classpath:ssl/organization.p12
+#    key-store-type: PKCS12
+#    key-store-password: changeit
+#    key-alias: organization-https
+#    client-auth: need
+#    trust-store: classpath:ssl/truststore.p12
+#    trust-store-type: PKCS12
+#    trust-store-password: changeit
 
 spring:
   datasource:
@@ -55,5 +55,5 @@ app:
     exercise-events: "exercise-events"
     post-events: "post-events"
   services:
-    file: https://localhost:8082/file
-    profile: https://localhost:8081/profile
+    file: http://localhost:8082/file
+    profile: http://localhost:8081/profile

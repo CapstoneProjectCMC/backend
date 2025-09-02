@@ -2,16 +2,16 @@ server:
   port: 8084
   servlet:
     context-path: /coding
-  ssl:
-    enabled: true
-    key-store: classpath:ssl/coding.p12
-    key-store-type: PKCS12
-    key-store-password: changeit
-    key-alias: coding-https
-    client-auth: need
-    trust-store: classpath:ssl/truststore.p12
-    trust-store-type: PKCS12
-    trust-store-password: changeit
+#  ssl:
+#    enabled: true
+#    key-store: classpath:ssl/coding.p12
+#    key-store-type: PKCS12
+#    key-store-password: changeit
+#    key-alias: coding-https
+#    client-auth: need
+#    trust-store: classpath:ssl/truststore.p12
+#    trust-store-type: PKCS12
+#    trust-store-password: changeit
 
 grpc:
   server:

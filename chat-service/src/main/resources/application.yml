@@ -38,6 +38,6 @@ app:
   event:
     profile-events: "profile-events"
   services:
-    profile: https://localhost:8081/profile
-    identity: https://localhost:8080/identity
-    file: https://localhost:8082/file
+    profile: http://localhost:8081/profile
+    identity: http://localhost:8080/identity
+    file: http://localhost:8082/file

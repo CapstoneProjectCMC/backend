@@ -5,16 +5,16 @@ server:
   tomcat:
     # Ngăn Tomcat chặn nuốt request lớn (giữ nguyên dữ liệu lớn)
     max-swallow-size: -1
-  ssl:
-    enabled: true
-    key-store: classpath:ssl/ai.p12
-    key-store-type: PKCS12
-    key-store-password: changeit
-    key-alias: ai-https
-    client-auth: need
-    trust-store: classpath:ssl/truststore.p12
-    trust-store-type: PKCS12
-    trust-store-password: changeit
+#  ssl:
+#    enabled: true
+#    key-store: classpath:ssl/ai.p12
+#    key-store-type: PKCS12
+#    key-store-password: changeit
+#    key-alias: ai-https
+#    client-auth: need
+#    trust-store: classpath:ssl/truststore.p12
+#    trust-store-type: PKCS12
+#    trust-store-password: changeit
 
 spring:
   application:
@@ -63,8 +63,8 @@ spring:
 
 app:
   services:
-    submission: https://localhost:8083/submission
+    submission: http://localhost:8083/submission
   file:
     upload-dir: ./uploads
-  public-base-url: https://localhost:8888/api/v1/ai
+  public-base-url: http://localhost:8888/api/v1/ai
 
