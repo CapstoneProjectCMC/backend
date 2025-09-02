@@ -1,4 +1,4 @@
-package com.codecampus.profile.config;
+package com.codecampus.profile.config.feign;
 
 import feign.RequestInterceptor;
 import feign.RequestTemplate;

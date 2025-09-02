@@ -1,5 +1,6 @@
 package com.codecampus.organization.repository.client;
 
+import com.codecampus.organization.configuration.feign.FeignConfigForm;
 import com.codecampus.organization.dto.common.ApiResponse;
 import com.codecampus.organization.dto.response.UserProfileResponse;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -9,7 +10,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 @FeignClient(
     name = "profile-service",
     url = "${app.services.profile}",
-    path = "/internal"
+    path = "/internal",
+    configuration = FeignConfigForm.class
 )
 public interface ProfileClient {
   @GetMapping("/user/{userId}")

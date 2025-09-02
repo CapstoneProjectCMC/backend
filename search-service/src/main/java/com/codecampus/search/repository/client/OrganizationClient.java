@@ -1,6 +1,7 @@
 package com.codecampus.search.repository.client;
 
-import com.codecampus.search.configuration.config.AuthenticationRequestInterceptor;
+import com.codecampus.search.configuration.feign.AuthenticationRequestInterceptor;
+import com.codecampus.search.configuration.feign.FeignConfigForm;
 import com.codecampus.search.dto.common.ApiResponse;
 import com.codecampus.search.dto.common.PageResponse;
 import com.codecampus.search.dto.response.BlockWithMembersPageResponse;
@@ -12,7 +13,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(
     name = "organization-service",
     url = "${app.services.organization}",
-    configuration = AuthenticationRequestInterceptor.class,
+    configuration = {AuthenticationRequestInterceptor.class,
+        FeignConfigForm.class},
     path = "/internal"
 )
 public interface OrganizationClient {

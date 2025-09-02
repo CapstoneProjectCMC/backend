@@ -1,6 +1,7 @@
 package com.codecampus.profile.repository.client;
 
-import com.codecampus.profile.config.AuthenticationRequestInterceptor;
+import com.codecampus.profile.config.feign.AuthenticationRequestInterceptor;
+import com.codecampus.profile.config.feign.FeignConfigForm;
 import com.codecampus.profile.dto.common.ApiResponse;
 import dtos.PostSummary;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -11,7 +12,8 @@ import org.springframework.web.bind.annotation.PathVariable;
     name = "post-service",
     url = "${app.services.post}",
     path = "/internal",
-    configuration = AuthenticationRequestInterceptor.class
+    configuration = {AuthenticationRequestInterceptor.class,
+        FeignConfigForm.class}
 )
 public interface PostClient {
   @GetMapping("/post/{postId}/summary")

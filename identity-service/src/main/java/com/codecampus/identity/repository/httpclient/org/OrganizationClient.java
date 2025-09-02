@@ -1,6 +1,7 @@
 package com.codecampus.identity.repository.httpclient.org;
 
 import com.codecampus.identity.configuration.feign.AuthenticationRequestInterceptor;
+import com.codecampus.identity.configuration.feign.FeignConfigForm;
 import com.codecampus.identity.dto.common.ApiResponse;
 import com.codecampus.identity.dto.request.org.BulkAddMembersRequest;
 import com.codecampus.identity.dto.request.org.CreateOrganizationMemberRequest;
@@ -15,7 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 @FeignClient(
     name = "organization-service",
     url = "${app.services.organization}",
-    configuration = {AuthenticationRequestInterceptor.class}
+    configuration = {AuthenticationRequestInterceptor.class,
+        FeignConfigForm.class}
 )
 public interface OrganizationClient {
   /**

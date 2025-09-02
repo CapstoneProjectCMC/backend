@@ -44,7 +44,11 @@ main() {
 #    echo "Building $svc..."
 #    build_push_java "$svc"
 #  done
-  for svc in ai-service; do
+#  for svc in ai-service submission-service chat-service gateway-service identity-service notification-service payment-service post-service profile-service quiz-service search-service; do
+#    echo "Building $svc..."
+#    build_push_java "$svc"
+#  done
+  for svc in org-service; do
     echo "Building $svc..."
     build_push_java "$svc"
   done

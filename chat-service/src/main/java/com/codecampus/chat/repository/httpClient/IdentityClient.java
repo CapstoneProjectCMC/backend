@@ -1,6 +1,7 @@
 package com.codecampus.chat.repository.httpClient;
 
 import com.codecampus.chat.configuration.feign.AuthenticationRequestInterceptor;
+import com.codecampus.chat.configuration.feign.FeignConfigForm;
 import com.codecampus.chat.dto.common.ApiResponse;
 import com.codecampus.chat.dto.request.IntrospectRequest;
 import com.codecampus.chat.dto.response.IntrospectResponse;
@@ -12,7 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
     name = "identity-client",
     url = "${app.services.identity}",
     path = "/auth",
-    configuration = AuthenticationRequestInterceptor.class
+    configuration = {AuthenticationRequestInterceptor.class,
+        FeignConfigForm.class}
 )
 public interface IdentityClient {
 

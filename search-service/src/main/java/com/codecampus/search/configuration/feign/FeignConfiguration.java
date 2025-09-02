@@ -1,4 +1,4 @@
-package com.codecampus.search.configuration.config;
+package com.codecampus.search.configuration.feign;
 
 import feign.codec.Encoder;
 import feign.form.spring.SpringFormEncoder;

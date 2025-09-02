@@ -1,7 +1,8 @@
 package com.codecampus.submission.repository.client;
 
 
-import com.codecampus.submission.configuration.config.AuthenticationRequestInterceptor;
+import com.codecampus.submission.configuration.feign.AuthenticationRequestInterceptor;
+import com.codecampus.submission.configuration.feign.FeignConfigForm;
 import com.codecampus.submission.dto.common.ApiResponse;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +17,8 @@ import org.springframework.web.bind.annotation.RequestParam;
     name = "payment-service",
     url = "${app.services.payment}",
     path = "/internal",
-    configuration = AuthenticationRequestInterceptor.class
+    configuration = {AuthenticationRequestInterceptor.class,
+        FeignConfigForm.class}
 )
 public interface PaymentClient {
 

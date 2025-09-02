@@ -1,5 +1,6 @@
 package com.codecampus.search.repository.client;
 
+import com.codecampus.search.configuration.feign.FeignConfigForm;
 import com.codecampus.search.dto.common.ApiResponse;
 import com.codecampus.search.dto.common.PageResponse;
 import com.codecampus.search.dto.response.PostAccessResponseDto;
@@ -11,7 +12,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(
     name = "post-service",
     url = "${app.services.post}",
-    path = "internal"
+    path = "internal",
+    configuration = {FeignConfigForm.class}
 )
 public interface PostAccessClient {
 

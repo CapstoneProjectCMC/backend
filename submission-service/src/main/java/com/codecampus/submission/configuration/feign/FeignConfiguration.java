@@ -1,4 +1,4 @@
-package com.codecampus.submission.configuration.config;
+package com.codecampus.submission.configuration.feign;
 
 import feign.codec.Encoder;
 import feign.form.spring.SpringFormEncoder;

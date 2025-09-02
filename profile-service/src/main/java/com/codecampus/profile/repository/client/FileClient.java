@@ -1,7 +1,7 @@
 package com.codecampus.profile.repository.client;
 
-import com.codecampus.profile.config.AuthenticationRequestInterceptor;
-import com.codecampus.profile.config.FeignConfiguration;
+import com.codecampus.profile.config.feign.AuthenticationRequestInterceptor;
+import com.codecampus.profile.config.feign.FeignConfiguration;
 import com.codecampus.profile.constant.file.FileType;
 import com.codecampus.profile.dto.common.ApiResponse;
 import com.codecampus.profile.dto.response.file.UploadedFileResponse;

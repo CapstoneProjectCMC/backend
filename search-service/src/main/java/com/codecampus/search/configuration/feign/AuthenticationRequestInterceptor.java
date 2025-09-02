@@ -1,4 +1,4 @@
-package com.codecampus.submission.configuration.config;
+package com.codecampus.search.configuration.feign;
 
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
