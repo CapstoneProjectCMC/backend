@@ -2,13 +2,14 @@ name: Build & Push file-service
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
+    tags:
+      - 'v*.*.*'
     paths:
-      - "FileService/**"
-      - "docker/file-service.Dockerfile"
-      - ".github/workflows/file-service-publish.yml"
-  tags:
-    - "v*.*.*"
+      - 'FileService/**'
+      - 'docker/file-service.Dockerfile'
+      - '.github/workflows/file-service-publish.yml'
   workflow_dispatch:
 
 permissions:

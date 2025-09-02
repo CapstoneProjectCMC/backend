@@ -2,13 +2,14 @@ name: Build & Push coding-service
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
+    tags:
+      - 'v*.*.*'
     paths:
-      - "coding-service/**"
-      - "docker/java-service-coding.Dockerfile"
-      - ".github/workflows/coding-service-publish.yml"
-  tags:
-    - "v*.*.*"
+      - 'coding-service/**'
+      - 'docker/java-service-coding.Dockerfile'
+      - '.github/workflows/coding-service-publish.yml'
   workflow_dispatch:
 
 permissions:
