@@ -20,6 +20,7 @@ public record CreateExerciseRequest(
     String allowDiscussionId,
     Set<String> resourceIds,
     Set<String> tags, //Cần cho input AI
-    Boolean allowAiQuestion
+    Boolean allowAiQuestion,
+    Boolean visibility
 ) {
 }

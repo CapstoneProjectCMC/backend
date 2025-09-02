@@ -1,6 +1,7 @@
 package com.codecampus.ai.repository.httpClient;
 
 import com.codecampus.ai.config.feign.AuthenticationRequestInterceptor;
+import com.codecampus.ai.config.feign.FeignEncoder;
 import com.codecampus.ai.dto.common.ApiResponse;
 import com.codecampus.ai.dto.request.coding.CreateCodingExerciseRequest;
 import com.codecampus.ai.dto.request.coding.TestCaseDto;
@@ -20,7 +21,8 @@ import org.springframework.web.bind.annotation.RequestBody;
     name = "submission-client",
     url = "${app.services.submission}",
     path = "/internal",
-    configuration = AuthenticationRequestInterceptor.class
+    configuration = {AuthenticationRequestInterceptor.class,
+        FeignEncoder.class}
 )
 public interface SubmissionClient {
 

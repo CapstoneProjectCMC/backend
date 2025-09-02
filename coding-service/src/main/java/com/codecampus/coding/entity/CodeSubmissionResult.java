@@ -44,7 +44,7 @@ public class CodeSubmissionResult {
 
   boolean passed;
   Integer runtimeMs;
-  Integer memoryKb;
+  Integer memoryMb;
   @Lob
   String output;
   @Lob

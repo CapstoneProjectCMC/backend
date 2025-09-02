@@ -7,7 +7,6 @@ import com.codecampus.identity.dto.request.org.CreateOrganizationMemberRequest;
 import com.codecampus.identity.dto.response.org.BlocksOfUserResponse;
 import com.codecampus.identity.dto.response.org.PrimaryOrgResponse;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,18 +21,14 @@ public interface OrganizationClient {
   /**
    * GET /member/{memberId}/primary-org
    */
-  @GetMapping(
-      value = "/member/{memberId}/primary-org",
-      produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(value = "/member/{memberId}/primary-org")
   ApiResponse<PrimaryOrgResponse> getPrimaryOrg(
       @PathVariable("memberId") String userId);
 
   /**
    * POST /{orgId}/member
    */
-  @PostMapping(
-      value = "/{orgId}/member",
-      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(value = "/{orgId}/member")
   ApiResponse<Void> addToOrg(
       @PathVariable String orgId,
       @RequestBody CreateOrganizationMemberRequest request);
@@ -41,9 +36,7 @@ public interface OrganizationClient {
   /**
    * POST /block/{blockId}/member
    */
-  @PostMapping(
-      value = "/block/{blockId}/member",
-      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(value = "/block/{blockId}/member")
   ApiResponse<Void> addToBlock(
       @PathVariable String blockId,
       @RequestBody CreateOrganizationMemberRequest request);
@@ -51,10 +44,7 @@ public interface OrganizationClient {
   /**
    * POST /{orgId}/members:bulk
    */
-  @PostMapping(
-      value = "/{orgId}/members:bulk",
-      consumes = MediaType.APPLICATION_JSON_VALUE
-  )
+  @PostMapping(value = "/{orgId}/members:bulk")
   ApiResponse<Void> bulkAddToOrg(
       @PathVariable String orgId,
       @RequestBody BulkAddMembersRequest request);
@@ -62,10 +52,7 @@ public interface OrganizationClient {
   /**
    * POST /block/{blockId}/members:bulk
    */
-  @PostMapping(
-      value = "/block/{blockId}/members:bulk",
-      consumes = MediaType.APPLICATION_JSON_VALUE
-  )
+  @PostMapping(value = "/block/{blockId}/members:bulk")
   ApiResponse<Void> bulkAddToBlock(
       @PathVariable String blockId,
       @RequestBody BulkAddMembersRequest request);
@@ -73,9 +60,7 @@ public interface OrganizationClient {
   /**
    * GET /user/{userId}/blocks
    */
-  @GetMapping(
-      value = "/member/{userId}/blocks",
-      produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(value = "/member/{userId}/blocks")
   ApiResponse<BlocksOfUserResponse> getBlocksOfUser(
       @PathVariable String userId);
 }

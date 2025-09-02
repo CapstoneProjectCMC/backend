@@ -120,7 +120,7 @@ public class CodeJudgeService {
                 .testCase(testCase)
                 .passed(codeResult.isPassed())
                 .runtimeMs(codeResult.getRuntimeMs())
-                .memoryKb(codeResult.getMemoryMb())
+                .memoryMb(codeResult.getMemoryMb())
                 .output(codeResult.getOutput())
                 .errorMessage(codeResult.getError())
                 .build();

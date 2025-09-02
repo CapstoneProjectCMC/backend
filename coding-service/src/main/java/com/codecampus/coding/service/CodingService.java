@@ -107,9 +107,7 @@ public class CodingService {
         codingHelper.findCodingOrThrow(exerciseId);
     String by = AuthenticationHelper.getMyUsername();
     codingExercise.markDeleted(by);
-    codingExercise.getTestCases().forEach(tc -> {
-      tc.markDeleted(by);
-    });
+    codingExercise.getTestCases().forEach(tc -> tc.markDeleted(by));
     codingExerciseRepository.save(codingExercise);
 
     loadCodingCacheService.refresh(exerciseId);
@@ -146,9 +144,8 @@ public class CodingService {
 
     CodingExercise codingExercise = codingHelper
         .findCodingOrThrow(exerciseId);
-    codingExercise.findTestCaseById(testCaseId).ifPresent(testCase -> {
-      testCase.markDeleted(AuthenticationHelper.getMyUsername());
-    });
+    codingExercise.findTestCaseById(testCaseId).ifPresent(
+        testCase -> testCase.markDeleted(AuthenticationHelper.getMyUsername()));
 
     loadCodingCacheService.refresh(exerciseId);
   }

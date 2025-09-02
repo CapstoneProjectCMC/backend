@@ -98,10 +98,10 @@ public class ExerciseGenerationService {
         suggestion.description(),
         suggestion.difficulty(),
         exerciseType,
-        null, BigDecimal.ZERO, null,
+        null, BigDecimal.ZERO, true,
         null, null,
         suggestion.duration(),
-        null, null, suggestion.tags(), true
+        null, null, suggestion.tags(), true, true
     );
   }
 
