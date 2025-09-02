@@ -1,9 +1,14 @@
-name: Build & Push Docker Images
+name: Build & Push coding-service
 
 on:
   push:
     branches: [ "main" ]
-    tags: [ "v*.*.*" ]
+    paths:
+      - "coding-service/**"
+      - "docker/java-service-coding.Dockerfile"
+      - ".github/workflows/coding-service-publish.yml"
+  tags:
+    - "v*.*.*"
   workflow_dispatch:
 
 permissions:
@@ -11,28 +16,12 @@ permissions:
   packages: write
 
 concurrency:
-  group: docker-${{ github.ref }}
+  group: docker-coding-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   build-push:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        module:
-          - identity-service
-          - submission-service
-          - quiz-service
-          - ai-service
-          - search-service
-          - notification-service
-          - chat-service
-          - post-service
-          - profile-service
-          - payment-service
-          - gateway-service
-          - org-service
 
     steps:
       - name: Checkout
@@ -52,12 +41,18 @@ jobs:
             echo "IMAGE_TAG=${GITHUB_SHA::12}" >> $GITHUB_ENV
           fi
 
-      - name: Build & Push ${{ matrix.module }}
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USER }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build & Push coding-service
         env:
           DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
           DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
           IMAGE_TAG: ${{ env.IMAGE_TAG }}
           DOCKER_PLATFORMS: linux/amd64
         run: |
-          chmod +x ./build-image-github.sh
-          ./build-image-github.sh ${{ matrix.module }}
+          chmod +x ./build-image-coding-github.sh
+          ./build-image-coding-github.sh coding-service
