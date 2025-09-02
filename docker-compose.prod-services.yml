@@ -181,9 +181,6 @@ services:
     networks: [ backend ]
 
   file-service:
-    build:
-      context: .
-      dockerfile: ./docker/file-service.Dockerfile
     image: ${DOCKERHUB_USER}/codecampus-file-service:${IMAGE_TAG:-latest}
     environment:
       - ASPNETCORE_ENVIRONMENT=Staging

@@ -391,11 +391,95 @@ services:
       retries: 5
     networks: [ backend ]
 
+  # ---------- Monitoring: Metrics (Prometheus/Grafana) ----------
+  prometheus:
+    image: bitnami/prometheus:latest
+    container_name: prometheus
+    restart: unless-stopped
+    ports: [ "5555:9090" ]
+    volumes:
+      - prometheus_data:/opt/bitnami/prometheus/data
+      - ./monitoring/prometheus.yml:/opt/bitnami/prometheus/conf/prometheus.yml:ro
+    networks: [ backend ]
+
+  grafana:
+    image: bitnami/grafana:latest
+    container_name: grafana
+    restart: unless-stopped
+    ports: [ "5556:3000" ]
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD}
+    volumes:
+      - grafana_data:/opt/bitnami/grafana/data
+      # Tự động thêm data source Prometheus & Loki
+      - ./monitoring/grafana/provisioning:/opt/bitnami/grafana/conf/provisioning
+    depends_on:
+      - prometheus
+      - loki
+    networks: [ backend ]
+
+  # Exporter lấy metrics host & container
+  node-exporter:
+    image: bitnami/node-exporter:latest
+    container_name: node-exporter
+    restart: unless-stopped
+    command:
+      - --path.rootfs=/host
+      - --path.sysfs=/host/sys
+      - --path.procfs=/host/proc
+      - --collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)
+    volumes:
+      - /:/host:ro
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+    ports: [ "5557:9100" ]
+    networks: [ backend ]
+
+  cadvisor:
+    image: bitnami/cadvisor:latest
+    container_name: cadvisor
+    restart: unless-stopped
+    ports: [ "5558:8080" ]
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    networks: [ backend ]
+
+  # ---------- Monitoring: Logs (Loki/Promtail) ----------
+  loki:
+    image: grafana/loki:3.4.1
+    container_name: loki
+    restart: unless-stopped
+    command: -config.file=/etc/loki/config.yml
+    ports: [ "5559:3100" ]
+    volumes:
+      - ./monitoring/loki-config.yml:/etc/loki/config.yml:ro
+      - loki_data:/loki
+    networks: [ backend ]
+
+  promtail:
+    image: grafana/promtail:3.4.1
+    container_name: promtail
+    restart: unless-stopped
+    command: -config.file=/etc/promtail/config.yml
+    volumes:
+      - ./monitoring/promtail-config.yml:/etc/promtail/config.yml:ro
+      - /var/log:/var/log:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks: [ backend ]
+
 networks:
   backend:
     name: codecampus_backend
 
 volumes:
+  prometheus_data:
+  grafana_data:
+  loki_data:
   organization_pg_data:
   payment_pg_data:
   identity_pg_data:
