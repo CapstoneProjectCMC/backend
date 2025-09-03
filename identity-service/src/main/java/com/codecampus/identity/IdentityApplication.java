@@ -11,4 +11,3 @@ public class IdentityApplication {
     SpringApplication.run(IdentityApplication.class, args);
   }
 }
- 

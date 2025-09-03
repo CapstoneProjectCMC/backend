@@ -9,7 +9,7 @@ spring:
     gateway:
       routes:
         - id: identity_service
-          uri: https://identity-service:8080
+          uri: http://identity-service:8080
           predicates:
             - Path=${app.api-prefix}/identity/**
           filters:
@@ -18,7 +18,7 @@ spring:
               args:
                 routeId: identity_service
         - id: profile_service
-          uri: https://profile-service:8081
+          uri: http://profile-service:8081
           predicates:
             - Path=${app.api-prefix}/profile/**
           filters:
@@ -27,7 +27,7 @@ spring:
               args:
                 routeId: profile_service
         - id: file_service
-          uri: https://file-service:8082
+          uri: http://file-service:8082
           predicates:
             - Path=${app.api-prefix}/file/**
           filters:
@@ -36,7 +36,7 @@ spring:
               args:
                 routeId: file_service
         - id: submission_service
-          uri: https://submission-service:8083
+          uri: http://submission-service:8083
           predicates:
             - Path=${app.api-prefix}/submission/**
           filters:
@@ -45,7 +45,7 @@ spring:
               args:
                 routeId: submission_service
         - id: coding_service
-          uri: https://coding-service:8084
+          uri: http://coding-service:8084
           predicates:
             - Path=${app.api-prefix}/coding/**
           filters:
@@ -54,7 +54,7 @@ spring:
               args:
                 routeId: coding_service
         - id: quiz_service
-          uri: https://quiz-service:8085
+          uri: http://quiz-service:8085
           predicates:
             - Path=${app.api-prefix}/quiz/**
           filters:
@@ -63,7 +63,7 @@ spring:
               args:
                 routeId: quiz_service
         - id: ai_service
-          uri: https://ai-service:8086
+          uri: http://ai-service:8086
           predicates:
             - Path=${app.api-prefix}/ai/**
           filters:
@@ -72,7 +72,7 @@ spring:
               args:
                 routeId: ai_service
         - id: search_service
-          uri: https://search-service:8087
+          uri: http://search-service:8087
           predicates:
             - Path=${app.api-prefix}/search/**
           filters:
@@ -81,7 +81,7 @@ spring:
               args:
                 routeId: search_service
         - id: notification_service
-          uri: https://notification-service:8088
+          uri: http://notification-service:8088
           predicates:
             - Path=${app.api-prefix}/notification/**
           filters:
@@ -90,7 +90,7 @@ spring:
               args:
                 routeId: notification_service
         - id: chat_service
-          uri: https://chat-service:8089
+          uri: http://chat-service:8089
           predicates:
             - Path=${app.api-prefix}/chat/**
           filters:
@@ -100,7 +100,7 @@ spring:
                 routeId: chat_service
         - id: post_service
           #          uri: https://post-service:8090
-          uri: https://post-service:8090
+          uri: http://post-service:8090
           predicates:
             - Path=${app.api-prefix}/post/**
           filters:
@@ -110,7 +110,7 @@ spring:
                 routeId: post_service
         - id: payment_service
           #          uri: https://payment-service:8091
-          uri: https://payment-service:8091
+          uri: http://payment-service:8091
           predicates:
             - Path=${app.api-prefix}/payment/**
           filters:
@@ -120,7 +120,7 @@ spring:
                 routeId: payment_service
         - id: organization_service
           #          uri: https://organization-service:8092
-          uri: https://organization-service:8092
+          uri: http://organization-service:8092
           predicates:
             - Path=${app.api-prefix}/org/**
           filters:
@@ -131,4 +131,4 @@ spring:
 
 identity:
   service:
-    base-url: https://identity-service:8080/identity
+    base-url: http://identity-service:8080/identity
