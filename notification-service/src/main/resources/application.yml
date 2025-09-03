@@ -42,3 +42,4 @@ app:
     identity: http://localhost:8080/identity
   event:
     notification-events: "notification-events"
+    notification-status-events: "notification-status-events"

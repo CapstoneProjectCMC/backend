@@ -25,4 +25,12 @@ public class SocketPushService {
     server.getRoomOperations(userId)
         .sendEvent("notification", payload);
   }
+
+  public void pushToUserEvent(
+      String userId,
+      String eventName,
+      Map<String, Object> payload) {
+    server.getRoomOperations(userId)
+        .sendEvent(eventName, payload);
+  }
 }

@@ -10,4 +10,6 @@ public interface NotificationRepository
     extends MongoRepository<NotificationDocument, String> {
   List<NotificationDocument> findByRecipientOrderByCreatedAtDesc(
       String recipient);
+
+  long countByRecipientAndReadStatus(String recipient, String readStatus);
 }

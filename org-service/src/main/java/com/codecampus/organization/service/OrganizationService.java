@@ -3,6 +3,7 @@ package com.codecampus.organization.service;
 import com.codecampus.organization.dto.common.PageResponse;
 import com.codecampus.organization.dto.request.CreateOrganizationForm;
 import com.codecampus.organization.dto.request.UpdateOrganizationForm;
+import com.codecampus.organization.dto.response.IdNameResponse;
 import com.codecampus.organization.dto.response.OrganizationResponse;
 import com.codecampus.organization.entity.Organization;
 import com.codecampus.organization.exception.AppException;
@@ -106,5 +107,17 @@ public class OrganizationService {
         .map(organizationMapper::toOrganizationResponseFromOrganization)
         .orElseThrow(
             () -> new AppException(ErrorCode.ORGANIZATION_NOT_FOUND));
+  }
+
+  public IdNameResponse resolveOrganizationByName(String name) {
+    Organization org = organizationRepository
+        .findByName(name)
+        .orElseThrow(
+            () -> new AppException(ErrorCode.ORGANIZATION_NOT_FOUND));
+
+    return IdNameResponse.builder()
+        .id(org.getId())
+        .name(org.getName())
+        .build();
   }
 }

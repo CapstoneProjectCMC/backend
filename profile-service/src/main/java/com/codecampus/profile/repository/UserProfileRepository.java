@@ -207,7 +207,7 @@ public interface UserProfileRepository
         MATCH (p:Post {postId:$postId})
         MERGE (u)-[r:SAVED_POST]->(p)
         ON CREATE SET r.saveAt = $now
-        ON MATCH  SET r.saveAt = coalesce(r.saveAt, $now) 
+        ON MATCH  SET r.saveAt = coalesce(r.saveAt, $now)
       """)
   void mergeSavedPost(String userId, String postId, Instant now);
 

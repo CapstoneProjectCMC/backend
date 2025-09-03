@@ -56,6 +56,7 @@ public class MembershipService {
   OrganizationMemberHelper organizationMemberHelper;
   UserBulkLoader userBulkLoader;
   UserSummaryCacheService userSummaryCacheService;
+  OrgAuthorization auth;
 
   @Transactional
   public void addToOrg(
@@ -63,6 +64,9 @@ public class MembershipService {
       String orgId,
       String role,
       boolean active) {
+
+    auth.ensureRoleAtLeastForOrg(orgId, OrgAuthorization.OrgRole.ADMIN);
+
     List<OrganizationMember> actives =
         memberRepository.findActiveOrgsOfUser(userId);
     boolean joinedOther =
@@ -105,6 +109,9 @@ public class MembershipService {
       String blockId,
       String role,
       boolean active) {
+
+    auth.ensureRoleAtLeastForBlock(blockId, OrgAuthorization.OrgRole.TEACHER);
+
     // đảm bảo user đang ở trong org của block (nếu chưa -> auto join org với role Student)
     String orgId = blockRepository.findById(blockId)
         .orElseThrow(() -> new AppException(ErrorCode.GRADE_NOT_FOUND))
@@ -144,6 +151,18 @@ public class MembershipService {
       String userId,
       ScopeType scopeType,
       String scopeId) {
+
+    if (scopeType == ScopeType.Organization) {
+      auth.ensureSelfOrMinRoleForOrg(userId, scopeId,
+          OrgAuthorization.OrgRole.ADMIN); // self hoặc Admin org
+    } else if (scopeType == ScopeType.Grade) {
+      var orgId = blockRepository.findById(scopeId)
+          .orElseThrow(() -> new AppException(ErrorCode.GRADE_NOT_FOUND))
+          .getOrgId();
+      auth.ensureSelfOrMinRoleForOrg(userId, orgId,
+          OrgAuthorization.OrgRole.TEACHER); // self hoặc Admin/Teacher
+    }
+
     String by = AuthenticationHelper.getMyUsername();
     OrganizationMember member = memberRepository
         .findByUserIdAndScopeTypeAndScopeId(userId, scopeType, scopeId)
@@ -365,6 +384,9 @@ public class MembershipService {
   public ImportMembersResult importMembersToOrg(
       String orgId,
       MultipartFile file) {
+
+    auth.ensureRoleAtLeastForOrg(orgId, OrgAuthorization.OrgRole.ADMIN);
+
     int total = 0, added = 0, skipped = 0;
     List<String> errors = new ArrayList<>();
 
@@ -409,6 +431,9 @@ public class MembershipService {
   public ImportMembersResult importMembersToBlock(
       String blockId,
       MultipartFile file) {
+
+    auth.ensureRoleAtLeastForBlock(blockId, OrgAuthorization.OrgRole.TEACHER);
+
     int total = 0, added = 0, skipped = 0;
     List<String> errors = new ArrayList<>();
 
@@ -451,6 +476,9 @@ public class MembershipService {
 
   @Transactional
   public void bulkAddToOrg(String orgId, BulkAddMembersRequest req) {
+
+    auth.ensureRoleAtLeastForOrg(orgId, OrgAuthorization.OrgRole.ADMIN);
+
     for (var it : req.getMembers()) {
       String role = it.getRole() != null ? it.getRole() : req.getDefaultRole();
       boolean active = it.getActive() != null ? it.getActive() : req.isActive();
@@ -460,6 +488,9 @@ public class MembershipService {
 
   @Transactional
   public void bulkAddToBlock(String blockId, BulkAddMembersRequest req) {
+
+    auth.ensureRoleAtLeastForBlock(blockId, OrgAuthorization.OrgRole.TEACHER);
+
     for (var it : req.getMembers()) {
       String role = it.getRole() != null ? it.getRole() : req.getDefaultRole();
       boolean active = it.getActive() != null ? it.getActive() : req.isActive();

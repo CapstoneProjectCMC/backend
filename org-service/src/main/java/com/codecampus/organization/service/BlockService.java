@@ -6,6 +6,7 @@ import com.codecampus.organization.dto.request.CreateBlockRequest;
 import com.codecampus.organization.dto.request.UpdateBlockRequest;
 import com.codecampus.organization.dto.response.BlockWithMembersPageResponse;
 import com.codecampus.organization.dto.response.BlockWithMembersWithMemberPageResponse;
+import com.codecampus.organization.dto.response.IdNameResponse;
 import com.codecampus.organization.dto.response.MemberInBlockResponse;
 import com.codecampus.organization.dto.response.MemberInBlockWithMemberResponse;
 import com.codecampus.organization.entity.OrganizationBlock;
@@ -46,11 +47,15 @@ public class BlockService {
   OrganizationRepository orgRepo;
   OrganizationMemberRepository memberRepo;
   UserBulkLoader userBulkLoader;
+  OrgAuthorization auth;
 
   @Transactional
   public void createBlock(
       String orgId,
       CreateBlockRequest req) {
+
+    auth.ensureRoleAtLeastForOrg(orgId, OrgAuthorization.OrgRole.TEACHER);
+
     orgRepo.findById(orgId)
         .orElseThrow(() -> new AppException(ErrorCode.ORGANIZATION_NOT_FOUND));
 
@@ -67,6 +72,8 @@ public class BlockService {
   public void updateBlock(
       String blockId,
       UpdateBlockRequest req) {
+    auth.ensureRoleAtLeastForBlock(blockId, OrgAuthorization.OrgRole.TEACHER);
+
     OrganizationBlock b = blockRepo.findById(blockId)
         .orElseThrow(() -> new AppException(ErrorCode.GRADE_NOT_FOUND));
 
@@ -78,6 +85,9 @@ public class BlockService {
 
   @Transactional
   public void deleteBlock(String blockId) {
+
+    auth.ensureRoleAtLeastForBlock(blockId, OrgAuthorization.OrgRole.ADMIN);
+
     String by = AuthenticationHelper.getMyUsername();
     OrganizationBlock b = blockRepo.findById(blockId)
         .orElseThrow(() -> new AppException(ErrorCode.GRADE_NOT_FOUND));
@@ -302,6 +312,43 @@ public class BlockService {
         .createdAt(b.getCreatedAt())
         .updatedAt(b.getUpdatedAt())
         .members(PageResponseHelper.toPageResponse(mapped, memberPage))
+        .build();
+  }
+
+  public IdNameResponse resolveBlockByName(
+      String orgId,
+      String name,
+      String code
+  ) {
+    if (name == null || name.isBlank()) {
+      throw new AppException(ErrorCode.GRADE_NOT_FOUND);
+    }
+
+    // Nếu có code -> resolve chính xác
+    if (code != null && !code.isBlank()) {
+      OrganizationBlock b = blockRepo
+          .findFirstByOrgIdAndNameIgnoreCaseAndCodeIgnoreCase(orgId, name, code)
+          .orElseThrow(() -> new AppException(ErrorCode.GRADE_NOT_FOUND));
+      return IdNameResponse.builder()
+          .id(b.getId()).orgId(b.getOrgId()).name(b.getName()).code(b.getCode())
+          .build();
+    }
+
+    // Không có code -> kiểm tra trùng tên
+    List<OrganizationBlock> list =
+        blockRepo.findByOrgIdAndNameIgnoreCase(orgId, name);
+    if (list.isEmpty()) {
+      throw new AppException(ErrorCode.GRADE_NOT_FOUND);
+    }
+    if (list.size() > 1) {
+      // báo “trùng tên”, yêu cầu truyền thêm code
+      throw new AppException(
+          ErrorCode.DUPLICATED_BLOCK_NAME);
+    }
+
+    OrganizationBlock b = list.getFirst();
+    return IdNameResponse.builder()
+        .id(b.getId()).orgId(b.getOrgId()).name(b.getName()).code(b.getCode())
         .build();
   }
 }

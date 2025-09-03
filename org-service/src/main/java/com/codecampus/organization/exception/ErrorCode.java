@@ -71,6 +71,9 @@ public enum ErrorCode {
       CONFLICT),
   PASSWORD_ALREADY_EXISTS(4099203, CONFLICT_STATUS, "Mật khẩu đã tồn tại!",
       CONFLICT),
+  DUPLICATED_BLOCK_NAME(4099204, CONFLICT_STATUS,
+      "Tên block bị trùng trong tổ chức!",
+      CONFLICT),
 
   // 500 - Internal Server Error
   FAILED_GENERATE_TOKEN(5009201, INTERNAL_SERVER_STATUS,

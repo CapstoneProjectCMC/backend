@@ -43,6 +43,8 @@ public class NotificationEventListener {
           .param(evt.getParam())
           .subject(evt.getSubject())
           .body(evt.getBody())
+          // readStatus = UNREAD (default)
+          // deliveryStatus = PENDING (default)
           .build();
       notificationRepository.save(doc);
 
@@ -54,6 +56,7 @@ public class NotificationEventListener {
       payload.put("body", doc.getBody());
       payload.put("param", doc.getParam());
       payload.put("createdAt", doc.getCreatedAt());
+      payload.put("readStatus", doc.getReadStatus());
 
       // 3) Gửi đúng kênh
       boolean wantSocket = hasChannel(evt.getChannel(), "SOCKET") ||
@@ -76,15 +79,16 @@ public class NotificationEventListener {
           String body = applyTemplate(evt.getBody(), evt.getParam());
           emailService.send(to, subject, body);
 
-          // cập nhật trạng thái đã gửi thành công
-          doc.setStatus("SENT");
+          // Cập nhật trạng thái gửi
+          doc.setDeliveryStatus("SENT");
+          doc.setDeliveredAt(java.time.Instant.now());
           notificationRepository.save(doc);
         }
       }
 
       log.info("[Notification] saved+dispatched channels='{}' to recipient={}",
           evt.getChannel(), evt.getRecipient());
-      
+
     } catch (Exception e) {
       log.error("[Notification] handle failed: {}", e.getMessage(), e);
     }

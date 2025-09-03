@@ -3,6 +3,7 @@ package com.codecampus.organization.controller;
 import com.codecampus.organization.dto.common.ApiResponse;
 import com.codecampus.organization.dto.common.PageResponse;
 import com.codecampus.organization.dto.response.BlockWithMembersPageResponse;
+import com.codecampus.organization.dto.response.IdNameResponse;
 import com.codecampus.organization.service.BlockService;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -38,6 +39,17 @@ public class InternalBlockController {
         .message("Get thông tin các khối trong tổ chức thành công!")
         .result(blockService.getBlocksOfOrg(orgId, blocksPage, blocksSize,
             membersPage, membersSize, activeOnlyMembers, includeUnassigned))
+        .build();
+  }
+
+  @GetMapping("/{orgId}/block/resolve")
+  public ApiResponse<IdNameResponse> internalResolveBlockByName(
+      @PathVariable String orgId,
+      @RequestParam("name") String name,
+      @RequestParam(value = "code", required = false) String code
+  ) {
+    return ApiResponse.<IdNameResponse>builder()
+        .result(blockService.resolveBlockByName(orgId, name, code))
         .build();
   }
 }

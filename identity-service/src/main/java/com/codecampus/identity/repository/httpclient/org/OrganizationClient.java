@@ -3,15 +3,20 @@ package com.codecampus.identity.repository.httpclient.org;
 import com.codecampus.identity.configuration.feign.AuthenticationRequestInterceptor;
 import com.codecampus.identity.configuration.feign.FeignConfigForm;
 import com.codecampus.identity.dto.common.ApiResponse;
+import com.codecampus.identity.dto.common.PageResponse;
 import com.codecampus.identity.dto.request.org.BulkAddMembersRequest;
 import com.codecampus.identity.dto.request.org.CreateOrganizationMemberRequest;
+import com.codecampus.identity.dto.response.org.BlockLookupResponse;
+import com.codecampus.identity.dto.response.org.BlockWithMembersLite;
 import com.codecampus.identity.dto.response.org.BlocksOfUserResponse;
+import com.codecampus.identity.dto.response.org.OrganizationLookupResponse;
 import com.codecampus.identity.dto.response.org.PrimaryOrgResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @FeignClient(
     name = "organization-service",
@@ -65,4 +70,26 @@ public interface OrganizationClient {
   @GetMapping(value = "/member/{userId}/blocks")
   ApiResponse<BlocksOfUserResponse> getBlocksOfUser(
       @PathVariable String userId);
+
+  @GetMapping("/internal/organization/resolve")
+  ApiResponse<OrganizationLookupResponse> internalResolveOrganizationByName(
+      @RequestParam("name") String name);
+
+  @GetMapping("/internal/{orgId}/block/resolve")
+  ApiResponse<BlockLookupResponse> internalResolveBlockByName(
+      @PathVariable String orgId,
+      @RequestParam("name") String name,
+      @RequestParam(value = "code", required = false) String code
+  );
+
+  @GetMapping("/internal/{orgId}/blocks")
+  ApiResponse<PageResponse<BlockWithMembersLite>> internalGetBlocksOfOrg(
+      @PathVariable String orgId,
+      @RequestParam(defaultValue = "1") int blocksPage,
+      @RequestParam(defaultValue = "1000") int blocksSize,
+      @RequestParam(defaultValue = "1") int membersPage,
+      @RequestParam(defaultValue = "1000") int membersSize,
+      @RequestParam(defaultValue = "true") boolean activeOnlyMembers,
+      @RequestParam(defaultValue = "true") boolean includeUnassigned
+  );
 }
