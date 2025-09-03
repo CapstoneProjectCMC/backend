@@ -131,4 +131,4 @@ spring:
 
 identity:
   service:
-    base-url: http://identity-service:8080/identity 
+    base-url: http://identity-service:8080/identity
