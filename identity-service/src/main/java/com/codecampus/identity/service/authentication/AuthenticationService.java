@@ -290,7 +290,7 @@ public class AuthenticationService {
     try {
       userRepository.save(user);
       // Sự kiện khởi tạo profile giàu dữ liệu
-      var profilePayload =
+      UserProfileCreationPayload profilePayload =
           userPayloadMapper.toUserProfileCreationPayloadFromUserCreationRequest(
               request);
       userEventProducer.publishRegisteredUserEvent(user, profilePayload);

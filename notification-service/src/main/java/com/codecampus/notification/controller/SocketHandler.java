@@ -4,6 +4,7 @@ import com.codecampus.notification.dto.request.IntrospectRequest;
 import com.codecampus.notification.dto.response.IntrospectResponse;
 import com.codecampus.notification.entity.WebSocketSessionDocument;
 import com.codecampus.notification.service.IdentityService;
+import com.codecampus.notification.service.NotificationRealtimeService;
 import com.codecampus.notification.service.WebSocketSessionService;
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
@@ -28,6 +29,7 @@ public class SocketHandler {
   SocketIOServer server;
   IdentityService identityService;
   WebSocketSessionService wsService;
+  NotificationRealtimeService realtimeService;
 
   @OnConnect
   public void onConnect(SocketIOClient client) {
@@ -51,6 +53,8 @@ public class SocketHandler {
         .createdAt(Instant.now())
         .build();
     wsService.create(doc);
+
+    realtimeService.pushUnreadBadge(userId);
 
     log.info("Socket connected: userId={} session={}", userId,
         doc.getSocketSessionId());

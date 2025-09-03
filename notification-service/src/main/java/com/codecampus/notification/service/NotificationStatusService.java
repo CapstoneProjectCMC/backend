@@ -24,6 +24,7 @@ public class NotificationStatusService {
   MongoTemplate mongoTemplate;
   NotificationRepository notificationRepository;
   SocketPushService socketPushService;
+  NotificationRealtimeService realtimeService;
 
   public long markRead(
       String recipient,
@@ -50,6 +51,8 @@ public class NotificationStatusService {
         )
     );
 
+    realtimeService.pushUnreadBadge(recipient);
+
     log.info("[Notification] markRead recipient={} ids={} modified={}",
         recipient, ids, r.getModifiedCount());
     return r.getModifiedCount();
@@ -74,6 +77,8 @@ public class NotificationStatusService {
             "ids", ids
         )
     );
+
+    realtimeService.pushUnreadBadge(recipient);
 
     log.info("[Notification] markUnread recipient={} ids={} modified={}",
         recipient, ids, r.getModifiedCount());
@@ -101,6 +106,8 @@ public class NotificationStatusService {
             "at", ts
         )
     );
+
+    realtimeService.pushUnreadBadge(recipient);
 
     log.info("[Notification] markAllRead recipient={} before={} modified={}",
         recipient, before, r.getModifiedCount());

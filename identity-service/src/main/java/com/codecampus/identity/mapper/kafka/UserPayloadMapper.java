@@ -8,10 +8,8 @@ import events.user.data.UserProfileCreationPayload;
 import java.time.Instant;
 import java.util.stream.Collectors;
 import org.mapstruct.Mapper;
-import org.mapstruct.NullValuePropertyMappingStrategy;
 
-@Mapper(componentModel = "spring",
-    nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+@Mapper(componentModel = "spring")
 public interface UserPayloadMapper {
 
   UserProfileCreationPayload toUserProfileCreationPayloadFromUserCreationRequest(

@@ -3,6 +3,7 @@ package com.codecampus.notification.service.kafka;
 import com.codecampus.notification.entity.NotificationDocument;
 import com.codecampus.notification.repository.NotificationRepository;
 import com.codecampus.notification.service.EmailService;
+import com.codecampus.notification.service.NotificationRealtimeService;
 import com.codecampus.notification.service.SocketPushService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import events.notification.NotificationEvent;
@@ -24,6 +25,7 @@ public class NotificationEventListener {
   ObjectMapper objectMapper;
   NotificationRepository notificationRepository;
   SocketPushService socketPushService;
+  NotificationRealtimeService realtimeService;
   EmailService emailService;
 
   @KafkaListener(
@@ -85,6 +87,9 @@ public class NotificationEventListener {
           notificationRepository.save(doc);
         }
       }
+
+      // 3) Đẩy realtime badge UNREAD sau khi thông báo mới xuất hiện
+      realtimeService.pushUnreadBadge(evt.getRecipient());
 
       log.info("[Notification] saved+dispatched channels='{}' to recipient={}",
           evt.getChannel(), evt.getRecipient());
