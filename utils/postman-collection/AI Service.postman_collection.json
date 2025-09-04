@@ -1,187 +1,553 @@
 {
-  "info": {
-    "_postman_id": "20151aa0-d6df-42b9-a8d2-ff86e79b6f33",
-    "name": "AI Service",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "33137665",
-    "_collection_link": "https://animeh-team.postman.co/workspace/Code-Campus-Workspace~833332bb-de6b-4a20-bdef-16542d164f4e/collection/33137665-20151aa0-d6df-42b9-a8d2-ff86e79b6f33?action=share&source=collection_link&creator=33137665"
-  },
-  "item": [
-    {
-      "name": "chat",
-      "request": {
-        "auth": {
-          "type": "bearer",
-          "bearer": [
-            {
-              "key": "token",
-              "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyYjU5NDM2Yi03YmMwLTQ5NWYtYmRhZS0zZDEyYWEzMDAwZGYiLCJwZXJtaXNzaW9ucyI6W10sInNjb3BlIjoiUk9MRV9BRE1JTiIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiZXhwIjoxNzUwOTM4MzgwLCJpYXQiOjE3NTA5MzQ3ODAsImp0aSI6IjgwYmNkOWNmLWZmOGMtNDM5Ni04ZTY1LTI2NjFlNTEyZjc1YSIsImVtYWlsIjoiYWRtaW4xMjMxMjMxMjNAbWFpbC5jb20iLCJ1c2VybmFtZSI6ImFkbWluIn0.k9lcHIuukbInOrinhWml6XaWq7RH4RnbChxx1-Sv074HmT6fP-oUFYIhLyfc_EKFcj9p1SexmP-txXEpE2ob1w",
-              "type": "string"
-            }
-          ]
-        },
-        "method": "POST",
-        "header": [
-          {
-            "key": "",
-            "value": "",
-            "type": "text"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\r\n    \"message\": \"Bạn tên là gì ?\"\r\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": {
-          "raw": "http://localhost:8086/ai/chat",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8086",
-          "path": [
-            "ai",
-            "chat"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "chatWithImage",
-      "request": {
-        "auth": {
-          "type": "bearer",
-          "bearer": [
-            {
-              "key": "token",
-              "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyYjU5NDM2Yi03YmMwLTQ5NWYtYmRhZS0zZDEyYWEzMDAwZGYiLCJwZXJtaXNzaW9ucyI6W10sInNjb3BlIjoiUk9MRV9BRE1JTiIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiZXhwIjoxNzUwOTM4MzgwLCJpYXQiOjE3NTA5MzQ3ODAsImp0aSI6IjgwYmNkOWNmLWZmOGMtNDM5Ni04ZTY1LTI2NjFlNTEyZjc1YSIsImVtYWlsIjoiYWRtaW4xMjMxMjMxMjNAbWFpbC5jb20iLCJ1c2VybmFtZSI6ImFkbWluIn0.k9lcHIuukbInOrinhWml6XaWq7RH4RnbChxx1-Sv074HmT6fP-oUFYIhLyfc_EKFcj9p1SexmP-txXEpE2ob1w",
-              "type": "string"
-            }
-          ]
-        },
-        "method": "POST",
-        "header": [
-          {
-            "key": "",
-            "value": "",
-            "type": "text"
-          }
-        ],
-        "body": {
-          "mode": "formdata",
-          "formdata": [
-            {
-              "key": "file",
-              "type": "file",
-              "src": []
-            },
-            {
-              "key": "message",
-              "value": "Hãy nhận diện ảnh này",
-              "type": "text"
-            }
-          ]
-        },
-        "url": {
-          "raw": "http://localhost:8086/ai/chat-with-image",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8086",
-          "path": [
-            "ai",
-            "chat-with-image"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "generateQuizExercise",
-      "request": {
-        "auth": {
-          "type": "bearer",
-          "bearer": [
-            {
-              "key": "token",
-              "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNDM0MjQyNTItZDJjZi00Y2NkLWFjYWEtNzgxOGQ2ZTE3YzdhIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTIxMzI4NDQsImlhdCI6MTc1MjEyOTI0NCwianRpIjoiNzVkZDIyZDItNTE4MS00YzQ3LWE1MjgtYTIxYjNhZWNlY2UxIiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.UKClDlrPTtbmE9HcexQ4t4CjAWMbtP1UzL2mVuuVW4uPDwhSwSyU9ahEeoakb7ve0yM_RDkBy_XFdeAzGrDIoA",
-              "type": "string"
-            }
-          ]
-        },
-        "method": "POST",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\r\n    \"exercisePromptIn\": {\r\n        \"title\": \"Lập trình Java căn bản – vòng lặp\",\r\n        \"description\": \"Ôn tập kiến thức for‑while‑do while, vòng lặp lồng.\",\r\n        \"difficulty\": \"EASY\",\r\n        \"duration\": 15,\r\n        \"tags\": [\r\n            \"java\",\r\n            \"loop\",\r\n            \"basic\"\r\n        ]\r\n    },\r\n    \"numQuestions\": 5\r\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": {
-          "raw": "http://localhost:8086/ai/generate/quiz",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8086",
-          "path": [
-            "ai",
-            "generate",
-            "quiz"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "generateQuestion",
-      "request": {
-        "auth": {
-          "type": "bearer",
-          "bearer": [
-            {
-              "key": "token",
-              "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyYjU5NDM2Yi03YmMwLTQ5NWYtYmRhZS0zZDEyYWEzMDAwZGYiLCJwZXJtaXNzaW9ucyI6W10sInNjb3BlIjoiUk9MRV9BRE1JTiIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiZXhwIjoxNzUwOTM4MzgwLCJpYXQiOjE3NTA5MzQ3ODAsImp0aSI6IjgwYmNkOWNmLWZmOGMtNDM5Ni04ZTY1LTI2NjFlNTEyZjc1YSIsImVtYWlsIjoiYWRtaW4xMjMxMjMxMjNAbWFpbC5jb20iLCJ1c2VybmFtZSI6ImFkbWluIn0.k9lcHIuukbInOrinhWml6XaWq7RH4RnbChxx1-Sv074HmT6fP-oUFYIhLyfc_EKFcj9p1SexmP-txXEpE2ob1w",
-              "type": "string"
-            }
-          ]
-        },
-        "method": "POST",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\r\n    \"exerciseId\": \"771e3cdb-537f-4b0f-9e1d-3f5d4f365cec\",\r\n    \"title\": \"Lập trình Java căn bản – vòng lặp\",\r\n    \"description\": \"Ôn tập kiến thức for‑while‑do while...\",\r\n    \"difficulty\": \"EASY\",\r\n    \"duration\": 15,\r\n    \"tags\": [\r\n        \"java\",\r\n        \"loop\"\r\n    ],\r\n    \"questionType\": \"SINGLE_CHOICE\",\r\n    \"points\": 2\r\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": {
-          "raw": "http://localhost:8086/ai/generate/question",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8086",
-          "path": [
-            "ai",
-            "generate",
-            "question"
-          ]
-        }
-      },
-      "response": []
-    }
-  ]
+	"info": {
+		"_postman_id": "e7c7baf0-db38-44ee-b163-823825ca932a",
+		"name": "AI Service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33137665",
+		"_collection_link": "https://animeh-team.postman.co/workspace/CodeCampus-Backend~4a46659f-0826-49f2-b8c2-66ff451e96a4/collection/33137665-e7c7baf0-db38-44ee-b163-823825ca932a?action=share&source=collection_link&creator=33137665"
+	},
+	"item": [
+		{
+			"name": "myThreads",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNDM0MjQyNTItZDJjZi00Y2NkLWFjYWEtNzgxOGQ2ZTE3YzdhIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTIxMzI4NDQsImlhdCI6MTc1MjEyOTI0NCwianRpIjoiNzVkZDIyZDItNTE4MS00YzQ3LWE1MjgtYTIxYjNhZWNlY2UxIiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.UKClDlrPTtbmE9HcexQ4t4CjAWMbtP1UzL2mVuuVW4uPDwhSwSyU9ahEeoakb7ve0yM_RDkBy_XFdeAzGrDIoA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\": \"Đức Gay 1234\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8086/ai/chat/threads",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8086",
+					"path": [
+						"ai",
+						"chat",
+						"threads"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getThread",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiZTVjMTU1MjgtYjBmMS00MDBmLTgyMDAtN2IwMjBjZmM1ZmQzIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTY0Nzc3OTMsImlhdCI6MTc1NTg3Mjk5MywianRpIjoiM2Q2MWMyZTQtMGU2MS00N2FhLWJlZGEtYzJlNjY1YTlhZTI0IiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.ll1TP_w5Ez0jj6RF90xWCd2-IIywuWFDus-LbqDat-2e4hSQ6HVmJXMCaEs5XHPNZ3p7-pD1uk4-wNvyPHZWJw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\": \"Đức Gay 1234\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8086/ai/chat/thread/2ed6fc91-3169-43f0-9505-55f09d3e0bd6",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8086",
+					"path": [
+						"ai",
+						"chat",
+						"thread",
+						"2ed6fc91-3169-43f0-9505-55f09d3e0bd6"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createThread",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiZTVjMTU1MjgtYjBmMS00MDBmLTgyMDAtN2IwMjBjZmM1ZmQzIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTY0Nzc3OTMsImlhdCI6MTc1NTg3Mjk5MywianRpIjoiM2Q2MWMyZTQtMGU2MS00N2FhLWJlZGEtYzJlNjY1YTlhZTI0IiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.ll1TP_w5Ez0jj6RF90xWCd2-IIywuWFDus-LbqDat-2e4hSQ6HVmJXMCaEs5XHPNZ3p7-pD1uk4-wNvyPHZWJw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\": \"An gay\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8086/ai/chat/thread",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8086",
+					"path": [
+						"ai",
+						"chat",
+						"thread"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "renameThread",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNDM0MjQyNTItZDJjZi00Y2NkLWFjYWEtNzgxOGQ2ZTE3YzdhIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTIxMzI4NDQsImlhdCI6MTc1MjEyOTI0NCwianRpIjoiNzVkZDIyZDItNTE4MS00YzQ3LWE1MjgtYTIxYjNhZWNlY2UxIiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.UKClDlrPTtbmE9HcexQ4t4CjAWMbtP1UzL2mVuuVW4uPDwhSwSyU9ahEeoakb7ve0yM_RDkBy_XFdeAzGrDIoA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\": \"Đức Gay 1234\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8086/ai/chat/thread/7691af11-ec99-4339-867c-be987e5471fa",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8086",
+					"path": [
+						"ai",
+						"chat",
+						"thread",
+						"7691af11-ec99-4339-867c-be987e5471fa"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteThread",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNDM0MjQyNTItZDJjZi00Y2NkLWFjYWEtNzgxOGQ2ZTE3YzdhIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTIxMzI4NDQsImlhdCI6MTc1MjEyOTI0NCwianRpIjoiNzVkZDIyZDItNTE4MS00YzQ3LWE1MjgtYTIxYjNhZWNlY2UxIiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.UKClDlrPTtbmE9HcexQ4t4CjAWMbtP1UzL2mVuuVW4uPDwhSwSyU9ahEeoakb7ve0yM_RDkBy_XFdeAzGrDIoA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\": \"Đức Gay 1234\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8086/ai/chat/thread/7691af11-ec99-4339-867c-be987e5471fa",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8086",
+					"path": [
+						"ai",
+						"chat",
+						"thread",
+						"7691af11-ec99-4339-867c-be987e5471fa"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "sendChat",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNDM0MjQyNTItZDJjZi00Y2NkLWFjYWEtNzgxOGQ2ZTE3YzdhIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTIxMzI4NDQsImlhdCI6MTc1MjEyOTI0NCwianRpIjoiNzVkZDIyZDItNTE4MS00YzQ3LWE1MjgtYTIxYjNhZWNlY2UxIiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.UKClDlrPTtbmE9HcexQ4t4CjAWMbtP1UzL2mVuuVW4uPDwhSwSyU9ahEeoakb7ve0yM_RDkBy_XFdeAzGrDIoA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"message\": \"Bạn tên là gì ?\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8086/ai/chat/thread/7c4a3323-fcaf-437b-9151-3b5206aad1b5/messages",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8086",
+					"path": [
+						"ai",
+						"chat",
+						"thread",
+						"7c4a3323-fcaf-437b-9151-3b5206aad1b5",
+						"messages"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "sendChatWithImage",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiZTVjMTU1MjgtYjBmMS00MDBmLTgyMDAtN2IwMjBjZmM1ZmQzIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTY0Nzc2ODQsImlhdCI6MTc1NTg3Mjg4NCwianRpIjoiZWI4NjQ3M2EtZjJmZC00OTY0LTg4NWEtMmYxMzFhYTBkNjYwIiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.Z2KeD4zAMerZumnasM5k7pjGuFq9lzIfOZAFgaq8iW-3CrhjJAKNC1FwXY1dY6vcSXc2xkrMX3Ti4f-CNHXJlA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/D:/Images/Steam Artwork Hatsune Miku/Miku avatar.jpg"
+						},
+						{
+							"key": "message",
+							"value": "Hãy nhận diện ảnh này",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8086/ai/chat/thread/2ed6fc91-3169-43f0-9505-55f09d3e0bd6/messages-with-image",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8086",
+					"path": [
+						"ai",
+						"chat",
+						"thread",
+						"2ed6fc91-3169-43f0-9505-55f09d3e0bd6",
+						"messages-with-image"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "(TEACHER) generateQuizExercise",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNDM0MjQyNTItZDJjZi00Y2NkLWFjYWEtNzgxOGQ2ZTE3YzdhIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTIxMzI4NDQsImlhdCI6MTc1MjEyOTI0NCwianRpIjoiNzVkZDIyZDItNTE4MS00YzQ3LWE1MjgtYTIxYjNhZWNlY2UxIiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.UKClDlrPTtbmE9HcexQ4t4CjAWMbtP1UzL2mVuuVW4uPDwhSwSyU9ahEeoakb7ve0yM_RDkBy_XFdeAzGrDIoA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"exercisePromptIn\": {\r\n        \"title\": \"Lập trình Java căn bản – vòng lặp\",\r\n        \"description\": \"Ôn tập kiến thức for‑while‑do while, vòng lặp lồng.\",\r\n        \"difficulty\": \"EASY\",\r\n        \"duration\": 15,\r\n        \"tags\": [\r\n            \"java\",\r\n            \"loop\",\r\n            \"basic\"\r\n        ]\r\n    },\r\n    \"numQuestions\": 5\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8086/ai/generate/quiz",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8086",
+					"path": [
+						"ai",
+						"generate",
+						"quiz"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "(TEACHER) generateQuestion",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNDM0MjQyNTItZDJjZi00Y2NkLWFjYWEtNzgxOGQ2ZTE3YzdhIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTE2OTM0NjAsImlhdCI6MTc1MTY4OTg2MCwianRpIjoiZTRiMTEwMzItMTY1OS00ODRlLWI1MzgtMjdiYWJkYzJmZTU3IiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.K2zcjXCfHWBRvIfOvvzNZKPd679JbK-eTiTGlq3BcEC7kqU_mbZCFu-QE6ST1G8NLC1tQB3lDOfzZ_ASFj5D1Q",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"exerciseId\": \"38d81f62-e2ec-4e16-873d-a6bd9430bf69\",\r\n    \"title\": \"Lập trình Java căn bản – vòng lặp\",\r\n    \"description\": \"Ôn tập kiến thức for‑while‑do while...\",\r\n    \"difficulty\": \"EASY\",\r\n    \"duration\": 15,\r\n    \"tags\": [\r\n        \"java\",\r\n        \"loop\"\r\n    ],\r\n    \"questionType\": \"SINGLE_CHOICE\",\r\n    \"points\": 2\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8086/ai/generate/question",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8086",
+					"path": [
+						"ai",
+						"generate",
+						"question"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "(TEACHER) generateQuestions",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNDM0MjQyNTItZDJjZi00Y2NkLWFjYWEtNzgxOGQ2ZTE3YzdhIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTE2OTM0NjAsImlhdCI6MTc1MTY4OTg2MCwianRpIjoiZTRiMTEwMzItMTY1OS00ODRlLWI1MzgtMjdiYWJkYzJmZTU3IiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.K2zcjXCfHWBRvIfOvvzNZKPd679JbK-eTiTGlq3BcEC7kqU_mbZCFu-QE6ST1G8NLC1tQB3lDOfzZ_ASFj5D1Q",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"exerciseId\": \"38d81f62-e2ec-4e16-873d-a6bd9430bf69\",\r\n    \"title\": \"Lập trình Java căn bản – vòng lặp\",\r\n    \"description\": \"Ôn tập kiến thức for‑while‑do while...\",\r\n    \"difficulty\": \"EASY\",\r\n    \"duration\": 15,\r\n    \"tags\": [\r\n        \"java\",\r\n        \"loop\"\r\n    ],\r\n    \"questionType\": \"SINGLE_CHOICE\",\r\n    \"points\": 2,\r\n    \"numQuestions\": 5\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8086/ai/generate/questions",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8086",
+					"path": [
+						"ai",
+						"generate",
+						"questions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "(TEACHER) generateCodingExercise",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiMDZiNTZlMmMtOTFkZS00N2VlLTgyYzktM2UxMjViMGU1N2QyIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTYwMDY5MDMsImlhdCI6MTc1NTQwMjEwMywianRpIjoiMGJjYWQ2ZWUtNjkzNS00MjVjLTlmODEtOTJjZDg5NzU3ZjA1IiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.ujsEI7A42CN03pIe6sPvYBcaJXmy91Y_tlignUCYFACnJmeEq4vx0_FqVI3EqC2jkoQpUSJ_BB-3Ard9tJWmxw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"exercisePromptIn\": {\r\n        \"title\": \"Lập trình Java căn bản – vòng lặp\",\r\n        \"description\": \"Ôn tập kiến thức for‑while‑do while.\",\r\n        \"difficulty\": \"EASY\",\r\n        \"duration\": 15,\r\n        \"tags\": [\r\n            \"java\"\r\n        ]\r\n    },\r\n    \"allowedLanguages\": [\r\n        \"java\"\r\n    ],\r\n    \"timeLimit\": 15,\r\n    \"memoryLimit\": 20,\r\n    \"maxSubmissions\": 4,\r\n    \"numTestCases\": 15\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8086/ai/generate/coding",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8086",
+					"path": [
+						"ai",
+						"generate",
+						"coding"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "(TEACHER) generateTestCases",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiMDZiNTZlMmMtOTFkZS00N2VlLTgyYzktM2UxMjViMGU1N2QyIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTYwMDY5MDMsImlhdCI6MTc1NTQwMjEwMywianRpIjoiMGJjYWQ2ZWUtNjkzNS00MjVjLTlmODEtOTJjZDg5NzU3ZjA1IiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.ujsEI7A42CN03pIe6sPvYBcaJXmy91Y_tlignUCYFACnJmeEq4vx0_FqVI3EqC2jkoQpUSJ_BB-3Ard9tJWmxw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"exerciseId\": \"e7903947-d75d-40cd-87de-62fecd95801a\",\r\n    \"title\": \"Lập trình Java căn bản – vòng lặp\",\r\n    \"description\": \"Ôn tập kiến thức for‑while‑do while...\",\r\n    \"input\": \"4\",\r\n    \"output\": \"1\\n2\\n3\\n4\",\r\n    \"constraintText\": \"\",\r\n    \"timeLimit\": 15,\r\n    \"memoryLimit\": 20,\r\n    \"numTestCases\": 5\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8086/ai/generate/coding/test-cases",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8086",
+					"path": [
+						"ai",
+						"generate",
+						"coding",
+						"test-cases"
+					]
+				}
+			},
+			"response": []
+		}
+	]
 }

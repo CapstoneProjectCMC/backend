@@ -1,241 +1,1531 @@
 {
-  "info": {
-    "_postman_id": "585aca11-9c2b-44bb-a4f7-f1e45b4298d8",
-    "name": "Profile Service",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "33137665",
-    "_collection_link": "https://animeh-team.postman.co/workspace/Code-Campus-Workspace~833332bb-de6b-4a20-bdef-16542d164f4e/collection/33137665-585aca11-9c2b-44bb-a4f7-f1e45b4298d8?action=share&source=collection_link&creator=33137665"
-  },
-  "item": [
-    {
-      "name": "User",
-      "item": [
-        {
-          "name": "(ADMIN) getAllUserProfiles",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb2RlIENhbXB1cyIsInN1YiI6IjRmYmJmZjYyLThmN2MtNGVkNC1hMjJiLWIyMmI4ZmM5NzM4MCIsImV4cCI6MTc0OTY0MDg0MywiaWF0IjoxNzQ5NjM3MjQzLCJqdGkiOiI2MDBmMjllZi03ZGFiLTQ2YzgtODJmZS01NjY5NTU2ZTcyNzEiLCJzY29wZSI6IlJPTEVfQURNSU4ifQ.RRvaVn_sR3Ii_0tBudUuqbhqhEpjDtEAOGwV2b3ZzZ0NHX78RZd52ddvaOuXPPTVJdE3Qq_lu-vmSpiBOZI6Gg",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{ProfileBase}}/users?page=1&size=10",
-              "host": [
-                "{{ProfileBase}}"
-              ],
-              "path": [
-                "users"
-              ],
-              "query": [
-                {
-                  "key": "page",
-                  "value": "1"
-                },
-                {
-                  "key": "size",
-                  "value": "10"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "(ADMIN) getUserProfileById",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb2RlIENhbXB1cyIsInN1YiI6IjZlODhkMmU1LWY3ODgtNDMzOS05MjYxLWM0MDA2YzBkZGMzOSIsImV4cCI6MTc0OTYzNzM5MywiaWF0IjoxNzQ5NjMzNzkzLCJqdGkiOiJmZmVkZjFmOS1kNDVjLTQwYTUtOGI0OS1mNDAwNmU4NzQwMWMiLCJzY29wZSI6IlJPTEVfQURNSU4ifQ.lkrdMMk8P25FntmgoNKnorkTZSFOPO-ER8Y2fOfS_lRnhsjxQmo41f_GdHt3-xu5MtXxBKisjwBU8HU2D1A-ag",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{ProfileBase}}/user/c663ff6a-ae42-43e2-907b-15638139903a",
-              "host": [
-                "{{ProfileBase}}"
-              ],
-              "path": [
-                "user",
-                "c663ff6a-ae42-43e2-907b-15638139903a"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "getMyUserProfile",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb2RlIENhbXB1cyIsInN1YiI6IjRmYmJmZjYyLThmN2MtNGVkNC1hMjJiLWIyMmI4ZmM5NzM4MCIsImV4cCI6MTc0OTY0MDg0MywiaWF0IjoxNzQ5NjM3MjQzLCJqdGkiOiI2MDBmMjllZi03ZGFiLTQ2YzgtODJmZS01NjY5NTU2ZTcyNzEiLCJzY29wZSI6IlJPTEVfQURNSU4ifQ.RRvaVn_sR3Ii_0tBudUuqbhqhEpjDtEAOGwV2b3ZzZ0NHX78RZd52ddvaOuXPPTVJdE3Qq_lu-vmSpiBOZI6Gg",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{ProfileBase}}/user/my-profile",
-              "host": [
-                "{{ProfileBase}}"
-              ],
-              "path": [
-                "user",
-                "my-profile"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "updateMyUserProfile",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb2RlIENhbXB1cyIsInN1YiI6IjRmYmJmZjYyLThmN2MtNGVkNC1hMjJiLWIyMmI4ZmM5NzM4MCIsImV4cCI6MTc0OTY0MDg0MywiaWF0IjoxNzQ5NjM3MjQzLCJqdGkiOiI2MDBmMjllZi03ZGFiLTQ2YzgtODJmZS01NjY5NTU2ZTcyNzEiLCJzY29wZSI6IlJPTEVfQURNSU4ifQ.RRvaVn_sR3Ii_0tBudUuqbhqhEpjDtEAOGwV2b3ZzZ0NHX78RZd52ddvaOuXPPTVJdE3Qq_lu-vmSpiBOZI6Gg",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "PATCH",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n  \"firstName\": \"\",\r\n  \"lastName\": \"\",\r\n  \"dob\": \"\",\r\n  \"bio\": \"\",\r\n  \"gender\": \"\",\r\n  \"displayName\": \"\",\r\n  \"education\": \"\",\r\n  \"links\": [],\r\n  \"city\": \"\"\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{ProfileBase}}/users/my-profile",
-              "host": [
-                "{{ProfileBase}}"
-              ],
-              "path": [
-                "users",
-                "my-profile"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "(internal) createUserProfile",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb2RlIENhbXB1cyIsInN1YiI6IjRmYmJmZjYyLThmN2MtNGVkNC1hMjJiLWIyMmI4ZmM5NzM4MCIsImV4cCI6MTc0OTY0MDg0MywiaWF0IjoxNzQ5NjM3MjQzLCJqdGkiOiI2MDBmMjllZi03ZGFiLTQ2YzgtODJmZS01NjY5NTU2ZTcyNzEiLCJzY29wZSI6IlJPTEVfQURNSU4ifQ.RRvaVn_sR3Ii_0tBudUuqbhqhEpjDtEAOGwV2b3ZzZ0NHX78RZd52ddvaOuXPPTVJdE3Qq_lu-vmSpiBOZI6Gg",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n  \"userId\": \"\",\r\n  \"firstName\": \"\",\r\n  \"lastName\": \"\",\r\n  \"dob\": \"\",\r\n  \"bio\": \"\",\r\n  \"gender\": \"\",\r\n  \"displayName\": \"\",\r\n  \"education\": \"\",\r\n  \"links\": [],\r\n  \"city\": \"\"\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{ProfileBase}}/internal/user",
-              "host": [
-                "{{ProfileBase}}"
-              ],
-              "path": [
-                "internal",
-                "user"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "(internal) getUserProfileByUserId",
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          },
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb2RlIENhbXB1cyIsInN1YiI6IjRmYmJmZjYyLThmN2MtNGVkNC1hMjJiLWIyMmI4ZmM5NzM4MCIsImV4cCI6MTc0OTY0MDg0MywiaWF0IjoxNzQ5NjM3MjQzLCJqdGkiOiI2MDBmMjllZi03ZGFiLTQ2YzgtODJmZS01NjY5NTU2ZTcyNzEiLCJzY29wZSI6IlJPTEVfQURNSU4ifQ.RRvaVn_sR3Ii_0tBudUuqbhqhEpjDtEAOGwV2b3ZzZ0NHX78RZd52ddvaOuXPPTVJdE3Qq_lu-vmSpiBOZI6Gg",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "GET",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n  \"userId\": \"\",\r\n  \"firstName\": \"\",\r\n  \"lastName\": \"\",\r\n  \"dob\": \"\",\r\n  \"bio\": \"\",\r\n  \"gender\": \"\",\r\n  \"displayName\": \"\",\r\n  \"education\": \"\",\r\n  \"links\": [],\r\n  \"city\": \"\"\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{ProfileBase}}/internal/user/4fbbff62-8f7c-4ed4-a22b-b22b8fc97380",
-              "host": [
-                "{{ProfileBase}}"
-              ],
-              "path": [
-                "internal",
-                "user",
-                "4fbbff62-8f7c-4ed4-a22b-b22b8fc97380"
-              ]
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "getHello",
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "{{ProfileBase}}/hello",
-          "host": [
-            "{{ProfileBase}}"
-          ],
-          "path": [
-            "hello"
-          ]
-        }
-      },
-      "response": []
-    }
-  ]
+	"info": {
+		"_postman_id": "218634e4-6765-498d-819f-b2c1e524d977",
+		"name": "Profile Service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33137665",
+		"_collection_link": "https://animeh-team.postman.co/workspace/CodeCampus-Backend~4a46659f-0826-49f2-b8c2-66ff451e96a4/collection/33137665-218634e4-6765-498d-819f-b2c1e524d977?action=share&source=collection_link&creator=33137665"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Image",
+					"item": [
+						{
+							"name": "uploadAvatar",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pblJvb3QxMjNAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iXSwiaXNzIjoiQ29kZSBDYW1wdXMiLCJhY3RpdmUiOnRydWUsInRva2VuX3R5cGUiOiJhY2Nlc3NfdG9rZW4iLCJ1c2VySWQiOiJlYmQzYmEyOS1hMWEzLTRhNzItYjYyZC0zMTYyNDIzYTM0MzEiLCJvcmdfcm9sZSI6IiIsInBlcm1pc3Npb25zIjpbXSwib3JnX2lkIjoiIiwic2NvcGUiOiJST0xFX0FETUlOIiwiZXhwIjoxNzU2OTA3NzgxLCJpYXQiOjE3NTYzMDI5ODEsImp0aSI6IjdlZWY5M2I3LTM1NWQtNDVmMi04OGJjLWU3MjJmZThlODJmOCIsImVtYWlsIjoiYWRtaW5Sb290MTIzQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.Ey462LPvFo0iOSVkLX_gzIIcDSFUonVVTriZQEVS8LewizHj9rP8aVJX7WUXvkU_JjsWz49CKE0nzxD6ZoClJA",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "file",
+											"type": "file",
+											"src": "/D:/Images/Steam Artwork Hatsune Miku/Miku avatar.jpg"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:8081/profile/user/my-profile/avatar",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8081",
+									"path": [
+										"profile",
+										"user",
+										"my-profile",
+										"avatar"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "uploadBackground",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "file",
+											"type": "file",
+											"src": []
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:8081/profile/user/my-profile/background",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8081",
+									"path": [
+										"profile",
+										"user",
+										"my-profile",
+										"background"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "updateAvatar",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiYWZkNjE4YTYtMmViMC00YmIxLTk4NzktZGY0YzM4NTgzYTlkIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTQ5ODkzMjIsImlhdCI6MTc1NDM4NDUyMiwianRpIjoiNDNkMTRhNmQtZWZiYy00YTdmLWE1OWYtNTMxMGVkZmJlZmI5IiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.xUXgtjV2wugwCdgM6gDCKD1XTPi9qrUZw-DqPSXbNSTTxAaj1LSgN073XMEIDHO-MgIT3EIFa8F8-5oyri2vRw",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "file",
+											"type": "file",
+											"src": "/D:/Images/Steam Artwork Hatsune Miku/Wallpaper_Video_Hatsune_miku_1080p.gif"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:8081/profile/user/my-profile/avatar",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8081",
+									"path": [
+										"profile",
+										"user",
+										"my-profile",
+										"avatar"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "updateBackground",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiYWZkNjE4YTYtMmViMC00YmIxLTk4NzktZGY0YzM4NTgzYTlkIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTQ5ODkzMjIsImlhdCI6MTc1NDM4NDUyMiwianRpIjoiNDNkMTRhNmQtZWZiYy00YTdmLWE1OWYtNTMxMGVkZmJlZmI5IiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.xUXgtjV2wugwCdgM6gDCKD1XTPi9qrUZw-DqPSXbNSTTxAaj1LSgN073XMEIDHO-MgIT3EIFa8F8-5oyri2vRw",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "file",
+											"type": "file",
+											"src": "/D:/Images/Steam Artwork Hatsune Miku/871513c2cc52e1dffb7c09d70abb65e9.gif"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:8081/profile/user/my-profile/background",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8081",
+									"path": [
+										"profile",
+										"user",
+										"my-profile",
+										"background"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "(ADMIN) getAllUserProfiles",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiZTI1NjRhMmMtOGIxMi00NTMwLThmYzgtMTI0YjRiMTQ4ZWFmIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTUzMjM5NjUsImlhdCI6MTc1NDcxOTE2NSwianRpIjoiNDQ4YjkxOTUtNTU1Yi00MzhlLWIyNTMtMDY3ODU0NTU5NWNkIiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.OWPFz7UjInME27MAKo9Q7SbZ2FJ8d5fNLiE2752-6ok-IeCgT1-eSmedp01pi2UWsQnSxmrydHisjb0C8Cb-yg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:8888/api/v1/profile/users?page=1&size=10",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8888",
+							"path": [
+								"api",
+								"v1",
+								"profile",
+								"users"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getUserProfileById",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiZTI1NjRhMmMtOGIxMi00NTMwLThmYzgtMTI0YjRiMTQ4ZWFmIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTUzMjc0ODksImlhdCI6MTc1NDcyMjY4OSwianRpIjoiYmYxZmExN2EtYzgwYy00NWQ2LTliODUtZThmNzI1ZmMyYzc4IiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.-QKH102d337AEEvE513Y5ekqXC3xDjXVOYsf2yex-b5RVAtEWXYx-BUu36YEiouzRD1twGqWSptTNMZlTY2FNQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/profile/user/467d2c4c-b590-435e-bb0b-d852e91992c8",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"profile",
+								"user",
+								"467d2c4c-b590-435e-bb0b-d852e91992c8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getMyUserProfile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pblJvb3QxMjNAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iXSwiaXNzIjoiQ29kZSBDYW1wdXMiLCJhY3RpdmUiOnRydWUsInRva2VuX3R5cGUiOiJhY2Nlc3NfdG9rZW4iLCJ1c2VySWQiOiIzMDNmOTU1NS04ZDAzLTQwZTYtOTViYi1mMWY2NGJiODY4ODEiLCJvcmdfcm9sZSI6IiIsInBlcm1pc3Npb25zIjpbXSwib3JnX2lkIjoiIiwic2NvcGUiOiJST0xFX0FETUlOIiwiZXhwIjoxNzU3MDEzOTIyLCJpYXQiOjE3NTY0MDkxMjQsImp0aSI6IjM3NmE4MjViLWE4MTAtNGRkZS04MzFjLWUyYzU1OTRmNzI5ZiIsImVtYWlsIjoiYWRtaW5Sb290MTIzQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.uLHD0vBqXZqHKyj6xOt0Ug36DW4BRxeFtfawoAGcfOQUhr6f_4apXcMscutIH3RvDMEr33w8biFYMic-NXq8mQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/profile/user/my-profile",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"profile",
+								"user",
+								"my-profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateMyUserProfile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiMjI5NjdjZGYtYzFlNi00ODM0LWFlM2UtYmQxYjZiMmQ5MmVhIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTY1NDYyMTEsImlhdCI6MTc1NTk0MTQxMSwianRpIjoiOGZhOTcxYjAtMmIwYy00NDk4LTk1NTYtZTIzMGQ4NGUyZDVmIiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.LEt8FIHbOFVsf65bRP1jWJ9jIS3AhydJLpbzYrFvKWoyuY1t0NggAm-FErQo0etKLBbSA9tVt_tttA36cuCjgQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"firstName\": \"An\",\r\n  \"lastName\": \"Nguyễn\",\r\n  \"dob\": \"2025-08-21T16:04:00Z\",\r\n  \"bio\": \"Tô lâzy to write anything :v\",\r\n  \"gender\": false,\r\n  \"displayName\": \"Yunom\",\r\n  \"education\": \"9\",\r\n  \"links\": [\r\n        \"https://github.com/yunomix280304\",\r\n        \"https://github.com/CapstoneProjectCMC/backend/280304\"\r\n  ],\r\n  \"city\": \"Vietnamese\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8888/api/v1/user/my-profile",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8888",
+							"path": [
+								"api",
+								"v1",
+								"user",
+								"my-profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "(internal) createUserProfile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb2RlIENhbXB1cyIsInN1YiI6IjRmYmJmZjYyLThmN2MtNGVkNC1hMjJiLWIyMmI4ZmM5NzM4MCIsImV4cCI6MTc0OTY0MDg0MywiaWF0IjoxNzQ5NjM3MjQzLCJqdGkiOiI2MDBmMjllZi03ZGFiLTQ2YzgtODJmZS01NjY5NTU2ZTcyNzEiLCJzY29wZSI6IlJPTEVfQURNSU4ifQ.RRvaVn_sR3Ii_0tBudUuqbhqhEpjDtEAOGwV2b3ZzZ0NHX78RZd52ddvaOuXPPTVJdE3Qq_lu-vmSpiBOZI6Gg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"userId\": \"\",\r\n  \"firstName\": \"\",\r\n  \"lastName\": \"\",\r\n  \"dob\": \"\",\r\n  \"bio\": \"\",\r\n  \"gender\": \"\",\r\n  \"displayName\": \"\",\r\n  \"education\": \"\",\r\n  \"links\": [],\r\n  \"city\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/internal/user",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"internal",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "(internal) getUserProfileByUserId",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb2RlIENhbXB1cyIsInN1YiI6IjRmYmJmZjYyLThmN2MtNGVkNC1hMjJiLWIyMmI4ZmM5NzM4MCIsImV4cCI6MTc0OTY0MDg0MywiaWF0IjoxNzQ5NjM3MjQzLCJqdGkiOiI2MDBmMjllZi03ZGFiLTQ2YzgtODJmZS01NjY5NTU2ZTcyNzEiLCJzY29wZSI6IlJPTEVfQURNSU4ifQ.RRvaVn_sR3Ii_0tBudUuqbhqhEpjDtEAOGwV2b3ZzZ0NHX78RZd52ddvaOuXPPTVJdE3Qq_lu-vmSpiBOZI6Gg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"userId\": \"\",\r\n  \"firstName\": \"\",\r\n  \"lastName\": \"\",\r\n  \"dob\": \"\",\r\n  \"bio\": \"\",\r\n  \"gender\": \"\",\r\n  \"displayName\": \"\",\r\n  \"education\": \"\",\r\n  \"links\": [],\r\n  \"city\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/internal/user/4fbbff62-8f7c-4ed4-a22b-b22b8fc97380",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"internal",
+								"user",
+								"4fbbff62-8f7c-4ed4-a22b-b22b8fc97380"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getuserprofile",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Activity",
+			"item": [
+				{
+					"name": "getMyActivityWeeks",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/profile/activity/weeks?page=1&size=10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"profile",
+								"activity",
+								"weeks"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Contest",
+			"item": [
+				{
+					"name": "(Đang tính bỏ) getMyContestStatuses",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/profile/contests/my?page=1&size=10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"profile",
+								"contests",
+								"my"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Exercise",
+			"item": [
+				{
+					"name": "saveExercise",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pblJvb3QxMjNAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iXSwiaXNzIjoiQ29kZSBDYW1wdXMiLCJhY3RpdmUiOnRydWUsInRva2VuX3R5cGUiOiJhY2Nlc3NfdG9rZW4iLCJ1c2VySWQiOiIwNjM5YmFmYi0xNzYzLTQ3YzAtYTJhMS1mMzYxOWE0MGJjMDEiLCJvcmdfcm9sZSI6IiIsInBlcm1pc3Npb25zIjpbXSwib3JnX2lkIjoiIiwic2NvcGUiOiJST0xFX0FETUlOIiwiZXhwIjoxNzU2ODc2MDM4LCJpYXQiOjE3NTYyNzEyMzgsImp0aSI6IjQzYjcwZWE2LTc1MmYtNGZhYy1iMjk1LWRiMjlmYjRiMjE5YiIsImVtYWlsIjoiYWRtaW5Sb290MTIzQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ._HkKdNEczO_1lGgrxxL3b_UH8E93XueHVVwORkwtUjWJxzQ0AoNVyawanX5qaXnrUgf1nTKGGfL3Ygr18K7y0Q",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/profile/exercise/94a4f746-af32-4233-83eb-3c34839793cc/save",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"profile",
+								"exercise",
+								"94a4f746-af32-4233-83eb-3c34839793cc",
+								"save"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "unsaveExercise",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pblJvb3QxMjNAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iXSwiaXNzIjoiQ29kZSBDYW1wdXMiLCJhY3RpdmUiOnRydWUsInRva2VuX3R5cGUiOiJhY2Nlc3NfdG9rZW4iLCJ1c2VySWQiOiIwNjM5YmFmYi0xNzYzLTQ3YzAtYTJhMS1mMzYxOWE0MGJjMDEiLCJvcmdfcm9sZSI6IiIsInBlcm1pc3Npb25zIjpbXSwib3JnX2lkIjoiIiwic2NvcGUiOiJST0xFX0FETUlOIiwiZXhwIjoxNzU2ODc2MDM4LCJpYXQiOjE3NTYyNzEyMzgsImp0aSI6IjQzYjcwZWE2LTc1MmYtNGZhYy1iMjk1LWRiMjlmYjRiMjE5YiIsImVtYWlsIjoiYWRtaW5Sb290MTIzQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ._HkKdNEczO_1lGgrxxL3b_UH8E93XueHVVwORkwtUjWJxzQ0AoNVyawanX5qaXnrUgf1nTKGGfL3Ygr18K7y0Q",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/profile/exercise/94a4f746-af32-4233-83eb-3c34839793cc/save",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"profile",
+								"exercise",
+								"94a4f746-af32-4233-83eb-3c34839793cc",
+								"save"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getSavedExercises",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pblJvb3QxMjNAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iXSwiaXNzIjoiQ29kZSBDYW1wdXMiLCJhY3RpdmUiOnRydWUsInRva2VuX3R5cGUiOiJhY2Nlc3NfdG9rZW4iLCJ1c2VySWQiOiIwNjM5YmFmYi0xNzYzLTQ3YzAtYTJhMS1mMzYxOWE0MGJjMDEiLCJvcmdfcm9sZSI6IiIsInBlcm1pc3Npb25zIjpbXSwib3JnX2lkIjoiIiwic2NvcGUiOiJST0xFX0FETUlOIiwiZXhwIjoxNzU2ODc2MDM4LCJpYXQiOjE3NTYyNzEyMzgsImp0aSI6IjQzYjcwZWE2LTc1MmYtNGZhYy1iMjk1LWRiMjlmYjRiMjE5YiIsImVtYWlsIjoiYWRtaW5Sb290MTIzQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ._HkKdNEczO_1lGgrxxL3b_UH8E93XueHVVwORkwtUjWJxzQ0AoNVyawanX5qaXnrUgf1nTKGGfL3Ygr18K7y0Q",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/profile/exercises/saved?page=1&size=10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"profile",
+								"exercises",
+								"saved"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getCompletedExercises",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/profile/exercises/completed?page=1&size=10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"profile",
+								"exercises",
+								"completed"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "(TEACHER) getCreatedExercises",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pblJvb3QxMjNAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iXSwiaXNzIjoiQ29kZSBDYW1wdXMiLCJhY3RpdmUiOnRydWUsInRva2VuX3R5cGUiOiJhY2Nlc3NfdG9rZW4iLCJ1c2VySWQiOiIwNjM5YmFmYi0xNzYzLTQ3YzAtYTJhMS1mMzYxOWE0MGJjMDEiLCJvcmdfcm9sZSI6IiIsInBlcm1pc3Npb25zIjpbXSwib3JnX2lkIjoiIiwic2NvcGUiOiJST0xFX0FETUlOIiwiZXhwIjoxNzU2ODc2MDM4LCJpYXQiOjE3NTYyNzEyMzgsImp0aSI6IjQzYjcwZWE2LTc1MmYtNGZhYy1iMjk1LWRiMjlmYjRiMjE5YiIsImVtYWlsIjoiYWRtaW5Sb290MTIzQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ._HkKdNEczO_1lGgrxxL3b_UH8E93XueHVVwORkwtUjWJxzQ0AoNVyawanX5qaXnrUgf1nTKGGfL3Ygr18K7y0Q",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/profile/exercises/created?page=1&size=10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"profile",
+								"exercises",
+								"created"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Family",
+			"item": [
+				{
+					"name": "(PARENT) addChild",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNDM0MjQyNTItZDJjZi00Y2NkLWFjYWEtNzgxOGQ2ZTE3YzdhIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTIxMzI4NDQsImlhdCI6MTc1MjEyOTI0NCwianRpIjoiNzVkZDIyZDItNTE4MS00YzQ3LWE1MjgtYTIxYjNhZWNlY2UxIiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.UKClDlrPTtbmE9HcexQ4t4CjAWMbtP1UzL2mVuuVW4uPDwhSwSyU9ahEeoakb7ve0yM_RDkBy_XFdeAzGrDIoA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/profile/family/{parentId}/children/{childId}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"profile",
+								"family",
+								"{parentId}",
+								"children",
+								"{childId}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "(PARENT) removeChild",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/profile/family/{parentId}/children/{childId}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"profile",
+								"family",
+								"{parentId}",
+								"children",
+								"{childId}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "(PARENT) getChildren",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/profile/family/{parentId}/children",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"profile",
+								"family",
+								"{parentId}",
+								"children"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Org",
+			"item": [
+				{
+					"name": "(ADMIN) getMyCreatedOrgs",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/profile/org/my/created?page=1&size=10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"profile",
+								"org",
+								"my",
+								"created"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getMyMemberOrgs",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/profile/org/my/member?page=1&size=10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"profile",
+								"org",
+								"my",
+								"member"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getMyTeacherOrgs",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/profile/org/my/teacher?page=1&size=10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"profile",
+								"org",
+								"my",
+								"teacher"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getMyAdminOrgs",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/profile/org/my/admin?page=1&size=10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"profile",
+								"org",
+								"my",
+								"admin"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "(Đang tính bỏ) assignedExercisesOfOrg",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/profile/org/{orgId}/assigned-exercises?page=1&size=10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"profile",
+								"org",
+								"{orgId}",
+								"assigned-exercises"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Package",
+			"item": [
+				{
+					"name": "getMySubscriptions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/profile/package/my-subscriptions?page=1&size=10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"profile",
+								"package",
+								"my-subscriptions"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Post",
+			"item": [
+				{
+					"name": "savePost",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pblJvb3QxMjNAZ21haWwuY29tIiwiYmxvY2tfaWRzIjpbXSwicm9sZXMiOlsiQURNSU4iXSwiaXNzIjoiQ29kZSBDYW1wdXMiLCJhY3RpdmUiOnRydWUsInRva2VuX3R5cGUiOiJhY2Nlc3NfdG9rZW4iLCJ1c2VySWQiOiIxNzAyMDQ4NS0xMmIzLTQ4ZTgtYTNkOS0xNmVjMTY4YjE1MDkiLCJvcmdfcm9sZSI6IiIsInBlcm1pc3Npb25zIjpbXSwib3JnX2lkIjoiIiwic2NvcGUiOiJST0xFX0FETUlOIiwiZXhwIjoxNzU3NTI1MDM3LCJpYXQiOjE3NTY5MjAyMzcsImp0aSI6ImM4Mjg2MzkzLTE3MTItNDI1Ny1iNTMxLWUxZDYzZjFmODJiZSIsImVtYWlsIjoiYWRtaW5Sb290MTIzQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.vfj9Olxds1pva14Oga5AxnIJJ9GjswN0nOPLmCyR-BHpRHuxrcvG1uNyk-rQzvZ_hw1WElaQtPdIglepNRks0w",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/profile/post/608cbf35-8f48-4270-b1c8-345d2c86b638/save",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"profile",
+								"post",
+								"608cbf35-8f48-4270-b1c8-345d2c86b638",
+								"save"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "unsavePost",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/profile/post/{postId}/save",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"profile",
+								"post",
+								"{postId}",
+								"save"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "reportPost",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"reason\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8081/profile/post/{postId}/report",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"profile",
+								"post",
+								"{postId}",
+								"report"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getSavedPosts",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pblJvb3QxMjNAZ21haWwuY29tIiwiYmxvY2tfaWRzIjpbXSwicm9sZXMiOlsiQURNSU4iXSwiaXNzIjoiQ29kZSBDYW1wdXMiLCJhY3RpdmUiOnRydWUsInRva2VuX3R5cGUiOiJhY2Nlc3NfdG9rZW4iLCJ1c2VySWQiOiIxNzAyMDQ4NS0xMmIzLTQ4ZTgtYTNkOS0xNmVjMTY4YjE1MDkiLCJvcmdfcm9sZSI6IiIsInBlcm1pc3Npb25zIjpbXSwib3JnX2lkIjoiIiwic2NvcGUiOiJST0xFX0FETUlOIiwiZXhwIjoxNzU3NTI1MDM3LCJpYXQiOjE3NTY5MjAyMzcsImp0aSI6ImM4Mjg2MzkzLTE3MTItNDI1Ny1iNTMxLWUxZDYzZjFmODJiZSIsImVtYWlsIjoiYWRtaW5Sb290MTIzQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.vfj9Olxds1pva14Oga5AxnIJJ9GjswN0nOPLmCyR-BHpRHuxrcvG1uNyk-rQzvZ_hw1WElaQtPdIglepNRks0w",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"reason\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8081/profile/posts/saved?page=1&size=10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"profile",
+								"posts",
+								"saved"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getMyReactions",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"reason\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8081/profile/posts/reactions?page=1&size=10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"profile",
+								"posts",
+								"reactions"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "reportedPosts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/profile/posts/reported?page=1&size=10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"profile",
+								"posts",
+								"reported"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Resource",
+			"item": [
+				{
+					"name": "saveResource",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/profile/resource/{fileId}/save",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"profile",
+								"resource",
+								"{fileId}",
+								"save"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "reportResource",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"reason\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8081/profile/resource/{fileId}/report",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"profile",
+								"resource",
+								"{fileId}",
+								"report"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getSavedLectures",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"reason\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8081/profile/resource/saved/lectures?page=1&size=10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"profile",
+								"resource",
+								"saved",
+								"lectures"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getSavedTextbooks",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"reason\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8081/profile/resource/saved/textbooks?page=1&size=10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"profile",
+								"resource",
+								"saved",
+								"textbooks"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Social",
+			"item": [
+				{
+					"name": "follow",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/profile/social/follow/{targetUserId}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"profile",
+								"social",
+								"follow",
+								"{targetUserId}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "unfollow",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/profile/social/follow/{targetUserId}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"profile",
+								"social",
+								"follow",
+								"{targetUserId}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "block",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/profile/social/block/{targetUserId}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"profile",
+								"social",
+								"block",
+								"{targetUserId}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "unblock",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/profile/social/block/{targetUserId}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"profile",
+								"social",
+								"block",
+								"{targetUserId}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getFollowers",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/profile/social/followers?page=1&size=10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"profile",
+								"social",
+								"followers"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getFollowings",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/profile/social/followings?page=1&size=10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"profile",
+								"social",
+								"followings"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "findBlocked",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/profile/social/blocked?page=1&size=10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"profile",
+								"social",
+								"blocked"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Statistic",
+			"item": [
+				{
+					"name": "getPostStats",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/profile/stats/post/{userId}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"profile",
+								"stats",
+								"post",
+								"{userId}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseURL",
+			"value": "{{ProfileBase}}",
+			"type": "default"
+		}
+	]
 }

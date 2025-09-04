@@ -1,111 +1,331 @@
 {
-  "info": {
-    "_postman_id": "1ada85aa-431f-4768-bf0e-c0a8beb4935c",
-    "name": "Search Service",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "33137665",
-    "_collection_link": "https://animeh-team.postman.co/workspace/Code-Campus-Workspace~833332bb-de6b-4a20-bdef-16542d164f4e/collection/33137665-1ada85aa-431f-4768-bf0e-c0a8beb4935c?action=share&source=collection_link&creator=33137665"
-  },
-  "item": [
-    {
-      "name": "searchExercise",
-      "request": {
-        "auth": {
-          "type": "bearer",
-          "bearer": [
-            {
-              "key": "token",
-              "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNDM0MjQyNTItZDJjZi00Y2NkLWFjYWEtNzgxOGQ2ZTE3YzdhIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTIxMzI4NDQsImlhdCI6MTc1MjEyOTI0NCwianRpIjoiNzVkZDIyZDItNTE4MS00YzQ3LWE1MjgtYTIxYjNhZWNlY2UxIiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.UKClDlrPTtbmE9HcexQ4t4CjAWMbtP1UzL2mVuuVW4uPDwhSwSyU9ahEeoakb7ve0yM_RDkBy_XFdeAzGrDIoA",
-              "type": "string"
-            }
-          ]
-        },
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "http://localhost:8087/search?q=Java",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8087",
-          "path": [
-            "search"
-          ],
-          "query": [
-            {
-              "key": "tags",
-              "value": null,
-              "disabled": true
-            },
-            {
-              "key": "difficulty",
-              "value": null,
-              "disabled": true
-            },
-            {
-              "key": "createdBy",
-              "value": null,
-              "disabled": true
-            },
-            {
-              "key": "exerciseType",
-              "value": null,
-              "disabled": true
-            },
-            {
-              "key": "orgId",
-              "value": null,
-              "disabled": true
-            },
-            {
-              "key": "freeForOrg",
-              "value": null,
-              "disabled": true
-            },
-            {
-              "key": "minCost",
-              "value": null,
-              "disabled": true
-            },
-            {
-              "key": "maxCost",
-              "value": null,
-              "disabled": true
-            },
-            {
-              "key": "startAfter",
-              "value": null,
-              "disabled": true
-            },
-            {
-              "key": "endBefore",
-              "value": null,
-              "disabled": true
-            },
-            {
-              "key": "allowAiQuestion",
-              "value": null,
-              "disabled": true
-            },
-            {
-              "key": "page",
-              "value": null,
-              "disabled": true
-            },
-            {
-              "key": "size",
-              "value": null,
-              "disabled": true
-            },
-            {
-              "key": "q",
-              "value": "Java"
-            }
-          ]
-        }
-      },
-      "response": []
-    }
-  ]
+	"info": {
+		"_postman_id": "a68b177e-f675-4abc-98e1-484b6f26eade",
+		"name": "Search Service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33137665",
+		"_collection_link": "https://animeh-team.postman.co/workspace/CodeCampus-Backend~4a46659f-0826-49f2-b8c2-66ff451e96a4/collection/33137665-a68b177e-f675-4abc-98e1-484b6f26eade?action=share&source=collection_link&creator=33137665"
+	},
+	"item": [
+		{
+			"name": "searchExercise",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiMDZiNTZlMmMtOTFkZS00N2VlLTgyYzktM2UxMjViMGU1N2QyIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTU5Mzg3ODAsImlhdCI6MTc1NTMzMzk4MCwianRpIjoiMzVkMjkwZDctMjA3Yi00ZTg3LWI5OWQtZjYzZDE4Yzc1MWI1IiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.bWi4a7Wy_aJjLXOchUkw7tZFIzT1F5vfepmYCGxYND1ElqI6CAH-n9l8gnPa804JJryqDRVmB6SD3ka9IifA9g",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8087/search/exercises/filter?q=",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8087",
+					"path": [
+						"search",
+						"exercises",
+						"filter"
+					],
+					"query": [
+						{
+							"key": "tags",
+							"value": null,
+							"disabled": true
+						},
+						{
+							"key": "difficulty",
+							"value": null,
+							"disabled": true
+						},
+						{
+							"key": "createdBy",
+							"value": null,
+							"disabled": true
+						},
+						{
+							"key": "exerciseType",
+							"value": null,
+							"disabled": true
+						},
+						{
+							"key": "orgId",
+							"value": null,
+							"disabled": true
+						},
+						{
+							"key": "freeForOrg",
+							"value": null,
+							"disabled": true
+						},
+						{
+							"key": "minCost",
+							"value": null,
+							"disabled": true
+						},
+						{
+							"key": "maxCost",
+							"value": null,
+							"disabled": true
+						},
+						{
+							"key": "startAfter",
+							"value": null,
+							"disabled": true
+						},
+						{
+							"key": "endBefore",
+							"value": null,
+							"disabled": true
+						},
+						{
+							"key": "allowAiQuestion",
+							"value": null,
+							"disabled": true
+						},
+						{
+							"key": "page",
+							"value": null,
+							"disabled": true
+						},
+						{
+							"key": "size",
+							"value": null,
+							"disabled": true
+						},
+						{
+							"key": "q",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "searchProfile",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiMDZiNTZlMmMtOTFkZS00N2VlLTgyYzktM2UxMjViMGU1N2QyIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTU5Mzg3ODAsImlhdCI6MTc1NTMzMzk4MCwianRpIjoiMzVkMjkwZDctMjA3Yi00ZTg3LWI5OWQtZjYzZDE4Yzc1MWI1IiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.bWi4a7Wy_aJjLXOchUkw7tZFIzT1F5vfepmYCGxYND1ElqI6CAH-n9l8gnPa804JJryqDRVmB6SD3ka9IifA9g",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8888/api/v1/search/user-profiles/filter?q&userId&username&email&roles&active&gender&city&educationMin&educationMax&createdAfter&createdBefore&page&size",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8888",
+					"path": [
+						"api",
+						"v1",
+						"search",
+						"user-profiles",
+						"filter"
+					],
+					"query": [
+						{
+							"key": "q",
+							"value": null
+						},
+						{
+							"key": "userId",
+							"value": null
+						},
+						{
+							"key": "username",
+							"value": null
+						},
+						{
+							"key": "email",
+							"value": null
+						},
+						{
+							"key": "roles",
+							"value": null
+						},
+						{
+							"key": "active",
+							"value": null
+						},
+						{
+							"key": "gender",
+							"value": null
+						},
+						{
+							"key": "city",
+							"value": null
+						},
+						{
+							"key": "educationMin",
+							"value": null
+						},
+						{
+							"key": "educationMax",
+							"value": null
+						},
+						{
+							"key": "createdAfter",
+							"value": null
+						},
+						{
+							"key": "createdBefore",
+							"value": null
+						},
+						{
+							"key": "page",
+							"value": null
+						},
+						{
+							"key": "size",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "searchPost",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pblJvb3QxMjNAZ21haWwuY29tIiwiYmxvY2tfaWRzIjpbXSwicm9sZXMiOlsiQURNSU4iXSwiaXNzIjoiQ29kZSBDYW1wdXMiLCJhY3RpdmUiOnRydWUsInRva2VuX3R5cGUiOiJhY2Nlc3NfdG9rZW4iLCJ1c2VySWQiOiJmNTJiNzdlYi1kYzMyLTQ0ZGYtOTBhNi02ZTZiZWE3Y2I5ZDAiLCJvcmdfcm9sZSI6IiIsInBlcm1pc3Npb25zIjpbXSwib3JnX2lkIjoiIiwic2NvcGUiOiJST0xFX0FETUlOIiwiZXhwIjoxNzU3MzM0NDQ2LCJpYXQiOjE3NTY3Mjk2NDYsImp0aSI6IjAxYTZkZjNhLTBlMDktNDJmNC04Mzg4LTNhZDZiZDlhOTU5ZiIsImVtYWlsIjoiYWRtaW5Sb290MTIzQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.hN203gB-eqT4e3d9aec0OrMF8Fte6kwIkq4QeCCutbX41qV02rE53whI8EW2MHeDEp51D_NBIyS6ZvtMjT_bUQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8087/search/posts/filter?q=Test Post!&postType&isPublic&status&page&size",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8087",
+					"path": [
+						"search",
+						"posts",
+						"filter"
+					],
+					"query": [
+						{
+							"key": "q",
+							"value": "Test Post!"
+						},
+						{
+							"key": "postType",
+							"value": null
+						},
+						{
+							"key": "isPublic",
+							"value": null
+						},
+						{
+							"key": "status",
+							"value": null
+						},
+						{
+							"key": "page",
+							"value": null
+						},
+						{
+							"key": "size",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "searchOrganization",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8087/search/organizations/filter?q&status&page&size&includeBlocks&blocksPage&blocksSize&membersPage&membersSize&activeOnlyMembers&includeUnassigned",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8087",
+					"path": [
+						"search",
+						"organizations",
+						"filter"
+					],
+					"query": [
+						{
+							"key": "q",
+							"value": null
+						},
+						{
+							"key": "status",
+							"value": null
+						},
+						{
+							"key": "page",
+							"value": null
+						},
+						{
+							"key": "size",
+							"value": null
+						},
+						{
+							"key": "includeBlocks",
+							"value": null
+						},
+						{
+							"key": "blocksPage",
+							"value": null
+						},
+						{
+							"key": "blocksSize",
+							"value": null
+						},
+						{
+							"key": "membersPage",
+							"value": null
+						},
+						{
+							"key": "membersSize",
+							"value": null
+						},
+						{
+							"key": "activeOnlyMembers",
+							"value": null
+						},
+						{
+							"key": "includeUnassigned",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
 }

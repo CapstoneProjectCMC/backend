@@ -1,0 +1,220 @@
+{
+	"info": {
+		"_postman_id": "61d89fcc-31c5-4e29-87d9-57313d0b6d1c",
+		"name": "Payment Service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33137665",
+		"_collection_link": "https://animeh-team.postman.co/workspace/CodeCampus-Backend~4a46659f-0826-49f2-b8c2-66ff451e96a4/collection/33137665-61d89fcc-31c5-4e29-87d9-57313d0b6d1c?action=share&source=collection_link&creator=33137665"
+	},
+	"item": [
+		{
+			"name": "topUp",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pblJvb3QxMjNAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iXSwiaXNzIjoiQ29kZSBDYW1wdXMiLCJhY3RpdmUiOnRydWUsInRva2VuX3R5cGUiOiJhY2Nlc3NfdG9rZW4iLCJ1c2VySWQiOiIzMDNmOTU1NS04ZDAzLTQwZTYtOTViYi1mMWY2NGJiODY4ODEiLCJvcmdfcm9sZSI6IiIsInBlcm1pc3Npb25zIjpbXSwib3JnX2lkIjoiIiwic2NvcGUiOiJST0xFX0FETUlOIiwiZXhwIjoxNzU2OTk1NTI2LCJpYXQiOjE3NTYzOTA3MjYsImp0aSI6IjkyYjYwYjBjLTkzMjMtNDU2MC05ZDRkLTg3MzY4MThmMjgyZCIsImVtYWlsIjoiYWRtaW5Sb290MTIzQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.zcw_rq5rxE1-kC5H2fku8NU6Xpg31UNy0o4j_Z_OL1PyP60Wx9_AxqnovWAIHagtjU7HGiBRu_ESiNPugePFXg",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"transactionId\": \"asda23atf6a2tas\",\r\n    \"referenceId\": \"asdasfdasd\",\r\n    \"amount\": 100000.0,\r\n    \"currency\": \"vnd\",\r\n    \"itemId\": \"\",\r\n    \"itemType\": \"\",\r\n    \"itemPrice\": 0.0,\r\n    \"itemName\": \"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8091/payment/topup",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8091",
+					"path": [
+						"payment",
+						"topup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "purchase",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pblJvb3QxMjNAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iXSwiaXNzIjoiQ29kZSBDYW1wdXMiLCJhY3RpdmUiOnRydWUsInRva2VuX3R5cGUiOiJhY2Nlc3NfdG9rZW4iLCJ1c2VySWQiOiIzMDNmOTU1NS04ZDAzLTQwZTYtOTViYi1mMWY2NGJiODY4ODEiLCJvcmdfcm9sZSI6IiIsInBlcm1pc3Npb25zIjpbXSwib3JnX2lkIjoiIiwic2NvcGUiOiJST0xFX0FETUlOIiwiZXhwIjoxNzU2OTk1NTI2LCJpYXQiOjE3NTYzOTA3MjYsImp0aSI6IjkyYjYwYjBjLTkzMjMtNDU2MC05ZDRkLTg3MzY4MThmMjgyZCIsImVtYWlsIjoiYWRtaW5Sb290MTIzQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.zcw_rq5rxE1-kC5H2fku8NU6Xpg31UNy0o4j_Z_OL1PyP60Wx9_AxqnovWAIHagtjU7HGiBRu_ESiNPugePFXg",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"transactionId\": \"asda23at6a23tas\",\r\n    \"referenceId\": \"asdasdasd\",\r\n    \"amount\": 0.0,\r\n    \"currency\": \"vnd\",\r\n    \"itemId\": \"dasdasdasd\",\r\n    \"itemType\": \"Exercise\",\r\n    \"itemPrice\": 100000.0,\r\n    \"itemName\": \"asasdasdadsasd\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8091/payment/purchase",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8091",
+					"path": [
+						"payment",
+						"purchase"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getTransactionHistory",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pblJvb3QxMjNAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iXSwiaXNzIjoiQ29kZSBDYW1wdXMiLCJhY3RpdmUiOnRydWUsInRva2VuX3R5cGUiOiJhY2Nlc3NfdG9rZW4iLCJ1c2VySWQiOiIzMDNmOTU1NS04ZDAzLTQwZTYtOTViYi1mMWY2NGJiODY4ODEiLCJvcmdfcm9sZSI6IiIsInBlcm1pc3Npb25zIjpbXSwib3JnX2lkIjoiIiwic2NvcGUiOiJST0xFX0FETUlOIiwiZXhwIjoxNzU2OTk1NTI2LCJpYXQiOjE3NTYzOTA3MjYsImp0aSI6IjkyYjYwYjBjLTkzMjMtNDU2MC05ZDRkLTg3MzY4MThmMjgyZCIsImVtYWlsIjoiYWRtaW5Sb290MTIzQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.zcw_rq5rxE1-kC5H2fku8NU6Xpg31UNy0o4j_Z_OL1PyP60Wx9_AxqnovWAIHagtjU7HGiBRu_ESiNPugePFXg",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "http://localhost:8091/payment/history?page=1&size=10",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8091",
+					"path": [
+						"payment",
+						"history"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "size",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getPurchaseHistory",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pblJvb3QxMjNAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iXSwiaXNzIjoiQ29kZSBDYW1wdXMiLCJhY3RpdmUiOnRydWUsInRva2VuX3R5cGUiOiJhY2Nlc3NfdG9rZW4iLCJ1c2VySWQiOiIzMDNmOTU1NS04ZDAzLTQwZTYtOTViYi1mMWY2NGJiODY4ODEiLCJvcmdfcm9sZSI6IiIsInBlcm1pc3Npb25zIjpbXSwib3JnX2lkIjoiIiwic2NvcGUiOiJST0xFX0FETUlOIiwiZXhwIjoxNzU2OTk1NTI2LCJpYXQiOjE3NTYzOTA3MjYsImp0aSI6IjkyYjYwYjBjLTkzMjMtNDU2MC05ZDRkLTg3MzY4MThmMjgyZCIsImVtYWlsIjoiYWRtaW5Sb290MTIzQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.zcw_rq5rxE1-kC5H2fku8NU6Xpg31UNy0o4j_Z_OL1PyP60Wx9_AxqnovWAIHagtjU7HGiBRu_ESiNPugePFXg",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "http://localhost:8091/payment/purchase-history?page=1&size=10",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8091",
+					"path": [
+						"payment",
+						"purchase-history"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "size",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getWallet",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pblJvb3QxMjNAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iXSwiaXNzIjoiQ29kZSBDYW1wdXMiLCJhY3RpdmUiOnRydWUsInRva2VuX3R5cGUiOiJhY2Nlc3NfdG9rZW4iLCJ1c2VySWQiOiIzMDNmOTU1NS04ZDAzLTQwZTYtOTViYi1mMWY2NGJiODY4ODEiLCJvcmdfcm9sZSI6IiIsInBlcm1pc3Npb25zIjpbXSwib3JnX2lkIjoiIiwic2NvcGUiOiJST0xFX0FETUlOIiwiZXhwIjoxNzU2OTk1NTI2LCJpYXQiOjE3NTYzOTA3MjYsImp0aSI6IjkyYjYwYjBjLTkzMjMtNDU2MC05ZDRkLTg3MzY4MThmMjgyZCIsImVtYWlsIjoiYWRtaW5Sb290MTIzQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.zcw_rq5rxE1-kC5H2fku8NU6Xpg31UNy0o4j_Z_OL1PyP60Wx9_AxqnovWAIHagtjU7HGiBRu_ESiNPugePFXg",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "http://localhost:8091/payment/wallet",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8091",
+					"path": [
+						"payment",
+						"wallet"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

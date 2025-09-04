@@ -1,0 +1,177 @@
+{
+	"info": {
+		"_postman_id": "2f1defd1-cdeb-4356-ab1f-b1f77f9962ab",
+		"name": "Notification Service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33137665",
+		"_collection_link": "https://animeh-team.postman.co/workspace/CodeCampus-Backend~4a46659f-0826-49f2-b8c2-66ff451e96a4/collection/33137665-2f1defd1-cdeb-4356-ab1f-b1f77f9962ab?action=share&source=collection_link&creator=33137665"
+	},
+	"item": [
+		{
+			"name": "getAllMyNotifications",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8088/notification/my?page=1&size=20&readStatus=ALL&from=&to",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8088",
+					"path": [
+						"notification",
+						"my"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "size",
+							"value": "20"
+						},
+						{
+							"key": "readStatus",
+							"value": "ALL"
+						},
+						{
+							"key": "from",
+							"value": ""
+						},
+						{
+							"key": "to",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getMyNotification",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8088/notification/{notificationId}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8088",
+					"path": [
+						"notification",
+						"{notificationId}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "countMyUnread",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8088/my/unread-count",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8088",
+					"path": [
+						"my",
+						"unread-count"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "markMyRead",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n    \"\", \"\"\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8088/my/mark-read",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8088",
+					"path": [
+						"my",
+						"mark-read"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "markMyUnread",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n    \"\", \"\"\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8088/my/mark-unread",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8088",
+					"path": [
+						"my",
+						"mark-unread"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "markMyAllRead",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8088/my/mark-all-read?before",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8088",
+					"path": [
+						"my",
+						"mark-all-read"
+					],
+					"query": [
+						{
+							"key": "before",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
