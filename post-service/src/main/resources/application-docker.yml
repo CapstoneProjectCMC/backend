@@ -1,7 +1,3 @@
-file:
-  service:
-    file-url: http://file-service:8082
-
 spring:
   datasource:
     url: jdbc:postgresql://post-db:5432/${POST_DATABASE}

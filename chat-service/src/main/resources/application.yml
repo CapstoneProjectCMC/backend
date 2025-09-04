@@ -2,16 +2,16 @@ server:
   port: 8089
   servlet:
     context-path: /chat
-  ssl:
-    enabled: true
-    key-store: classpath:ssl/chat.p12
-    key-store-type: PKCS12
-    key-store-password: changeit
-    key-alias: chat-https
-    client-auth: need
-    trust-store: classpath:ssl/truststore.p12
-    trust-store-type: PKCS12
-    trust-store-password: changeit
+#  ssl:
+#    enabled: true
+#    key-store: classpath:ssl/chat.p12
+#    key-store-type: PKCS12
+#    key-store-password: changeit
+#    key-alias: chat-https
+#    client-auth: need
+#    trust-store: classpath:ssl/truststore.p12
+#    trust-store-type: PKCS12
+#    trust-store-password: changeit
 
 spring:
   application:
