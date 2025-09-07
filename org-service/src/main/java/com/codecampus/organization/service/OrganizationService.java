@@ -31,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class OrganizationService {
   OrganizationRepository organizationRepository;
+  MembershipService membershipService;
   BlockService blockService;
   OrganizationMapper organizationMapper;
   OrganizationEventProducer eventProducer;
@@ -53,6 +54,12 @@ public class OrganizationService {
         .build();
 
     o = organizationRepository.save(o);
+
+    String creatorUserId = AuthenticationHelper.getMyUserId();
+    if (creatorUserId != null && !creatorUserId.isBlank()) {
+      // mặc định role=Admin, active=true
+      membershipService.addCreatorToOrg(creatorUserId, o.getId());
+    }
 
     // publish CREATED
     OrganizationPayload payload =

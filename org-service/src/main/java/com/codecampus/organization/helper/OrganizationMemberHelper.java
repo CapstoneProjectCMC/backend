@@ -25,13 +25,12 @@ public class OrganizationMemberHelper {
 
   public String normalizeRole(String role) {
     if (role == null) {
-      return "Student";
+      return "STUDENT";
     }
-    return switch (role.toLowerCase(Locale.ROOT)) {
-      case "superadmin" -> "SuperAdmin";
-      case "admin" -> "Admin";
-      case "teacher" -> "Teacher";
-      case "student" -> "Student";
+    return switch (role.toUpperCase(Locale.ROOT)) {
+      case "ADMIN" -> "ADMIN";
+      case "TEACHER" -> "TEACHER";
+      case "STUDENT" -> "STUDENT";
       default -> role;
     };
   }

@@ -65,6 +65,7 @@ public class MembershipService {
       String role,
       boolean active) {
 
+
     auth.ensureRoleAtLeastForOrg(orgId, OrgAuthorization.OrgRole.ADMIN);
 
     List<OrganizationMember> actives =
@@ -101,6 +102,56 @@ public class MembershipService {
     organizationMemberHelper.publishEvent(member,
         isNew ? OrganizationMemberEvent.Type.ADDED :
             OrganizationMemberEvent.Type.UPDATED);
+  }
+
+  @Transactional
+  public void addCreatorToOrg(String userId, String orgId, String role,
+                              boolean active) {
+    // KHÔNG gọi auth.ensureRoleAtLeastForOrg
+
+    // Vẫn giữ rule: không được ở 2 org active cùng lúc
+    List<OrganizationMember> actives =
+        memberRepository.findActiveOrgsOfUser(userId);
+    boolean joinedOther =
+        actives.stream().anyMatch(m -> !m.getScopeId().equals(orgId));
+    if (active && joinedOther) {
+      throw new AppException(ErrorCode.INVALID_REQUEST_MEMBER);
+    }
+
+    var any = memberRepository.findAnyMembership(
+        userId, ScopeType.Organization.name(), orgId);
+
+    OrganizationMember member = any.orElse(OrganizationMember.builder()
+        .userId(userId)
+        .scopeType(ScopeType.Organization)
+        .scopeId(orgId)
+        .build());
+
+    member.setRole(organizationMemberHelper.normalizeRole(role));
+    member.setActive(active);
+
+    // clear soft-delete nếu từng bị xoá
+    member.setDeletedAt(null);
+    member.setDeletedBy(null);
+
+    // set primary nếu là org active đầu tiên
+    if (member.getId() == null && active && actives.isEmpty()) {
+      member.setPrimary(true);
+    }
+
+    boolean isNew = member.getId() == null;
+    member = memberRepository.save(member);
+
+    // publish event ADDED/UPDATED giống addToOrg
+    organizationMemberHelper.publishEvent(
+        member, isNew ? OrganizationMemberEvent.Type.ADDED :
+            OrganizationMemberEvent.Type.UPDATED
+    );
+  }
+
+  @Transactional
+  public void addCreatorToOrg(String userId, String orgId) {
+    addCreatorToOrg(userId, orgId, "Admin", true);
   }
 
   @Transactional
