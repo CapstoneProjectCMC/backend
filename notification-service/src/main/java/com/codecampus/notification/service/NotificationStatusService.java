@@ -4,6 +4,7 @@ import com.codecampus.notification.entity.NotificationDocument;
 import com.codecampus.notification.repository.NotificationRepository;
 import com.mongodb.client.result.UpdateResult;
 import java.time.Instant;
+import java.util.Map;
 import java.util.Set;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -44,10 +45,10 @@ public class NotificationStatusService {
 
     // push realtime để UI cập nhật
     socketPushService.pushToUserEvent(recipient, "notification-status",
-        java.util.Map.of(
+        Map.of(
             "action", "READ",
             "ids", ids,
-            "at", ts
+            "at", ts.toEpochMilli()
         )
     );
 
@@ -72,7 +73,7 @@ public class NotificationStatusService {
         mongoTemplate.updateMulti(q, u, NotificationDocument.class);
 
     socketPushService.pushToUserEvent(recipient, "notification-status",
-        java.util.Map.of(
+        Map.of(
             "action", "UNREAD",
             "ids", ids
         )
@@ -100,7 +101,7 @@ public class NotificationStatusService {
         mongoTemplate.updateMulti(q, u, NotificationDocument.class);
 
     socketPushService.pushToUserEvent(recipient, "notification-status",
-        java.util.Map.of(
+        Map.of(
             "action", "READ_ALL",
             "before", before,
             "at", ts

@@ -57,7 +57,8 @@ public class NotificationEventListener {
       payload.put("subject", doc.getSubject());
       payload.put("body", doc.getBody());
       payload.put("param", doc.getParam());
-      payload.put("createdAt", doc.getCreatedAt());
+      payload.put("createdAt", doc.getCreatedAt() == null ? null :
+          doc.getCreatedAt().toEpochMilli());
       payload.put("readStatus", doc.getReadStatus());
 
       // 3) Gửi đúng kênh
