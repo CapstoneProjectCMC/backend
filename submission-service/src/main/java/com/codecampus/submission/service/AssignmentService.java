@@ -167,11 +167,37 @@ public class AssignmentService {
     }
 
     List<Assignment> assignmentListSaved =
-        assignmentRepository.saveAll(assignmentList);
+        assignmentRepository.saveAllAndFlush(assignmentList);
 
     assignmentListSaved.forEach(
-        assignment -> pushAssignmentToChildService(
-            exercise, assignment));
+        assignment -> {
+          pushAssignmentToChildService(
+              exercise, assignment);
+
+          ExerciseStatusDto exerciseStatusDto = new ExerciseStatusDto(
+              exerciseId, assignment.getStudentId(),
+              /* created   */ false,
+              /* completed */ false,
+              /* completedAt */ null,
+              /* attempts   */ null,
+              /* bestScore  */ null,
+              /* totalPts   */ null);
+          exerciseStatusEventProducer.publishUpsert(exerciseStatusDto);
+
+          NotificationEvent evt = NotificationEvent.builder()
+              .channel("SOCKET") // hoặc "EMAIL", "PUSH" nếu sau này mở rộng
+              .recipient(assignment.getStudentId()) // userId đích
+              .templateCode("ASSIGNMENT_ASSIGNED") // code template
+              .subject("Bạn được giao bài tập mới")
+              .body("Bạn vừa được giao bài: " + exercise.getTitle())
+              .param(Map.of(
+                  "exerciseId", exercise.getId(),
+                  "exerciseTitle", exercise.getTitle(),
+                  "dueAt", assignment.getDueAt()
+              ))
+              .build();
+          notificationEventProducer.publish(evt);
+        });
 
     return assignmentListSaved;
   }
