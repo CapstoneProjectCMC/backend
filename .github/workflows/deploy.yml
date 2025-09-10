@@ -13,7 +13,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: deploy-${{ github.event_name }}-${{ github.event.workflow_run.id || github.ref }}
+  group: deploy-${{ github.event_name }}-${{ github.run_id }}
   cancel-in-progress: false
 
 jobs:
@@ -25,20 +25,22 @@ jobs:
         github.event.workflow_run.conclusion == 'success' &&
         (
           github.event.workflow_run.head_branch == 'main' ||
-          startsWith(github.event.workflow_run.head_branch || '', 'v')
+          startsWith(github.event.workflow_run.head_branch, 'v')
         )
       )
     runs-on: ubuntu-latest
     environment: production
+    env:
+      # Truyền DEPLOY_DIR qua env (có thể rỗng); xử lý default ở shell
+      DEPLOY_DIR_SECRET: ${{ secrets.DEPLOY_DIR }}
 
     steps:
       - name: Show trigger context (debug)
         run: |
           echo "event_name:        ${{ github.event_name }}"
-          echo "run.conclusion:    ${{ github.event.workflow_run.conclusion || 'N/A' }}"
-          echo "run.event:         ${{ github.event.workflow_run.event || 'N/A' }}"
-          echo "run.head_branch:   ${{ github.event.workflow_run.head_branch || 'N/A' }}"
-          echo "run.head_sha:      ${{ github.event.workflow_run.head_sha || 'N/A' }}"
+          echo "run.conclusion:    ${{ github.event.workflow_run.conclusion }}"
+          echo "run.head_branch:   ${{ github.event.workflow_run.head_branch }}"
+          echo "run.head_sha:      ${{ github.event.workflow_run.head_sha }}"
 
       - name: Checkout
         uses: actions/checkout@v4
@@ -53,17 +55,14 @@ jobs:
           set -euo pipefail
           IMAGE_TAG_VALUE=""
           if [ "${EVENT_NAME}" = "workflow_dispatch" ]; then
-            # chạy tay: dùng short SHA của commit của workflow hiện tại
             IMAGE_TAG_VALUE="${GITHUB_SHA:0:12}"
           else
-            # workflow_run: nếu đầu vào là tag vX.Y.Z -> dùng X.Y.Z; ngược lại dùng short SHA của run nguồn
             if [[ "${HEAD_BRANCH:-}" =~ ^v([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
               IMAGE_TAG_VALUE="${HEAD_BRANCH#v}"
             else
               IMAGE_TAG_VALUE="${HEAD_SHA:0:12}"
             fi
           fi
-
           echo "Resolved IMAGE_TAG=${IMAGE_TAG_VALUE}"
           echo "IMAGE_TAG=${IMAGE_TAG_VALUE}" >> "$GITHUB_ENV"
 
@@ -73,10 +72,11 @@ jobs:
             echo "::error::.env không tồn tại trong repo tại thời điểm deploy."
             exit 1
           fi
-          echo "ENV_SHA=$(sha256sum .env | awk '{print $1}')" >> $GITHUB_ENV
+          echo "ENV_SHA=$(sha256sum .env | awk '{print $1}')" >> "$GITHUB_ENV"
 
       - name: Prepare deploy bundle
         run: |
+          set -euo pipefail
           mkdir -p deploy_bundle
           cp -v .env deploy_bundle/.env
           cp -v docker-compose.prod-infra.yml deploy_bundle/
@@ -87,21 +87,27 @@ jobs:
           #!/usr/bin/env bash
           set -euo pipefail
 
-          DEPLOY_DIR="${DEPLOY_DIR:-$HOME/codecampus}"
+          DEPLOY_DIR_ROOT="${DEPLOY_DIR:-$HOME}"
+          DEPLOY_DIR="${DEPLOY_DIR_ROOT%/}/codecampus"
+          mkdir -p "$DEPLOY_DIR"
           cd "$DEPLOY_DIR"
 
+          # Backup .env
           cp -f .env ".env.bak.$(date +%Y%m%d-%H%M%S)" || true
 
+          # Ghi IMAGE_TAG vào .env
           if grep -q '^IMAGE_TAG=' .env; then
             sed -i "s/^IMAGE_TAG=.*/IMAGE_TAG=${IMAGE_TAG}/" .env
           else
             echo "IMAGE_TAG=${IMAGE_TAG}" >> .env
           fi
 
+          # Load env
           set -a
           source .env
           set +a
 
+          # docker compose wrapper
           compose() {
             if docker compose version >/dev/null 2>&1; then
               docker compose "$@"
@@ -110,6 +116,7 @@ jobs:
             fi
           }
 
+          # docker login (nếu có)
           if [ -n "${DOCKERHUB_USER:-}" ] && [ -n "${DOCKERHUB_TOKEN:-}" ]; then
             echo "docker login Docker Hub..."
             echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USER" --password-stdin
@@ -134,15 +141,26 @@ jobs:
           chmod +x ops/deploy.sh
           cp -v ops/deploy.sh deploy_bundle/
 
+      - name: Decide remote target dir
+        id: targetdir
+        run: |
+          set -euo pipefail
+          # Nếu repo secret rỗng -> mặc định "~"
+          if [ -z "${DEPLOY_DIR_SECRET:-}" ]; then
+            echo "TARGET_ROOT=~" >> "$GITHUB_OUTPUT"
+          else
+            echo "TARGET_ROOT=${DEPLOY_DIR_SECRET%/}" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Upload bundle to server
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: ${{ secrets.SSH_PORT || 22 }}
+          port: ${{ secrets.SSH_PORT }}
           source: "deploy_bundle/*"
-          target: "${{ secrets.DEPLOY_DIR || '~' }}/codecampus"
+          target: "${{ steps.targetdir.outputs.TARGET_ROOT }}/codecampus"
           overwrite: true
           strip_components: 1
 
@@ -151,15 +169,17 @@ jobs:
         env:
           IMAGE_TAG: ${{ env.IMAGE_TAG }}
           ENV_SHA: ${{ env.ENV_SHA }}
+          DEPLOY_DIR: ${{ secrets.DEPLOY_DIR }}
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: ${{ secrets.SSH_PORT || 22 }}
+          port: ${{ secrets.SSH_PORT }}
           script_stop: true
           script: |
             set -euo pipefail
-            DEPLOY_DIR="${DEPLOY_DIR:-${{ secrets.DEPLOY_DIR || '$HOME' }}/codecampus}"
+            ROOT="${DEPLOY_DIR:-$HOME}"
+            DEPLOY_DIR="${ROOT%/}/codecampus"
             mkdir -p "$DEPLOY_DIR"
             cd "$DEPLOY_DIR"
 
@@ -175,4 +195,4 @@ jobs:
               exit 1
             fi
 
-            IMAGE_TAG="${IMAGE_TAG:-latest}" DEPLOY_DIR="$DEPLOY_DIR" bash ./deploy.sh
+            IMAGE_TAG="${IMAGE_TAG:-latest}" DEPLOY_DIR="$ROOT" bash ./deploy.sh
