@@ -3,8 +3,9 @@ datasources:
   - name: Prometheus
     type: prometheus
     access: proxy
-    url: http://prometheus:5555
+    url: http://prometheus:9090
     isDefault: true
+    
   - name: Loki
     type: loki
     access: proxy

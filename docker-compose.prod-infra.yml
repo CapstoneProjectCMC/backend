@@ -447,6 +447,10 @@ services:
       - /sys:/sys:ro
       - /var/lib/docker/:/var/lib/docker:ro
     networks: [ backend ]
+    user: "0:0"
+    privileged: true
+    devices:
+      - /dev/kmsg
 
   # ---------- Monitoring: Logs (Loki/Promtail) ----------
   loki:

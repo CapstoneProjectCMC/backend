@@ -50,3 +50,5 @@ scrape_configs:
           - post-service:6705
           - payment-service:6706
           - organization-service:6707
+
+

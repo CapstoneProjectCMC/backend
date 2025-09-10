@@ -10,6 +10,16 @@ spring:
       auto-index-creation: true
   kafka:
     bootstrap-servers: http://kafka:9092
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "prometheus,health,info"
+  endpoint:
+    prometheus:
+      enabled: true
+
 app:
   services:
     identity: http://identity-service:8080/identity

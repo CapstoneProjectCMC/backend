@@ -4,6 +4,15 @@ server:
 app:
   api-prefix: /api/v1
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "prometheus,health,info"
+  endpoint:
+    prometheus:
+      enabled: true
+
 spring:
   cloud:
     gateway:

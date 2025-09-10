@@ -20,6 +20,15 @@ logging:
     org.springframework.data.elasticsearch: DEBUG
     org.elasticsearch.client: TRACE
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "prometheus,health,info"
+  endpoint:
+    prometheus:
+      enabled: true
+
 app:
   services:
     profile: http://profile-service:8081/profile

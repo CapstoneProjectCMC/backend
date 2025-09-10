@@ -3,6 +3,15 @@ server:
   servlet:
     context-path: /chat
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "prometheus,health,info"
+  endpoint:
+    prometheus:
+      enabled: true
+
 spring:
   data:
     mongodb:

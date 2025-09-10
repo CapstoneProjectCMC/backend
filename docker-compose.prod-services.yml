@@ -192,7 +192,7 @@ services:
       - AppSettings__MinioConfig__Port=9000
       - AppSettings__MinioConfig__AccessKey=${MINIO_ROOT_USER}
       - AppSettings__MinioConfig__SecretKey=${MINIO_ROOT_PASSWORD}
-      - AppSettings__MinioConfig__BucketName=programmingcontest2025
+      - AppSettings__MinioConfig__BucketName=codecampus2025
       - AppSettings__MinioConfig__Secure=false
       - AppSettings__Jwt__Key=1TjXchw5FloESb63Kc+DFhTARvpWL4jUGCwfGWxuG5SIf/1y/LgJxHnMqaF6A/ij
       - AppSettings__Jwt__Issuer=Code Campus
