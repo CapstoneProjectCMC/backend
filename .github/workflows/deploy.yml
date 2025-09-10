@@ -87,11 +87,10 @@ jobs:
           #!/usr/bin/env bash
           set -euo pipefail
 
-          DEPLOY_DIR_ROOT="${DEPLOY_DIR:-$HOME}"
-          DEPLOY_DIR="${DEPLOY_DIR_ROOT%/}/codecampus"
+          DEPLOY_DIR="${DEPLOY_DIR:-$HOME/codecampus}"
           mkdir -p "$DEPLOY_DIR"
           cd "$DEPLOY_DIR"
-
+          
           # Backup .env
           cp -f .env ".env.bak.$(date +%Y%m%d-%H%M%S)" || true
 
@@ -152,6 +151,18 @@ jobs:
             echo "DEPLOY_DIR_FINAL=~/codecampus" >> "$GITHUB_OUTPUT"
           fi
 
+      - name: Ensure remote dir exists
+        uses: appleboy/ssh-action@v1.0.3
+        env:
+          DEPLOY_DIR: ${{ steps.targetdir.outputs.DEPLOY_DIR_FINAL }}
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            mkdir -p "${DEPLOY_DIR}"
+
       - name: Upload bundle to server
         uses: appleboy/scp-action@v0.1.7
         with:
@@ -159,7 +170,11 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
-          source: "deploy_bundle/*"
+          source: |
+            deploy_bundle/.env
+            deploy_bundle/docker-compose.prod-infra.yml
+            deploy_bundle/docker-compose.prod-services.yml
+            deploy_bundle/deploy.sh
           target: "${{ steps.targetdir.outputs.DEPLOY_DIR_FINAL }}"
           overwrite: true
 
@@ -180,17 +195,17 @@ jobs:
             DEPLOY_DIR="${DEPLOY_DIR:-$HOME/codecampus}"
             mkdir -p "$DEPLOY_DIR"
             cd "$DEPLOY_DIR"
-
+            
             if [ ! -f .env ]; then
-              echo "::error::Không thấy $DEPLOY_DIR/.env trên server."
-              exit 1
+            echo "::error::Không thấy $DEPLOY_DIR/.env trên server."
+            exit 1
             fi
             SERVER_SHA=$(sha256sum .env | awk '{print $1}')
             echo "Local  .env sha: $ENV_SHA"
             echo "Server .env sha: $SERVER_SHA"
             if [ "$SERVER_SHA" != "$ENV_SHA" ]; then
-              echo "::error::.env trên server KHÁC repo. Hủy deploy để tránh sai lệch."
-              exit 1
+            echo "::error::.env trên server KHÁC repo. Hủy deploy để tránh sai lệch."
+            exit 1
             fi
-
+            
             IMAGE_TAG="${IMAGE_TAG:-latest}" DEPLOY_DIR="$DEPLOY_DIR" bash ./deploy.sh
