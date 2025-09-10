@@ -28,7 +28,7 @@ jobs:
         github.event.workflow_run.conclusion == 'success' &&
         (
           github.event.workflow_run.head_branch == 'main' ||
-          startsWith(github.event.workflow_run.head_branch, 'v')
+          startsWith(github.event.workflow_run.head_branch || '', 'v')
         )
       )
     runs-on: ubuntu-latest
@@ -54,20 +54,21 @@ jobs:
           EVENT_NAME: ${{ github.event_name }}
         run: |
           set -euo pipefail
+          IMAGE_TAG_VALUE=""
           if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
             # chạy tay: mặc định tag theo short SHA của commit hiện tại
-            echo "IMAGE_TAG=${GITHUB_SHA::12}" >> $GITHUB_ENV
+            echo "IMAGE_TAG_VALUE=${GITHUB_SHA::12}"
           else
             # workflow_run: nếu là tag vX.Y.Z -> IMAGE_TAG = X.Y.Z, ngược lại = shortSHA của head_sha
-            if [[ "${HEAD_BRANCH}" =~ ^v([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
-              echo "IMAGE_TAG=${HEAD_BRANCH#v}" >> $GITHUB_ENV
+            if [[ "${HEAD_BRANCH:-}" =~ ^v([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
+              echo "IMAGE_TAG_VALUE=${HEAD_BRANCH#v}
             else
-              SHORT="${HEAD_SHA:0:12}"
-              echo "IMAGE_TAG=${SHORT}" >> $GITHUB_ENV
+              echo "IMAGE_TAG_VALUE=${HEAD_SHA:0:12}"
             fi
           fi
-          echo "IMAGE_TAG=$IMAGE_TAG"
-
+          echo "Resolved IMAGE_TAG=${IMAGE_TAG_VALUE}"
+          echo "IMAGE_TAG=${IMAGE_TAG_VALUE}" >> "$GITHUB_ENV"
+          
       - name: Compute .env SHA256
         run: |
           if [ ! -f .env ]; then
