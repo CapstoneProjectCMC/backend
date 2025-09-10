@@ -145,11 +145,11 @@ jobs:
         id: targetdir
         run: |
           set -euo pipefail
-          # Nếu repo secret rỗng -> mặc định "~"
-          if [ -z "${DEPLOY_DIR_SECRET:-}" ]; then
-            echo "TARGET_ROOT=~" >> "$GITHUB_OUTPUT"
+          if [ -n "${DEPLOY_DIR_SECRET:-}" ]; then
+            echo "DEPLOY_DIR_FINAL=${DEPLOY_DIR_SECRET%/}" >> "$GITHUB_OUTPUT"
           else
-            echo "TARGET_ROOT=${DEPLOY_DIR_SECRET%/}" >> "$GITHUB_OUTPUT"
+            # Mặc định
+            echo "DEPLOY_DIR_FINAL=~/codecampus" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Upload bundle to server
@@ -160,16 +160,15 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
           source: "deploy_bundle/*"
-          target: "${{ steps.targetdir.outputs.TARGET_ROOT }}/codecampus"
+          target: "${{ steps.targetdir.outputs.DEPLOY_DIR_FINAL }}"
           overwrite: true
-          strip_components: 1
 
       - name: Verify .env identical & run deploy
         uses: appleboy/ssh-action@v1.0.3
         env:
           IMAGE_TAG: ${{ env.IMAGE_TAG }}
           ENV_SHA: ${{ env.ENV_SHA }}
-          DEPLOY_DIR: ${{ secrets.DEPLOY_DIR }}
+          DEPLOY_DIR: ${{ steps.targetdir.outputs.DEPLOY_DIR_FINAL }}
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
@@ -178,8 +177,7 @@ jobs:
           script_stop: true
           script: |
             set -euo pipefail
-            ROOT="${DEPLOY_DIR:-$HOME}"
-            DEPLOY_DIR="${ROOT%/}/codecampus"
+            DEPLOY_DIR="${DEPLOY_DIR:-$HOME/codecampus}"
             mkdir -p "$DEPLOY_DIR"
             cd "$DEPLOY_DIR"
 
@@ -195,4 +193,4 @@ jobs:
               exit 1
             fi
 
-            IMAGE_TAG="${IMAGE_TAG:-latest}" DEPLOY_DIR="$ROOT" bash ./deploy.sh
+            IMAGE_TAG="${IMAGE_TAG:-latest}" DEPLOY_DIR="$DEPLOY_DIR" bash ./deploy.sh
