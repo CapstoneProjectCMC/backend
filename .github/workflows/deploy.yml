@@ -180,6 +180,26 @@ jobs:
           test -f deploy_bundle/monitoring/loki-config.yml
           test -f deploy_bundle/monitoring/promtail-config.yml
 
+      - name: Pre-clean monitoring paths on server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            set -euo pipefail
+            DEPLOY_DIR='${{ steps.targetdir.outputs.DEPLOY_DIR_FINAL }}'
+            mkdir -p "$DEPLOY_DIR/monitoring/grafana/provisioning"
+
+            # Nếu lỡ có THƯ MỤC trùng tên file, xóa đi
+            for f in prometheus.yml loki-config.yml promtail-config.yml; do
+              if [ -d "$DEPLOY_DIR/monitoring/$f" ]; then
+                echo "Found directory at $DEPLOY_DIR/monitoring/$f -> removing"
+                rm -rf "$DEPLOY_DIR/monitoring/$f"
+              fi
+            done
+
       - name: Upload bundle to server
         uses: appleboy/scp-action@v0.1.7
         with:
