@@ -80,7 +80,12 @@ jobs:
           cp -v .env deploy_bundle/.env
           cp -v docker-compose.prod-infra.yml deploy_bundle/
           cp -v docker-compose.prod-services.yml deploy_bundle/
-
+          mkdir -p deploy_bundle/monitoring/grafana/provisioning
+          cp -v monitoring/prometheus.yml deploy_bundle/monitoring/
+          cp -v monitoring/loki-config.yml deploy_bundle/monitoring/
+          cp -v monitoring/promtail-config.yml deploy_bundle/monitoring/
+          cp -vr monitoring/grafana/provisioning/* deploy_bundle/monitoring/grafana/provisioning/ 2>/dev/null || true
+          
           mkdir -p ops
           cat > ops/deploy.sh <<'EOS'
           #!/usr/bin/env bash
@@ -171,6 +176,9 @@ jobs:
           test -f deploy_bundle/docker-compose.prod-infra.yml
           test -f deploy_bundle/docker-compose.prod-services.yml
           test -f deploy_bundle/deploy.sh
+          test -f deploy_bundle/monitoring/prometheus.yml
+          test -f deploy_bundle/monitoring/loki-config.yml
+          test -f deploy_bundle/monitoring/promtail-config.yml
 
       - name: Upload bundle to server
         uses: appleboy/scp-action@v0.1.7
@@ -179,7 +187,7 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
-          source: "deploy_bundle/.env,deploy_bundle/docker-compose.prod-infra.yml,deploy_bundle/docker-compose.prod-services.yml,deploy_bundle/deploy.sh"
+          source: "deploy_bundle/.env,deploy_bundle/docker-compose.prod-infra.yml,deploy_bundle/docker-compose.prod-services.yml,deploy_bundle/deploy.sh,deploy_bundle/monitoring/**"
           target: "${{ steps.targetdir.outputs.DEPLOY_DIR_FINAL }}"
           overwrite: true
           strip_components: 1
