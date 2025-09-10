@@ -163,6 +163,16 @@ jobs:
           script: |
             mkdir -p '${{ steps.targetdir.outputs.DEPLOY_DIR_FINAL }}'
 
+      # Kiểm tra bundle có file hay không
+      - name: Verify local deploy bundle
+        run: |
+          set -euo pipefail
+          ls -la deploy_bundle
+          test -f deploy_bundle/.env
+          test -f deploy_bundle/docker-compose.prod-infra.yml
+          test -f deploy_bundle/docker-compose.prod-services.yml
+          test -f deploy_bundle/deploy.sh
+
       - name: Upload bundle to server
         uses: appleboy/scp-action@v0.1.7
         with:
@@ -170,11 +180,7 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
-          source: |
-            deploy_bundle/.env
-            deploy_bundle/docker-compose.prod-infra.yml
-            deploy_bundle/docker-compose.prod-services.yml
-            deploy_bundle/deploy.sh
+          source: "deploy_bundle/.env,deploy_bundle/docker-compose.prod-infra.yml,deploy_bundle/docker-compose.prod-services.yml,deploy_bundle/deploy.sh"
           target: "${{ steps.targetdir.outputs.DEPLOY_DIR_FINAL }}"
           overwrite: true
 
