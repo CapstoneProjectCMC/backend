@@ -13,6 +13,7 @@ server:
 #    trust-store-type: PKCS12
 #    trust-store-password: changeit
 
+
 spring:
   application:
     name: search-service
