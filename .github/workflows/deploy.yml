@@ -1,0 +1,179 @@
+name: CD Deploy to Server (SSH)
+
+on:
+  # Chỉ chạy sau khi các workflow build đã hoàn tất
+  workflow_run:
+    workflows:
+      - Build & Push Docker Images
+      - Build & Push coding-service
+      - Build & Push file-service
+    types: [ completed ]
+  # Cho phép chạy tay nếu cần
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-${{ github.event_name }}-${{ github.event.workflow_run.id || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    # Chỉ chạy khi workflow build kết thúc SUCCESS và nguồn là main hoặc tag v*.*.*
+    if: >
+      (github.event_name == 'workflow_dispatch') ||
+      (
+        github.event_name == 'workflow_run' &&
+        github.event.workflow_run.conclusion == 'success' &&
+        (
+          github.event.workflow_run.head_branch == 'main' ||
+          startsWith(github.event.workflow_run.head_branch, 'v')
+        )
+      )
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Show trigger context (debug)
+        run: |
+          echo "event_name:        ${{ github.event_name }}"
+          echo "run.conclusion:    ${{ github.event.workflow_run.conclusion || 'N/A' }}"
+          echo "run.event:         ${{ github.event.workflow_run.event || 'N/A' }}"
+          echo "run.head_branch:   ${{ github.event.workflow_run.head_branch || 'N/A' }}"
+          echo "run.head_sha:      ${{ github.event.workflow_run.head_sha || 'N/A' }}"
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Derive IMAGE_TAG (from workflow_run or manual)
+        shell: bash
+        env:
+          HEAD_BRANCH: ${{ github.event.workflow_run.head_branch }}
+          HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          set -euo pipefail
+          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+            # chạy tay: mặc định tag theo short SHA của commit hiện tại
+            echo "IMAGE_TAG=${GITHUB_SHA::12}" >> $GITHUB_ENV
+          else
+            # workflow_run: nếu là tag vX.Y.Z -> IMAGE_TAG = X.Y.Z, ngược lại = shortSHA của head_sha
+            if [[ "${HEAD_BRANCH}" =~ ^v([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
+              echo "IMAGE_TAG=${HEAD_BRANCH#v}" >> $GITHUB_ENV
+            else
+              SHORT="${HEAD_SHA:0:12}"
+              echo "IMAGE_TAG=${SHORT}" >> $GITHUB_ENV
+            fi
+          fi
+          echo "IMAGE_TAG=$IMAGE_TAG"
+
+      - name: Compute .env SHA256
+        run: |
+          if [ ! -f .env ]; then
+            echo "::error::.env không tồn tại trong repo tại thời điểm deploy."
+            exit 1
+          fi
+          echo "ENV_SHA=$(sha256sum .env | awk '{print $1}')" >> $GITHUB_ENV
+
+      - name: Prepare deploy bundle
+        run: |
+          mkdir -p deploy_bundle
+          cp -v .env deploy_bundle/.env
+          cp -v docker-compose.prod-infra.yml deploy_bundle/
+          cp -v docker-compose.prod-services.yml deploy_bundle/
+
+          mkdir -p ops
+          cat > ops/deploy.sh <<'EOS'
+          #!/usr/bin/env bash
+          set -euo pipefail
+
+          DEPLOY_DIR="${DEPLOY_DIR:-$HOME/codecampus}"
+          cd "$DEPLOY_DIR"
+
+          cp -f .env ".env.bak.$(date +%Y%m%d-%H%M%S)" || true
+
+          if grep -q '^IMAGE_TAG=' .env; then
+            sed -i "s/^IMAGE_TAG=.*/IMAGE_TAG=${IMAGE_TAG}/" .env
+          else
+            echo "IMAGE_TAG=${IMAGE_TAG}" >> .env
+          fi
+
+          set -a
+          source .env
+          set +a
+
+          compose() {
+            if docker compose version >/dev/null 2>&1; then
+              docker compose "$@"
+            else
+              docker-compose "$@"
+            fi
+          }
+
+          if [ -n "${DOCKERHUB_USER:-}" ] && [ -n "${DOCKERHUB_TOKEN:-}" ]; then
+            echo "docker login Docker Hub..."
+            echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USER" --password-stdin
+          else
+            echo "Thiếu DOCKERHUB_USER/DOCKERHUB_TOKEN trong .env (image public thì vẫn OK)."
+          fi
+
+          echo "Hạ tầng (idempotent)..."
+          compose -f docker-compose.prod-infra.yml --env-file .env up -d
+
+          echo "Pull images tag ${IMAGE_TAG}..."
+          compose -f docker-compose.prod-services.yml --env-file .env pull
+
+          echo "Up services..."
+          compose -f docker-compose.prod-services.yml --env-file .env up -d
+
+          echo "Prune dangling images..."
+          docker image prune -f || true
+
+          echo "Deploy xong."
+          EOS
+          chmod +x ops/deploy.sh
+          cp -v ops/deploy.sh deploy_bundle/
+
+      - name: Upload bundle to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT || 22 }}
+          source: "deploy_bundle/*"
+          target: "${{ secrets.DEPLOY_DIR || '~' }}/codecampus"
+          overwrite: true
+          strip_components: 1
+
+      - name: Verify .env identical & run deploy
+        uses: appleboy/ssh-action@v1.0.3
+        env:
+          IMAGE_TAG: ${{ env.IMAGE_TAG }}
+          ENV_SHA: ${{ env.ENV_SHA }}
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT || 22 }}
+          script_stop: true
+          script: |
+            set -euo pipefail
+            DEPLOY_DIR="${DEPLOY_DIR:-${{ secrets.DEPLOY_DIR || '$HOME' }}/codecampus}"
+            mkdir -p "$DEPLOY_DIR"
+            cd "$DEPLOY_DIR"
+
+            if [ ! -f .env ]; then
+              echo "::error::Không thấy $DEPLOY_DIR/.env trên server."
+              exit 1
+            fi
+            SERVER_SHA=$(sha256sum .env | awk '{print $1}')
+            echo "Local  .env sha: $ENV_SHA"
+            echo "Server .env sha: $SERVER_SHA"
+            if [ "$SERVER_SHA" != "$ENV_SHA" ]; then
+              echo "::error::.env trên server KHÁC repo. Hủy deploy để tránh sai lệch."
+              exit 1
+            fi
+
+            IMAGE_TAG="${IMAGE_TAG:-latest}" DEPLOY_DIR="$DEPLOY_DIR" bash ./deploy.sh
