@@ -12,6 +12,15 @@ submission:
     host: submission-service
     port: 9590
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "prometheus,health,info"
+  endpoint:
+    prometheus:
+      enabled: true
+
 spring:
   datasource:
     url: jdbc:postgresql://quiz-db:5432/${QUIZ_DATABASE}

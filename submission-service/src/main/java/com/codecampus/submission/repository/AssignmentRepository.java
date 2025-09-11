@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -38,4 +39,22 @@ public interface AssignmentRepository
   List<Assignment> findByStudentIdAndCompleted(
       String studentId,
       boolean completed);
+
+  @Query("""
+      select a.exercise.id, count(a)
+        from Assignment a
+       where a.exercise.id in :exerciseIds
+       group by a.exercise.id
+      """)
+  List<Object[]> countAssignmentsByExerciseIds(Collection<String> exerciseIds);
+
+  @Query("""
+      select a.exercise.id, count(a)
+        from Assignment a
+       where a.exercise.id in :exerciseIds
+         and a.completed = true
+       group by a.exercise.id
+      """)
+  List<Object[]> countCompletedAssignmentsByExerciseIds(
+      Collection<String> exerciseIds);
 }

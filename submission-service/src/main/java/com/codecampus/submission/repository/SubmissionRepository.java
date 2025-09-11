@@ -119,5 +119,51 @@ public interface SubmissionRepository
   Integer countByExerciseIdAndUserId(String exerciseId, String userId);
 
   List<Submission> findByUserIdAndExerciseId(String userId, String exerciseId);
+
+
+  @Query("""
+      select s.exercise.id, count(s)
+        from Submission s
+       where s.exercise.id in :exerciseIds
+       group by s.exercise.id
+      """)
+  List<Object[]> countSubmissionsByExerciseIds(Collection<String> exerciseIds);
+
+  @Query("""
+      select s.exercise.id, count(s)
+        from Submission s
+       where s.exercise.id in :exerciseIds
+         and s.status = com.codecampus.submission.constant.submission.SubmissionStatus.PASSED
+       group by s.exercise.id
+      """)
+  List<Object[]> countPassedSubmissionsByExerciseIds(
+      Collection<String> exerciseIds);
+
+  @Query("""
+      select s.exercise.id, avg(s.score)
+        from Submission s
+       where s.exercise.id in :exerciseIds
+       group by s.exercise.id
+      """)
+  List<Object[]> avgScoreByExerciseIds(Collection<String> exerciseIds);
+
+  @Query("""
+      select s.exercise.id, max(s.submittedAt)
+        from Submission s
+       where s.exercise.id in :exerciseIds
+       group by s.exercise.id
+      """)
+  List<Object[]> lastSubmissionAtByExerciseIds(Collection<String> exerciseIds);
+
+  // Tổng quan cho summary (admin)
+  @Query("select count(s) from Submission s")
+  long countAllSubmissions();
+
+  @Query("""
+      select count(s)
+        from Submission s
+       where s.status = com.codecampus.submission.constant.submission.SubmissionStatus.PASSED
+      """)
+  long countAllPassedSubmissions();
 }
 
