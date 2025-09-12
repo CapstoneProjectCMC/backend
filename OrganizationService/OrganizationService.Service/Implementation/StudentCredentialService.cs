@@ -93,7 +93,7 @@ namespace OrganizationService.Service.Implementation
         {
 
             var exists = await _studentCredentialRepository.FindAsync(x => x.OrganizationId == request.OrganizationId && x.Username == request.Username && !x.IsDeleted);
-            if (exists == null)
+            if (exists != null)
             {
                 throw new ErrorException(StatusCodeEnum.A01, "Username already exists.");
             }

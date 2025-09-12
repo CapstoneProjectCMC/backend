@@ -2,17 +2,29 @@ package com.codecampus.post.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.List;
-import lombok.Data;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 import org.springframework.web.multipart.MultipartFile;
 
-@Data
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class AddFileDocumentDto {
-  private MultipartFile file;
-  private String category; // enum truyền dạng string
-  private String description;
-  private List<String> tags;
-  private boolean isLectureVideo = false;
-  private boolean isTextbook = false;
-  private String orgId;
+  List<MultipartFile> files;
+  MultipartFile file;
+  String category;
+  String description;
+  List<String> tags;
+  boolean isLectureVideo = false;
+  boolean isTextbook = false;
+  String orgId;
 }

@@ -190,6 +190,7 @@ public interface UserProfileRepository
         MATCH (e:Exercise {exerciseId:$exerciseId})
         MERGE (u)-[r:SAVED_EXERCISE]->(e)
         ON CREATE SET r.saveAt = $now
+        ON MATCH  SET r.saveAt = coalesce(r.saveAt, $now)
       """)
   void mergeSavedExercise(String userId, String exerciseId, Instant now);
 
@@ -206,6 +207,7 @@ public interface UserProfileRepository
         MATCH (p:Post {postId:$postId})
         MERGE (u)-[r:SAVED_POST]->(p)
         ON CREATE SET r.saveAt = $now
+        ON MATCH  SET r.saveAt = coalesce(r.saveAt, $now)
       """)
   void mergeSavedPost(String userId, String postId, Instant now);
 
@@ -274,6 +276,8 @@ public interface UserProfileRepository
       WHERE me.deletedAt IS NULL
       MATCH (me)-[f:FOLLOWS]->(target:User)
       WHERE target.deletedAt IS NULL
+        AND NOT EXISTS( (me)-[:BLOCKS]->(target) )
+        AND NOT EXISTS( (target)-[:BLOCKS]->(me) )
       RETURN f, target  // target đã trùng tên field @TargetNode
       ORDER BY f.since DESC
       SKIP $skip
@@ -284,6 +288,8 @@ public interface UserProfileRepository
           WHERE me.deletedAt IS NULL
           MATCH (me)-[f:FOLLOWS]->(target:User)
           WHERE target.deletedAt IS NULL
+            AND NOT EXISTS( (me)-[:BLOCKS]->(target) )
+            AND NOT EXISTS( (target)-[:BLOCKS]->(me) )
           RETURN count(f)
           """)
   Page<Follows> findFollowings(
@@ -295,6 +301,8 @@ public interface UserProfileRepository
       WHERE me.deletedAt IS NULL
       MATCH (src:User)-[f:FOLLOWS]->(me)
       WHERE src.deletedAt IS NULL
+        AND NOT EXISTS( (me)-[:BLOCKS]->(src) )
+        AND NOT EXISTS( (src)-[:BLOCKS]->(me) )
       RETURN f, src AS target   // quan trọng: alias về đúng tên field
       ORDER BY f.since DESC
       SKIP $skip
@@ -305,6 +313,8 @@ public interface UserProfileRepository
           WHERE me.deletedAt IS NULL
           MATCH (src:User)-[f:FOLLOWS]->(me)
           WHERE src.deletedAt IS NULL
+            AND NOT EXISTS( (me)-[:BLOCKS]->(src) )
+            AND NOT EXISTS( (src)-[:BLOCKS]->(me) )
           RETURN count(f)
           """)
   Page<Follows> findFollowers(
@@ -477,6 +487,7 @@ public interface UserProfileRepository
         MATCH (f:FileResource {fileId:$fileId})
         MERGE (u)-[r:SAVED_RESOURCE]->(f)
         ON CREATE SET r.saveAt = $now
+        ON MATCH  SET r.saveAt = coalesce(r.saveAt, $now)
       """)
   void mergeSavedResource(String userId, String fileId, Instant now);
 
@@ -501,4 +512,16 @@ public interface UserProfileRepository
         DELETE r
       """)
   void deleteReportedResource(String userId, String fileId);
+
+  @Query("""
+      MATCH (me:User {userId:$me}), (target:User {userId:$target})
+      RETURN EXISTS( (me)-[:FOLLOWS]->(target) )
+      """)
+  boolean existsFollow(String me, String target);
+
+  @Query("""
+      MATCH (a:User {userId:$me}), (b:User {userId:$target})
+      RETURN EXISTS( (a)-[:BLOCKS]->(b) ) OR EXISTS( (b)-[:BLOCKS]->(a) )
+      """)
+  boolean isBlockedEitherWay(String me, String target);
 }

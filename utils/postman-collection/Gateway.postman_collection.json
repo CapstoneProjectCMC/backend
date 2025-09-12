@@ -1,235 +1,235 @@
 {
-  "info": {
-    "_postman_id": "80511420-0f91-4421-9b5c-d9a950b6af5d",
-    "name": "Gateway",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "33137665",
-    "_collection_link": "https://animeh-team.postman.co/workspace/Code-Campus-Workspace~833332bb-de6b-4a20-bdef-16542d164f4e/collection/33137665-80511420-0f91-4421-9b5c-d9a950b6af5d?action=share&source=collection_link&creator=33137665"
-  },
-  "item": [
-    {
-      "name": "getHello",
-      "protocolProfileBehavior": {
-        "disableBodyPruning": true
-      },
-      "request": {
-        "method": "GET",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": {
-          "raw": ""
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "login (Username)",
-      "request": {
-        "auth": {
-          "type": "noauth"
-        },
-        "method": "POST",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\r\n    \"username\": \"admin\",\r\n    \"password\": \"admin123\"\r\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": {
-          "raw": "http://26.100.147.137:8888/api/v1/identity/auth/login",
-          "protocol": "http",
-          "host": [
-            "26",
-            "100",
-            "147",
-            "137"
-          ],
-          "port": "8888",
-          "path": [
-            "api",
-            "v1",
-            "identity",
-            "auth",
-            "login"
-          ]
-        }
-      },
-      "response": [
-        {
-          "name": "200 login (Username)",
-          "originalRequest": {
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n    \"username\": \"yunomix2834\",\r\n    \"password\": \"dinhanst2832004\"\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{IdentityBase}}/auth/login",
-              "host": [
-                "{{IdentityBase}}"
-              ],
-              "path": [
-                "auth",
-                "login"
-              ]
-            }
-          },
-          "status": "OK",
-          "code": 200,
-          "_postman_previewlanguage": "json",
-          "header": [
-            {
-              "key": "X-Content-Type-Options",
-              "value": "nosniff"
-            },
-            {
-              "key": "X-XSS-Protection",
-              "value": "0"
-            },
-            {
-              "key": "Cache-Control",
-              "value": "no-cache, no-store, max-age=0, must-revalidate"
-            },
-            {
-              "key": "Pragma",
-              "value": "no-cache"
-            },
-            {
-              "key": "Expires",
-              "value": "0"
-            },
-            {
-              "key": "Strict-Transport-Security",
-              "value": "max-age=31536000 ; includeSubDomains"
-            },
-            {
-              "key": "X-Frame-Options",
-              "value": "DENY"
-            },
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            },
-            {
-              "key": "Transfer-Encoding",
-              "value": "chunked"
-            },
-            {
-              "key": "Date",
-              "value": "Sat, 31 May 2025 12:38:41 GMT"
-            },
-            {
-              "key": "Keep-Alive",
-              "value": "timeout=60"
-            },
-            {
-              "key": "Connection",
-              "value": "keep-alive"
-            }
-          ],
-          "cookie": [],
-          "body": "{\n    \"code\": 20000,\n    \"message\": \"Login successful\",\n    \"status\": \"OK\",\n    \"result\": {\n        \"username\": \"yunomix2834\",\n        \"email\": \"yunomix2834@gmail.com\",\n        \"role\": \"USER\",\n        \"tokenId\": \"21904eb0-59bb-4223-9298-28645052ee63\",\n        \"tokenAccessType\": \"Bearer\",\n        \"accessToken\": \"eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb2RlIENhbXB1cyIsInN1YiI6Inl1bm9taXgyODM0IiwiZXhwIjoxNzQ4Njk4NzIxLCJpYXQiOjE3NDg2OTUxMjEsImp0aSI6IjIxOTA0ZWIwLTU5YmItNDIyMy05Mjk4LTI4NjQ1MDUyZWU2MyIsInNjb3BlIjoiUk9MRV9VU0VSIn0.vni6lEsyc0q5gpyIAw3pWOSg6ZiPoRCPDizPXyVkkhM7Vq3snl4bYEInqRm4M0_kNNzN-PNZ9hjgsBwsIuXFNQ\",\n        \"refreshToken\": null,\n        \"expiryTime\": \"2025-05-31T13:38:41Z\",\n        \"enabled\": true,\n        \"authenticated\": true\n    }\n}"
-        },
-        {
-          "name": "404 login (Username)",
-          "originalRequest": {
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n    \"username\": \"yunomix283\",\r\n    \"password\": \"dinhanst2832004\"\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{IdentityBase}}/auth/login",
-              "host": [
-                "{{IdentityBase}}"
-              ],
-              "path": [
-                "auth",
-                "login"
-              ]
-            }
-          },
-          "status": "Not Found",
-          "code": 404,
-          "_postman_previewlanguage": "json",
-          "header": [
-            {
-              "key": "X-Content-Type-Options",
-              "value": "nosniff"
-            },
-            {
-              "key": "X-XSS-Protection",
-              "value": "0"
-            },
-            {
-              "key": "Cache-Control",
-              "value": "no-cache, no-store, max-age=0, must-revalidate"
-            },
-            {
-              "key": "Pragma",
-              "value": "no-cache"
-            },
-            {
-              "key": "Expires",
-              "value": "0"
-            },
-            {
-              "key": "Strict-Transport-Security",
-              "value": "max-age=31536000 ; includeSubDomains"
-            },
-            {
-              "key": "X-Frame-Options",
-              "value": "DENY"
-            },
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            },
-            {
-              "key": "Transfer-Encoding",
-              "value": "chunked"
-            },
-            {
-              "key": "Date",
-              "value": "Sat, 31 May 2025 12:39:24 GMT"
-            },
-            {
-              "key": "Keep-Alive",
-              "value": "timeout=60"
-            },
-            {
-              "key": "Connection",
-              "value": "keep-alive"
-            }
-          ],
-          "cookie": [],
-          "body": "{\n    \"code\": 40401,\n    \"message\": \"User not found!\",\n    \"status\": \"404 NOT_FOUND\"\n}"
-        }
-      ]
-    }
-  ]
+	"info": {
+		"_postman_id": "4785dc08-74ad-4e6c-a536-846172dcccb8",
+		"name": "Gateway",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33137665",
+		"_collection_link": "https://animeh-team.postman.co/workspace/CodeCampus-Backend~4a46659f-0826-49f2-b8c2-66ff451e96a4/collection/33137665-4785dc08-74ad-4e6c-a536-846172dcccb8?action=share&source=collection_link&creator=33137665"
+	},
+	"item": [
+		{
+			"name": "getHello",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login (Username)",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"admin\",\r\n    \"password\": \"admin123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://26.100.147.137:8888/api/v1/identity/auth/login",
+					"protocol": "http",
+					"host": [
+						"26",
+						"100",
+						"147",
+						"137"
+					],
+					"port": "8888",
+					"path": [
+						"api",
+						"v1",
+						"identity",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "200 login (Username)",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"yunomix2834\",\r\n    \"password\": \"dinhanst2832004\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{IdentityBase}}/auth/login",
+							"host": [
+								"{{IdentityBase}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "0"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"key": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"key": "Expires",
+							"value": "0"
+						},
+						{
+							"key": "Strict-Transport-Security",
+							"value": "max-age=31536000 ; includeSubDomains"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 31 May 2025 12:38:41 GMT"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=60"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"code\": 20000,\n    \"message\": \"Login successful\",\n    \"status\": \"OK\",\n    \"result\": {\n        \"username\": \"yunomix2834\",\n        \"email\": \"yunomix2834@gmail.com\",\n        \"role\": \"USER\",\n        \"tokenId\": \"21904eb0-59bb-4223-9298-28645052ee63\",\n        \"tokenAccessType\": \"Bearer\",\n        \"accessToken\": \"eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb2RlIENhbXB1cyIsInN1YiI6Inl1bm9taXgyODM0IiwiZXhwIjoxNzQ4Njk4NzIxLCJpYXQiOjE3NDg2OTUxMjEsImp0aSI6IjIxOTA0ZWIwLTU5YmItNDIyMy05Mjk4LTI4NjQ1MDUyZWU2MyIsInNjb3BlIjoiUk9MRV9VU0VSIn0.vni6lEsyc0q5gpyIAw3pWOSg6ZiPoRCPDizPXyVkkhM7Vq3snl4bYEInqRm4M0_kNNzN-PNZ9hjgsBwsIuXFNQ\",\n        \"refreshToken\": null,\n        \"expiryTime\": \"2025-05-31T13:38:41Z\",\n        \"enabled\": true,\n        \"authenticated\": true\n    }\n}"
+				},
+				{
+					"name": "404 login (Username)",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"yunomix283\",\r\n    \"password\": \"dinhanst2832004\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{IdentityBase}}/auth/login",
+							"host": [
+								"{{IdentityBase}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "0"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"key": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"key": "Expires",
+							"value": "0"
+						},
+						{
+							"key": "Strict-Transport-Security",
+							"value": "max-age=31536000 ; includeSubDomains"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 31 May 2025 12:39:24 GMT"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=60"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"code\": 40401,\n    \"message\": \"User not found!\",\n    \"status\": \"404 NOT_FOUND\"\n}"
+				}
+			]
+		}
+	]
 }

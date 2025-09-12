@@ -12,10 +12,14 @@ submission:
     host: submission-service
     port: 9590
 
-playground:
-  grpc:
-    host: coding-service
-    port: 9593
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "prometheus,health,info"
+  endpoint:
+    prometheus:
+      enabled: true
 
 spring:
   datasource:

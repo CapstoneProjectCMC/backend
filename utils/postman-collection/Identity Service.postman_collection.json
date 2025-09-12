@@ -1,1151 +1,1482 @@
 {
-  "info": {
-    "_postman_id": "ff059696-7443-4cc9-bad7-d202e03d23f4",
-    "name": "Identity Service",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "33137665",
-    "_collection_link": "https://animeh-team.postman.co/workspace/Code-Campus-Workspace~833332bb-de6b-4a20-bdef-16542d164f4e/collection/33137665-ff059696-7443-4cc9-bad7-d202e03d23f4?action=share&source=collection_link&creator=33137665"
-  },
-  "item": [
-    {
-      "name": "Authentication",
-      "item": [
-        {
-          "name": "outboundGoogleLogin",
-          "request": {
-            "auth": {
-              "type": "noauth"
-            },
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": ""
-            },
-            "url": {
-              "raw": "{{IdentityBase}}/auth/login-google?code=4%2F0AVMBsJjo3VhAjUKCey7KPAmgLzHgN93vgJsqS5phtCwO0tZMowmD_egIbR6lIUNTXv5TXg",
-              "host": [
-                "{{IdentityBase}}"
-              ],
-              "path": [
-                "auth",
-                "login-google"
-              ],
-              "query": [
-                {
-                  "key": "code",
-                  "value": "4%2F0AVMBsJjo3VhAjUKCey7KPAmgLzHgN93vgJsqS5phtCwO0tZMowmD_egIbR6lIUNTXv5TXg"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "login (Username)",
-          "request": {
-            "auth": {
-              "type": "noauth"
-            },
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n    \"username\": \"admin\",\r\n    \"password\": \"admin123\"\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{IdentityBase}}/auth/login",
-              "host": [
-                "{{IdentityBase}}"
-              ],
-              "path": [
-                "auth",
-                "login"
-              ]
-            }
-          },
-          "response": [
-            {
-              "name": "200 login (Username)",
-              "originalRequest": {
-                "method": "POST",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\r\n    \"username\": \"yunomix2834\",\r\n    \"password\": \"dinhanst2832004\"\r\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                },
-                "url": {
-                  "raw": "{{IdentityBase}}/auth/login",
-                  "host": [
-                    "{{IdentityBase}}"
-                  ],
-                  "path": [
-                    "auth",
-                    "login"
-                  ]
-                }
-              },
-              "status": "OK",
-              "code": 200,
-              "_postman_previewlanguage": "json",
-              "header": [
-                {
-                  "key": "X-Content-Type-Options",
-                  "value": "nosniff"
-                },
-                {
-                  "key": "X-XSS-Protection",
-                  "value": "0"
-                },
-                {
-                  "key": "Cache-Control",
-                  "value": "no-cache, no-store, max-age=0, must-revalidate"
-                },
-                {
-                  "key": "Pragma",
-                  "value": "no-cache"
-                },
-                {
-                  "key": "Expires",
-                  "value": "0"
-                },
-                {
-                  "key": "Strict-Transport-Security",
-                  "value": "max-age=31536000 ; includeSubDomains"
-                },
-                {
-                  "key": "X-Frame-Options",
-                  "value": "DENY"
-                },
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                },
-                {
-                  "key": "Transfer-Encoding",
-                  "value": "chunked"
-                },
-                {
-                  "key": "Date",
-                  "value": "Sat, 31 May 2025 12:38:41 GMT"
-                },
-                {
-                  "key": "Keep-Alive",
-                  "value": "timeout=60"
-                },
-                {
-                  "key": "Connection",
-                  "value": "keep-alive"
-                }
-              ],
-              "cookie": [],
-              "body": "{\n    \"code\": 20000,\n    \"message\": \"Login successful\",\n    \"status\": \"OK\",\n    \"result\": {\n        \"username\": \"yunomix2834\",\n        \"email\": \"yunomix2834@gmail.com\",\n        \"role\": \"USER\",\n        \"tokenId\": \"21904eb0-59bb-4223-9298-28645052ee63\",\n        \"tokenAccessType\": \"Bearer\",\n        \"accessToken\": \"eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb2RlIENhbXB1cyIsInN1YiI6Inl1bm9taXgyODM0IiwiZXhwIjoxNzQ4Njk4NzIxLCJpYXQiOjE3NDg2OTUxMjEsImp0aSI6IjIxOTA0ZWIwLTU5YmItNDIyMy05Mjk4LTI4NjQ1MDUyZWU2MyIsInNjb3BlIjoiUk9MRV9VU0VSIn0.vni6lEsyc0q5gpyIAw3pWOSg6ZiPoRCPDizPXyVkkhM7Vq3snl4bYEInqRm4M0_kNNzN-PNZ9hjgsBwsIuXFNQ\",\n        \"refreshToken\": null,\n        \"expiryTime\": \"2025-05-31T13:38:41Z\",\n        \"enabled\": true,\n        \"authenticated\": true\n    }\n}"
-            },
-            {
-              "name": "404 login (Username)",
-              "originalRequest": {
-                "method": "POST",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\r\n    \"username\": \"yunomix283\",\r\n    \"password\": \"dinhanst2832004\"\r\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                },
-                "url": {
-                  "raw": "{{IdentityBase}}/auth/login",
-                  "host": [
-                    "{{IdentityBase}}"
-                  ],
-                  "path": [
-                    "auth",
-                    "login"
-                  ]
-                }
-              },
-              "status": "Not Found",
-              "code": 404,
-              "_postman_previewlanguage": "json",
-              "header": [
-                {
-                  "key": "X-Content-Type-Options",
-                  "value": "nosniff"
-                },
-                {
-                  "key": "X-XSS-Protection",
-                  "value": "0"
-                },
-                {
-                  "key": "Cache-Control",
-                  "value": "no-cache, no-store, max-age=0, must-revalidate"
-                },
-                {
-                  "key": "Pragma",
-                  "value": "no-cache"
-                },
-                {
-                  "key": "Expires",
-                  "value": "0"
-                },
-                {
-                  "key": "Strict-Transport-Security",
-                  "value": "max-age=31536000 ; includeSubDomains"
-                },
-                {
-                  "key": "X-Frame-Options",
-                  "value": "DENY"
-                },
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                },
-                {
-                  "key": "Transfer-Encoding",
-                  "value": "chunked"
-                },
-                {
-                  "key": "Date",
-                  "value": "Sat, 31 May 2025 12:39:24 GMT"
-                },
-                {
-                  "key": "Keep-Alive",
-                  "value": "timeout=60"
-                },
-                {
-                  "key": "Connection",
-                  "value": "keep-alive"
-                }
-              ],
-              "cookie": [],
-              "body": "{\n    \"code\": 40401,\n    \"message\": \"User not found!\",\n    \"status\": \"404 NOT_FOUND\"\n}"
-            }
-          ]
-        },
-        {
-          "name": "login (Email)",
-          "request": {
-            "auth": {
-              "type": "noauth"
-            },
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n    \"email\": \"admin123123123@mail.com\",\r\n    \"password\": \"admin123\"\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{IdentityBase}}/auth/login",
-              "host": [
-                "{{IdentityBase}}"
-              ],
-              "path": [
-                "auth",
-                "login"
-              ]
-            }
-          },
-          "response": [
-            {
-              "name": "200 login (Email)",
-              "originalRequest": {
-                "method": "POST",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\r\n    \"email\": \"yunomix2834@gmail.com\",\r\n    \"password\": \"dinhanst2832004\"\r\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                },
-                "url": {
-                  "raw": "{{IdentityBase}}/auth/login",
-                  "host": [
-                    "{{IdentityBase}}"
-                  ],
-                  "path": [
-                    "auth",
-                    "login"
-                  ]
-                }
-              },
-              "status": "OK",
-              "code": 200,
-              "_postman_previewlanguage": "json",
-              "header": [
-                {
-                  "key": "X-Content-Type-Options",
-                  "value": "nosniff"
-                },
-                {
-                  "key": "X-XSS-Protection",
-                  "value": "0"
-                },
-                {
-                  "key": "Cache-Control",
-                  "value": "no-cache, no-store, max-age=0, must-revalidate"
-                },
-                {
-                  "key": "Pragma",
-                  "value": "no-cache"
-                },
-                {
-                  "key": "Expires",
-                  "value": "0"
-                },
-                {
-                  "key": "Strict-Transport-Security",
-                  "value": "max-age=31536000 ; includeSubDomains"
-                },
-                {
-                  "key": "X-Frame-Options",
-                  "value": "DENY"
-                },
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                },
-                {
-                  "key": "Transfer-Encoding",
-                  "value": "chunked"
-                },
-                {
-                  "key": "Date",
-                  "value": "Sat, 31 May 2025 12:40:26 GMT"
-                },
-                {
-                  "key": "Keep-Alive",
-                  "value": "timeout=60"
-                },
-                {
-                  "key": "Connection",
-                  "value": "keep-alive"
-                }
-              ],
-              "cookie": [],
-              "body": "{\n    \"code\": 20000,\n    \"message\": \"Login successful\",\n    \"status\": \"OK\",\n    \"result\": {\n        \"username\": \"yunomix2834\",\n        \"email\": \"yunomix2834@gmail.com\",\n        \"role\": \"USER\",\n        \"tokenId\": \"3c28ae46-16aa-47f2-93c4-92ce9e5dd4a3\",\n        \"tokenAccessType\": \"Bearer\",\n        \"accessToken\": \"eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb2RlIENhbXB1cyIsInN1YiI6Inl1bm9taXgyODM0IiwiZXhwIjoxNzQ4Njk4ODI2LCJpYXQiOjE3NDg2OTUyMjYsImp0aSI6IjNjMjhhZTQ2LTE2YWEtNDdmMi05M2M0LTkyY2U5ZTVkZDRhMyIsInNjb3BlIjoiUk9MRV9VU0VSIn0.x7ViMOK-4KRL4GZL3IOPU1jReNwBl1U1lrZZFU-l5ScNlFctucUdsKDoswUy-_TKVjf-Ql35_ol5XU0eoWLCMQ\",\n        \"refreshToken\": null,\n        \"expiryTime\": \"2025-05-31T13:40:26Z\",\n        \"enabled\": true,\n        \"authenticated\": true\n    }\n}"
-            },
-            {
-              "name": "404 login (Email)",
-              "originalRequest": {
-                "method": "POST",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\r\n    \"email\": \"yunomix283@gmail.com\",\r\n    \"password\": \"dinhanst2832004\"\r\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                },
-                "url": {
-                  "raw": "{{IdentityBase}}/auth/login",
-                  "host": [
-                    "{{IdentityBase}}"
-                  ],
-                  "path": [
-                    "auth",
-                    "login"
-                  ]
-                }
-              },
-              "status": "Not Found",
-              "code": 404,
-              "_postman_previewlanguage": "json",
-              "header": [
-                {
-                  "key": "X-Content-Type-Options",
-                  "value": "nosniff"
-                },
-                {
-                  "key": "X-XSS-Protection",
-                  "value": "0"
-                },
-                {
-                  "key": "Cache-Control",
-                  "value": "no-cache, no-store, max-age=0, must-revalidate"
-                },
-                {
-                  "key": "Pragma",
-                  "value": "no-cache"
-                },
-                {
-                  "key": "Expires",
-                  "value": "0"
-                },
-                {
-                  "key": "Strict-Transport-Security",
-                  "value": "max-age=31536000 ; includeSubDomains"
-                },
-                {
-                  "key": "X-Frame-Options",
-                  "value": "DENY"
-                },
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                },
-                {
-                  "key": "Transfer-Encoding",
-                  "value": "chunked"
-                },
-                {
-                  "key": "Date",
-                  "value": "Sat, 31 May 2025 12:41:02 GMT"
-                },
-                {
-                  "key": "Keep-Alive",
-                  "value": "timeout=60"
-                },
-                {
-                  "key": "Connection",
-                  "value": "keep-alive"
-                }
-              ],
-              "cookie": [],
-              "body": "{\n    \"code\": 40401,\n    \"message\": \"User not found!\",\n    \"status\": \"404 NOT_FOUND\"\n}"
-            }
-          ]
-        },
-        {
-          "name": "register",
-          "request": {
-            "auth": {
-              "type": "noauth"
-            },
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n    \"username\": \"yunomix283428389\",\r\n    \"email\": \"yunomix283428389@gmail.com\",\r\n    \"password\": \"dinhanst2832004\",\r\n    \r\n    \"firstName\": \"An\",\r\n    \"lastName\": \"Nguyễn\",\r\n    \"dob\": \"2004-03-28T00:00:00Z\",\r\n    \"bio\": \"Too lazy to write anything :v\",\r\n    \"displayName\": \"Yunomi Xavia\",\r\n    \"education\": 9,\r\n    \"links\": [\r\n        \"https://github.com/yunomix2834\",\r\n        \"https://github.com/CapstoneProjectCMC/backend\"\r\n    ],\r\n    \"city\": \"Viet Nam\"\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{IdentityBase}}/auth/register",
-              "host": [
-                "{{IdentityBase}}"
-              ],
-              "path": [
-                "auth",
-                "register"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "sendOtp",
-          "request": {
-            "auth": {
-              "type": "noauth"
-            },
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n    \"email\": \"yunom2834@gmail.com\",\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{IdentityBase}}/auth/send-otp",
-              "host": [
-                "{{IdentityBase}}"
-              ],
-              "path": [
-                "auth",
-                "send-otp"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "verifyOtp",
-          "request": {
-            "auth": {
-              "type": "noauth"
-            },
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n    \"email\": \"Toquangduc1304@gmail.com\",\r\n    \"otpCode\": \"612994\"\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{IdentityBase}}/auth/verify-otp",
-              "host": [
-                "{{IdentityBase}}"
-              ],
-              "path": [
-                "auth",
-                "verify-otp"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "introspect (Verity token)",
-          "request": {
-            "auth": {
-              "type": "noauth"
-            },
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n    \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyYjU5NDM2Yi03YmMwLTQ5NWYtYmRhZS0zZDEyYWEzMDAwZGYiLCJwZXJtaXNzaW9ucyI6W10sInNjb3BlIjoiUk9MRV9BRE1JTiIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJleHAiOjE3NTEyODA2MjksInRva2VuX3R5cGUiOiJhY2Nlc3NfdG9rZW4iLCJpYXQiOjE3NTEyNzcwMjksImp0aSI6ImY3NTc1NjEyLWMxMzctNGQ2ZC1hOWRlLTFkZjRjZDY0NDA0YSIsImVtYWlsIjoiYWRtaW4xMjMxMjMxMjNAbWFpbC5jb20iLCJ1c2VybmFtZSI6ImFkbWluIn0.W33RYJBG1dITG7pGDH-zIUQ8hanRAPNfFRBDi_dccGt_4ZZ8bx-qw-U8iRz6HgovfXbrtvjwfO9KQ_gNNxDsSA\"\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{IdentityBase}}/auth/introspect",
-              "host": [
-                "{{IdentityBase}}"
-              ],
-              "path": [
-                "auth",
-                "introspect"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "refreshToken",
-          "request": {
-            "auth": {
-              "type": "noauth"
-            },
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n    \"token\": \"eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb2RlIENhbXB1cyIsInN1YiI6Inl1bm9taXgyODM0IiwiZXhwIjoxNzQ4Njk4MjI4LCJpYXQiOjE3NDg2OTQ2MjgsImp0aSI6IjBiNzgwM2NjLTMyZDQtNGM5OC1iYjg2LTE2MzBhNmNiYmYwMyIsInNjb3BlIjoiUk9MRV9VU0VSIn0.vcUxVZ_71fVW5nJ7MHkQy6JUVd3auECnD4UWr09xbbY4CmFHTDocifQFDc5p6WVFxT_LIV7Ff_i1l2MzRf7r2w\"\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{IdentityBase}}/auth/refresh",
-              "host": [
-                "{{IdentityBase}}"
-              ],
-              "path": [
-                "auth",
-                "refresh"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "logout",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiZDVkMjM4YjQtODBjZC00YjVjLWExOGYtOWYzMzk2NGQ3NTVjIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTE0NjI2MDAsImlhdCI6MTc1MTQ1OTAwMCwianRpIjoiNzE4NjZjMTgtNGRkNi00YzRmLWIzNGUtMjJhYTJkZDEzMDI0IiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.vs9wJwQpQAgyGATIICoyrTGs5ra8bgAUjANXj4nvNLyxWyLoduqvj8NzBNR30Lbe8Q-vbtaIad-VIqVrOBQZeA",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{IdentityBase}}/auth/logout",
-              "host": [
-                "{{IdentityBase}}"
-              ],
-              "path": [
-                "auth",
-                "logout"
-              ]
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "Role",
-      "item": [
-        {
-          "name": "(ADMIN) createRole",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb2RlIENhbXB1cyIsInN1YiI6ImFkbWluIiwiZXhwIjoxNzQ4Njk5NTM2LCJpYXQiOjE3NDg2OTU5MzYsImp0aSI6Ijc1MWY0NDljLWY5NmUtNDYyZS1iOGIzLTVlZGZiMzQzMjcwNSIsInNjb3BlIjoiUk9MRV9BRE1JTiJ9.R17nYPjVjxHQiQ0WEosiUuJn5uMbs0oBOjH4UgPVGBbeYMcKWVgBkq4R55ufL_oyuSL11ayyan8BH5e1QXNzYA",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n    \"name\": \"TEST_ROLE1\",\r\n    \"description\": \"TEST_ROLE1\",\r\n    \"permissions\": [\r\n        \"TEST_PERMISSION\"\r\n    ]\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{IdentityBase}}/role",
-              "host": [
-                "{{IdentityBase}}"
-              ],
-              "path": [
-                "role"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "(ADMIN) getAllRoles",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb2RlIENhbXB1cyIsInN1YiI6ImFkbWluIiwiZXhwIjoxNzQ4Njk5NTM2LCJpYXQiOjE3NDg2OTU5MzYsImp0aSI6Ijc1MWY0NDljLWY5NmUtNDYyZS1iOGIzLTVlZGZiMzQzMjcwNSIsInNjb3BlIjoiUk9MRV9BRE1JTiJ9.R17nYPjVjxHQiQ0WEosiUuJn5uMbs0oBOjH4UgPVGBbeYMcKWVgBkq4R55ufL_oyuSL11ayyan8BH5e1QXNzYA",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{IdentityBase}}/roles",
-              "host": [
-                "{{IdentityBase}}"
-              ],
-              "path": [
-                "roles"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "(ADMIN) deleteRole",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb2RlIENhbXB1cyIsInN1YiI6ImFkbWluIiwiZXhwIjoxNzQ4Njk5NTM2LCJpYXQiOjE3NDg2OTU5MzYsImp0aSI6Ijc1MWY0NDljLWY5NmUtNDYyZS1iOGIzLTVlZGZiMzQzMjcwNSIsInNjb3BlIjoiUk9MRV9BRE1JTiJ9.R17nYPjVjxHQiQ0WEosiUuJn5uMbs0oBOjH4UgPVGBbeYMcKWVgBkq4R55ufL_oyuSL11ayyan8BH5e1QXNzYA",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "DELETE",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n    \"name\": \"TEST_PERMISSION1\",\r\n    \"description\": \"TEST_PERMISSION1\"\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{IdentityBase}}/role/TEST_ROLE1",
-              "host": [
-                "{{IdentityBase}}"
-              ],
-              "path": [
-                "role",
-                "TEST_ROLE1"
-              ]
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "Permission",
-      "item": [
-        {
-          "name": "(ADMIN) createPermission",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb2RlIENhbXB1cyIsInN1YiI6ImFkbWluIiwiZXhwIjoxNzQ4Njk5NTM2LCJpYXQiOjE3NDg2OTU5MzYsImp0aSI6Ijc1MWY0NDljLWY5NmUtNDYyZS1iOGIzLTVlZGZiMzQzMjcwNSIsInNjb3BlIjoiUk9MRV9BRE1JTiJ9.R17nYPjVjxHQiQ0WEosiUuJn5uMbs0oBOjH4UgPVGBbeYMcKWVgBkq4R55ufL_oyuSL11ayyan8BH5e1QXNzYA",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n    \"name\": \"TEST_PERMISSION1\",\r\n    \"description\": \"TEST_PERMISSION1\"\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{IdentityBase}}/permission",
-              "host": [
-                "{{IdentityBase}}"
-              ],
-              "path": [
-                "permission"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "(ADMIN) deletePermission",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb2RlIENhbXB1cyIsInN1YiI6ImFkbWluIiwiZXhwIjoxNzQ4Njk5NTM2LCJpYXQiOjE3NDg2OTU5MzYsImp0aSI6Ijc1MWY0NDljLWY5NmUtNDYyZS1iOGIzLTVlZGZiMzQzMjcwNSIsInNjb3BlIjoiUk9MRV9BRE1JTiJ9.R17nYPjVjxHQiQ0WEosiUuJn5uMbs0oBOjH4UgPVGBbeYMcKWVgBkq4R55ufL_oyuSL11ayyan8BH5e1QXNzYA",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "DELETE",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n    \"name\": \"TEST_PERMISSION1\",\r\n    \"description\": \"TEST_PERMISSION1\"\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{IdentityBase}}/permission/TEST_PERMISSION1",
-              "host": [
-                "{{IdentityBase}}"
-              ],
-              "path": [
-                "permission",
-                "TEST_PERMISSION1"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "(ADMIN) getAllPermissions",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb2RlIENhbXB1cyIsInN1YiI6ImFkbWluIiwiZXhwIjoxNzQ4Njk5NTM2LCJpYXQiOjE3NDg2OTU5MzYsImp0aSI6Ijc1MWY0NDljLWY5NmUtNDYyZS1iOGIzLTVlZGZiMzQzMjcwNSIsInNjb3BlIjoiUk9MRV9BRE1JTiJ9.R17nYPjVjxHQiQ0WEosiUuJn5uMbs0oBOjH4UgPVGBbeYMcKWVgBkq4R55ufL_oyuSL11ayyan8BH5e1QXNzYA",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{IdentityBase}}/permissions",
-              "host": [
-                "{{IdentityBase}}"
-              ],
-              "path": [
-                "permissions"
-              ]
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "Account",
-      "item": [
-        {
-          "name": "(ADMIN) createUser",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5OWY3NDc0YS1kZmEzLTRiYmEtYmYyMS05NDRhYTQ5YjdkNmUiLCJwZXJtaXNzaW9ucyI6W10sInNjb3BlIjoiUk9MRV9BRE1JTiIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJleHAiOjE3NTEyODcxMDAsInRva2VuX3R5cGUiOiJhY2Nlc3NfdG9rZW4iLCJpYXQiOjE3NTEyODM1MDAsImp0aSI6IjJjNDM1M2E2LTMyN2EtNGYxMi05YjBmLTMxMDYzNjFmYTE5OSIsImVtYWlsIjoiYWRtaW4xMjMxMjMxMjNAbWFpbC5jb20iLCJ1c2VybmFtZSI6ImFkbWluIn0.Pa2icThjLIc95iHCn-SqKwcd10ixuo4beguTzYTYA95bXFfWyn2ho8S9PJLmY8vFbfguTsqABfRleJd5G4ySGg",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n    \"username\": \"yunom01280304\",\r\n    \"email\": \"yunom01280304@gmail.com\",\r\n    \"password\": \"dinhanst2832004\"\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{IdentityBase}}/user",
-              "host": [
-                "{{IdentityBase}}"
-              ],
-              "path": [
-                "user"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "createPassword",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb2RlIENhbXB1cyIsInN1YiI6ImFkbWluIiwiZXhwIjoxNzQ4Njk5NTM2LCJpYXQiOjE3NDg2OTU5MzYsImp0aSI6Ijc1MWY0NDljLWY5NmUtNDYyZS1iOGIzLTVlZGZiMzQzMjcwNSIsInNjb3BlIjoiUk9MRV9BRE1JTiJ9.R17nYPjVjxHQiQ0WEosiUuJn5uMbs0oBOjH4UgPVGBbeYMcKWVgBkq4R55ufL_oyuSL11ayyan8BH5e1QXNzYA",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n    \"username\": \"yunom280304\",\r\n    \"email\": \"yunom280304@gmail.com\",\r\n    \"password\": \"dinhanst2832004\"\r\n}"
-            },
-            "url": {
-              "raw": "{{IdentityBase}}/user/create-password",
-              "host": [
-                "{{IdentityBase}}"
-              ],
-              "path": [
-                "user",
-                "create-password"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "(ADMIN) getUsers",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMDk3NmMxYS0zOWEzLTRiNjctYmYzOC1iM2Q0MGY1NWY3ODQiLCJwZXJtaXNzaW9ucyI6W10sInNjb3BlIjoiUk9MRV9BRE1JTiIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJleHAiOjE3NTEyODQ5MTAsInRva2VuX3R5cGUiOiJhY2Nlc3NfdG9rZW4iLCJpYXQiOjE3NTEyODEzMTAsImp0aSI6ImM2NzBhMWJmLTc4ZmItNDU1OC04MDIyLWUyZTc3NmEwYTU0YiIsImVtYWlsIjoiYWRtaW4xMjMxMjMxMjNAbWFpbC5jb20iLCJ1c2VybmFtZSI6ImFkbWluIn0.g49mjP2gBjXXTf20YY3p5daKcMG9OCXUKX7OZN9IaYE1qqhuMlvAqeIcI-jb506QSuSYLbJ5nC1cXP1I1C4qMw",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{IdentityBase}}/users?page=1&size=10",
-              "host": [
-                "{{IdentityBase}}"
-              ],
-              "path": [
-                "users"
-              ],
-              "query": [
-                {
-                  "key": "page",
-                  "value": "1"
-                },
-                {
-                  "key": "size",
-                  "value": "10"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "(ADMIN) getUser",
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          },
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb2RlIENhbXB1cyIsInN1YiI6ImFkbWluIiwiZXhwIjoxNzQ4Njk5NTM2LCJpYXQiOjE3NDg2OTU5MzYsImp0aSI6Ijc1MWY0NDljLWY5NmUtNDYyZS1iOGIzLTVlZGZiMzQzMjcwNSIsInNjb3BlIjoiUk9MRV9BRE1JTiJ9.R17nYPjVjxHQiQ0WEosiUuJn5uMbs0oBOjH4UgPVGBbeYMcKWVgBkq4R55ufL_oyuSL11ayyan8BH5e1QXNzYA",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "GET",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{IdentityBase}}/user/43be1d7c-ecc6-4ee3-aa72-4157afa30462",
-              "host": [
-                "{{IdentityBase}}"
-              ],
-              "path": [
-                "user",
-                "43be1d7c-ecc6-4ee3-aa72-4157afa30462"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "getMyInfo",
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          },
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyYjU5NDM2Yi03YmMwLTQ5NWYtYmRhZS0zZDEyYWEzMDAwZGYiLCJwZXJtaXNzaW9ucyI6W10sInNjb3BlIjoiUk9MRV9BRE1JTiIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJleHAiOjE3NTEyNzg3ODcsInRva2VuX3R5cGUiOiJhY2Nlc3NfdG9rZW4iLCJpYXQiOjE3NTEyNzUxODcsImp0aSI6ImM5ODk5YzY5LTNmNmEtNDNhZS05MWE0LWYwY2UyYjc1ODdlMiIsImVtYWlsIjoiYWRtaW4xMjMxMjMxMjNAbWFpbC5jb20iLCJ1c2VybmFtZSI6ImFkbWluIn0.amzIvahdaFXnyPUxPk9gKRzdpHnnH10l3zsdhoc3ZUrd4DdoFI314vicvEN7a1s1Y-NVd5I834ANzIjY8n1_Yw",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "GET",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{IdentityBase}}/user/my-info",
-              "host": [
-                "{{IdentityBase}}"
-              ],
-              "path": [
-                "user",
-                "my-info"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "(ADMIN) deleteUser",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5OWY3NDc0YS1kZmEzLTRiYmEtYmYyMS05NDRhYTQ5YjdkNmUiLCJwZXJtaXNzaW9ucyI6W10sInNjb3BlIjoiUk9MRV9BRE1JTiIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJleHAiOjE3NTEyODcxMDAsInRva2VuX3R5cGUiOiJhY2Nlc3NfdG9rZW4iLCJpYXQiOjE3NTEyODM1MDAsImp0aSI6IjJjNDM1M2E2LTMyN2EtNGYxMi05YjBmLTMxMDYzNjFmYTE5OSIsImVtYWlsIjoiYWRtaW4xMjMxMjMxMjNAbWFpbC5jb20iLCJ1c2VybmFtZSI6ImFkbWluIn0.Pa2icThjLIc95iHCn-SqKwcd10ixuo4beguTzYTYA95bXFfWyn2ho8S9PJLmY8vFbfguTsqABfRleJd5G4ySGg",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "DELETE",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{IdentityBase}}/user/960fe5c4-d56b-400b-a0ac-2a1acc921fc9",
-              "host": [
-                "{{IdentityBase}}"
-              ],
-              "path": [
-                "user",
-                "960fe5c4-d56b-400b-a0ac-2a1acc921fc9"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "(ADMIN) updateUser",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMDk3NmMxYS0zOWEzLTRiNjctYmYzOC1iM2Q0MGY1NWY3ODQiLCJwZXJtaXNzaW9ucyI6W10sInNjb3BlIjoiUk9MRV9BRE1JTiIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJleHAiOjE3NTEyODQ5MTAsInRva2VuX3R5cGUiOiJhY2Nlc3NfdG9rZW4iLCJpYXQiOjE3NTEyODEzMTAsImp0aSI6ImM2NzBhMWJmLTc4ZmItNDU1OC04MDIyLWUyZTc3NmEwYTU0YiIsImVtYWlsIjoiYWRtaW4xMjMxMjMxMjNAbWFpbC5jb20iLCJ1c2VybmFtZSI6ImFkbWluIn0.g49mjP2gBjXXTf20YY3p5daKcMG9OCXUKX7OZN9IaYE1qqhuMlvAqeIcI-jb506QSuSYLbJ5nC1cXP1I1C4qMw",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "PUT",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n    \"password\": \"Dinhanst2832004%%\"\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{IdentityBase}}/user/aa4cf8c3-bf55-4bf7-8b51-73608cefe475",
-              "host": [
-                "{{IdentityBase}}"
-              ],
-              "path": [
-                "user",
-                "aa4cf8c3-bf55-4bf7-8b51-73608cefe475"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "updateMyInfo",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb2RlIENhbXB1cyIsInN1YiI6ImFkbWluIiwiZXhwIjoxNzQ4Njk5NTM2LCJpYXQiOjE3NDg2OTU5MzYsImp0aSI6Ijc1MWY0NDljLWY5NmUtNDYyZS1iOGIzLTVlZGZiMzQzMjcwNSIsInNjb3BlIjoiUk9MRV9BRE1JTiJ9.R17nYPjVjxHQiQ0WEosiUuJn5uMbs0oBOjH4UgPVGBbeYMcKWVgBkq4R55ufL_oyuSL11ayyan8BH5e1QXNzYA",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "PUT",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n    \"password\": \"Dinhanst2832004%%\"\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{IdentityBase}}/user/my-info",
-              "host": [
-                "{{IdentityBase}}"
-              ],
-              "path": [
-                "user",
-                "my-info"
-              ]
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "getHello",
-      "request": {
-        "auth": {
-          "type": "noauth"
-        },
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "{{IdentityBase}}/hello",
-          "host": [
-            "{{IdentityBase}}"
-          ],
-          "path": [
-            "hello"
-          ]
-        }
-      },
-      "response": []
-    }
-  ]
+	"info": {
+		"_postman_id": "194f8020-440d-4bb4-9bab-e333594478c6",
+		"name": "Identity Service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33137665",
+		"_collection_link": "https://animeh-team.postman.co/workspace/CodeCampus-Backend~4a46659f-0826-49f2-b8c2-66ff451e96a4/collection/33137665-194f8020-440d-4bb4-9bab-e333594478c6?action=share&source=collection_link&creator=33137665"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "outboundGoogleLogin",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{IdentityBase}}/auth/login-google?code=4%2F0AVMBsJjo3VhAjUKCey7KPAmgLzHgN93vgJsqS5phtCwO0tZMowmD_egIbR6lIUNTXv5TXg",
+							"host": [
+								"{{IdentityBase}}"
+							],
+							"path": [
+								"auth",
+								"login-google"
+							],
+							"query": [
+								{
+									"key": "code",
+									"value": "4%2F0AVMBsJjo3VhAjUKCey7KPAmgLzHgN93vgJsqS5phtCwO0tZMowmD_egIbR6lIUNTXv5TXg"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login (Username)",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"admin\",\r\n    \"password\": \"adminRoot123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/identity/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"identity",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "200 login (Username)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"yunomix2834\",\r\n    \"password\": \"dinhanst2832004\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{IdentityBase}}/auth/login",
+									"host": [
+										"{{IdentityBase}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000 ; includeSubDomains"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 31 May 2025 12:38:41 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"code\": 20000,\n    \"message\": \"Login successful\",\n    \"status\": \"OK\",\n    \"result\": {\n        \"username\": \"yunomix2834\",\n        \"email\": \"yunomix2834@gmail.com\",\n        \"role\": \"USER\",\n        \"tokenId\": \"21904eb0-59bb-4223-9298-28645052ee63\",\n        \"tokenAccessType\": \"Bearer\",\n        \"accessToken\": \"eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb2RlIENhbXB1cyIsInN1YiI6Inl1bm9taXgyODM0IiwiZXhwIjoxNzQ4Njk4NzIxLCJpYXQiOjE3NDg2OTUxMjEsImp0aSI6IjIxOTA0ZWIwLTU5YmItNDIyMy05Mjk4LTI4NjQ1MDUyZWU2MyIsInNjb3BlIjoiUk9MRV9VU0VSIn0.vni6lEsyc0q5gpyIAw3pWOSg6ZiPoRCPDizPXyVkkhM7Vq3snl4bYEInqRm4M0_kNNzN-PNZ9hjgsBwsIuXFNQ\",\n        \"refreshToken\": null,\n        \"expiryTime\": \"2025-05-31T13:38:41Z\",\n        \"enabled\": true,\n        \"authenticated\": true\n    }\n}"
+						},
+						{
+							"name": "404 login (Username)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"yunomix283\",\r\n    \"password\": \"dinhanst2832004\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{IdentityBase}}/auth/login",
+									"host": [
+										"{{IdentityBase}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000 ; includeSubDomains"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 31 May 2025 12:39:24 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"code\": 40401,\n    \"message\": \"User not found!\",\n    \"status\": \"404 NOT_FOUND\"\n}"
+						}
+					]
+				},
+				{
+					"name": "login (Email)",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"admin123123123@mail.com\",\r\n    \"password\": \"admin123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/identity/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"identity",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "200 login (Email)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"yunomix2834@gmail.com\",\r\n    \"password\": \"dinhanst2832004\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{IdentityBase}}/auth/login",
+									"host": [
+										"{{IdentityBase}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000 ; includeSubDomains"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 31 May 2025 12:40:26 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"code\": 20000,\n    \"message\": \"Login successful\",\n    \"status\": \"OK\",\n    \"result\": {\n        \"username\": \"yunomix2834\",\n        \"email\": \"yunomix2834@gmail.com\",\n        \"role\": \"USER\",\n        \"tokenId\": \"3c28ae46-16aa-47f2-93c4-92ce9e5dd4a3\",\n        \"tokenAccessType\": \"Bearer\",\n        \"accessToken\": \"eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb2RlIENhbXB1cyIsInN1YiI6Inl1bm9taXgyODM0IiwiZXhwIjoxNzQ4Njk4ODI2LCJpYXQiOjE3NDg2OTUyMjYsImp0aSI6IjNjMjhhZTQ2LTE2YWEtNDdmMi05M2M0LTkyY2U5ZTVkZDRhMyIsInNjb3BlIjoiUk9MRV9VU0VSIn0.x7ViMOK-4KRL4GZL3IOPU1jReNwBl1U1lrZZFU-l5ScNlFctucUdsKDoswUy-_TKVjf-Ql35_ol5XU0eoWLCMQ\",\n        \"refreshToken\": null,\n        \"expiryTime\": \"2025-05-31T13:40:26Z\",\n        \"enabled\": true,\n        \"authenticated\": true\n    }\n}"
+						},
+						{
+							"name": "404 login (Email)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"yunomix283@gmail.com\",\r\n    \"password\": \"dinhanst2832004\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{IdentityBase}}/auth/login",
+									"host": [
+										"{{IdentityBase}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000 ; includeSubDomains"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 31 May 2025 12:41:02 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"code\": 40401,\n    \"message\": \"User not found!\",\n    \"status\": \"404 NOT_FOUND\"\n}"
+						}
+					]
+				},
+				{
+					"name": "register",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"yunomix2834\",\r\n    \"email\": \"yunomix2834@gmail.com\",\r\n    \"password\": \"dinhanst2832004\",\r\n    \r\n    \"firstName\": \"An\",\r\n    \"lastName\": \"Nguyễn\",\r\n    \"dob\": \"2004-03-28T00:00:00Z\",\r\n    \"bio\": \"Too lazy to write anything :v\",\r\n    \"displayName\": \"Yunomi Xavia\",\r\n    \"education\": 9,\r\n    \"links\": [\r\n        \"https://github.com/yunomix2834\",\r\n        \"https://github.com/CapstoneProjectCMC/backend\"\r\n    ],\r\n    \"city\": \"Viet Nam\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/identity/auth/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"identity",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "sendOtp",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"yunom2834@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{IdentityBase}}/auth/send-otp",
+							"host": [
+								"{{IdentityBase}}"
+							],
+							"path": [
+								"auth",
+								"send-otp"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "verifyOtp",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"yunomix2834@gmail.com\",\r\n    \"otpCode\": \"477813\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/identity/auth/verify-otp",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"identity",
+								"auth",
+								"verify-otp"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "introspect (Verity token)",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjb2RlX2NhbXB1c2FkbWluQG1haWwuY29tIiwicm9sZXMiOlsiQURNSU4iXSwiaXNzIjoiQ29kZSBDYW1wdXMiLCJhY3RpdmUiOnRydWUsInRva2VuX3R5cGUiOiJhY2Nlc3NfdG9rZW4iLCJ1c2VySWQiOiI0NjdkMmM0Yy1iNTkwLTQzNWUtYmIwYi1kODUyZTkxOTkyYzgiLCJvcmdfcm9sZSI6IiIsInBlcm1pc3Npb25zIjpbXSwib3JnX2lkIjoiIiwic2NvcGUiOiJST0xFX0FETUlOIiwiZXhwIjoxNzU2Nzk5NjYyLCJpYXQiOjE3NTYxOTQ4NjIsImp0aSI6ImU0OGJiNWUzLTU1YzItNGE4MC1iNTI4LWUzNGRiYTM1MjUzOCIsImVtYWlsIjoiY29kZV9jYW1wdXNhZG1pbkBtYWlsLmNvbSIsInVzZXJuYW1lIjoiY29kZV9jYW1wdXNhZG1pbiJ9.OX7Rnk6qtZ25pBV-lt0nROemykNM0afvX7zLEZEUwzFxzgb5m0rEbxk27Fk1F48U9gpvm5X7pctyBap5cVPaJw\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/identity/auth/introspect",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"identity",
+								"auth",
+								"introspect"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "refreshToken",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZWFjaGVyUm9vdDEyM0BnbWFpbC5jb20iLCJibG9ja19pZHMiOltdLCJyb2xlcyI6WyJURUFDSEVSIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNmM2ZWY0NDAtZTY3NC00NmI2LThlYjQtM2U5N2ZmOWEyZDJiIiwib3JnX3JvbGUiOiIiLCJwZXJtaXNzaW9ucyI6W10sIm9yZ19pZCI6IiIsInNjb3BlIjoiUk9MRV9URUFDSEVSIiwiZXhwIjoxNzU3MTc2MjAwLCJpYXQiOjE3NTY1NzE0MDAsImp0aSI6ImM1YjQ2OTUzLTk2ZjktNDNkNS05YjFiLTQ5M2EyNTUzMzlkNyIsImVtYWlsIjoidGVhY2hlclJvb3QxMjNAZ21haWwuY29tIiwidXNlcm5hbWUiOiJ0ZWFjaGVyUm9vdCJ9.yNlX1M0qezsCWGExqaa8fp-f21CuaY9cBg8pvLlumCD0gpX6rhRdOX6CWcD55veqPzPB22qKOzeWiLQHsF8HCQ\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/identity/auth/refresh",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"identity",
+								"auth",
+								"refresh"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "logout",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiZDVkMjM4YjQtODBjZC00YjVjLWExOGYtOWYzMzk2NGQ3NTVjIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTE0NjI2MDAsImlhdCI6MTc1MTQ1OTAwMCwianRpIjoiNzE4NjZjMTgtNGRkNi00YzRmLWIzNGUtMjJhYTJkZDEzMDI0IiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.vs9wJwQpQAgyGATIICoyrTGs5ra8bgAUjANXj4nvNLyxWyLoduqvj8NzBNR30Lbe8Q-vbtaIad-VIqVrOBQZeA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{IdentityBase}}/auth/logout",
+							"host": [
+								"{{IdentityBase}}"
+							],
+							"path": [
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Role",
+			"item": [
+				{
+					"name": "(ADMIN) createRole",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb2RlIENhbXB1cyIsInN1YiI6ImFkbWluIiwiZXhwIjoxNzQ4Njk5NTM2LCJpYXQiOjE3NDg2OTU5MzYsImp0aSI6Ijc1MWY0NDljLWY5NmUtNDYyZS1iOGIzLTVlZGZiMzQzMjcwNSIsInNjb3BlIjoiUk9MRV9BRE1JTiJ9.R17nYPjVjxHQiQ0WEosiUuJn5uMbs0oBOjH4UgPVGBbeYMcKWVgBkq4R55ufL_oyuSL11ayyan8BH5e1QXNzYA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"TEST_ROLE1\",\r\n    \"description\": \"TEST_ROLE1\",\r\n    \"permissions\": [\r\n        \"TEST_PERMISSION\"\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{IdentityBase}}/role",
+							"host": [
+								"{{IdentityBase}}"
+							],
+							"path": [
+								"role"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "(ADMIN) getAllRoles",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb2RlIENhbXB1cyIsInN1YiI6ImFkbWluIiwiZXhwIjoxNzQ4Njk5NTM2LCJpYXQiOjE3NDg2OTU5MzYsImp0aSI6Ijc1MWY0NDljLWY5NmUtNDYyZS1iOGIzLTVlZGZiMzQzMjcwNSIsInNjb3BlIjoiUk9MRV9BRE1JTiJ9.R17nYPjVjxHQiQ0WEosiUuJn5uMbs0oBOjH4UgPVGBbeYMcKWVgBkq4R55ufL_oyuSL11ayyan8BH5e1QXNzYA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{IdentityBase}}/roles",
+							"host": [
+								"{{IdentityBase}}"
+							],
+							"path": [
+								"roles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "(ADMIN) deleteRole",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb2RlIENhbXB1cyIsInN1YiI6ImFkbWluIiwiZXhwIjoxNzQ4Njk5NTM2LCJpYXQiOjE3NDg2OTU5MzYsImp0aSI6Ijc1MWY0NDljLWY5NmUtNDYyZS1iOGIzLTVlZGZiMzQzMjcwNSIsInNjb3BlIjoiUk9MRV9BRE1JTiJ9.R17nYPjVjxHQiQ0WEosiUuJn5uMbs0oBOjH4UgPVGBbeYMcKWVgBkq4R55ufL_oyuSL11ayyan8BH5e1QXNzYA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"TEST_PERMISSION1\",\r\n    \"description\": \"TEST_PERMISSION1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{IdentityBase}}/role/TEST_ROLE1",
+							"host": [
+								"{{IdentityBase}}"
+							],
+							"path": [
+								"role",
+								"TEST_ROLE1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Permission",
+			"item": [
+				{
+					"name": "(ADMIN) createPermission",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb2RlIENhbXB1cyIsInN1YiI6ImFkbWluIiwiZXhwIjoxNzQ4Njk5NTM2LCJpYXQiOjE3NDg2OTU5MzYsImp0aSI6Ijc1MWY0NDljLWY5NmUtNDYyZS1iOGIzLTVlZGZiMzQzMjcwNSIsInNjb3BlIjoiUk9MRV9BRE1JTiJ9.R17nYPjVjxHQiQ0WEosiUuJn5uMbs0oBOjH4UgPVGBbeYMcKWVgBkq4R55ufL_oyuSL11ayyan8BH5e1QXNzYA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"TEST_PERMISSION1\",\r\n    \"description\": \"TEST_PERMISSION1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{IdentityBase}}/permission",
+							"host": [
+								"{{IdentityBase}}"
+							],
+							"path": [
+								"permission"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "(ADMIN) deletePermission",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb2RlIENhbXB1cyIsInN1YiI6ImFkbWluIiwiZXhwIjoxNzQ4Njk5NTM2LCJpYXQiOjE3NDg2OTU5MzYsImp0aSI6Ijc1MWY0NDljLWY5NmUtNDYyZS1iOGIzLTVlZGZiMzQzMjcwNSIsInNjb3BlIjoiUk9MRV9BRE1JTiJ9.R17nYPjVjxHQiQ0WEosiUuJn5uMbs0oBOjH4UgPVGBbeYMcKWVgBkq4R55ufL_oyuSL11ayyan8BH5e1QXNzYA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"TEST_PERMISSION1\",\r\n    \"description\": \"TEST_PERMISSION1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{IdentityBase}}/permission/TEST_PERMISSION1",
+							"host": [
+								"{{IdentityBase}}"
+							],
+							"path": [
+								"permission",
+								"TEST_PERMISSION1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "(ADMIN) getAllPermissions",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb2RlIENhbXB1cyIsInN1YiI6ImFkbWluIiwiZXhwIjoxNzQ4Njk5NTM2LCJpYXQiOjE3NDg2OTU5MzYsImp0aSI6Ijc1MWY0NDljLWY5NmUtNDYyZS1iOGIzLTVlZGZiMzQzMjcwNSIsInNjb3BlIjoiUk9MRV9BRE1JTiJ9.R17nYPjVjxHQiQ0WEosiUuJn5uMbs0oBOjH4UgPVGBbeYMcKWVgBkq4R55ufL_oyuSL11ayyan8BH5e1QXNzYA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{IdentityBase}}/permissions",
+							"host": [
+								"{{IdentityBase}}"
+							],
+							"path": [
+								"permissions"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Account",
+			"item": [
+				{
+					"name": "Forgot Password",
+					"item": [
+						{
+							"name": "request",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"yunomix2834@gmail.com\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/identity/auth/forgot-password/request",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"identity",
+										"auth",
+										"forgot-password",
+										"request"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "verify",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyUm9vdDEyM0BnbWFpbC5jb20iLCJyb2xlcyI6WyJTVFVERU5UIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiYzExYzAzNzEtMTAxMy00YTViLTk4NTMtYWQ4YzhjZTEwMmFkIiwib3JnX3JvbGUiOiIiLCJwZXJtaXNzaW9ucyI6W10sIm9yZ19pZCI6IiIsInNjb3BlIjoiUk9MRV9TVFVERU5UIiwiZXhwIjoxNzU3MDU3MzE5LCJpYXQiOjE3NTY0NTI1MTksImp0aSI6ImE5NzYzZDQxLTlkYzQtNDg5Zi04ZmE5LTRhNDE2MzM5MGFhNiIsImVtYWlsIjoidXNlclJvb3QxMjNAZ21haWwuY29tIiwidXNlcm5hbWUiOiJ1c2VyUm9vdCJ9._j5o9Q2UevRYvonBq9Hb6SnIVc0vAeuvHYTHP8GQPqI1uv4FdZw9Bhzfd47TW42EWHz9DHVqfEzdpSb2091ILw",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"yunomix2834@gmail.com\",\r\n    \"otp\": \"842287\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/identity/auth/forgot-password/verify",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"identity",
+										"auth",
+										"forgot-password",
+										"verify"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "reset",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyUm9vdDEyM0BnbWFpbC5jb20iLCJyb2xlcyI6WyJTVFVERU5UIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiYzExYzAzNzEtMTAxMy00YTViLTk4NTMtYWQ4YzhjZTEwMmFkIiwib3JnX3JvbGUiOiIiLCJwZXJtaXNzaW9ucyI6W10sIm9yZ19pZCI6IiIsInNjb3BlIjoiUk9MRV9TVFVERU5UIiwiZXhwIjoxNzU3MDU3MzE5LCJpYXQiOjE3NTY0NTI1MTksImp0aSI6ImE5NzYzZDQxLTlkYzQtNDg5Zi04ZmE5LTRhNDE2MzM5MGFhNiIsImVtYWlsIjoidXNlclJvb3QxMjNAZ21haWwuY29tIiwidXNlcm5hbWUiOiJ1c2VyUm9vdCJ9._j5o9Q2UevRYvonBq9Hb6SnIVc0vAeuvHYTHP8GQPqI1uv4FdZw9Bhzfd47TW42EWHz9DHVqfEzdpSb2091ILw",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"yunomix2834@gmail.com\",\r\n    \"otp\": \"842287\",\r\n    \"newPassword\": \"dinhanst283200405\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/identity/auth/forgot-password/reset",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"identity",
+										"auth",
+										"forgot-password",
+										"reset"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "(ADMIN) createStudent",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pblJvb3QxMjNAZ21haWwuY29tIiwiYmxvY2tfaWRzIjpbXSwicm9sZXMiOlsiQURNSU4iXSwiaXNzIjoiQ29kZSBDYW1wdXMiLCJhY3RpdmUiOnRydWUsInRva2VuX3R5cGUiOiJhY2Nlc3NfdG9rZW4iLCJ1c2VySWQiOiIxNzAyMDQ4NS0xMmIzLTQ4ZTgtYTNkOS0xNmVjMTY4YjE1MDkiLCJvcmdfcm9sZSI6IiIsInBlcm1pc3Npb25zIjpbXSwib3JnX2lkIjoiIiwic2NvcGUiOiJST0xFX0FETUlOIiwiZXhwIjoxNzU3NTI1MDM3LCJpYXQiOjE3NTY5MjAyMzcsImp0aSI6ImM4Mjg2MzkzLTE3MTItNDI1Ny1iNTMxLWUxZDYzZjFmODJiZSIsImVtYWlsIjoiYWRtaW5Sb290MTIzQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.vfj9Olxds1pva14Oga5AxnIJJ9GjswN0nOPLmCyR-BHpRHuxrcvG1uNyk-rQzvZ_hw1WElaQtPdIglepNRks0w",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"yunom01280304\",\r\n    \"email\": \"yunom01280304@gmail.com\",\r\n    \"password\": \"dinhanst2832004\",\r\n    \"firstName\": \"Dff\",\r\n    \"lastName\": \"Dff\",\r\n    \"dob\": \"\",\r\n    \"bio\": \"\",\r\n    \"gender\": \"\",\r\n    \"displayName\": \"\",\r\n    \"education\": \"\",\r\n    \"links\": [],\r\n    \"city\": \"VN\",\r\n    \"organizationId\": \"\",\r\n    \"organizationMemberRole\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/identity/user",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"identity",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "(ADMIN) createTeacher",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5OWY3NDc0YS1kZmEzLTRiYmEtYmYyMS05NDRhYTQ5YjdkNmUiLCJwZXJtaXNzaW9ucyI6W10sInNjb3BlIjoiUk9MRV9BRE1JTiIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJleHAiOjE3NTEyODcxMDAsInRva2VuX3R5cGUiOiJhY2Nlc3NfdG9rZW4iLCJpYXQiOjE3NTEyODM1MDAsImp0aSI6IjJjNDM1M2E2LTMyN2EtNGYxMi05YjBmLTMxMDYzNjFmYTE5OSIsImVtYWlsIjoiYWRtaW4xMjMxMjMxMjNAbWFpbC5jb20iLCJ1c2VybmFtZSI6ImFkbWluIn0.Pa2icThjLIc95iHCn-SqKwcd10ixuo4beguTzYTYA95bXFfWyn2ho8S9PJLmY8vFbfguTsqABfRleJd5G4ySGg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"yunom01280304\",\r\n    \"email\": \"yunom01280304@gmail.com\",\r\n    \"password\": \"dinhanst2832004\",\r\n    \"firstName\": \"\",\r\n    \"lastName\": \"\",\r\n    \"dob\": \"\",\r\n    \"bio\": \"\",\r\n    \"gender\": \"\",\r\n    \"displayName\": \"\",\r\n    \"education\": \"\",\r\n    \"links\": \"\",\r\n    \"city\": \"\",\r\n    \"organizationId\": \"\",\r\n    \"organizationMemberRole\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{IdentityBase}}/teacher",
+							"host": [
+								"{{IdentityBase}}"
+							],
+							"path": [
+								"teacher"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "(ADMIN) createAdmin",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5OWY3NDc0YS1kZmEzLTRiYmEtYmYyMS05NDRhYTQ5YjdkNmUiLCJwZXJtaXNzaW9ucyI6W10sInNjb3BlIjoiUk9MRV9BRE1JTiIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJleHAiOjE3NTEyODcxMDAsInRva2VuX3R5cGUiOiJhY2Nlc3NfdG9rZW4iLCJpYXQiOjE3NTEyODM1MDAsImp0aSI6IjJjNDM1M2E2LTMyN2EtNGYxMi05YjBmLTMxMDYzNjFmYTE5OSIsImVtYWlsIjoiYWRtaW4xMjMxMjMxMjNAbWFpbC5jb20iLCJ1c2VybmFtZSI6ImFkbWluIn0.Pa2icThjLIc95iHCn-SqKwcd10ixuo4beguTzYTYA95bXFfWyn2ho8S9PJLmY8vFbfguTsqABfRleJd5G4ySGg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"yunom01280304\",\r\n    \"email\": \"yunom01280304@gmail.com\",\r\n    \"password\": \"dinhanst2832004\",\r\n    \"firstName\": \"\",\r\n    \"lastName\": \"\",\r\n    \"dob\": \"\",\r\n    \"bio\": \"\",\r\n    \"gender\": \"\",\r\n    \"displayName\": \"\",\r\n    \"education\": \"\",\r\n    \"links\": \"\",\r\n    \"city\": \"\",\r\n    \"organizationId\": \"\",\r\n    \"organizationMemberRole\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{IdentityBase}}/admin",
+							"host": [
+								"{{IdentityBase}}"
+							],
+							"path": [
+								"admin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "createPassword",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb2RlIENhbXB1cyIsInN1YiI6ImFkbWluIiwiZXhwIjoxNzQ4Njk5NTM2LCJpYXQiOjE3NDg2OTU5MzYsImp0aSI6Ijc1MWY0NDljLWY5NmUtNDYyZS1iOGIzLTVlZGZiMzQzMjcwNSIsInNjb3BlIjoiUk9MRV9BRE1JTiJ9.R17nYPjVjxHQiQ0WEosiUuJn5uMbs0oBOjH4UgPVGBbeYMcKWVgBkq4R55ufL_oyuSL11ayyan8BH5e1QXNzYA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"yunom280304\",\r\n    \"email\": \"yunom280304@gmail.com\",\r\n    \"password\": \"dinhanst2832004\"\r\n}"
+						},
+						"url": {
+							"raw": "{{IdentityBase}}/user/create-password",
+							"host": [
+								"{{IdentityBase}}"
+							],
+							"path": [
+								"user",
+								"create-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "(ADMIN) restoreUser",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5OWY3NDc0YS1kZmEzLTRiYmEtYmYyMS05NDRhYTQ5YjdkNmUiLCJwZXJtaXNzaW9ucyI6W10sInNjb3BlIjoiUk9MRV9BRE1JTiIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJleHAiOjE3NTEyODcxMDAsInRva2VuX3R5cGUiOiJhY2Nlc3NfdG9rZW4iLCJpYXQiOjE3NTEyODM1MDAsImp0aSI6IjJjNDM1M2E2LTMyN2EtNGYxMi05YjBmLTMxMDYzNjFmYTE5OSIsImVtYWlsIjoiYWRtaW4xMjMxMjMxMjNAbWFpbC5jb20iLCJ1c2VybmFtZSI6ImFkbWluIn0.Pa2icThjLIc95iHCn-SqKwcd10ixuo4beguTzYTYA95bXFfWyn2ho8S9PJLmY8vFbfguTsqABfRleJd5G4ySGg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{IdentityBase}}/user/960fe5c4-d56b-400b-a0ac-2a1acc921fc9",
+							"host": [
+								"{{IdentityBase}}"
+							],
+							"path": [
+								"user",
+								"960fe5c4-d56b-400b-a0ac-2a1acc921fc9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "(ADMIN) deleteUser",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5OWY3NDc0YS1kZmEzLTRiYmEtYmYyMS05NDRhYTQ5YjdkNmUiLCJwZXJtaXNzaW9ucyI6W10sInNjb3BlIjoiUk9MRV9BRE1JTiIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJleHAiOjE3NTEyODcxMDAsInRva2VuX3R5cGUiOiJhY2Nlc3NfdG9rZW4iLCJpYXQiOjE3NTEyODM1MDAsImp0aSI6IjJjNDM1M2E2LTMyN2EtNGYxMi05YjBmLTMxMDYzNjFmYTE5OSIsImVtYWlsIjoiYWRtaW4xMjMxMjMxMjNAbWFpbC5jb20iLCJ1c2VybmFtZSI6ImFkbWluIn0.Pa2icThjLIc95iHCn-SqKwcd10ixuo4beguTzYTYA95bXFfWyn2ho8S9PJLmY8vFbfguTsqABfRleJd5G4ySGg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{IdentityBase}}/user/960fe5c4-d56b-400b-a0ac-2a1acc921fc9",
+							"host": [
+								"{{IdentityBase}}"
+							],
+							"path": [
+								"user",
+								"960fe5c4-d56b-400b-a0ac-2a1acc921fc9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "(ADMIN) updateUser",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMDk3NmMxYS0zOWEzLTRiNjctYmYzOC1iM2Q0MGY1NWY3ODQiLCJwZXJtaXNzaW9ucyI6W10sInNjb3BlIjoiUk9MRV9BRE1JTiIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJleHAiOjE3NTEyODQ5MTAsInRva2VuX3R5cGUiOiJhY2Nlc3NfdG9rZW4iLCJpYXQiOjE3NTEyODEzMTAsImp0aSI6ImM2NzBhMWJmLTc4ZmItNDU1OC04MDIyLWUyZTc3NmEwYTU0YiIsImVtYWlsIjoiYWRtaW4xMjMxMjMxMjNAbWFpbC5jb20iLCJ1c2VybmFtZSI6ImFkbWluIn0.g49mjP2gBjXXTf20YY3p5daKcMG9OCXUKX7OZN9IaYE1qqhuMlvAqeIcI-jb506QSuSYLbJ5nC1cXP1I1C4qMw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"password\": \"Dinhanst2832004%%\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{IdentityBase}}/user/aa4cf8c3-bf55-4bf7-8b51-73608cefe475",
+							"host": [
+								"{{IdentityBase}}"
+							],
+							"path": [
+								"user",
+								"aa4cf8c3-bf55-4bf7-8b51-73608cefe475"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateMyInfo",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb2RlIENhbXB1cyIsInN1YiI6ImFkbWluIiwiZXhwIjoxNzQ4Njk5NTM2LCJpYXQiOjE3NDg2OTU5MzYsImp0aSI6Ijc1MWY0NDljLWY5NmUtNDYyZS1iOGIzLTVlZGZiMzQzMjcwNSIsInNjb3BlIjoiUk9MRV9BRE1JTiJ9.R17nYPjVjxHQiQ0WEosiUuJn5uMbs0oBOjH4UgPVGBbeYMcKWVgBkq4R55ufL_oyuSL11ayyan8BH5e1QXNzYA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"password\": \"Dinhanst2832004%%\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{IdentityBase}}/user/my-info",
+							"host": [
+								"{{IdentityBase}}"
+							],
+							"path": [
+								"user",
+								"my-info"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "changeMyPassword",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pblJvb3QxMjNAZ21haWwuY29tIiwiYmxvY2tfaWRzIjpbXSwicm9sZXMiOlsiQURNSU4iXSwiaXNzIjoiQ29kZSBDYW1wdXMiLCJhY3RpdmUiOnRydWUsInRva2VuX3R5cGUiOiJhY2Nlc3NfdG9rZW4iLCJ1c2VySWQiOiIwYmEzMWFlZC1jNDZhLTQzZjEtODE2OC04MzBiYmE1ZDU5YzQiLCJvcmdfcm9sZSI6IiIsInBlcm1pc3Npb25zIjpbXSwib3JnX2lkIjoiIiwic2NvcGUiOiJST0xFX0FETUlOIiwiZXhwIjoxNzU3MTcyMjE4LCJpYXQiOjE3NTY1Njc0MTgsImp0aSI6IjMyN2NiY2Y3LTQ1ZjAtNDA3OC1iZGIxLWQ2ZjFmY2EyYzQ0NSIsImVtYWlsIjoiYWRtaW5Sb290MTIzQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.t0oE4IhMC1HWJd4lPODwz00qMKqZW2QYsO6afC-VT04Iy3k1eq5C3Cslm1K4hoBWE4w6-fBNoJRKN7nDKpVPIQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"oldPassword\": \"Dinhanst2832004%%\",\r\n    \"newPassword\": \"adminRoot123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8888/api/v1/identity/user/password",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8888",
+							"path": [
+								"api",
+								"v1",
+								"identity",
+								"user",
+								"password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "createPassword",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"password\": \"String\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/identity/user/create-password",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"identity",
+								"user",
+								"create-password"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Org",
+			"item": [
+				{
+					"name": "createUserOrg",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pblJvb3QxMjNAZ21haWwuY29tIiwiYmxvY2tfaWRzIjpbXSwicm9sZXMiOlsiQURNSU4iXSwiaXNzIjoiQ29kZSBDYW1wdXMiLCJhY3RpdmUiOnRydWUsInRva2VuX3R5cGUiOiJhY2Nlc3NfdG9rZW4iLCJ1c2VySWQiOiIwYmEzMWFlZC1jNDZhLTQzZjEtODE2OC04MzBiYmE1ZDU5YzQiLCJvcmdfcm9sZSI6IiIsInBlcm1pc3Npb25zIjpbXSwib3JnX2lkIjoiIiwic2NvcGUiOiJST0xFX0FETUlOIiwiZXhwIjoxNzU3MTM0Nzg1LCJpYXQiOjE3NTY1Mjk5ODUsImp0aSI6IjE3N2I4YTU1LWU4MTgtNDIyNy1hMjQwLTdlODI5OThkYTM3NyIsImVtYWlsIjoiYWRtaW5Sb290MTIzQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.c_28_H2g39ci7UMcF_yOCX7ybieXIM6PDs4srXhX4h1uiTGc4Jt78tjYn8rJfKKlXSkxaBwbRcy29gkDydlPvg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"studentorg\",\r\n    \"email\": \"studentorg@gmail.com\",\r\n    \"password\": \"dinhanst2832004\",\r\n    \"firstName\": \"Studentorg\",\r\n    \"lastName\": \"Studentorg\",\r\n    \"dob\": \"\",\r\n    \"bio\": \"Too lazy to write anything:v\",\r\n    \"gender\": \"\",\r\n    \"displayName\": \"Studentorg\",\r\n    \"education\": 9,\r\n    \"links\": [\r\n        \"\"\r\n    ],\r\n    \"city\": \"Hanoi\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/identity/user/org/016cca87-fbe4-4b48-9525-989736f05163/with-membership?roleName=Student&orgMemberRole&blockId&blockRole",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"identity",
+								"user",
+								"org",
+								"016cca87-fbe4-4b48-9525-989736f05163",
+								"with-membership"
+							],
+							"query": [
+								{
+									"key": "roleName",
+									"value": "Student"
+								},
+								{
+									"key": "orgMemberRole",
+									"value": null
+								},
+								{
+									"key": "blockId",
+									"value": null
+								},
+								{
+									"key": "blockRole",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "bulkCreateUsersAndAssign",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pblJvb3QxMjNAZ21haWwuY29tIiwiYmxvY2tfaWRzIjpbXSwicm9sZXMiOlsiQURNSU4iXSwiaXNzIjoiQ29kZSBDYW1wdXMiLCJhY3RpdmUiOnRydWUsInRva2VuX3R5cGUiOiJhY2Nlc3NfdG9rZW4iLCJ1c2VySWQiOiIwYmEzMWFlZC1jNDZhLTQzZjEtODE2OC04MzBiYmE1ZDU5YzQiLCJvcmdfcm9sZSI6IiIsInBlcm1pc3Npb25zIjpbXSwib3JnX2lkIjoiIiwic2NvcGUiOiJST0xFX0FETUlOIiwiZXhwIjoxNzU3MTM0Nzg1LCJpYXQiOjE3NTY1Mjk5ODUsImp0aSI6IjE3N2I4YTU1LWU4MTgtNDIyNy1hMjQwLTdlODI5OThkYTM3NyIsImVtYWlsIjoiYWRtaW5Sb290MTIzQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.c_28_H2g39ci7UMcF_yOCX7ybieXIM6PDs4srXhX4h1uiTGc4Jt78tjYn8rJfKKlXSkxaBwbRcy29gkDydlPvg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"defaultRole\": \"STUDENT\",\r\n    \"orgId\": \"016cca87-fbe4-4b48-9525-989736f05163\",\r\n    \"orgMemberRole\": \"Student\",\r\n    \"blockId\": \"\",\r\n    \"blockRole\": \"\",\r\n    \"users\": [\r\n        {\r\n            \"username\": \"studentorg2\",\r\n            \"email\": \"studentorg2@gmail.com\",\r\n            \"password\": \"dinhanst2832004\",\r\n            \"firstName\": \"Studentorg\",\r\n            \"lastName\": \"Studentorg\",\r\n            \"dob\": \"\",\r\n            \"bio\": \"Too lazy to write anything:v\",\r\n            \"gender\": \"\",\r\n            \"displayName\": \"Studentorg\",\r\n            \"education\": 9,\r\n            \"links\": [\r\n                \"\"\r\n            ],\r\n            \"city\": \"Hanoi\"\r\n        },\r\n                {\r\n            \"username\": \"studentorg3\",\r\n            \"email\": \"studentorg3@gmail.com\",\r\n            \"password\": \"dinhanst2832004\",\r\n            \"firstName\": \"Studentorg\",\r\n            \"lastName\": \"Studentorg\",\r\n            \"dob\": \"\",\r\n            \"bio\": \"Too lazy to write anything:v\",\r\n            \"gender\": \"\",\r\n            \"displayName\": \"Studentorg\",\r\n            \"education\": 9,\r\n            \"links\": [\r\n                \"\"\r\n            ],\r\n            \"city\": \"Hanoi\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/identity/users:bulk-with-membership",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"identity",
+								"users:bulk-with-membership"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "importUsers",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pblJvb3QxMjNAZ21haWwuY29tIiwiYmxvY2tfaWRzIjpbXSwicm9sZXMiOlsiQURNSU4iXSwiaXNzIjoiQ29kZSBDYW1wdXMiLCJhY3RpdmUiOnRydWUsInRva2VuX3R5cGUiOiJhY2Nlc3NfdG9rZW4iLCJ1c2VySWQiOiIwYmEzMWFlZC1jNDZhLTQzZjEtODE2OC04MzBiYmE1ZDU5YzQiLCJvcmdfcm9sZSI6IiIsInBlcm1pc3Npb25zIjpbXSwib3JnX2lkIjoiIiwic2NvcGUiOiJST0xFX0FETUlOIiwiZXhwIjoxNzU3MTM0Nzg1LCJpYXQiOjE3NTY1Mjk5ODUsImp0aSI6IjE3N2I4YTU1LWU4MTgtNDIyNy1hMjQwLTdlODI5OThkYTM3NyIsImVtYWlsIjoiYWRtaW5Sb290MTIzQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.c_28_H2g39ci7UMcF_yOCX7ybieXIM6PDs4srXhX4h1uiTGc4Jt78tjYn8rJfKKlXSkxaBwbRcy29gkDydlPvg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/yunom/Downloads/identity_users_import_template.xlsx"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/identity/users/import",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"identity",
+								"users",
+								"import"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
 }

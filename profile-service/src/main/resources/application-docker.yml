@@ -17,9 +17,20 @@ spring:
       port: 6379
       password: ${REDIS_PASSWORD}
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "prometheus,health,info"
+  endpoint:
+    prometheus:
+      enabled: true
+
 app:
   services:
     file: http://file-service:8082/file
     organization: http://organization-service:8091/org
     submission: http://submission-service:8083/submission
+    post: http://post-service:8090/post
+
 

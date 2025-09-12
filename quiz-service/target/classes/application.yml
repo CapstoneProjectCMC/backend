@@ -1,9 +1,17 @@
 server:
   port: 8085
-  #  http:
-  #    port: 8005
   servlet:
     context-path: /quiz
+#  ssl:
+#    enabled: true
+#    key-store: classpath:ssl/quiz.p12
+#    key-store-type: PKCS12
+#    key-store-password: changeit
+#    key-alias: quiz-https
+#    client-auth: need
+#    trust-store: classpath:ssl/truststore.p12
+#    trust-store-type: PKCS12
+#    trust-store-password: changeit
 
 grpc:
   server:

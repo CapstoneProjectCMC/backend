@@ -48,17 +48,20 @@ public class ChatMessageHelper {
         conversationMapper.toConversationResponseFromConversation(
             conversation);
 
-    conversation.getParticipants()
-        .stream()
-        .filter(participantInfo -> !participantInfo.getUserId()
-            .equals(currentUserId))
-        .findFirst()
-        .ifPresent(participantInfo -> {
-          conversationResponse.setConversationName(
-              participantInfo.getDisplayName());
-          conversationResponse.setConversationAvatar(
-              participantInfo.getAvatarUrl());
-        });
+    if ("DIRECT".equals(conversation.getType())) {
+      conversation.getParticipants().stream()
+          .filter(p -> !p.getUserId().equals(currentUserId))
+          .findFirst()
+          .ifPresent(p -> {
+            conversationResponse.setConversationName(p.getDisplayName());
+            conversationResponse.setConversationAvatar(p.getAvatarUrl());
+          });
+    } else { // GROUP
+      conversationResponse.setConversationName(
+          conversation.getName() != null ? conversation.getName() : "Nhóm");
+      conversationResponse.setConversationAvatar(conversation.getAvatarUrl());
+      conversationResponse.setTopic(conversation.getTopic());
+    }
 
     return conversationResponse;
   }

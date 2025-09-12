@@ -10,10 +10,9 @@ namespace FileService.Service.Interfaces
     {
         Task<IEnumerable<FileDocumentModel>> GetViewModelsAsync(FileDocumentDto fileDocumentDto);
         Task<FileUploadResult> AddFileAsync(AddFileDocumentDto addFileDto);
-        Task<FileDocumentModel> GetFileDetailById(Guid id);
+        Task<FileDocumentModel> GetFileDetailById(Guid fileId);
         Task<EditFileDocumentResponseModel> EditFileDetailAsync(Guid id, EditFileDocumentDto editFileDto);
         Task DeleteAsync(Guid id);
-        //Task<List<FileDocument>> GetFilesByCategoryAsync(FileCategory category);
         Task<List<FileDocumentModel>> GetVideosAsync();
         Task<List<FileDocumentModel>> GetRegularFilesAsync();
 

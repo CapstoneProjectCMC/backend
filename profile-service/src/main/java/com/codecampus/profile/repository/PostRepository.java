@@ -13,6 +13,27 @@ public interface PostRepository
   Optional<Post> findByPostId(String postId);
 
   @Query("""
+      MERGE (p:Post {postId: $postId})
+      RETURN p
+      """)
+  Post mergeByPostId(String postId);
+
+  @Query("""
+      MERGE (p:Post {postId: $postId})
+      ON CREATE SET p.title = $title
+      ON MATCH  SET p.title = coalesce($title, p.title)
+      RETURN p
+      """)
+  Post upsertPost(String postId, String title);
+
+  // NEW: xóa theo postId (sẽ xóa cả các quan hệ SAVED_POST/REACTION/... tới Post đó)
+  @Query("""
+      MATCH (p:Post {postId: $postId})
+      DETACH DELETE p
+      """)
+  void deleteByPostId(String postId);
+
+  @Query("""
         MATCH (u:User {userId:$userId})-[:REACTION|:SAVED_POST]->(p:Post)
         RETURN count(DISTINCT p)
       """

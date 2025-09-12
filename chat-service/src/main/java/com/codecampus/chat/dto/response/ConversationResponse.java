@@ -20,7 +20,14 @@ public class ConversationResponse {
   String participantsHash;
   String conversationAvatar;
   String conversationName;
+  String topic;
+  String ownerId;
+  List<String> adminIds;
   List<ParticipantInfo> participants;
   Instant createdDate;
   Instant modifiedDate;
+
+  Long unreadCount;
+  String myRole; // OWNER/ADMIN/MEMBER
+  Instant mutedUntil;
 }

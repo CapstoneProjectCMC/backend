@@ -19,14 +19,23 @@ public interface UserMapper {
         .userId(profilePayload.getUserId())
         .username(profilePayload.getUsername())
         .email(profilePayload.getEmail())
-        .active(profilePayload.isActive())
+        .active(
+            profilePayload.getActive() != null ? profilePayload.getActive() :
+                Boolean.TRUE)
         .roles(profilePayload.getRoles())
-        .firstName(profilePayload.getFirstName())
-        .lastName(profilePayload.getLastName())
-        .gender(profilePayload.getGender())
-        .displayName(profilePayload.getDisplayName())
-        .avatarUrl(profilePayload.getAvatarUrl())
-        .backgroundUrl(profilePayload.getBackgroundUrl())
+        .firstName(profilePayload.getFirstName() != null ?
+            profilePayload.getFirstName() : profilePayload.getUsername())
+        .lastName(profilePayload.getLastName() != null ?
+            profilePayload.getLastName() : "Nguyễn")
+        .gender(
+            profilePayload.getGender() != null ? profilePayload.getGender() :
+                Boolean.TRUE)
+        .displayName(profilePayload.getDisplayName() != null ?
+            profilePayload.getDisplayName() : profilePayload.getUsername())
+        .avatarUrl(profilePayload.getAvatarUrl() != null ?
+            profilePayload.getAvatarUrl() : "")
+        .backgroundUrl(profilePayload.getBackgroundUrl() != null ?
+            profilePayload.getBackgroundUrl() : "")
         .build();
   }
 }

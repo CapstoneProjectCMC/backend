@@ -1,11 +1,13 @@
 package com.codecampus.search.service;
 
+import co.elastic.clients.elasticsearch._types.FieldValue;
 import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.Operator;
 import com.codecampus.search.dto.common.PageResponse;
 import com.codecampus.search.dto.request.ExerciseSearchRequest;
 import com.codecampus.search.dto.response.ExerciseSearchResponse;
 import com.codecampus.search.entity.ExerciseDocument;
+import com.codecampus.search.helper.AuthenticationHelper;
 import com.codecampus.search.helper.SearchHelper;
 import com.codecampus.search.mapper.ExerciseMapper;
 import com.codecampus.search.service.cache.UserBulkLoader;
@@ -46,6 +48,9 @@ public class ExerciseSearchService {
   public PageResponse<ExerciseSearchResponse> searchExercise(
       ExerciseSearchRequest request) {
 
+    String viewerOrgId = AuthenticationHelper.getOrgId();
+    String viewerUserId = AuthenticationHelper.getUserId();
+
     HighlightQuery
         highlightQuery = buildHighLightQuery();
 
@@ -60,7 +65,7 @@ public class ExerciseSearchService {
     //        .build();
     NativeQuery query = new NativeQueryBuilder()
         .withQuery(
-            q -> q.bool(builder -> buildQuery(request, builder)))
+            q -> q.bool(builder -> buildQuery(request, viewerOrgId, builder)))
         .withPageable(
             PageRequest.of(
                 request.page() - 1,
@@ -92,8 +97,12 @@ public class ExerciseSearchService {
           ExerciseSearchResponse base =
               exerciseMapper.toExerciseSearchResponseFromExerciseDocument(
                   doc);
+
+          boolean purchased = isPurchased(viewerUserId, viewerOrgId, doc);
+
           return base.toBuilder()
               .user(summaries.get(doc.getUserId()))
+              .purchased(purchased)
               .build();
         })
         .toList();
@@ -131,6 +140,7 @@ public class ExerciseSearchService {
 
   BoolQuery.Builder buildQuery(
       ExerciseSearchRequest request,
+      String viewerOrgId,
       BoolQuery.Builder builder) {
 
     /* -------- full‑text Q -------- */
@@ -191,6 +201,39 @@ public class ExerciseSearchService {
     // Không trả item đã xoá mềm
     builder.mustNot(mn -> mn.exists(e -> e.field("deletedAt")));
 
+    // visible nếu (visibility=true) OR (orgId = viewerOrgId)
+    builder.filter(f -> f.bool(bv -> {
+      bv.should(s -> s.term(t -> t.field("visibility").value(true)));
+      if (viewerOrgId != null) {
+        bv.should(s -> s.terms(ts -> ts.field("orgId").terms(tv -> tv.value(
+            java.util.List.of(FieldValue.of(viewerOrgId))
+        ))));
+      }
+      return bv;
+    }));
+
     return builder;
+  }
+
+  private boolean isPurchased(String viewerUserId, String viewerOrgId,
+                              ExerciseDocument doc) {
+    // 1) Chủ bài/author luôn có quyền (coi như purchased)
+    if (viewerUserId != null && viewerUserId.equals(doc.getUserId())) {
+      return true;
+    }
+    // 2) Bài miễn phí (cost=0 hoặc null)
+    if (doc.getCost() == null || doc.getCost() <= 0.0) {
+      return true;
+    }
+    // 3) Free cho org và viewer thuộc đúng org
+    if (Boolean.TRUE.equals(doc.getFreeForOrg())
+        && viewerOrgId != null
+        && viewerOrgId.equals(doc.getOrgId())) {
+      return true;
+    }
+    // 4) Đã mua theo event (buyerUserIds chứa viewer)
+    return viewerUserId != null
+        && doc.getBuyerUserIds() != null
+        && doc.getBuyerUserIds().contains(viewerUserId);
   }
 }

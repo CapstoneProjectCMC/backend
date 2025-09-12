@@ -3,6 +3,15 @@ server:
   servlet:
     context-path: /chat
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "prometheus,health,info"
+  endpoint:
+    prometheus:
+      enabled: true
+
 spring:
   data:
     mongodb:
@@ -19,3 +28,4 @@ app:
   services:
     profile: http://profile-service:8081/profile
     identity: http://identity-service:8080/identity
+    file: http://file-service:8082/file

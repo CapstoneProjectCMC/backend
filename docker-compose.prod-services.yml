@@ -124,7 +124,12 @@ services:
     image: ${DOCKERHUB_USER}/codecampus-notification-service:${IMAGE_TAG:-latest}
     environment:
       - SPRING_PROFILES_ACTIVE=docker
-    ports: [ "8088:8088" ]
+      - NOTIFICATION_USERNAME=${NOTIFICATION_USERNAME}
+      - NOTIFICATION_PASSWORD=${NOTIFICATION_PASSWORD}
+      - NOTIFICATION_DATABASE=${NOTIFICATION_DATABASE}
+    ports:
+      - "8088:8088"
+      - "4101:4101"
     networks: [ backend ]
 
   chat-service:
@@ -148,24 +153,46 @@ services:
       - POST_USERNAME=${POST_USERNAME}
       - POST_DB_PASSWORD=${POST_DB_PASSWORD}
       - REDIS_PASSWORD=${REDIS_PASSWORD}
-    ports: [ "8090:8090" ]
+    ports:
+      - "8090:8090"
+      - "4100:4100"
+    networks: [ backend ]
+
+  payment-service:
+    image: ${DOCKERHUB_USER}/codecampus-payment-service:${IMAGE_TAG:-latest}
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - PAYMENT_DATABASE=${PAYMENT_DATABASE}
+      - PAYMENT_USERNAME=${PAYMENT_USERNAME}
+      - PAYMENT_DB_PASSWORD=${PAYMENT_DB_PASSWORD}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    ports: [ "8091:8091" ]
+    networks: [ backend ]
+
+  organization-service:
+    image: ${DOCKERHUB_USER}/codecampus-org-service:${IMAGE_TAG:-latest}
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - ORGANIZATION_DATABASE=${ORGANIZATION_DATABASE}
+      - ORGANIZATION_USERNAME=${ORGANIZATION_USERNAME}
+      - ORGANIZATION_DB_PASSWORD=${ORGANIZATION_DB_PASSWORD}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    ports: [ "8092:8092" ]
     networks: [ backend ]
 
   file-service:
-    build:
-      context: .
-      dockerfile: ./docker/file-service.Dockerfile
     image: ${DOCKERHUB_USER}/codecampus-file-service:${IMAGE_TAG:-latest}
     environment:
       - ASPNETCORE_ENVIRONMENT=Staging
       - MongoDbSettings__ConnectionStrings=mongodb://${FILE_USERNAME}:${FILE_PASSWORD}@file-db:27017/${FILE_DATABASE}?authSource=${FILE_DATABASE}
       - MongoDbSettings__DatabaseName=${FILE_DATABASE}
+      - AppSettings__ApiSettings__UserServiceBaseUrl=http://profile-service:8081
       - AppSettings__MinioConfig__Endpoint=minio
       - AppSettings__MinioConfig__PublicEndpoint=localhost
       - AppSettings__MinioConfig__Port=9000
       - AppSettings__MinioConfig__AccessKey=${MINIO_ROOT_USER}
       - AppSettings__MinioConfig__SecretKey=${MINIO_ROOT_PASSWORD}
-      - AppSettings__MinioConfig__BucketName=programmingcontest2025
+      - AppSettings__MinioConfig__BucketName=codecampus2025
       - AppSettings__MinioConfig__Secure=false
       - AppSettings__Jwt__Key=1TjXchw5FloESb63Kc+DFhTARvpWL4jUGCwfGWxuG5SIf/1y/LgJxHnMqaF6A/ij
       - AppSettings__Jwt__Issuer=Code Campus
@@ -190,6 +217,13 @@ services:
       - notification-service
       - chat-service
     networks: [ backend ]
+
+  frontend:
+    image: ${DOCKERHUB_USER}/codecampus-frontend:${IMAGE_TAG:-latest}
+    restart: unless-stopped
+    ports: [ "4200:4200" ]
+    networks: [ backend ]
+
 
 ########################
 #   NETWORK & VOLUME    #

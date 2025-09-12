@@ -18,5 +18,6 @@ namespace FileService.Core.ApiModels
         public string? OrganizationId { get; set; }
         public string? OrganizationRole { get; set; }
         public List<string> Permissions { get; set; } = new();
+        public string Token { get; set; } = string.Empty;
     }
 }

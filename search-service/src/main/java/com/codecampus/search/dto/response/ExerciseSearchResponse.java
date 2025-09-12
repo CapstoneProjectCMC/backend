@@ -21,6 +21,7 @@ public record ExerciseSearchResponse(
     boolean freeForOrg,
     Set<String> tags,
     boolean visibility,
-    Instant createdAt
+    Instant createdAt,
+    boolean purchased
 ) {
 }

@@ -2,6 +2,7 @@ package com.codecampus.identity.controller.authentication;
 
 import com.codecampus.identity.dto.common.ApiResponse;
 import com.codecampus.identity.dto.data.BulkImportResult;
+import com.codecampus.identity.dto.request.authentication.ChangePasswordRequest;
 import com.codecampus.identity.dto.request.authentication.PasswordCreationRequest;
 import com.codecampus.identity.dto.request.authentication.UserCreationRequest;
 import com.codecampus.identity.dto.request.authentication.UserUpdateRequest;
@@ -16,10 +17,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -49,6 +52,16 @@ public class UserController {
     userService.createTeacher(request);
     return ApiResponse.<Void>builder()
         .message("Create Teacher successful")
+        .build();
+  }
+
+  @PreAuthorize("hasRole('ADMIN')")
+  @PostMapping("/admin")
+  ApiResponse<Void> createAdmin(
+      @RequestBody @Valid UserCreationRequest request) {
+    userService.createAdmin(request);
+    return ApiResponse.<Void>builder()
+        .message("Create Admin successful")
         .build();
   }
 
@@ -83,6 +96,15 @@ public class UserController {
         .build();
   }
 
+  @PatchMapping("/user/password")
+  ApiResponse<Void> changeMyPassword(
+      @RequestBody ChangePasswordRequest req) {
+    userService.changeMyPassword(req);
+    return ApiResponse.<Void>builder()
+        .message("Password changed")
+        .build();
+  }
+
   @PreAuthorize("hasRole('ADMIN')")
   @PutMapping("/user/{userId}")
   ApiResponse<Void> updateUser(
@@ -113,9 +135,11 @@ public class UserController {
         .build();
   }
 
-  @GetMapping("/users/export")
+  @GetMapping("/users/export/org")
   @PreAuthorize("hasRole('ADMIN')")
-  public void exportUsers(HttpServletResponse response) {
-    userService.exportUsers(response);
+  public void exportUsers(
+      HttpServletResponse response,
+      @RequestParam String orgName) {
+    userService.exportOrgBlocksAndMembers(orgName, response);
   }
 }

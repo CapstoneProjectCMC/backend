@@ -20,7 +20,7 @@ public class UserProfilePayload {
   // Identity snapshot (tiện cho search doc cập nhật đồng bộ)
   String username;
   String email;
-  boolean active;
+  Boolean active;
   Set<String> roles;
 
   // Profile fields

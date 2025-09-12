@@ -20,6 +20,9 @@ COPY search-service/pom.xml search-service/pom.xml
 COPY notification-service/pom.xml notification-service/pom.xml
 COPY chat-service/pom.xml chat-service/pom.xml
 COPY post-service/pom.xml post-service/pom.xml
+COPY payment-service/pom.xml payment-service/pom.xml
+COPY org-service/pom.xml org-service/pom.xml
+
 
 
 # Tải dependency trước để cache (Không compile)
@@ -39,7 +42,7 @@ RUN apt-get update && \
 COPY . .
 
 # Build & install proto + events (tạo jar trước)
-RUN mvn -q -DskipTests install -pl common-protos,common-events
+RUN mvn -q -DskipTests install -pl common-protos
 
 # Build đúng module
 RUN mvn -q -DskipTests -pl ${MODULE} -am package

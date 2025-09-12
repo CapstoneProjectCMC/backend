@@ -24,6 +24,10 @@ public class SearchHelper {
       return;
     }
 
+    if (value instanceof CharSequence cs && cs.toString().trim().isEmpty()) {
+      return;
+    }
+
     bool.filter(q -> q.term(t -> t
         .field(field)
         .value(asFieldValue(value))));

@@ -31,6 +31,12 @@ public enum ErrorCode {
       "Tài khoản chưa được kích hoạt!", BAD_REQUEST),
   USER_PROFILE_NULL(4008905, BAD_REQUEST_STATUS,
       "Tài khoản người dùng null!", BAD_REQUEST),
+  PARTICIPANT_NULL(4008906, BAD_REQUEST_STATUS,
+      "Người tham gia đoạn chat null!",
+      BAD_REQUEST),
+  OWNER_MUST_TRANSFER(4008907, BAD_REQUEST_STATUS,
+      "Chuyển quyền trước khi rời!",
+      BAD_REQUEST),
 
 
   // 401 - Unauthorized
@@ -73,6 +79,8 @@ public enum ErrorCode {
       "Lỗi tạo JWT token!", INTERNAL_SERVER_ERROR),
   FAILED_VALIDATE_TOKEN(5008902, INTERNAL_SERVER_STATUS,
       "Lỗi xác thực token!", INTERNAL_SERVER_ERROR),
+  FAILED_LOAD_USER(5008903, INTERNAL_SERVER_STATUS,
+      "Lỗi không load được nguười dùng!", INTERNAL_SERVER_ERROR),
 
 
   ;

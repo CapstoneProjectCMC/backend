@@ -1,7 +1,3 @@
-file:
-  service:
-    file-url: http://file-service:8082
-
 spring:
   datasource:
     url: jdbc:postgresql://post-db:5432/${POST_DATABASE}
@@ -16,7 +12,17 @@ spring:
       port: 6379
       password: ${REDIS_PASSWORD}
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "prometheus,health,info"
+  endpoint:
+    prometheus:
+      enabled: true
+
 app:
   services:
     profile: http://profile-service:8081/profile
     file: http://file-service:8082/file
+    identity: http://identity-service:8080/identity

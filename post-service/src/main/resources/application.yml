@@ -2,10 +2,24 @@ server:
   port: 8090
   servlet:
     context-path: /post
+#  ssl:
+#    enabled: true
+#    key-store: classpath:ssl/post.p12
+#    key-store-type: PKCS12
+#    key-store-password: changeit
+#    key-alias: post-https
+#    client-auth: need
+#    trust-store: classpath:ssl/truststore.p12
+#    trust-store-type: PKCS12
+#    trust-store-password: changeit
 
 spring:
   application:
     name: post-service
+  servlet:
+    multipart:
+      max-file-size: 5000MB
+      max-request-size: 5000MB
   datasource:
     url: jdbc:postgresql://localhost:5439/post_db
     username: postgres_post
@@ -40,5 +54,8 @@ app:
   services:
     profile: http://localhost:8081/profile
     file: http://localhost:8082/file
+    identity: http://localhost:8080/identity
   event:
     profile-events: "profile-events"
+    post-events: "post-events"
+    post-access-events: "post-access-events"

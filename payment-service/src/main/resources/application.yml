@@ -1,18 +1,26 @@
 server:
-    port: 8091
-    servlet:
-        context-path: /payment
-
+  port: 8091
+  servlet:
+    context-path: /payment
+#  ssl:
+#    enabled: true
+#    key-store: classpath:ssl/payment.p12
+#    key-store-type: PKCS12
+#    key-store-password: changeit
+#    key-alias: payment-https
+#    client-auth: need
+#    trust-store: classpath:ssl/truststore.p12
+#    trust-store-type: PKCS12
+#    trust-store-password: changeit
 
 spring:
   application:
     name: payment-service
   datasource:
-      url: jdbc:postgresql://localhost:5440/payment_db
-      username: postgres_payment
-      password: dinhanst2832004
-      driver-class-name: org.postgresql.Driver
-
+    url: jdbc:postgresql://localhost:5440/payment_db
+    username: postgres_payment
+    password: dinhanst2832004
+    driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: update
@@ -20,16 +28,35 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
-
   cloud:
     openfeign:
-        multipart:
-            enabled: true
+      multipart:
+        enabled: true
+  kafka:
+    bootstrap-servers: localhost:9094
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+  #      acks: all
+  #      retries: 3
+  #      # optional: giảm latency
+  #      linger-ms: 5            # gộp record <= 5 MS rồi mới gửi
+  #      batch-size: 16384       # 16 KB
+  #      compression-type: lz4   # nén nhẹ – giảm băng thông
+  data:
+    redis:
+      host: localhost # dịch vụ trong compose
+      port: 6379
+      password: dinhanst2832004
+      timeout: 3000ms
 
 app:
-    services:
-        profile: http://localhost:8081/profile
-        file: http://localhost:8082/file
-        organization: http://localhost:8091/org
+  event:
+    profile-events: "profile-events"
+    exercise-purchased-events: "exercise-purchased-events"
+  services:
+    profile: http://localhost:8081/profile
+    file: http://localhost:8082/file
+    organization: http://localhost:8091/org
 
 

@@ -1,3 +1,7 @@
 package com.codecampus.constant;
 
-public enum ScopeType { ORGANIZATION, GRADE, CLASS }
+public enum ScopeType {
+  Organization,
+  Grade,
+  Class
+}

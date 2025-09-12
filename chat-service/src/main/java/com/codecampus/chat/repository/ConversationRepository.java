@@ -19,8 +19,8 @@ public interface ConversationRepository
   List<Conversation> findAllByParticipantIdsContains(
       String participantId);
 
-  @Query(value = "{'participants.userId' : ?0}")
-  Page<Conversation> findAllByParticipantIdsContains(
+  @Query(value = "{'participants.userId' : ?0, $or:[{'deleted':{$exists:false}}, {'deleted': false}]}")
+  Page<Conversation> findAllActiveByParticipantIdsContains(
       String participantId,
       Pageable pageable);
 }

@@ -10,7 +10,9 @@ import com.codecampus.post.exception.ErrorCode;
 import com.codecampus.post.helper.AuthenticationHelper;
 import com.codecampus.post.repository.PostAccessRepository;
 import com.codecampus.post.repository.PostRepository;
+import com.codecampus.post.service.kafka.PostAccessEventProducer;
 import com.codecampus.post.utils.PageResponseUtils;
+import events.post.PostAccessEvent;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +33,7 @@ public class PostAccessService {
 
   PostAccessRepository postAccessRepository;
   PostRepository postRepository;
+  PostAccessEventProducer postAccessEventProducer;
 
   // Thêm hoặc cập nhật quyền truy cập cho nhiều user
   @Transactional
@@ -60,6 +63,14 @@ public class PostAccessService {
       }
       postAccessRepository.save(pa);
     }
+
+    dto.getUserIds().forEach(uid -> postAccessEventProducer.publish(
+        PostAccessEvent.builder()
+            .type(PostAccessEvent.Type.UPSERT)
+            .postId(postId)
+            .userId(uid)
+            .isExcluded(dto.getIsExcluded())
+            .build()));
   }
 
   @Transactional
@@ -68,10 +79,21 @@ public class PostAccessService {
     PostAccess access = postAccessRepository.findById(accessId)
         .orElseThrow(() -> new AppException(ErrorCode.ACCESS_NOT_FOUND));
 
+    String postId = access.getPost().getPostId();
+    String userId = access.getUserId();
+
     if (!access.isDeleted()) {
       access.markDeleted(by);
       postAccessRepository.save(access);
     }
+
+    postAccessEventProducer.publish(
+        PostAccessEvent.builder()
+            .type(PostAccessEvent.Type.BULK_DELETE)
+            .postId(postId)
+            .userId(userId)
+            .build()
+    );
   }
 
   @Transactional
@@ -88,6 +110,13 @@ public class PostAccessService {
     if (!list.isEmpty()) {
       postAccessRepository.saveAll(list);
     }
+
+    userIds.forEach(uid -> postAccessEventProducer.publish(
+        PostAccessEvent.builder()
+            .type(PostAccessEvent.Type.BULK_DELETE)
+            .postId(postId)
+            .userId(uid)
+            .build()));
   }
 
   // Lấy danh sách quyền của 1 bài post

@@ -1,6 +1,7 @@
 package com.codecampus.profile.entity.properties.post;
 
 import com.codecampus.profile.entity.Post;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.Instant;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -26,6 +27,7 @@ public class SavedPost {
   @GeneratedValue
   Long id;
 
+  @JsonProperty("savedAt")
   Instant saveAt;
 
   @TargetNode

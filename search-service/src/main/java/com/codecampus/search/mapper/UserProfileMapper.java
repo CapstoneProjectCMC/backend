@@ -95,8 +95,8 @@ public interface UserProfileMapper {
     if (userProfilePayload.getRoles() != null) {
       userProfileDocument.setRoles(userProfilePayload.getRoles());
     }
-    if (userProfilePayload.isActive()) {
-      userProfileDocument.setActive(userProfilePayload.isActive());
+    if (userProfilePayload.getActive()) {
+      userProfileDocument.setActive(userProfilePayload.getActive());
     }
   }
 }

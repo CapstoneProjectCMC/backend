@@ -2,11 +2,14 @@ server:
   port: 8888
 #  ssl:
 #    enabled: true
+#    key-store: classpath:ssl/gateway.p12
+#    key-store-type: PKCS12
+#    key-store-password: changeit
 #    key-alias: gateway-https
-#    key-store: classpath:ssl/gateway.jks
-#    key-store-password: dinhanst2832004
-#    key-store-type: JKS
-
+#    client-auth: need
+#    trust-store: classpath:ssl/truststore.p12
+#    trust-store-type: PKCS12
+#    trust-store-password: changeit
 app:
   api-prefix: /api/v1
 
@@ -15,14 +18,22 @@ spring:
     name: api-gateway
   cloud:
     gateway:
-      httpclient:
+      #      globalcors:
+      #        add-to-simple-url-handler-mapping: true
+      #        corsConfigurations:
+      #          '[/**]':
+      #            allowedOrigins:
+      #              - http://localhost:4200
+      #            allowedMethods: [ GET, POST, PUT, PATCH, DELETE, OPTIONS ]
+      #            allowedHeaders: [ "*" ]
+      #            allowCredentials: true
+      #      httpclient:
       #        ssl:
+      #          key-store: classpath:ssl/gateway.p12
+      #          key-store-type: PKCS12
+      #          key-store-password: changeit
       #          trusted-x509-certificates:
-      #            - classpath:ssl/identity.pem
-      #            - classpath:ssl/profile.pem
-      #            - classpath:ssl/submission.pem
-      #            - classpath:ssl/coding.pem
-
+      #            - classpath:ssl/ca.crt
       routes:
         - id: identity_service
           #          uri: https://localhost:8080
@@ -134,9 +145,19 @@ spring:
             - name: RateLimiter
               args:
                 routeId: post_service
-        - id: organization_service
+        - id: payment_service
           #          uri: https://localhost:8091
           uri: http://localhost:8091
+          predicates:
+            - Path=${app.api-prefix}/payment/**
+          filters:
+            - StripPrefix=2
+            - name: RateLimiter
+              args:
+                routeId: payment_service
+        - id: organization_service
+          #          uri: https://localhost:8092
+          uri: http://localhost:8092
           predicates:
             - Path=${app.api-prefix}/org/**
           filters:
@@ -197,6 +218,14 @@ rate-limiter:
       refillTokens: 125
       refillDuration: 60
     post_service:
+      capacity: 125
+      refillTokens: 125
+      refillDuration: 60
+    payment_service:
+      capacity: 125
+      refillTokens: 125
+      refillDuration: 60
+    organization_service:
       capacity: 125
       refillTokens: 125
       refillDuration: 60

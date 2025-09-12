@@ -124,4 +124,7 @@ public class ExerciseDocument {
   String updatedBy;
   @Field(type = Keyword)
   String deletedBy;
+
+  @Field(type = FieldType.Keyword)
+  Set<String> buyerUserIds;
 }

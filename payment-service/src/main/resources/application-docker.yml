@@ -1,0 +1,30 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://payment-db:5432/${PAYMENT_DATABASE}
+    username: ${PAYMENT_USERNAME}
+    password: ${PAYMENT_DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  kafka:
+    bootstrap-servers: http://kafka:9092
+  data:
+    redis:
+      host: redis     # dịch vụ trong compose
+      port: 6379
+      password: ${REDIS_PASSWORD}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "prometheus,health,info"
+  endpoint:
+    prometheus:
+      enabled: true
+
+app:
+  event:
+    profile-events: "profile-events"
+  services:
+    profile: http://profile-service:8081/profile
+    file: http://file-service:8082/file
+    organization: http://organization-service:8091/org

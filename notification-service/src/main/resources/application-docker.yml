@@ -2,3 +2,24 @@ server:
   port: 8088
   servlet:
     context-path: /notification
+
+spring:
+  data:
+    mongodb:
+      uri: mongodb://${NOTIFICATION_USERNAME}:${NOTIFICATION_PASSWORD}@notification-db:27017/${NOTIFICATION_DATABASE}?authSource=${NOTIFICATION_DATABASE}
+      auto-index-creation: true
+  kafka:
+    bootstrap-servers: http://kafka:9092
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "prometheus,health,info"
+  endpoint:
+    prometheus:
+      enabled: true
+
+app:
+  services:
+    identity: http://identity-service:8080/identity

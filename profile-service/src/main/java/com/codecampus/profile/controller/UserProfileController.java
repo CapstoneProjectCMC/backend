@@ -4,8 +4,11 @@ import com.codecampus.profile.dto.common.ApiResponse;
 import com.codecampus.profile.dto.common.PageResponse;
 import com.codecampus.profile.dto.request.UserProfileUpdateRequest;
 import com.codecampus.profile.dto.response.UserProfileResponse;
+import com.codecampus.profile.entity.properties.exercise.SavedExercise;
+import com.codecampus.profile.entity.properties.post.SavedPost;
 import com.codecampus.profile.service.ProfileImageService;
 import com.codecampus.profile.service.UserProfileService;
+import com.codecampus.profile.service.VisibilityGuard;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +34,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserProfileController {
   UserProfileService userProfileService;
   ProfileImageService profileImageService;
+  VisibilityGuard guard;
 
   @GetMapping("/user/{userId}")
   ApiResponse<UserProfileResponse> getUserProfileByUserId(
@@ -109,6 +113,29 @@ public class UserProfileController {
     profileImageService.updateBackground(file);
     return ApiResponse.<Void>builder()
         .message("Đã cập nhật background!")
+        .build();
+  }
+
+
+  @GetMapping("/{userId}/saved-posts")
+  public ApiResponse<PageResponse<SavedPost>> savedPostsOf(
+      @PathVariable String userId,
+      @RequestParam(defaultValue = "1") int page,
+      @RequestParam(defaultValue = "10") int size) {
+    return ApiResponse.<PageResponse<SavedPost>>builder()
+        .message("Get các bài post đã lưu thành công!")
+        .result(guard.savedPostsOf(userId, page, size))
+        .build();
+  }
+
+  @GetMapping("/{userId}/saved-exercises")
+  public ApiResponse<PageResponse<SavedExercise>> savedExercisesOf(
+      @PathVariable String userId,
+      @RequestParam(defaultValue = "1") int page,
+      @RequestParam(defaultValue = "10") int size) {
+    return ApiResponse.<PageResponse<SavedExercise>>builder()
+        .message("Get các bài tập đã lưu thành công!")
+        .result(guard.savedExercisesOf(userId, page, size))
         .build();
   }
 

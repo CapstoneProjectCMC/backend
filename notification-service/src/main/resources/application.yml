@@ -1,10 +1,45 @@
 server:
   port: 8088
-  #  http:
-  #    port: 8008
   servlet:
     context-path: /notification
+#  ssl:
+#    enabled: true
+#    key-store: classpath:ssl/notification.p12
+#    key-store-type: PKCS12
+#    key-store-password: changeit
+#    key-alias: notification-https
+#    client-auth: need
+#    trust-store: classpath:ssl/truststore.p12
+#    trust-store-type: PKCS12
+#    trust-store-password: changeit
 
 spring:
   application:
     name: notification-service
+  data:
+    mongodb:
+      uri: mongodb://mongodb_notification:dinhanst2832004@localhost:27018/notification_db?authSource=notification_db
+      auto-index-creation: true
+  kafka:
+    bootstrap-servers: localhost:9094
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: yunomix2834@gmail.com
+    password: mfym xcpi cstr ckfd
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+app:
+  services:
+    identity: http://localhost:8080/identity
+  event:
+    notification-events: "notification-events"
+    notification-status-events: "notification-status-events"

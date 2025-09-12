@@ -45,19 +45,30 @@ public class Post extends AuditMetadata {
 
   String userId;
   String orgId;
+
+  @Column(length = 32)
   String postType; //global, organization, group, etc.
+
+  @Column(length = 512)
   String title;
+
+  @Column(columnDefinition = "TEXT")
   String content;
+  
   Boolean isPublic;
   Boolean allowComment;
+
+  @Column(columnDefinition = "TEXT")
   String hashtag;
+
+  @Column(length = 64)
   String status;
 
   @ElementCollection
-  @CollectionTable(name = "post_images", joinColumns = @JoinColumn(name = "post_id"))
-  @Column(name = "image_url")
+  @CollectionTable(name = "post_files", joinColumns = @JoinColumn(name = "post_id"))
+  @Column(name = "file_url")
   @Builder.Default
-  List<String> imagesUrls = new ArrayList<>();
+  List<String> fileUrls = new ArrayList<>();
 
   @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
   @JsonIgnore

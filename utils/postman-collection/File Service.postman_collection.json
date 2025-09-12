@@ -1,31 +1,373 @@
 {
-  "info": {
-    "_postman_id": "0b8d5cae-65ec-472c-8af4-a406356d0555",
-    "name": "File Service",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "33137665",
-    "_collection_link": "https://animeh-team.postman.co/workspace/Code-Campus-Workspace~833332bb-de6b-4a20-bdef-16542d164f4e/collection/33137665-0b8d5cae-65ec-472c-8af4-a406356d0555?action=share&source=collection_link&creator=33137665"
-  },
-  "item": [
-    {
-      "name": "getHello",
-      "request": {
-        "auth": {
-          "type": "noauth"
-        },
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "{{FileBase}}/hello",
-          "host": [
-            "{{FileBase}}"
-          ],
-          "path": [
-            "hello"
-          ]
-        }
-      },
-      "response": []
-    }
-  ]
+	"info": {
+		"_postman_id": "abcb8e03-7735-4f65-82ad-31969280ce41",
+		"name": "File Service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33137665",
+		"_collection_link": "https://animeh-team.postman.co/workspace/CodeCampus-Backend~4a46659f-0826-49f2-b8c2-66ff451e96a4/collection/33137665-abcb8e03-7735-4f65-82ad-31969280ce41?action=share&source=collection_link&creator=33137665"
+	},
+	"item": [
+		{
+			"name": "GetAllAsync",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "\r\n    {\r\n        \"pageIndex\":1,\r\n        \"pageSize\":20\r\n\r\n    }\r\n    ",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8888/api/v1/file/api/FileDocument/public",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8888",
+					"path": [
+						"api",
+						"v1",
+						"file",
+						"api",
+						"FileDocument",
+						"public"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetAllVideosAsync",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pblJvb3QxMjNAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iXSwiaXNzIjoiQ29kZSBDYW1wdXMiLCJhY3RpdmUiOnRydWUsInRva2VuX3R5cGUiOiJhY2Nlc3NfdG9rZW4iLCJ1c2VySWQiOiI1MDk3MTViZC1lNWIxLTRjZGQtOTViZC0zMzJjMTQ5MDBhZTYiLCJvcmdfcm9sZSI6IiIsInBlcm1pc3Npb25zIjpbXSwib3JnX2lkIjoiIiwic2NvcGUiOiJST0xFX0FETUlOIiwiZXhwIjoxNzU2ODExNTkxLCJpYXQiOjE3NTYyMDY3OTQsImp0aSI6ImIyNjA1ZjdlLWYzY2MtNDQxMy04MTY2LTZlYzEyMGQyNWNjNCIsImVtYWlsIjoiYWRtaW5Sb290MTIzQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.xKmjc81Zuv6OYeYmcYx9yOC0T28i0c25suIylWd6LQ_gUmdnHlscp8TiH5qbTre6W9xP0zzI5jNoxdFyDUjnOA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8888/api/v1/file/api/FileDocument/videos",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8888",
+					"path": [
+						"api",
+						"v1",
+						"file",
+						"api",
+						"FileDocument",
+						"videos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetVideoByIdAsync",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJteWJlb3ZsODEwQGdtYWlsLmNvbSIsInJvbGVzIjpbIlVTRVIiXSwiaXNzIjoiQ29kZSBDYW1wdXMiLCJhY3RpdmUiOnRydWUsInRva2VuX3R5cGUiOiJhY2Nlc3NfdG9rZW4iLCJ1c2VySWQiOiJiNWM1MzI1Mi1kYmNkLTQ3MjAtYWU2MS0yMzFmYjY1YmVjZWMiLCJwZXJtaXNzaW9ucyI6W10sInNjb3BlIjoiUk9MRV9VU0VSIiwiZXhwIjoxNzU2NTUwNTk0LCJpYXQiOjE3NTU5NDU3OTQsImp0aSI6IjA0MWJkYWY5LTE1NGQtNDA0My1iZTkyLTVlMGE1Yjk2YmQ1MCIsImVtYWlsIjoibXliZW92bDgxMEBnbWFpbC5jb20iLCJ1c2VybmFtZSI6Ik5vbGVvZkNNIn0.t60efVhu5BkDJD9-GbZyn75w9oJo8JrmShBF7om4xfgWLdK7KhbSBcuLKO6EQFvRWGr70RL1U6WwKgc6Nu1hbw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8888/api/v1/file/api/FileDocument/videos",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8888",
+					"path": [
+						"api",
+						"v1",
+						"file",
+						"api",
+						"FileDocument",
+						"videos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetAllFileAsync",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pblJvb3QxMjNAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iXSwiaXNzIjoiQ29kZSBDYW1wdXMiLCJhY3RpdmUiOnRydWUsInRva2VuX3R5cGUiOiJhY2Nlc3NfdG9rZW4iLCJ1c2VySWQiOiI1MDk3MTViZC1lNWIxLTRjZGQtOTViZC0zMzJjMTQ5MDBhZTYiLCJvcmdfcm9sZSI6IiIsInBlcm1pc3Npb25zIjpbXSwib3JnX2lkIjoiIiwic2NvcGUiOiJST0xFX0FETUlOIiwiZXhwIjoxNzU2ODExNTkxLCJpYXQiOjE3NTYyMDY3OTQsImp0aSI6ImIyNjA1ZjdlLWYzY2MtNDQxMy04MTY2LTZlYzEyMGQyNWNjNCIsImVtYWlsIjoiYWRtaW5Sb290MTIzQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.xKmjc81Zuv6OYeYmcYx9yOC0T28i0c25suIylWd6LQ_gUmdnHlscp8TiH5qbTre6W9xP0zzI5jNoxdFyDUjnOA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8888/api/v1/file/api/FileDocument/regular-files",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8888",
+					"path": [
+						"api",
+						"v1",
+						"file",
+						"api",
+						"FileDocument",
+						"regular-files"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetFileByIdAsync",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiODdhNGZkMGQtMzk1YS00YTM2LThlMGEtYWJhYmQ2ZmRmMjUzIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTY3NDcxOTYsImlhdCI6MTc1NjE0MjM5NiwianRpIjoiYzBhODdhYTMtZDM5ZC00N2Q3LWE5MzYtNjk3OTQwYjYzZjc5IiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.Q8GswYc-SdtkYU5udZmXlDm1fLc2v1SH5r3RCwlSAtY0QaY2CKUvkVfHbZtQVYxzEV4SUKH3soN7I0nS5XHlOA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8888/api/v1/file/api/FileDocument/e9001b59-f588-4eb2-bcc7-bc4d0b0dfa16",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8888",
+					"path": [
+						"api",
+						"v1",
+						"file",
+						"api",
+						"FileDocument",
+						"e9001b59-f588-4eb2-bcc7-bc4d0b0dfa16"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddFile",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pblJvb3QxMjNAZ21haWwuY29tIiwicm9sZXMiOlsiQURNSU4iXSwiaXNzIjoiQ29kZSBDYW1wdXMiLCJhY3RpdmUiOnRydWUsInRva2VuX3R5cGUiOiJhY2Nlc3NfdG9rZW4iLCJ1c2VySWQiOiJlYmQzYmEyOS1hMWEzLTRhNzItYjYyZC0zMTYyNDIzYTM0MzEiLCJvcmdfcm9sZSI6IiIsInBlcm1pc3Npb25zIjpbXSwib3JnX2lkIjoiIiwic2NvcGUiOiJST0xFX0FETUlOIiwiZXhwIjoxNzU2OTA3NzgxLCJpYXQiOjE3NTYzMDI5ODEsImp0aSI6IjdlZWY5M2I3LTM1NWQtNDVmMi04OGJjLWU3MjJmZThlODJmOCIsImVtYWlsIjoiYWRtaW5Sb290MTIzQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.Ey462LPvFo0iOSVkLX_gzIIcDSFUonVVTriZQEVS8LewizHj9rP8aVJX7WUXvkU_JjsWz49CKE0nzxD6ZoClJA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/D:/Images/Steam Artwork Hatsune Miku/Miku avatar.jpg"
+						},
+						{
+							"key": "category",
+							"value": "0",
+							"type": "text"
+						},
+						{
+							"key": "description",
+							"value": "avatar",
+							"type": "text"
+						},
+						{
+							"key": "tags",
+							"value": "avatar, anime",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8082/file/api/FileDocument/add",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"file",
+						"api",
+						"FileDocument",
+						"add"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateFile",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiYTNjNzMyNTktZmJhNS00YTFjLWJiOWYtZTE0YjQwNjA5NmViIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTY2NDk1ODUsImlhdCI6MTc1NjA0NDc4NSwianRpIjoiNWIwYTVlZGUtZDdiOS00YzBmLTgwMzktNmI4YmEzYjNiZDA3IiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.qtCV9YIXfTF29P4htSG2w9PThlcbetfWDyOhJxHXNgsGYAb_neL1QBTjdkUdepY9rFDL6m85iOS_R9LLYlqyjw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/C:/Users/toqua/Videos/Captures/League of Legends (TM) Client 2025-08-05 18-53-28.mp4"
+						},
+						{
+							"key": "fileName",
+							"value": "test update",
+							"type": "text"
+						},
+						{
+							"key": "category",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "description",
+							"value": "fdgdfgdfgdfg",
+							"type": "text"
+						},
+						{
+							"key": "tags",
+							"value": "gsfdgd dgfdgdfg dgfdfgdg",
+							"type": "text"
+						},
+						{
+							"key": "isLectureVideo",
+							"value": "true",
+							"type": "text"
+						},
+						{
+							"key": "isTextbook",
+							"value": "false",
+							"type": "text"
+						},
+						{
+							"key": "isActive",
+							"value": "true",
+							"type": "text"
+						},
+						{
+							"key": "orgId",
+							"value": "",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8888/api/v1/file/api/FileDocument/edit/654d36ba-c353-4306-bd69-707bd7d6dc89",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8888",
+					"path": [
+						"api",
+						"v1",
+						"file",
+						"api",
+						"FileDocument",
+						"edit",
+						"654d36ba-c353-4306-bd69-707bd7d6dc89"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteFile",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiYTNjNzMyNTktZmJhNS00YTFjLWJiOWYtZTE0YjQwNjA5NmViIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTY2NDk1ODUsImlhdCI6MTc1NjA0NDc4NSwianRpIjoiNWIwYTVlZGUtZDdiOS00YzBmLTgwMzktNmI4YmEzYjNiZDA3IiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.qtCV9YIXfTF29P4htSG2w9PThlcbetfWDyOhJxHXNgsGYAb_neL1QBTjdkUdepY9rFDL6m85iOS_R9LLYlqyjw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8888/api/v1/file/api/FileDocument/654d36ba-c353-4306-bd69-707bd7d6dc89",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8888",
+					"path": [
+						"api",
+						"v1",
+						"file",
+						"api",
+						"FileDocument",
+						"654d36ba-c353-4306-bd69-707bd7d6dc89"
+					]
+				}
+			},
+			"response": []
+		}
+	]
 }

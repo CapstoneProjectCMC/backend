@@ -1,19 +1,16 @@
 package com.codecampus.post.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import java.util.Set;
+import lombok.Builder;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-public class ProfileResponseDto {
-  private String userId;
-  private String username;
-  private String email;
-  private String role;
-  private String avatarUrl;
-  private String backgroundUrl;
+@Builder
+public record ProfileResponseDto(
+    String userId,
+    String username,
+    String email,
+    String displayName,
+    String avatarUrl,
+    Boolean active,
+    Set<String> roles
+) {
 }

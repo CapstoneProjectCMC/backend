@@ -1,9 +1,17 @@
 server:
   port: 8089
-  #  http:
-  #    port: 8009
   servlet:
     context-path: /chat
+#  ssl:
+#    enabled: true
+#    key-store: classpath:ssl/chat.p12
+#    key-store-type: PKCS12
+#    key-store-password: changeit
+#    key-alias: chat-https
+#    client-auth: need
+#    trust-store: classpath:ssl/truststore.p12
+#    trust-store-type: PKCS12
+#    trust-store-password: changeit
 
 spring:
   application:
@@ -22,10 +30,14 @@ spring:
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
-
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
 app:
   event:
     profile-events: "profile-events"
   services:
     profile: http://localhost:8081/profile
     identity: http://localhost:8080/identity
+    file: http://localhost:8082/file

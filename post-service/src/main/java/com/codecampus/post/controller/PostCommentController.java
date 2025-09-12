@@ -85,5 +85,14 @@ public class PostCommentController {
         .message("Xoá bình luận thành công!")
         .build();
   }
+
+  @GetMapping("/{postId}/comments/count")
+  ApiResponse<Long> countComments(@PathVariable String postId) {
+    long c = postCommentService.countByPost(postId);
+    return ApiResponse.<Long>builder()
+        .message("Đếm bình luận thành công!")
+        .result(c)
+        .build();
+  }
 }
 

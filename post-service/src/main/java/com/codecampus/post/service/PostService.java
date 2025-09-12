@@ -2,10 +2,7 @@ package com.codecampus.post.service;
 
 
 import com.codecampus.post.dto.common.PageResponse;
-import com.codecampus.post.dto.request.AddFileDocumentDto;
 import com.codecampus.post.dto.request.PostRequestDto;
-import com.codecampus.post.dto.response.AddFileResponseDto;
-import com.codecampus.post.dto.response.FileResult;
 import com.codecampus.post.dto.response.PostResponseDto;
 import com.codecampus.post.entity.Post;
 import com.codecampus.post.exception.AppException;
@@ -15,14 +12,13 @@ import com.codecampus.post.helper.PostHelper;
 import com.codecampus.post.mapper.PostMapper;
 import com.codecampus.post.repository.PostRepository;
 import com.codecampus.post.repository.httpClient.FileServiceClient;
+import com.codecampus.post.service.kafka.PostEventProducer;
 import com.codecampus.post.utils.PageResponseUtils;
-import java.io.IOException;
-import java.io.InputStream;
+import dtos.PostSummary;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import javax.imageio.ImageIO;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -32,7 +28,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -43,6 +38,7 @@ public class PostService {
   PostMapper postMapper;
   FileServiceClient fileServiceClient;
   PostHelper postHelper;
+  PostEventProducer postEventProducer;
 
   public PageResponse<PostResponseDto> getAllMyPosts(
       int page, int size) {
@@ -108,34 +104,16 @@ public class PostService {
       PostRequestDto postRequestDto) {
     String userId = AuthenticationHelper.getMyUserId();
 
-    List<String> fileUrls = Collections.emptyList();
-    AddFileDocumentDto fileDoc = postRequestDto.getFileDocument();
-    if (fileDoc != null && fileDoc.getFile() != null &&
-        !fileDoc.getFile().isEmpty()) {
-
-      MultipartFile file = fileDoc.getFile();
-
-      // Kiểm tra file được tải lên có phải ảnh thật hay không
-      if (!isRealImage(file)) {
-        throw new AppException(ErrorCode.INVALID_FILE_TYPE);
-      }
-
-      // Upload file sau khi xác thực
-      AddFileResponseDto response = fileServiceClient.uploadFile(fileDoc);
-
-      // Nếu API C# trả result là String URL
-      fileUrls = Optional.ofNullable(response)
-          .map(AddFileResponseDto::getResult)
-          .map(FileResult::getUrl)
-          .map(List::of)
-          .orElse(Collections.emptyList());
-    }
+    List<String> fileUrls =
+        postHelper.uploadAll(postRequestDto.getFileDocument());
 
     Post post = postMapper.toPostFromPostRequestDto(postRequestDto);
-    post.setImagesUrls(fileUrls);
+    post.setFileUrls(fileUrls);
     post.setUserId(userId);
 
     postRepository.save(post);
+
+    postEventProducer.publishCreated(post);
   }
 
   public void updatePost(
@@ -153,47 +131,24 @@ public class PostService {
     }
 
     // Danh sách ảnh sau khi chỉnh sửa
-    List<String> updatedImageUrls = new ArrayList<>();
-    List<String> existingImages =
-        Optional.ofNullable(existingPost.getImagesUrls())
-            .orElse(Collections.emptyList());
+    List<String> updatedFileUrls = new ArrayList<>(
+        Optional.ofNullable(existingPost.getFileUrls())
+            .orElse(Collections.emptyList())
+    );
 
-    // 1. Giữ lại ảnh cũ mà người dùng vẫn muốn giữ
-    if (postRequestDto.getOldImagesUrls() != null &&
-        !postRequestDto.getOldImagesUrls().isEmpty()) {
-      updatedImageUrls.addAll(
-          existingPost.getImagesUrls().stream()
-              .filter(postRequestDto.getOldImagesUrls()::contains)
-              .toList()
-      );
+    List<String> newUrls = postHelper.uploadAll(
+        postRequestDto.getFileDocument());
+    if (newUrls != null && !newUrls.isEmpty()) {
+      updatedFileUrls.addAll(newUrls);
     }
 
-    // 2. Nếu có ảnh mới thì kiểm tra và upload
-    if (postRequestDto.getFileDocument() != null &&
-        postRequestDto.getFileDocument().getFile() != null &&
-        !postRequestDto.getFileDocument().getFile().isEmpty()) {
-
-      MultipartFile file = postRequestDto.getFileDocument().getFile();
-      if (!isRealImage(file)) {
-        throw new AppException(ErrorCode.INVALID_FILE_TYPE);
-      }
-
-      // Upload ảnh mới
-      AddFileResponseDto response = fileServiceClient.uploadFile(
-          postRequestDto.getFileDocument());
-      List<String> newFileUrls = Optional.ofNullable(response)
-          .map(AddFileResponseDto::getResult)
-          .map(FileResult::getUrl)
-          .map(List::of)
-          .orElse(Collections.emptyList());
-
-      updatedImageUrls.addAll(newFileUrls);
-    }
-
-    // 3. Cập nhật các field khác
+    // Cập nhật các field đơn khác
     postMapper.updatePostRequestDtoToPost(postRequestDto, existingPost);
-    existingPost.setImagesUrls(updatedImageUrls);
+
+    existingPost.setFileUrls(updatedFileUrls);
     postRepository.save(existingPost);
+
+    postEventProducer.publishUpdated(existingPost);
   }
 
 
@@ -203,14 +158,14 @@ public class PostService {
         .orElseThrow(() -> new AppException(ErrorCode.POST_NOT_FOUND));
     post.markDeleted(deletedBy);
     postRepository.save(post);
+
+    postEventProducer.publishDeleted(post);
   }
 
-  public boolean isRealImage(MultipartFile file) {
-    try (InputStream input = file.getInputStream()) {
-      return ImageIO.read(input) != null;
-    } catch (IOException e) {
-      return false;
-    }
+  public PostSummary getPostSummary(String postId) {
+    Post post = postRepository.findById(postId)
+        .orElseThrow(() -> new AppException(ErrorCode.POST_NOT_FOUND));
+    return postMapper.toPostSummaryFromPost(post);
   }
 }
 

@@ -1,0 +1,54 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: prometheus
+    static_configs:
+      - targets: [ "prometheus:9090" ]
+
+  - job_name: cadvisor
+    static_configs:
+      - targets: [ "cadvisor:8080" ]
+
+  - job_name: node-exporter
+    static_configs:
+      - targets: [ "node-exporter:9100" ]
+
+  # Spring Boot apps: nếu metrics ở cổng app
+  - job_name: spring-boot
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets:
+          - identity-service:8080
+          - profile-service:8081
+          - submission-service:8083
+          - coding-service:8084
+          - quiz-service:8085
+          - ai-service:8086
+          - search-service:8087
+          - notification-service:8088
+          - chat-service:8089
+          - post-service:8090
+          - payment-service:8091
+          - organization-service:8092
+
+  # Metrics ở cổng quản trị riêng (ví dụ 959x):
+  - job_name: spring-boot-mgmt
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets:
+          - identity-service:6666
+          - profile-service:6667
+          - submission-service:6668
+          - coding-service:6669
+          - quiz-service:6700
+          - ai-service:6701
+          - search-service:6702
+          - notification-service:6703
+          - chat-service:6704
+          - post-service:6705
+          - payment-service:6706
+          - organization-service:6707
+
+

@@ -20,5 +20,9 @@ namespace OrganizationService.Service.Interfaces
         Task<PrimaryOrgDto?> GetPrimaryOrgForUser(Guid userId);
         Task<OrganizationMemberDto> JoinOrganizationForCurrentUser(Guid organizationId);
         Task<OrganizationMemberDto> GrantAdmin(Guid organizationId, Guid userId);
+        
+        Task<OrganizationMemberDto> CreateOrUpdateAsync(CreateOrganizationMemberRequest request);
+        Task<IEnumerable<OrganizationMemberDto>> BulkCreateOrUpdateAsync(
+            IEnumerable<CreateOrganizationMemberRequest> requests);
     }
 }

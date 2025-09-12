@@ -30,6 +30,44 @@ public class WebClientConfiguration {
    */
   @Bean
   WebClient webClient(IdentityServiceProperties props) {
+//    try {
+//      // ---- KeyStore (client-cert) cho mTLS ----
+//      var ksRes = new ClassPathResource("ssl/gateway.p12");
+//      KeyStore ks = KeyStore.getInstance("PKCS12");
+//      try (InputStream is = ksRes.getInputStream()) {
+//        ks.load(is, "changeit".toCharArray());
+//      }
+//      KeyManagerFactory kmf = KeyManagerFactory.getInstance(
+//          KeyManagerFactory.getDefaultAlgorithm());
+//      kmf.init(ks, "changeit".toCharArray());
+//
+//      // ---- TrustStore (tin CA của server) ----
+//      var tsRes = new ClassPathResource("ssl/truststore.p12");
+//      KeyStore ts = KeyStore.getInstance("PKCS12");
+//      try (InputStream is = tsRes.getInputStream()) {
+//        ts.load(is, "changeit".toCharArray());
+//      }
+//      TrustManagerFactory tmf = TrustManagerFactory.getInstance(
+//          TrustManagerFactory.getDefaultAlgorithm());
+//      tmf.init(ts);
+//
+//      // ---- SSL context cho Reactor Netty ----
+//      SslContext sslContext = SslContextBuilder.forClient()
+//          .keyManager(kmf)      // bắt buộc nếu Identity bật client-auth
+//          .trustManager(tmf)
+//          .build();
+//
+//      HttpClient httpClient = HttpClient.create()
+//          .secure(ssl -> ssl.sslContext(sslContext));
+//
+//      return WebClient.builder()
+//          .baseUrl(props.getBaseUrl()) // ví dụ: https://localhost:8080/identity
+//          .clientConnector(new ReactorClientHttpConnector(httpClient))
+//          .build();
+//
+//    } catch (Exception e) {
+//      throw new IllegalStateException("Cannot build WebClient with TLS/mTLS", e);
+//    }
     return WebClient.builder()
         .baseUrl(props.getBaseUrl())
         .build();

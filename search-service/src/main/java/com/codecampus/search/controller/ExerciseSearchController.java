@@ -32,7 +32,6 @@ public class ExerciseSearchController {
       @RequestParam(required = false) Integer difficulty,
       @RequestParam(required = false) String createdBy,
       @RequestParam(required = false) String exerciseType,
-      @RequestParam(required = false) String orgId,
       @RequestParam(required = false) Boolean freeForOrg,
       @RequestParam(required = false) Double minCost,
       @RequestParam(required = false) Double maxCost,
@@ -43,7 +42,7 @@ public class ExerciseSearchController {
       @RequestParam(defaultValue = "10") int size) {
 
     ExerciseSearchRequest request = new ExerciseSearchRequest(
-        q, tags, difficulty, createdBy, exerciseType, orgId,
+        q, tags, difficulty, createdBy, exerciseType, null,
         freeForOrg, minCost, maxCost, startAfter, endBefore,
         allowAiQuestion, page, size);
 

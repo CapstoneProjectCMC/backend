@@ -3,7 +3,7 @@ package com.codecampus.submission.mapper;
 import com.codecampus.submission.dto.data.ExerciseSummaryDto;
 import com.codecampus.submission.dto.request.CreateExerciseRequest;
 import com.codecampus.submission.dto.request.UpdateExerciseRequest;
-import com.codecampus.submission.dto.response.quiz.ExerciseQuizResponse;
+import com.codecampus.submission.dto.response.ExerciseResponse;
 import com.codecampus.submission.entity.Exercise;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Context;
@@ -37,13 +37,14 @@ public interface ExerciseMapper {
       @MappingTarget Exercise exercise
   );
 
-  ExerciseQuizResponse toExerciseQuizResponseFromExercise(
+  ExerciseResponse toExerciseResponseFromExercise(
       Exercise e);
 
   default ExerciseSummaryDto toExerciseSyncDtoFromExercise(
       Exercise exercise,
       boolean created,
-      boolean completed) {
+      boolean completed,
+      boolean purchased) {
     return new ExerciseSummaryDto(
         exercise.getId(),
         exercise.getTitle(),
@@ -52,7 +53,8 @@ public interface ExerciseMapper {
         exercise.isVisibility(),
         exercise.getOrgId(),
         created,
-        completed
+        completed,
+        purchased
     );
   }
 }

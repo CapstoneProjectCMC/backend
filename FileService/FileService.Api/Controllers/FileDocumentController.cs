@@ -7,10 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FileService.Api.Controllers
 {
-    [Authorize]
-    [Authorize(Policy = "AdminOnly")]
-    // [Authorize(Policy = "Permission")]
-    // [Authorize(Roles = "ADMIN")]
+    [AllowAnonymous]
     [Route("file/api/[controller]")]
     [ApiController]
     public class FileDocumentController : BaseApiController
@@ -45,13 +42,14 @@ namespace FileService.Api.Controllers
             return Success(files);
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetFileById(Guid id)
+        [HttpGet("file/{fileId}")]
+        public async Task<IActionResult> GetFileById(Guid fileId)
         {
-            var result = await _fileDocumentService.GetFileDetailById(id);
+            var result = await _fileDocumentService.GetFileDetailById(fileId);
             return Success(result);
         }
 
+        [Authorize]
         [HttpPost("add")]
         public async Task<IActionResult> AddFile([FromForm] AddFileDocumentDto dto)
         {
@@ -59,6 +57,7 @@ namespace FileService.Api.Controllers
             return Success(result);
         }
 
+        [Authorize]
         [HttpPut("edit/{id}")]
         public async Task<IActionResult> EditDetailFile(Guid id, [FromForm] EditFileDocumentDto dto)
         {
@@ -66,6 +65,8 @@ namespace FileService.Api.Controllers
             return Success(result);
         }
 
+
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteFile(Guid id)
         {

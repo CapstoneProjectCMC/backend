@@ -13,25 +13,32 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b5542390-86ea-4e7c-8261-890d4e9fdf28" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../OrganizationService/OrganizationService.Service/ApiModels/OrganizationMember/CreateOrganizationMemberV2Request.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.FileService/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.FileService/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../identity-service/src/main/java/com/codecampus/identity/controller/authentication/PasswordResetController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../identity-service/src/main/java/com/codecampus/identity/controller/authentication/PasswordResetController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../identity-service/src/main/java/com/codecampus/identity/dto/request/authentication/ForgotPasswordRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../identity-service/src/main/java/com/codecampus/identity/dto/request/authentication/ForgotPasswordRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../identity-service/src/main/java/com/codecampus/identity/dto/request/authentication/ResetPasswordRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../identity-service/src/main/java/com/codecampus/identity/dto/request/authentication/ResetPasswordRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../identity-service/src/main/java/com/codecampus/identity/dto/request/authentication/VerifyPasswordResetRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../identity-service/src/main/java/com/codecampus/identity/dto/request/authentication/VerifyPasswordResetRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../identity-service/src/main/java/com/codecampus/identity/entity/account/PasswordResetToken.java" beforeDir="false" afterPath="$PROJECT_DIR$/../identity-service/src/main/java/com/codecampus/identity/entity/account/PasswordResetToken.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../identity-service/src/main/java/com/codecampus/identity/repository/account/PasswordResetTokenRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/../identity-service/src/main/java/com/codecampus/identity/repository/account/PasswordResetTokenRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../identity-service/src/main/java/com/codecampus/identity/service/authentication/PasswordResetService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../identity-service/src/main/java/com/codecampus/identity/service/authentication/PasswordResetService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../OrganizationService/OrganizationService.Api/Controllers/OrganizationMemberController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../OrganizationService/OrganizationService.Api/Controllers/OrganizationMemberController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../OrganizationService/OrganizationService.Api/OrganizationService.Api.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../OrganizationService/OrganizationService.Api/OrganizationService.Api.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../OrganizationService/OrganizationService.Api/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../OrganizationService/OrganizationService.Api/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../OrganizationService/OrganizationService.Api/Properties/launchSettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/../OrganizationService/OrganizationService.Api/Properties/launchSettings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../OrganizationService/OrganizationService.Core/OrganizationService.Core.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../OrganizationService/OrganizationService.Core/OrganizationService.Core.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../OrganizationService/OrganizationService.DataAccess/OrganizationService.DataAccess.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../OrganizationService/OrganizationService.DataAccess/OrganizationService.DataAccess.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../OrganizationService/OrganizationService.Service/Implementation/OrganizationMemberService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../OrganizationService/OrganizationService.Service/Implementation/OrganizationMemberService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../OrganizationService/OrganizationService.Service/Implementation/StudentCredentialService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../OrganizationService/OrganizationService.Service/Implementation/StudentCredentialService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../OrganizationService/OrganizationService.Service/Interfaces/IOrganizationMemberService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../OrganizationService/OrganizationService.Service/Interfaces/IOrganizationMemberService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../OrganizationService/OrganizationService.Service/OrganizationService.Service.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../OrganizationService/OrganizationService.Service/OrganizationService.Service.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../OrganizationService/OrganizationService.UnitTests/OrganizationService.UnitTests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../OrganizationService/OrganizationService.UnitTests/OrganizationService.UnitTests.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../build-image.sh" beforeDir="false" afterPath="$PROJECT_DIR$/../build-image.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../docker-compose.prod-infra.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../docker-compose.prod-infra.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../docker-compose.prod-services.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../docker-compose.prod-services.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../gateway-service/src/main/resources/application-docker.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../gateway-service/src/main/resources/application-docker.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../gateway-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../gateway-service/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../identity-service/src/main/java/com/codecampus/identity/dto/request/org/CreateOrganizationMemberRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../identity-service/src/main/java/com/codecampus/identity/dto/request/org/CreateOrganizationMemberRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../identity-service/src/main/java/com/codecampus/identity/repository/httpclient/org/OrganizationClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/../identity-service/src/main/java/com/codecampus/identity/repository/httpclient/org/OrganizationClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../identity-service/src/main/java/com/codecampus/identity/service/account/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../identity-service/src/main/java/com/codecampus/identity/service/account/UserService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../identity-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../identity-service/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../profile-service/src/main/java/com/codecampus/profile/dto/response/file/UploadedFileResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/../profile-service/src/main/java/com/codecampus/profile/dto/response/file/UploadedFileResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../profile-service/src/main/java/com/codecampus/profile/dto/response/org/PrimaryOrgDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/../profile-service/src/main/java/com/codecampus/profile/dto/response/org/PrimaryOrgDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../profile-service/src/main/java/com/codecampus/profile/repository/UserProfileRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/../profile-service/src/main/java/com/codecampus/profile/repository/UserProfileRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../profile-service/src/main/java/com/codecampus/profile/repository/client/FileClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/../profile-service/src/main/java/com/codecampus/profile/repository/client/FileClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../profile-service/src/main/java/com/codecampus/profile/service/ExerciseService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../profile-service/src/main/java/com/codecampus/profile/service/ExerciseService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../profile-service/src/main/java/com/codecampus/profile/service/FamilyService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../profile-service/src/main/java/com/codecampus/profile/service/FamilyService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../profile-service/src/main/java/com/codecampus/profile/service/PostService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../profile-service/src/main/java/com/codecampus/profile/service/PostService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../profile-service/src/main/java/com/codecampus/profile/service/ProfileImageService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../profile-service/src/main/java/com/codecampus/profile/service/ProfileImageService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../profile-service/src/main/java/com/codecampus/profile/service/ResourceService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../profile-service/src/main/java/com/codecampus/profile/service/ResourceService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../profile-service/src/main/java/com/codecampus/profile/service/SocialService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../profile-service/src/main/java/com/codecampus/profile/service/SocialService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../payment-service/src/main/resources/application-docker.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../payment-service/src/main/resources/application-docker.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../post-service/src/main/java/com/codecampus/post/dto/request/AddFileDocumentDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/../post-service/src/main/java/com/codecampus/post/dto/request/AddFileDocumentDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../post-service/src/main/java/com/codecampus/post/repository/httpClient/ProfileServiceClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/../post-service/src/main/java/com/codecampus/post/repository/httpClient/ProfileServiceClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../post-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../post-service/src/main/resources/application.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,6 +61,7 @@
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/36d58214bb9298b1821d4808b3d75878085fba1d79f1467a02d76924cf9669/IBucketOperations.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/a77b231cea33ff338c41dc7869d6c493d4dae137ff51e342173efa61d933/Task.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/bd1d5c50194fea68ff3559c160230b0ab50f5acf4ce3061bffd6d62958e2182/ExceptionDispatchInfo.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/f11445d02251979ba5e24139358c5e504719add8c58b3327f5f95bb9ecac6ed/HttpGetAttribute.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="KubernetesApiPersistence">{}</component>
@@ -68,25 +76,25 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    ".NET Launch Settings Profile.FileService.Api: FileService.Api.Development.executor": "Debug",
-    ".NET Launch Settings Profile.FileService.Api: IIS Express.executor": "Debug",
-    ".NET Launch Settings Profile.FileService.Api: http.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "XThreadsFramesViewSplitterKey": "0.105919",
-    "git-widget-placeholder": "main",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.sourceCode.C#",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;.NET Launch Settings Profile.FileService.Api: FileService.Api.Development.executor&quot;: &quot;Debug&quot;,
+    &quot;.NET Launch Settings Profile.FileService.Api: IIS Express.executor&quot;: &quot;Debug&quot;,
+    &quot;.NET Launch Settings Profile.FileService.Api: http.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;XThreadsFramesViewSplitterKey&quot;: &quot;0.105919&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.sourceCode.C#&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected=".NET Launch Settings Profile.FileService.Api: FileService.Api.Development">
     <configuration name="FileService.Api: FileService.Api.Development" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
       <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/FileService.Api/FileService.Api.csproj" />
@@ -201,7 +209,12 @@
       <workItem from="1755941810793" duration="2669000" />
       <workItem from="1755945729996" duration="127000" />
       <workItem from="1755945872388" duration="636000" />
-      <workItem from="1756296024284" duration="738000" />
+      <workItem from="1756296024284" duration="1441000" />
+      <workItem from="1756304618856" duration="3998000" />
+      <workItem from="1756392852261" duration="2274000" />
+      <workItem from="1756410468301" duration="2005000" />
+      <workItem from="1756456497761" duration="301000" />
+      <workItem from="1756456915635" duration="26000" />
     </task>
     <servers />
   </component>

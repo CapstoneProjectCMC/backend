@@ -36,6 +36,19 @@ public class CommentHelper {
         .replies(replies) // chỉ 1 cấp reply
         .user(map.getOrDefault(c.getUserId(),
             userSummaryCacheService.getOrLoad(c.getUserId())))
+        .createdAt(c.getCreatedAt() != null ? c.getCreatedAt() : null)
+        .build();
+  }
+
+  public CommentResponseDto toCommentResponseDto(PostComment c) {
+    return CommentResponseDto.builder()
+        .commentId(c.getCommentId())
+        .parentCommentId(c.getParentComment() == null ? null :
+            c.getParentComment().getCommentId())
+        .content(c.getContent())
+        .replies(null) // không cần trong push realtime
+        .user(userSummaryCacheService.getOrLoad(c.getUserId()))
+        .createdAt(c.getCreatedAt())
         .build();
   }
 }

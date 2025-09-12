@@ -26,12 +26,20 @@ public class Conversation {
 
   String type; // GROUP, DIRECT
 
-  @Indexed(unique = true)
+  @Indexed(unique = true, sparse = true)
   String participantsHash;
 
   List<ParticipantInfo> participants;
 
-  Instant createdDate;
+  String name; // tên nhóm (GROUP)
+  String avatarUrl; // avatar nhóm (GROUP)
+  String topic; // mô tả / chủ đề nhóm (GROUP)
 
+  String ownerId; // chủ nhóm (GROUP)
+  List<String> adminIds; // admin phụ (GROUP)
+
+  Instant createdDate;
   Instant modifiedDate;
+
+  Boolean deleted;
 }

@@ -1,8 +1,8 @@
 package com.codecampus.submission.helper;
 
+import com.codecampus.submission.dto.response.ExerciseResponse;
 import com.codecampus.submission.dto.response.coding.coding_detail.CodingDetailSliceDetailResponse;
 import com.codecampus.submission.dto.response.coding.coding_detail.ExerciseCodingDetailResponse;
-import com.codecampus.submission.dto.response.quiz.ExerciseQuizResponse;
 import com.codecampus.submission.dto.response.quiz.quiz_detail.ExerciseQuizDetailResponse;
 import com.codecampus.submission.dto.response.quiz.quiz_detail.QuizDetailSliceDetailResponse;
 import com.codecampus.submission.entity.CodingDetail;
@@ -60,10 +60,11 @@ public class ExerciseHelper {
     }
   }
 
-  public ExerciseQuizResponse toExerciseQuizResponseFromExerciseAndUserSummary(
+  public ExerciseResponse toExerciseResponseFromExerciseAndUserSummary(
       Exercise e,
-      UserSummary summary) {
-    return ExerciseQuizResponse.builder()
+      UserSummary summary,
+      boolean purchased) {
+    return ExerciseResponse.builder()
         .id(e.getId())
         .user(summary)
         .title(e.getTitle())
@@ -76,13 +77,15 @@ public class ExerciseHelper {
         .tags(e.getTags())
         .visibility(e.isVisibility())
         .createdAt(e.getCreatedAt())
+        .purchased(purchased)
         .build();
   }
 
   public ExerciseQuizDetailResponse toExerciseQuizDetailResponseFromExerciseQuizDetailSliceDetailResponseAndUserSummary(
       Exercise e,
       QuizDetailSliceDetailResponse qSlice,
-      UserSummary summary) {
+      UserSummary summary,
+      boolean purchased) {
     return ExerciseQuizDetailResponse.builder()
         .id(e.getId())
         .user(summary)
@@ -109,13 +112,15 @@ public class ExerciseHelper {
         .updatedAt(e.getUpdatedAt())
         .deletedBy(e.getDeletedBy())
         .deletedAt(e.getDeletedAt())
+        .purchased(purchased)
         .build();
   }
 
   public ExerciseCodingDetailResponse toExerciseCodingDetailResponseFromExerciseCodingDetailSliceDetailResponseAndUserSummary(
       Exercise e,
       CodingDetailSliceDetailResponse slice,
-      UserSummary summary) {
+      UserSummary summary,
+      boolean purchased) {
     return ExerciseCodingDetailResponse.builder()
         .id(e.getId())
         .user(summary)
@@ -142,6 +147,7 @@ public class ExerciseHelper {
         .updatedAt(e.getUpdatedAt())
         .deletedBy(e.getDeletedBy())
         .deletedAt(e.getDeletedAt())
+        .purchased(purchased)
         .build();
   }
 }

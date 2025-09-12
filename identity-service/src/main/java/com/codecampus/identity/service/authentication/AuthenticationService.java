@@ -43,8 +43,10 @@ import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.StringJoiner;
 import java.util.UUID;
@@ -288,7 +290,7 @@ public class AuthenticationService {
     try {
       userRepository.save(user);
       // Sự kiện khởi tạo profile giàu dữ liệu
-      var profilePayload =
+      UserProfileCreationPayload profilePayload =
           userPayloadMapper.toUserProfileCreationPayloadFromUserCreationRequest(
               request);
       userEventProducer.publishRegisteredUserEvent(user, profilePayload);
@@ -384,6 +386,8 @@ public class AuthenticationService {
         ? primaryOrg.getOrganizationId() : null;
     String orgRole = primaryOrg != null
         ? primaryOrg.getRole() : null;
+    List<String> blockIds = organizationHelper
+        .getActiveBlockIds(user.getId());
 
     JWTClaimsSet.Builder builder = new JWTClaimsSet.Builder()
         .subject(user.getEmail())
@@ -410,7 +414,9 @@ public class AuthenticationService {
         .claim("active", user.isEnabled())
         .claim("token_type", type)
         .claim("org_role", orgRole != null ? orgRole : "")
-        .claim("org_id", orgId != null ? orgId : "");
+        .claim("org_id", orgId != null ? orgId : "")
+        .claim("block_ids", blockIds != null
+            ? blockIds : new ArrayList<>());
 
     return builder.build();
   }
@@ -482,6 +488,9 @@ public class AuthenticationService {
     SignedJWT refreshToken =
         generateToken(user, REFRESH_DURATION, "refresh_token");
 
+    boolean needPasswordSetup =
+        (user.getPassword() == null || user.getPassword().isBlank());
+
     return AuthenticationResponse.builder()
         .accessToken(accessToken.serialize())
         .refreshToken(refreshToken.serialize())
@@ -492,6 +501,7 @@ public class AuthenticationService {
                 .toInstant())
         .authenticated(true)
         .enabled(user.isEnabled())
+        .needPasswordSetup(needPasswordSetup)
         .build();
   }
 }

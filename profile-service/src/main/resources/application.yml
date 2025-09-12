@@ -1,20 +1,25 @@
 server:
   port: 8081
-  #  http:
-  #    port: 8001
   servlet:
     context-path: /profile
 #  ssl:
 #    enabled: true
+#    key-store: classpath:ssl/profile.p12
+#    key-store-type: PKCS12
+#    key-store-password: changeit
 #    key-alias: profile-https
-#    key-store: classpath:ssl/profile.jks
-#    key-store-type: JKS
-#    key-store-password: dinhanst2832004
-#    key-password: dinhanst2832004
+#    client-auth: need
+#    trust-store: classpath:ssl/truststore.p12
+#    trust-store-type: PKCS12
+#    trust-store-password: changeit
 
 spring:
   application:
     name: profile-service
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
   neo4j:
     uri: neo4j://localhost:7687
     authentication:
@@ -42,6 +47,7 @@ app:
     file: http://localhost:8082/file
     organization: http://localhost:8091/org
     submission: http://localhost:8083/submission
+    post: http://localhost:8090/post
   event:
     user-events: "user-events"
     user-registrations: "user-registrations"
@@ -52,3 +58,4 @@ app:
     contest-events: "contest-events"
     exercise-status-events: "exercise-status-events"
     contest-status-events: "contest-status-events"
+    post-events: "post-events"

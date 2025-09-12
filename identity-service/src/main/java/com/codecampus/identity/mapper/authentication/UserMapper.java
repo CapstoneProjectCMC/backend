@@ -13,6 +13,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 @Mapper(componentModel = "spring",
     nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface UserMapper {
+
   User toUserFromUserCreationRequest(UserCreationRequest userCreationRequest);
 
   @Mapping(target = "userId", ignore = true)

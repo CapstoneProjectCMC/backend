@@ -341,6 +341,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <!-- version lấy từ spring-boot-starter-parent -->
                 <configuration>
+                    <mainClass>com.codecampus.quiz.QuizApplication</mainClass>
                     <excludes>
                         <exclude>
                             <groupId>org.projectlombok</groupId>

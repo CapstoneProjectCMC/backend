@@ -1,1246 +1,1968 @@
 {
-  "info": {
-    "_postman_id": "63a9254d-351a-4e0d-b88b-4065aa9a81a8",
-    "name": "Submission Service",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "33137665",
-    "_collection_link": "https://animeh-team.postman.co/workspace/Code-Campus-Workspace~833332bb-de6b-4a20-bdef-16542d164f4e/collection/33137665-63a9254d-351a-4e0d-b88b-4065aa9a81a8?action=share&source=collection_link&creator=33137665"
-  },
-  "item": [
-    {
-      "name": "Contest",
-      "item": [
-        {
-          "name": "(TEACHER) createContest",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNDM0MjQyNTItZDJjZi00Y2NkLWFjYWEtNzgxOGQ2ZTE3YzdhIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTIxMzI4NDQsImlhdCI6MTc1MjEyOTI0NCwianRpIjoiNzVkZDIyZDItNTE4MS00YzQ3LWE1MjgtYTIxYjNhZWNlY2UxIiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.UKClDlrPTtbmE9HcexQ4t4CjAWMbtP1UzL2mVuuVW4uPDwhSwSyU9ahEeoakb7ve0yM_RDkBy_XFdeAzGrDIoA",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n  \"title\": \"Summer Coding Final\",\r\n  \"description\": \"Thi cuối kỳ – phần coding & quiz\",\r\n  \"startTime\": \"2025-08-01T08:00:00Z\",\r\n  \"endTime\":   \"2025-08-01T10:00:00Z\",\r\n  \"rankPublic\": true,\r\n  \"rankRevealTime\": \"2025-08-01T10:05:00Z\",\r\n  \"antiCheatConfig\": {\r\n    \"shuffleQuestions\": true,\r\n    \"shuffleOptions\": true,\r\n    \"fullscreenRequired\": true,\r\n    \"webcamRequired\": false,\r\n    \"maxTabSwitches\": 3,\r\n    \"attemptLimitPerExercise\": 2,\r\n    \"ipWhitelist\": [\"10.0.0.0/24\"]\r\n  },\r\n  \"exerciseIds\": [\r\n    \"33a295ad-b5c8-4ca2-b0c9-7c59d2ba30ea\"\r\n  ],\r\n  \"studentIds\": [\r\n    \"05d574e2-9627-4186-a75a-a34cea33378d\"\r\n  ]\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "http://localhost:8083/submission/contest",
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "8083",
-              "path": [
-                "submission",
-                "contest"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "getContest",
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          },
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiMDVkNTc0ZTItOTYyNy00MTg2LWE3NWEtYTM0Y2VhMzMzNzhkIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTI5NDA4NDUsImlhdCI6MTc1MjkzNzI0NSwianRpIjoiZWVjMmFiZTktYTlkYy00NDI2LTk3ZWMtYjhiNjhiNzliMmUyIiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.VH8-gf5Qpgf51odPYzXQvZtE8ldNO1313CCPSGE1bEDMFASIvxX7ptGZf9XHbbyVlNx2iIi8tZAeVYSYkNH50A",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "GET",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n  \"title\": \"Summer Coding Final\",\r\n  \"description\": \"Thi cuối kỳ – phần coding & quiz\",\r\n  \"startTime\": \"2025-08-01T08:00:00Z\",\r\n  \"endTime\":   \"2025-08-01T10:00:00Z\",\r\n  \"rankPublic\": true,\r\n  \"rankRevealTime\": \"2025-08-01T10:05:00Z\",\r\n  \"antiCheatConfig\": {\r\n    \"shuffleQuestions\": true,\r\n    \"shuffleOptions\": true,\r\n    \"fullscreenRequired\": true,\r\n    \"webcamRequired\": false,\r\n    \"maxTabSwitches\": 3,\r\n    \"attemptLimitPerExercise\": 2,\r\n    \"ipWhitelist\": [\"10.0.0.0/24\"]\r\n  },\r\n  \"exerciseIds\": [\r\n    \"33a295ad-b5c8-4ca2-b0c9-7c59d2ba30ea\"\r\n  ],\r\n  \"studentIds\": [\r\n    \"05d574e2-9627-4186-a75a-a34cea33378d\"\r\n  ]\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "http://localhost:8083/submission/contest/self",
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "8083",
-              "path": [
-                "submission",
-                "contest",
-                "self"
-              ]
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "Internal (FE không truy cập được vào đây)",
-      "item": [
-        {
-          "name": "(INTERNAL) (TEACHER) internalCreateExercise",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNDM0MjQyNTItZDJjZi00Y2NkLWFjYWEtNzgxOGQ2ZTE3YzdhIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTIxMzI4NDQsImlhdCI6MTc1MjEyOTI0NCwianRpIjoiNzVkZDIyZDItNTE4MS00YzQ3LWE1MjgtYTIxYjNhZWNlY2UxIiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.UKClDlrPTtbmE9HcexQ4t4CjAWMbtP1UzL2mVuuVW4uPDwhSwSyU9ahEeoakb7ve0yM_RDkBy_XFdeAzGrDIoA",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n    \"title\": \"Java Basics Quiz\",\r\n    \"description\": \"Test your Java knowledge\",\r\n    \"difficulty\": \"EASY\",\r\n    \"exerciseType\": \"QUIZ\",\r\n    \"orgId\": null,\r\n    \"cost\": 0,\r\n    \"freeForOrg\": true,\r\n    \"startTime\": null,\r\n    \"endTime\": null,\r\n    \"duration\": 0,\r\n    \"allowDiscussionId\": null,\r\n    \"resourceIds\": [],\r\n    \"tags\": [\r\n        \"java\",\r\n        \"quiz\"\r\n    ],\r\n    \"allowAiQuestion\": false\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "http://localhost:8083/submission/internal/exercise",
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "8083",
-              "path": [
-                "submission",
-                "internal",
-                "exercise"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "(INTERNAL) (TEACHER) internalCreateQuizExercise",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNDM0MjQyNTItZDJjZi00Y2NkLWFjYWEtNzgxOGQ2ZTE3YzdhIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTIxMzI4NDQsImlhdCI6MTc1MjEyOTI0NCwianRpIjoiNzVkZDIyZDItNTE4MS00YzQ3LWE1MjgtYTIxYjNhZWNlY2UxIiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.UKClDlrPTtbmE9HcexQ4t4CjAWMbtP1UzL2mVuuVW4uPDwhSwSyU9ahEeoakb7ve0yM_RDkBy_XFdeAzGrDIoA",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n    \"createExerciseRequest\": {\r\n        \"title\": \"Quiz về các khái niệm cơ bản của Java\",\r\n        \"description\": \"Kiểm tra kiến thức về các khái niệm cơ bản của Java\",\r\n        \"difficulty\": \"EASY\",\r\n        \"exerciseType\": \"QUIZ\",\r\n        \"orgId\": null,\r\n        \"cost\": 10,\r\n        \"freeForOrg\": null,\r\n        \"startTime\": null,\r\n        \"endTime\": null,\r\n        \"duration\": 15,\r\n        \"allowDiscussionId\": null,\r\n        \"resourceIds\": null,\r\n        \"tags\": null,\r\n        \"allowAiQuestion\": null\r\n    },\r\n    \"addQuizDetailRequest\": {\r\n        \"questions\": [\r\n            {\r\n                \"text\": \"Bốn trụ cột chính của lập trình hướng đối tượng trong Java là gì?\",\r\n                \"questionType\": \"SINGLE_CHOICE\",\r\n                \"points\": 1,\r\n                \"orderInQuiz\": 1,\r\n                \"options\": [\r\n                    {\r\n                        \"optionText\": \"Tính đóng gói, tính kế thừa, tính đa hình, tính trừu tượng\",\r\n                        \"correct\": true,\r\n                        \"order\": \"A\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"Tính bảo mật, tính linh hoạt, tính tái sử dụng, tính mở rộng\",\r\n                        \"correct\": false,\r\n                        \"order\": \"B\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"Tính nhất quán, tính module hóa, tính trừu tượng, tính kế thừa\",\r\n                        \"correct\": false,\r\n                        \"order\": \"C\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"Tính toàn vẹn, tính bảo mật, tính trừu tượng, tính đa hình\",\r\n                        \"correct\": false,\r\n                        \"order\": \"D\"\r\n                    }\r\n                ]\r\n            },\r\n            {\r\n                \"text\": \"Từ khóa nào cho phép truy cập một biến hoặc phương thức từ bất kỳ đâu?\",\r\n                \"questionType\": \"SINGLE_CHOICE\",\r\n                \"points\": 1,\r\n                \"orderInQuiz\": 2,\r\n                \"options\": [\r\n                    {\r\n                        \"optionText\": \"public\",\r\n                        \"correct\": true,\r\n                        \"order\": \"A\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"private\",\r\n                        \"correct\": false,\r\n                        \"order\": \"B\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"protected\",\r\n                        \"correct\": false,\r\n                        \"order\": \"C\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"internal\",\r\n                        \"correct\": false,\r\n                        \"order\": \"D\"\r\n                    }\r\n                ]\r\n            },\r\n            {\r\n                \"text\": \"Cơ chế cho phép một lớp kế thừa các thuộc tính và phương thức của một lớp khác được gọi là gì?\",\r\n                \"questionType\": \"SINGLE_CHOICE\",\r\n                \"points\": 1,\r\n                \"orderInQuiz\": 3,\r\n                \"options\": [\r\n                    {\r\n                        \"optionText\": \"Kế thừa\",\r\n                        \"correct\": true,\r\n                        \"order\": \"A\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"Đóng gói\",\r\n                        \"correct\": false,\r\n                        \"order\": \"B\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"Đa hình\",\r\n                        \"correct\": false,\r\n                        \"order\": \"C\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"Trừu tượng\",\r\n                        \"correct\": false,\r\n                        \"order\": \"D\"\r\n                    }\r\n                ]\r\n            },\r\n            {\r\n                \"text\": \"Trong Java, một bản thiết kế cho một lớp (class) mà chỉ định nghĩa các phương thức trừu tượng được gọi là gì?\",\r\n                \"questionType\": \"SINGLE_CHOICE\",\r\n                \"points\": 1,\r\n                \"orderInQuiz\": 4,\r\n                \"options\": [\r\n                    {\r\n                        \"optionText\": \"Interface\",\r\n                        \"correct\": true,\r\n                        \"order\": \"A\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"Class\",\r\n                        \"correct\": false,\r\n                        \"order\": \"B\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"Object\",\r\n                        \"correct\": false,\r\n                        \"order\": \"C\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"Package\",\r\n                        \"correct\": false,\r\n                        \"order\": \"D\"\r\n                    }\r\n                ]\r\n            },\r\n            {\r\n                \"text\": \"Những lớp nào sau đây triển khai interface List trong Java?\",\r\n                \"questionType\": \"MULTI_CHOICE\",\r\n                \"points\": 1,\r\n                \"orderInQuiz\": 5,\r\n                \"options\": [\r\n                    {\r\n                        \"optionText\": \"ArrayList\",\r\n                        \"correct\": true,\r\n                        \"order\": \"A\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"LinkedList\",\r\n                        \"correct\": true,\r\n                        \"order\": \"B\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"HashMap\",\r\n                        \"correct\": false,\r\n                        \"order\": \"C\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"HashSet\",\r\n                        \"correct\": false,\r\n                        \"order\": \"D\"\r\n                    }\r\n                ]\r\n            },\r\n            {\r\n                \"text\": \"Cấu trúc nào được sử dụng để xử lý ngoại lệ trong Java?\",\r\n                \"questionType\": \"SINGLE_CHOICE\",\r\n                \"points\": 1,\r\n                \"orderInQuiz\": 6,\r\n                \"options\": [\r\n                    {\r\n                        \"optionText\": \"try-catch\",\r\n                        \"correct\": true,\r\n                        \"order\": \"A\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"if-else\",\r\n                        \"correct\": false,\r\n                        \"order\": \"B\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"for loop\",\r\n                        \"correct\": false,\r\n                        \"order\": \"C\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"while loop\",\r\n                        \"correct\": false,\r\n                        \"order\": \"D\"\r\n                    }\r\n                ]\r\n            },\r\n            {\r\n                \"text\": \"Kiểu dữ liệu nào trong Java là một kiểu tham chiếu (reference type)?\",\r\n                \"questionType\": \"SINGLE_CHOICE\",\r\n                \"points\": 1,\r\n                \"orderInQuiz\": 7,\r\n                \"options\": [\r\n                    {\r\n                        \"optionText\": \"int\",\r\n                        \"correct\": false,\r\n                        \"order\": \"A\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"String\",\r\n                        \"correct\": true,\r\n                        \"order\": \"B\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"boolean\",\r\n                        \"correct\": false,\r\n                        \"order\": \"C\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"double\",\r\n                        \"correct\": false,\r\n                        \"order\": \"D\"\r\n                    }\r\n                ]\r\n            },\r\n            {\r\n                \"text\": \"Thành phần nào của Java chịu trách nhiệm chuyển đổi bytecode thành mã máy để thực thi?\",\r\n                \"questionType\": \"SINGLE_CHOICE\",\r\n                \"points\": 1,\r\n                \"orderInQuiz\": 8,\r\n                \"options\": [\r\n                    {\r\n                        \"optionText\": \"JVM (Java Virtual Machine)\",\r\n                        \"correct\": true,\r\n                        \"order\": \"A\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"JRE (Java Runtime Environment)\",\r\n                        \"correct\": false,\r\n                        \"order\": \"B\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"JDK (Java Development Kit)\",\r\n                        \"correct\": false,\r\n                        \"order\": \"C\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"API (Application Programming Interface)\",\r\n                        \"correct\": false,\r\n                        \"order\": \"D\"\r\n                    }\r\n                ]\r\n            },\r\n            {\r\n                \"text\": \"Phương thức nào được sử dụng để so sánh nội dung của hai đối tượng String trong Java?\",\r\n                \"questionType\": \"SINGLE_CHOICE\",\r\n                \"points\": 1,\r\n                \"orderInQuiz\": 9,\r\n                \"options\": [\r\n                    {\r\n                        \"optionText\": \"equals()\",\r\n                        \"correct\": true,\r\n                        \"order\": \"A\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"==\",\r\n                        \"correct\": false,\r\n                        \"order\": \"B\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"compareTo()\",\r\n                        \"correct\": false,\r\n                        \"order\": \"C\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"hashCode()\",\r\n                        \"correct\": false,\r\n                        \"order\": \"D\"\r\n                    }\r\n                ]\r\n            },\r\n            {\r\n                \"text\": \"Từ khóa nào được sử dụng để khai báo một biến hoặc phương thức thuộc về lớp chứ không phải là một thể hiện cụ thể của lớp?\",\r\n                \"questionType\": \"SINGLE_CHOICE\",\r\n                \"points\": 1,\r\n                \"orderInQuiz\": 10,\r\n                \"options\": [\r\n                    {\r\n                        \"optionText\": \"static\",\r\n                        \"correct\": true,\r\n                        \"order\": \"A\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"final\",\r\n                        \"correct\": false,\r\n                        \"order\": \"B\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"abstract\",\r\n                        \"correct\": false,\r\n                        \"order\": \"C\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"synchronized\",\r\n                        \"correct\": false,\r\n                        \"order\": \"D\"\r\n                    }\r\n                ]\r\n            }\r\n        ]\r\n    }\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "http://localhost:8083/submission/internal/exercise/quiz",
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "8083",
-              "path": [
-                "submission",
-                "internal",
-                "exercise",
-                "quiz"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "(INTERNAL) (TEACHER) internalAddQuizDetail",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNDM0MjQyNTItZDJjZi00Y2NkLWFjYWEtNzgxOGQ2ZTE3YzdhIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTE2OTM0NjAsImlhdCI6MTc1MTY4OTg2MCwianRpIjoiZTRiMTEwMzItMTY1OS00ODRlLWI1MzgtMjdiYWJkYzJmZTU3IiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.K2zcjXCfHWBRvIfOvvzNZKPd679JbK-eTiTGlq3BcEC7kqU_mbZCFu-QE6ST1G8NLC1tQB3lDOfzZ_ASFj5D1Q",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n    \"questions\": [\r\n        {\r\n            \"text\": \"What is the size of int in Java?\",\r\n            \"questionType\": \"SINGLE_CHOICE\",\r\n            \"points\": 10,\r\n            \"orderInQuiz\": 1,\r\n            \"options\": [\r\n                {\r\n                    \"optionText\": \"4 bytes\",\r\n                    \"correct\": true,\r\n                    \"order\": \"A\"\r\n                },\r\n                {\r\n                    \"optionText\": \"2 bytes\",\r\n                    \"correct\": false,\r\n                    \"order\": \"B\"\r\n                },\r\n                {\r\n                    \"optionText\": \"8 bytes\",\r\n                    \"correct\": false,\r\n                    \"order\": \"C\"\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"text\": \"Which of the following are primitive types in Java?\",\r\n            \"questionType\": \"MULTI_CHOICE\",\r\n            \"points\": 10,\r\n            \"orderInQuiz\": 2,\r\n            \"options\": [\r\n                {\r\n                    \"optionText\": \"int\",\r\n                    \"correct\": true,\r\n                    \"order\": \"A\"\r\n                },\r\n                {\r\n                    \"optionText\": \"String\",\r\n                    \"correct\": false,\r\n                    \"order\": \"B\"\r\n                },\r\n                {\r\n                    \"optionText\": \"boolean\",\r\n                    \"correct\": true,\r\n                    \"order\": \"C\"\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"text\": \"Fill in the blank: The keyword used to inherit a class is _____ .\",\r\n            \"questionType\": \"FILL_BLANK\",\r\n            \"points\": 10,\r\n            \"orderInQuiz\": 3,\r\n            \"options\": []\r\n        }\r\n    ]\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "http://localhost:8083/submission/internal/quiz/exercise/33a295ad-b5c8-4ca2-b0c9-7c59d2ba30ea/quiz-detail",
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "8083",
-              "path": [
-                "submission",
-                "internal",
-                "quiz",
-                "exercise",
-                "33a295ad-b5c8-4ca2-b0c9-7c59d2ba30ea",
-                "quiz-detail"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "(INTERNAL) (TEACHER) internalAddQuestion",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiMTViNmZkNDgtZThmYi00ZjUzLWIxMmYtZWJjZTFiZmQyYzk3IiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTI4MjU1MTIsImlhdCI6MTc1MjgyMTkxMiwianRpIjoiMTA3MjE0MTEtYjQzZS00MDk5LThlYjgtMmI3ODZmMTk5ZGQxIiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.I2U_jNov7o5eC_Yyaz-8_sGUNARyFJpZ6X_1uhrTX2NV057HVr4JVkeGJ1zYnDAhyo55j-K8oU5_7wan_7aJHQ",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n  \"text\": \"Phương thức nào dưới đây thuộc lớp java.lang.System để in ra console?\",\r\n  \"questionType\": \"SINGLE_CHOICE\",\r\n  \"points\": 10,\r\n  \"orderInQuiz\": 3,\r\n  \"options\": [\r\n    { \"optionText\": \"print()\",    \"correct\": false, \"order\": \"A\" },\r\n    { \"optionText\": \"println()\",  \"correct\": false, \"order\": \"B\" },\r\n    { \"optionText\": \"out.println()\", \"correct\": true, \"order\": \"C\" },\r\n    { \"optionText\": \"console()\",  \"correct\": false, \"order\": \"D\" }\r\n  ]\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "http://localhost:8083/submission/internal/quiz/fe66b34c-d998-47b3-8e0d-bce71ccdfe30/question",
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "8083",
-              "path": [
-                "submission",
-                "internal",
-                "quiz",
-                "fe66b34c-d998-47b3-8e0d-bce71ccdfe30",
-                "question"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "(INTERNAL) (TEACHER) internalAddOption",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNDM0MjQyNTItZDJjZi00Y2NkLWFjYWEtNzgxOGQ2ZTE3YzdhIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTE2OTM0NjAsImlhdCI6MTc1MTY4OTg2MCwianRpIjoiZTRiMTEwMzItMTY1OS00ODRlLWI1MzgtMjdiYWJkYzJmZTU3IiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.K2zcjXCfHWBRvIfOvvzNZKPd679JbK-eTiTGlq3BcEC7kqU_mbZCFu-QE6ST1G8NLC1tQB3lDOfzZ_ASFj5D1Q",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n    \"optionText\": \"16 bytes\",\r\n    \"correct\": false,\r\n    \"order\": \"D\"\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "http://localhost:8083/submission/internal/quiz/question/1d089c28-9286-4503-abf1-1b534235fab5/option",
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "8083",
-              "path": [
-                "submission",
-                "internal",
-                "quiz",
-                "question",
-                "1d089c28-9286-4503-abf1-1b534235fab5",
-                "option"
-              ]
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "(TEACHER) createExercise",
-      "request": {
-        "auth": {
-          "type": "bearer",
-          "bearer": [
-            {
-              "key": "token",
-              "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNDM0MjQyNTItZDJjZi00Y2NkLWFjYWEtNzgxOGQ2ZTE3YzdhIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTIxMzI4NDQsImlhdCI6MTc1MjEyOTI0NCwianRpIjoiNzVkZDIyZDItNTE4MS00YzQ3LWE1MjgtYTIxYjNhZWNlY2UxIiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.UKClDlrPTtbmE9HcexQ4t4CjAWMbtP1UzL2mVuuVW4uPDwhSwSyU9ahEeoakb7ve0yM_RDkBy_XFdeAzGrDIoA",
-              "type": "string"
-            }
-          ]
-        },
-        "method": "POST",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\r\n    \"title\": \"Java Basics Quiz\",\r\n    \"description\": \"Test your Java knowledge\",\r\n    \"difficulty\": \"EASY\",\r\n    \"exerciseType\": \"QUIZ\",\r\n    \"orgId\": null,\r\n    \"cost\": 0,\r\n    \"freeForOrg\": true,\r\n    \"startTime\": null,\r\n    \"endTime\": null,\r\n    \"duration\": 0,\r\n    \"allowDiscussionId\": null,\r\n    \"resourceIds\": [],\r\n    \"tags\": [\r\n        \"java\",\r\n        \"quiz\"\r\n    ],\r\n    \"allowAiQuestion\": false\r\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": {
-          "raw": "http://localhost:8083/submission/exercise",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8083",
-          "path": [
-            "submission",
-            "exercise"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "(TEACHER) createQuizExercise",
-      "request": {
-        "auth": {
-          "type": "bearer",
-          "bearer": [
-            {
-              "key": "token",
-              "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNDM0MjQyNTItZDJjZi00Y2NkLWFjYWEtNzgxOGQ2ZTE3YzdhIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTIxMzI4NDQsImlhdCI6MTc1MjEyOTI0NCwianRpIjoiNzVkZDIyZDItNTE4MS00YzQ3LWE1MjgtYTIxYjNhZWNlY2UxIiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.UKClDlrPTtbmE9HcexQ4t4CjAWMbtP1UzL2mVuuVW4uPDwhSwSyU9ahEeoakb7ve0yM_RDkBy_XFdeAzGrDIoA",
-              "type": "string"
-            }
-          ]
-        },
-        "method": "POST",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\r\n    \"createExerciseRequest\": {\r\n        \"title\": \"Quiz về các khái niệm cơ bản của Java\",\r\n        \"description\": \"Kiểm tra kiến thức về các khái niệm cơ bản của Java\",\r\n        \"difficulty\": \"EASY\",\r\n        \"exerciseType\": \"QUIZ\",\r\n        \"orgId\": null,\r\n        \"cost\": 10,\r\n        \"freeForOrg\": null,\r\n        \"startTime\": null,\r\n        \"endTime\": null,\r\n        \"duration\": 15,\r\n        \"allowDiscussionId\": null,\r\n        \"resourceIds\": null,\r\n        \"tags\": null,\r\n        \"allowAiQuestion\": null\r\n    },\r\n    \"addQuizDetailRequest\": {\r\n        \"questions\": [\r\n            {\r\n                \"text\": \"Bốn trụ cột chính của lập trình hướng đối tượng trong Java là gì?\",\r\n                \"questionType\": \"SINGLE_CHOICE\",\r\n                \"points\": 1,\r\n                \"orderInQuiz\": 1,\r\n                \"options\": [\r\n                    {\r\n                        \"optionText\": \"Tính đóng gói, tính kế thừa, tính đa hình, tính trừu tượng\",\r\n                        \"correct\": true,\r\n                        \"order\": \"A\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"Tính bảo mật, tính linh hoạt, tính tái sử dụng, tính mở rộng\",\r\n                        \"correct\": false,\r\n                        \"order\": \"B\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"Tính nhất quán, tính module hóa, tính trừu tượng, tính kế thừa\",\r\n                        \"correct\": false,\r\n                        \"order\": \"C\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"Tính toàn vẹn, tính bảo mật, tính trừu tượng, tính đa hình\",\r\n                        \"correct\": false,\r\n                        \"order\": \"D\"\r\n                    }\r\n                ]\r\n            },\r\n            {\r\n                \"text\": \"Từ khóa nào cho phép truy cập một biến hoặc phương thức từ bất kỳ đâu?\",\r\n                \"questionType\": \"SINGLE_CHOICE\",\r\n                \"points\": 1,\r\n                \"orderInQuiz\": 2,\r\n                \"options\": [\r\n                    {\r\n                        \"optionText\": \"public\",\r\n                        \"correct\": true,\r\n                        \"order\": \"A\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"private\",\r\n                        \"correct\": false,\r\n                        \"order\": \"B\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"protected\",\r\n                        \"correct\": false,\r\n                        \"order\": \"C\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"internal\",\r\n                        \"correct\": false,\r\n                        \"order\": \"D\"\r\n                    }\r\n                ]\r\n            },\r\n            {\r\n                \"text\": \"Cơ chế cho phép một lớp kế thừa các thuộc tính và phương thức của một lớp khác được gọi là gì?\",\r\n                \"questionType\": \"SINGLE_CHOICE\",\r\n                \"points\": 1,\r\n                \"orderInQuiz\": 3,\r\n                \"options\": [\r\n                    {\r\n                        \"optionText\": \"Kế thừa\",\r\n                        \"correct\": true,\r\n                        \"order\": \"A\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"Đóng gói\",\r\n                        \"correct\": false,\r\n                        \"order\": \"B\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"Đa hình\",\r\n                        \"correct\": false,\r\n                        \"order\": \"C\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"Trừu tượng\",\r\n                        \"correct\": false,\r\n                        \"order\": \"D\"\r\n                    }\r\n                ]\r\n            },\r\n            {\r\n                \"text\": \"Trong Java, một bản thiết kế cho một lớp (class) mà chỉ định nghĩa các phương thức trừu tượng được gọi là gì?\",\r\n                \"questionType\": \"SINGLE_CHOICE\",\r\n                \"points\": 1,\r\n                \"orderInQuiz\": 4,\r\n                \"options\": [\r\n                    {\r\n                        \"optionText\": \"Interface\",\r\n                        \"correct\": true,\r\n                        \"order\": \"A\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"Class\",\r\n                        \"correct\": false,\r\n                        \"order\": \"B\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"Object\",\r\n                        \"correct\": false,\r\n                        \"order\": \"C\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"Package\",\r\n                        \"correct\": false,\r\n                        \"order\": \"D\"\r\n                    }\r\n                ]\r\n            },\r\n            {\r\n                \"text\": \"Những lớp nào sau đây triển khai interface List trong Java?\",\r\n                \"questionType\": \"MULTI_CHOICE\",\r\n                \"points\": 1,\r\n                \"orderInQuiz\": 5,\r\n                \"options\": [\r\n                    {\r\n                        \"optionText\": \"ArrayList\",\r\n                        \"correct\": true,\r\n                        \"order\": \"A\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"LinkedList\",\r\n                        \"correct\": true,\r\n                        \"order\": \"B\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"HashMap\",\r\n                        \"correct\": false,\r\n                        \"order\": \"C\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"HashSet\",\r\n                        \"correct\": false,\r\n                        \"order\": \"D\"\r\n                    }\r\n                ]\r\n            },\r\n            {\r\n                \"text\": \"Cấu trúc nào được sử dụng để xử lý ngoại lệ trong Java?\",\r\n                \"questionType\": \"SINGLE_CHOICE\",\r\n                \"points\": 1,\r\n                \"orderInQuiz\": 6,\r\n                \"options\": [\r\n                    {\r\n                        \"optionText\": \"try-catch\",\r\n                        \"correct\": true,\r\n                        \"order\": \"A\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"if-else\",\r\n                        \"correct\": false,\r\n                        \"order\": \"B\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"for loop\",\r\n                        \"correct\": false,\r\n                        \"order\": \"C\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"while loop\",\r\n                        \"correct\": false,\r\n                        \"order\": \"D\"\r\n                    }\r\n                ]\r\n            },\r\n            {\r\n                \"text\": \"Kiểu dữ liệu nào trong Java là một kiểu tham chiếu (reference type)?\",\r\n                \"questionType\": \"SINGLE_CHOICE\",\r\n                \"points\": 1,\r\n                \"orderInQuiz\": 7,\r\n                \"options\": [\r\n                    {\r\n                        \"optionText\": \"int\",\r\n                        \"correct\": false,\r\n                        \"order\": \"A\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"String\",\r\n                        \"correct\": true,\r\n                        \"order\": \"B\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"boolean\",\r\n                        \"correct\": false,\r\n                        \"order\": \"C\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"double\",\r\n                        \"correct\": false,\r\n                        \"order\": \"D\"\r\n                    }\r\n                ]\r\n            },\r\n            {\r\n                \"text\": \"Thành phần nào của Java chịu trách nhiệm chuyển đổi bytecode thành mã máy để thực thi?\",\r\n                \"questionType\": \"SINGLE_CHOICE\",\r\n                \"points\": 1,\r\n                \"orderInQuiz\": 8,\r\n                \"options\": [\r\n                    {\r\n                        \"optionText\": \"JVM (Java Virtual Machine)\",\r\n                        \"correct\": true,\r\n                        \"order\": \"A\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"JRE (Java Runtime Environment)\",\r\n                        \"correct\": false,\r\n                        \"order\": \"B\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"JDK (Java Development Kit)\",\r\n                        \"correct\": false,\r\n                        \"order\": \"C\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"API (Application Programming Interface)\",\r\n                        \"correct\": false,\r\n                        \"order\": \"D\"\r\n                    }\r\n                ]\r\n            },\r\n            {\r\n                \"text\": \"Phương thức nào được sử dụng để so sánh nội dung của hai đối tượng String trong Java?\",\r\n                \"questionType\": \"SINGLE_CHOICE\",\r\n                \"points\": 1,\r\n                \"orderInQuiz\": 9,\r\n                \"options\": [\r\n                    {\r\n                        \"optionText\": \"equals()\",\r\n                        \"correct\": true,\r\n                        \"order\": \"A\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"==\",\r\n                        \"correct\": false,\r\n                        \"order\": \"B\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"compareTo()\",\r\n                        \"correct\": false,\r\n                        \"order\": \"C\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"hashCode()\",\r\n                        \"correct\": false,\r\n                        \"order\": \"D\"\r\n                    }\r\n                ]\r\n            },\r\n            {\r\n                \"text\": \"Từ khóa nào được sử dụng để khai báo một biến hoặc phương thức thuộc về lớp chứ không phải là một thể hiện cụ thể của lớp?\",\r\n                \"questionType\": \"SINGLE_CHOICE\",\r\n                \"points\": 1,\r\n                \"orderInQuiz\": 10,\r\n                \"options\": [\r\n                    {\r\n                        \"optionText\": \"static\",\r\n                        \"correct\": true,\r\n                        \"order\": \"A\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"final\",\r\n                        \"correct\": false,\r\n                        \"order\": \"B\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"abstract\",\r\n                        \"correct\": false,\r\n                        \"order\": \"C\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"synchronized\",\r\n                        \"correct\": false,\r\n                        \"order\": \"D\"\r\n                    }\r\n                ]\r\n            }\r\n        ]\r\n    }\r\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": {
-          "raw": "http://localhost:8083/submission/exercise/quiz",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8083",
-          "path": [
-            "submission",
-            "exercise",
-            "quiz"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "(TEACHER) addQuizDetail",
-      "request": {
-        "auth": {
-          "type": "bearer",
-          "bearer": [
-            {
-              "key": "token",
-              "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNDM0MjQyNTItZDJjZi00Y2NkLWFjYWEtNzgxOGQ2ZTE3YzdhIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTE2OTM0NjAsImlhdCI6MTc1MTY4OTg2MCwianRpIjoiZTRiMTEwMzItMTY1OS00ODRlLWI1MzgtMjdiYWJkYzJmZTU3IiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.K2zcjXCfHWBRvIfOvvzNZKPd679JbK-eTiTGlq3BcEC7kqU_mbZCFu-QE6ST1G8NLC1tQB3lDOfzZ_ASFj5D1Q",
-              "type": "string"
-            }
-          ]
-        },
-        "method": "POST",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\r\n    \"questions\": [\r\n        {\r\n            \"text\": \"What is the size of int in Java?\",\r\n            \"questionType\": \"SINGLE_CHOICE\",\r\n            \"points\": 10,\r\n            \"orderInQuiz\": 1,\r\n            \"options\": [\r\n                {\r\n                    \"optionText\": \"4 bytes\",\r\n                    \"correct\": true,\r\n                    \"order\": \"A\"\r\n                },\r\n                {\r\n                    \"optionText\": \"2 bytes\",\r\n                    \"correct\": false,\r\n                    \"order\": \"B\"\r\n                },\r\n                {\r\n                    \"optionText\": \"8 bytes\",\r\n                    \"correct\": false,\r\n                    \"order\": \"C\"\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"text\": \"Which of the following are primitive types in Java?\",\r\n            \"questionType\": \"MULTI_CHOICE\",\r\n            \"points\": 10,\r\n            \"orderInQuiz\": 2,\r\n            \"options\": [\r\n                {\r\n                    \"optionText\": \"int\",\r\n                    \"correct\": true,\r\n                    \"order\": \"A\"\r\n                },\r\n                {\r\n                    \"optionText\": \"String\",\r\n                    \"correct\": false,\r\n                    \"order\": \"B\"\r\n                },\r\n                {\r\n                    \"optionText\": \"boolean\",\r\n                    \"correct\": true,\r\n                    \"order\": \"C\"\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"text\": \"Fill in the blank: The keyword used to inherit a class is _____ .\",\r\n            \"questionType\": \"FILL_BLANK\",\r\n            \"points\": 10,\r\n            \"orderInQuiz\": 3,\r\n            \"options\": []\r\n        }\r\n    ]\r\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": {
-          "raw": "http://localhost:8083/submission/quiz/exercise/771e3cdb-537f-4b0f-9e1d-3f5d4f365cec/quiz-detail",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8083",
-          "path": [
-            "submission",
-            "quiz",
-            "exercise",
-            "771e3cdb-537f-4b0f-9e1d-3f5d4f365cec",
-            "quiz-detail"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "(TEACHER) addQuestion",
-      "request": {
-        "auth": {
-          "type": "bearer",
-          "bearer": [
-            {
-              "key": "token",
-              "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiMTViNmZkNDgtZThmYi00ZjUzLWIxMmYtZWJjZTFiZmQyYzk3IiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTI4MjU1MTIsImlhdCI6MTc1MjgyMTkxMiwianRpIjoiMTA3MjE0MTEtYjQzZS00MDk5LThlYjgtMmI3ODZmMTk5ZGQxIiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.I2U_jNov7o5eC_Yyaz-8_sGUNARyFJpZ6X_1uhrTX2NV057HVr4JVkeGJ1zYnDAhyo55j-K8oU5_7wan_7aJHQ",
-              "type": "string"
-            }
-          ]
-        },
-        "method": "POST",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\r\n  \"text\": \"Phương thức nào dưới đây thuộc lớp java.lang.System để in ra console?\",\r\n  \"questionType\": \"SINGLE_CHOICE\",\r\n  \"points\": 10,\r\n  \"orderInQuiz\": 3,\r\n  \"options\": [\r\n    { \"optionText\": \"print()\",    \"correct\": false, \"order\": \"A\" },\r\n    { \"optionText\": \"println()\",  \"correct\": false, \"order\": \"B\" },\r\n    { \"optionText\": \"out.println()\", \"correct\": true, \"order\": \"C\" },\r\n    { \"optionText\": \"console()\",  \"correct\": false, \"order\": \"D\" }\r\n  ]\r\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": {
-          "raw": "http://localhost:8888/api/v1/submission/quiz/fe66b34c-d998-47b3-8e0d-bce71ccdfe30/question",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8888",
-          "path": [
-            "api",
-            "v1",
-            "submission",
-            "quiz",
-            "fe66b34c-d998-47b3-8e0d-bce71ccdfe30",
-            "question"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "(TEACHER) addOption",
-      "request": {
-        "auth": {
-          "type": "bearer",
-          "bearer": [
-            {
-              "key": "token",
-              "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNDM0MjQyNTItZDJjZi00Y2NkLWFjYWEtNzgxOGQ2ZTE3YzdhIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTE2OTM0NjAsImlhdCI6MTc1MTY4OTg2MCwianRpIjoiZTRiMTEwMzItMTY1OS00ODRlLWI1MzgtMjdiYWJkYzJmZTU3IiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.K2zcjXCfHWBRvIfOvvzNZKPd679JbK-eTiTGlq3BcEC7kqU_mbZCFu-QE6ST1G8NLC1tQB3lDOfzZ_ASFj5D1Q",
-              "type": "string"
-            }
-          ]
-        },
-        "method": "POST",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\r\n    \"optionText\": \"16 bytes\",\r\n    \"correct\": false,\r\n    \"order\": \"D\"\r\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": {
-          "raw": "http://localhost:8083/submission/quiz/question/1d089c28-9286-4503-abf1-1b534235fab5/option",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8083",
-          "path": [
-            "submission",
-            "quiz",
-            "question",
-            "1d089c28-9286-4503-abf1-1b534235fab5",
-            "option"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "(TEACHER) assignExercise",
-      "request": {
-        "auth": {
-          "type": "bearer",
-          "bearer": [
-            {
-              "key": "token",
-              "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNDM0MjQyNTItZDJjZi00Y2NkLWFjYWEtNzgxOGQ2ZTE3YzdhIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTE2OTM0NjAsImlhdCI6MTc1MTY4OTg2MCwianRpIjoiZTRiMTEwMzItMTY1OS00ODRlLWI1MzgtMjdiYWJkYzJmZTU3IiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.K2zcjXCfHWBRvIfOvvzNZKPd679JbK-eTiTGlq3BcEC7kqU_mbZCFu-QE6ST1G8NLC1tQB3lDOfzZ_ASFj5D1Q",
-              "type": "string"
-            }
-          ]
-        },
-        "method": "POST",
-        "header": [],
-        "url": {
-          "raw": "http://localhost:8083/submission/assignment?exerciseId=33a295ad-b5c8-4ca2-b0c9-7c59d2ba30ea&studentId=05d574e2-9627-4186-a75a-a34cea33378d&dueAt=2025-07-31T17:00:00Z",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8083",
-          "path": [
-            "submission",
-            "assignment"
-          ],
-          "query": [
-            {
-              "key": "exerciseId",
-              "value": "33a295ad-b5c8-4ca2-b0c9-7c59d2ba30ea"
-            },
-            {
-              "key": "studentId",
-              "value": "05d574e2-9627-4186-a75a-a34cea33378d"
-            },
-            {
-              "key": "dueAt",
-              "value": "2025-07-31T17:00:00Z"
-            }
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "(TEACHER) updateExercise",
-      "request": {
-        "auth": {
-          "type": "bearer",
-          "bearer": [
-            {
-              "key": "token",
-              "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNDM0MjQyNTItZDJjZi00Y2NkLWFjYWEtNzgxOGQ2ZTE3YzdhIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTE2OTM0NjAsImlhdCI6MTc1MTY4OTg2MCwianRpIjoiZTRiMTEwMzItMTY1OS00ODRlLWI1MzgtMjdiYWJkYzJmZTU3IiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.K2zcjXCfHWBRvIfOvvzNZKPd679JbK-eTiTGlq3BcEC7kqU_mbZCFu-QE6ST1G8NLC1tQB3lDOfzZ_ASFj5D1Q",
-              "type": "string"
-            }
-          ]
-        },
-        "method": "PATCH",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\r\n    \"title\": \"Java Basics Quiz (v2)\",\r\n    \"duration\": 30\r\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": {
-          "raw": "http://localhost:8083/submission/exercise/b535081b-02f5-43a8-82c9-6cec9c1b9da6",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8083",
-          "path": [
-            "submission",
-            "exercise",
-            "b535081b-02f5-43a8-82c9-6cec9c1b9da6"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "(TEACHER) updateQuestion",
-      "request": {
-        "auth": {
-          "type": "bearer",
-          "bearer": [
-            {
-              "key": "token",
-              "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNDM0MjQyNTItZDJjZi00Y2NkLWFjYWEtNzgxOGQ2ZTE3YzdhIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTE2OTM0NjAsImlhdCI6MTc1MTY4OTg2MCwianRpIjoiZTRiMTEwMzItMTY1OS00ODRlLWI1MzgtMjdiYWJkYzJmZTU3IiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.K2zcjXCfHWBRvIfOvvzNZKPd679JbK-eTiTGlq3BcEC7kqU_mbZCFu-QE6ST1G8NLC1tQB3lDOfzZ_ASFj5D1Q",
-              "type": "string"
-            }
-          ]
-        },
-        "method": "PATCH",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\r\n    \"points\": 30\r\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": {
-          "raw": "http://localhost:8083/submission/quiz/30daadcd-79ac-4aaf-89e3-25a204d93091/question/07d692f3-a275-447a-a044-8e7d7d737d1e",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8083",
-          "path": [
-            "submission",
-            "quiz",
-            "30daadcd-79ac-4aaf-89e3-25a204d93091",
-            "question",
-            "07d692f3-a275-447a-a044-8e7d7d737d1e"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "(TEACHER) updateQuestionWithOptions",
-      "request": {
-        "auth": {
-          "type": "bearer",
-          "bearer": [
-            {
-              "key": "token",
-              "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNDM0MjQyNTItZDJjZi00Y2NkLWFjYWEtNzgxOGQ2ZTE3YzdhIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTE2OTM0NjAsImlhdCI6MTc1MTY4OTg2MCwianRpIjoiZTRiMTEwMzItMTY1OS00ODRlLWI1MzgtMjdiYWJkYzJmZTU3IiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.K2zcjXCfHWBRvIfOvvzNZKPd679JbK-eTiTGlq3BcEC7kqU_mbZCFu-QE6ST1G8NLC1tQB3lDOfzZ_ASFj5D1Q",
-              "type": "string"
-            }
-          ]
-        },
-        "method": "PUT",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\r\n    \"text\": \"Which of the following are primitive types in Java? (Choose all that apply)\",\r\n    \"questionType\": \"SINGLE_CHOICE\",\r\n    \"points\": 35,\r\n    \"orderInQuiz\": 2,\r\n    \"options\": [\r\n        {\r\n            \"id\": \"d178ecd0-0d21-4ff7-885e-953509dd2eae\",\r\n            \"optionText\": \"INTEGER\",\r\n            \"correct\": false,\r\n            \"order\": \"A\"\r\n        }, // cập nhật\r\n        {\r\n            \"id\": \"02555cda-1e90-4250-9587-75a3dd12ada1\",\r\n            \"delete\": true\r\n        }, // xoá mềm\r\n        {\r\n            \"id\": \"f49226db-5194-4207-bdf0-4e3cbafebad9\",\r\n            \"optionText\": \"boolean\",\r\n            \"correct\": true,\r\n            \"order\": \"B\"\r\n        } // cập nhật\r\n    ]\r\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": {
-          "raw": "http://localhost:8083/submission/quiz/771e3cdb-537f-4b0f-9e1d-3f5d4f365cec/question/b0c7eec5-0d0c-4097-9b90-6cd04e8c5339",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8083",
-          "path": [
-            "submission",
-            "quiz",
-            "771e3cdb-537f-4b0f-9e1d-3f5d4f365cec",
-            "question",
-            "b0c7eec5-0d0c-4097-9b90-6cd04e8c5339"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "(TEACHER) updateOption",
-      "request": {
-        "auth": {
-          "type": "bearer",
-          "bearer": [
-            {
-              "key": "token",
-              "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNDM0MjQyNTItZDJjZi00Y2NkLWFjYWEtNzgxOGQ2ZTE3YzdhIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTE2OTM0NjAsImlhdCI6MTc1MTY4OTg2MCwianRpIjoiZTRiMTEwMzItMTY1OS00ODRlLWI1MzgtMjdiYWJkYzJmZTU3IiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.K2zcjXCfHWBRvIfOvvzNZKPd679JbK-eTiTGlq3BcEC7kqU_mbZCFu-QE6ST1G8NLC1tQB3lDOfzZ_ASFj5D1Q",
-              "type": "string"
-            }
-          ]
-        },
-        "method": "PATCH",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\r\n    \"optionText\": \"4 bytes (32-bit)\",\r\n    \"order\": \"A\"\r\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": {
-          "raw": "http://localhost:8083/submission/quiz/question/option/4c266a8c-85df-4802-b08f-0dcca7336f79",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8083",
-          "path": [
-            "submission",
-            "quiz",
-            "question",
-            "option",
-            "4c266a8c-85df-4802-b08f-0dcca7336f79"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "(ADMIN) getAllExercises",
-      "request": {
-        "auth": {
-          "type": "bearer",
-          "bearer": [
-            {
-              "key": "token",
-              "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNDM0MjQyNTItZDJjZi00Y2NkLWFjYWEtNzgxOGQ2ZTE3YzdhIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTIxMzI4NDQsImlhdCI6MTc1MjEyOTI0NCwianRpIjoiNzVkZDIyZDItNTE4MS00YzQ3LWE1MjgtYTIxYjNhZWNlY2UxIiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.UKClDlrPTtbmE9HcexQ4t4CjAWMbtP1UzL2mVuuVW4uPDwhSwSyU9ahEeoakb7ve0yM_RDkBy_XFdeAzGrDIoA",
-              "type": "string"
-            }
-          ]
-        },
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "http://localhost:8083/submission/exercises?page=1&size=10&sortBy=CREATED_AT&asc=true",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8083",
-          "path": [
-            "submission",
-            "exercises"
-          ],
-          "query": [
-            {
-              "key": "page",
-              "value": "1"
-            },
-            {
-              "key": "size",
-              "value": "10"
-            },
-            {
-              "key": "sortBy",
-              "value": "CREATED_AT"
-            },
-            {
-              "key": "asc",
-              "value": "true"
-            }
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "(ADMIN) getExercisesOf",
-      "request": {
-        "auth": {
-          "type": "bearer",
-          "bearer": [
-            {
-              "key": "token",
-              "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNDM0MjQyNTItZDJjZi00Y2NkLWFjYWEtNzgxOGQ2ZTE3YzdhIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTIxMzI4NDQsImlhdCI6MTc1MjEyOTI0NCwianRpIjoiNzVkZDIyZDItNTE4MS00YzQ3LWE1MjgtYTIxYjNhZWNlY2UxIiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.UKClDlrPTtbmE9HcexQ4t4CjAWMbtP1UzL2mVuuVW4uPDwhSwSyU9ahEeoakb7ve0yM_RDkBy_XFdeAzGrDIoA",
-              "type": "string"
-            }
-          ]
-        },
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "http://localhost:8083/submission/exercises/self?page=1&size=10&sortBy=CREATED_AT&asc=true",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8083",
-          "path": [
-            "submission",
-            "exercises",
-            "self"
-          ],
-          "query": [
-            {
-              "key": "page",
-              "value": "1"
-            },
-            {
-              "key": "size",
-              "value": "10"
-            },
-            {
-              "key": "sortBy",
-              "value": "CREATED_AT"
-            },
-            {
-              "key": "asc",
-              "value": "true"
-            }
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "getExercise",
-      "request": {
-        "auth": {
-          "type": "bearer",
-          "bearer": [
-            {
-              "key": "token",
-              "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiYmY3YzUxMTItZGQ4Mi00NTE1LThlMDItMGM5ZGM2NzE2ZmU5IiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTMyNjQ3MjQsImlhdCI6MTc1MzI2MTEyNCwianRpIjoiNDliNjFlMTAtNDMwMC00MDQ1LTgwZjYtZWNhNjM2YjZmNmUyIiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ._gYQhN3EsN4EsdKnkS1xWbYA0_BNwWf7jzWdtcdRK6CGMZ_2dmtKVWuya4Z9gP0xGuOYw_DjBcKwQs055sq5oQ",
-              "type": "string"
-            }
-          ]
-        },
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "http://localhost:8083/submission/exercise/d5e85798-fad1-403f-a85b-91a6bc7dc66a?qPage=1&qSize=5&qSortBy=ORDER_IN_QUIZ&qAsc=false",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8083",
-          "path": [
-            "submission",
-            "exercise",
-            "d5e85798-fad1-403f-a85b-91a6bc7dc66a"
-          ],
-          "query": [
-            {
-              "key": "qPage",
-              "value": "1"
-            },
-            {
-              "key": "qSize",
-              "value": "5"
-            },
-            {
-              "key": "qSortBy",
-              "value": "ORDER_IN_QUIZ"
-            },
-            {
-              "key": "qAsc",
-              "value": "false"
-            }
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "(TEACHER) getQuestionsOfQuiz",
-      "request": {
-        "auth": {
-          "type": "bearer",
-          "bearer": [
-            {
-              "key": "token",
-              "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNDM0MjQyNTItZDJjZi00Y2NkLWFjYWEtNzgxOGQ2ZTE3YzdhIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTIxMzI4NDQsImlhdCI6MTc1MjEyOTI0NCwianRpIjoiNzVkZDIyZDItNTE4MS00YzQ3LWE1MjgtYTIxYjNhZWNlY2UxIiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.UKClDlrPTtbmE9HcexQ4t4CjAWMbtP1UzL2mVuuVW4uPDwhSwSyU9ahEeoakb7ve0yM_RDkBy_XFdeAzGrDIoA",
-              "type": "string"
-            }
-          ]
-        },
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "http://localhost:8083/submission/quiz/ad223f64-e3f3-4936-9215-4eadcad6fb92/questions?page=1&size=10&sortBy=ORDER_IN_QUIZ&asc=false",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8083",
-          "path": [
-            "submission",
-            "quiz",
-            "ad223f64-e3f3-4936-9215-4eadcad6fb92",
-            "questions"
-          ],
-          "query": [
-            {
-              "key": "page",
-              "value": "1"
-            },
-            {
-              "key": "size",
-              "value": "10"
-            },
-            {
-              "key": "sortBy",
-              "value": "ORDER_IN_QUIZ"
-            },
-            {
-              "key": "asc",
-              "value": "false"
-            }
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "(TEACHER) getQuestion",
-      "request": {
-        "auth": {
-          "type": "bearer",
-          "bearer": [
-            {
-              "key": "token",
-              "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNDM0MjQyNTItZDJjZi00Y2NkLWFjYWEtNzgxOGQ2ZTE3YzdhIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTIxMzI4NDQsImlhdCI6MTc1MjEyOTI0NCwianRpIjoiNzVkZDIyZDItNTE4MS00YzQ3LWE1MjgtYTIxYjNhZWNlY2UxIiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.UKClDlrPTtbmE9HcexQ4t4CjAWMbtP1UzL2mVuuVW4uPDwhSwSyU9ahEeoakb7ve0yM_RDkBy_XFdeAzGrDIoA",
-              "type": "string"
-            }
-          ]
-        },
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "http://localhost:8083/submission/question/dcf11051-7706-44c8-9f18-a3c889c2422b",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8083",
-          "path": [
-            "submission",
-            "question",
-            "dcf11051-7706-44c8-9f18-a3c889c2422b"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "(TEACHER) getOptionsOfQuestion",
-      "request": {
-        "auth": {
-          "type": "bearer",
-          "bearer": [
-            {
-              "key": "token",
-              "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNDM0MjQyNTItZDJjZi00Y2NkLWFjYWEtNzgxOGQ2ZTE3YzdhIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTIxMzI4NDQsImlhdCI6MTc1MjEyOTI0NCwianRpIjoiNzVkZDIyZDItNTE4MS00YzQ3LWE1MjgtYTIxYjNhZWNlY2UxIiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.UKClDlrPTtbmE9HcexQ4t4CjAWMbtP1UzL2mVuuVW4uPDwhSwSyU9ahEeoakb7ve0yM_RDkBy_XFdeAzGrDIoA",
-              "type": "string"
-            }
-          ]
-        },
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "http://localhost:8083/submission/question/dcf11051-7706-44c8-9f18-a3c889c2422b/option",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8083",
-          "path": [
-            "submission",
-            "question",
-            "dcf11051-7706-44c8-9f18-a3c889c2422b",
-            "option"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "(TEACHER) getOption",
-      "request": {
-        "auth": {
-          "type": "bearer",
-          "bearer": [
-            {
-              "key": "token",
-              "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNDM0MjQyNTItZDJjZi00Y2NkLWFjYWEtNzgxOGQ2ZTE3YzdhIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTIxMzI4NDQsImlhdCI6MTc1MjEyOTI0NCwianRpIjoiNzVkZDIyZDItNTE4MS00YzQ3LWE1MjgtYTIxYjNhZWNlY2UxIiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.UKClDlrPTtbmE9HcexQ4t4CjAWMbtP1UzL2mVuuVW4uPDwhSwSyU9ahEeoakb7ve0yM_RDkBy_XFdeAzGrDIoA",
-              "type": "string"
-            }
-          ]
-        },
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "http://localhost:8083/submission/option/4c266a8c-85df-4802-b08f-0dcca7336f79",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8083",
-          "path": [
-            "submission",
-            "option",
-            "4c266a8c-85df-4802-b08f-0dcca7336f79"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "myQuizHistory",
-      "protocolProfileBehavior": {
-        "disableBodyPruning": true
-      },
-      "request": {
-        "auth": {
-          "type": "bearer",
-          "bearer": [
-            {
-              "key": "token",
-              "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiMDVkNTc0ZTItOTYyNy00MTg2LWE3NWEtYTM0Y2VhMzMzNzhkIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTI5NDA4NDUsImlhdCI6MTc1MjkzNzI0NSwianRpIjoiZWVjMmFiZTktYTlkYy00NDI2LTk3ZWMtYjhiNjhiNzliMmUyIiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.VH8-gf5Qpgf51odPYzXQvZtE8ldNO1313CCPSGE1bEDMFASIvxX7ptGZf9XHbbyVlNx2iIi8tZAeVYSYkNH50A",
-              "type": "string"
-            }
-          ]
-        },
-        "method": "GET",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": {
-          "raw": "http://localhost:8083/submission/quiz/self/history",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8083",
-          "path": [
-            "submission",
-            "quiz",
-            "self",
-            "history"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "myAssignments",
-      "protocolProfileBehavior": {
-        "disableBodyPruning": true
-      },
-      "request": {
-        "auth": {
-          "type": "bearer",
-          "bearer": [
-            {
-              "key": "token",
-              "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiMDVkNTc0ZTItOTYyNy00MTg2LWE3NWEtYTM0Y2VhMzMzNzhkIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTI5NDA4NDUsImlhdCI6MTc1MjkzNzI0NSwianRpIjoiZWVjMmFiZTktYTlkYy00NDI2LTk3ZWMtYjhiNjhiNzliMmUyIiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.VH8-gf5Qpgf51odPYzXQvZtE8ldNO1313CCPSGE1bEDMFASIvxX7ptGZf9XHbbyVlNx2iIi8tZAeVYSYkNH50A",
-              "type": "string"
-            }
-          ]
-        },
-        "method": "GET",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": {
-          "raw": "http://localhost:8083/submission/assignments/self",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8083",
-          "path": [
-            "submission",
-            "assignments",
-            "self"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "mySubmissions",
-      "protocolProfileBehavior": {
-        "disableBodyPruning": true
-      },
-      "request": {
-        "auth": {
-          "type": "bearer",
-          "bearer": [
-            {
-              "key": "token",
-              "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiMDVkNTc0ZTItOTYyNy00MTg2LWE3NWEtYTM0Y2VhMzMzNzhkIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTI5NDA4NDUsImlhdCI6MTc1MjkzNzI0NSwianRpIjoiZWVjMmFiZTktYTlkYy00NDI2LTk3ZWMtYjhiNjhiNzliMmUyIiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.VH8-gf5Qpgf51odPYzXQvZtE8ldNO1313CCPSGE1bEDMFASIvxX7ptGZf9XHbbyVlNx2iIi8tZAeVYSYkNH50A",
-              "type": "string"
-            }
-          ]
-        },
-        "method": "GET",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": {
-          "raw": "http://localhost:8083/submission/self/history",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8083",
-          "path": [
-            "submission",
-            "self",
-            "history"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "(Teacher) softDeleteOption",
-      "request": {
-        "auth": {
-          "type": "bearer",
-          "bearer": [
-            {
-              "key": "token",
-              "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNDM0MjQyNTItZDJjZi00Y2NkLWFjYWEtNzgxOGQ2ZTE3YzdhIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTIxMzI4NDQsImlhdCI6MTc1MjEyOTI0NCwianRpIjoiNzVkZDIyZDItNTE4MS00YzQ3LWE1MjgtYTIxYjNhZWNlY2UxIiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.UKClDlrPTtbmE9HcexQ4t4CjAWMbtP1UzL2mVuuVW4uPDwhSwSyU9ahEeoakb7ve0yM_RDkBy_XFdeAzGrDIoA",
-              "type": "string"
-            }
-          ]
-        },
-        "method": "DELETE",
-        "header": [],
-        "url": {
-          "raw": "http://localhost:8083/submission/quiz/33a295ad-b5c8-4ca2-b0c9-7c59d2ba30ea/14419198-ff06-4034-ab37-505d2adcb36c/option/ee8e2bd0-9520-48db-b70f-6a182af2db67",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8083",
-          "path": [
-            "submission",
-            "quiz",
-            "33a295ad-b5c8-4ca2-b0c9-7c59d2ba30ea",
-            "14419198-ff06-4034-ab37-505d2adcb36c",
-            "option",
-            "ee8e2bd0-9520-48db-b70f-6a182af2db67"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "(Teacher) softDeleteQuestion",
-      "request": {
-        "auth": {
-          "type": "bearer",
-          "bearer": [
-            {
-              "key": "token",
-              "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNDM0MjQyNTItZDJjZi00Y2NkLWFjYWEtNzgxOGQ2ZTE3YzdhIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTIxMzI4NDQsImlhdCI6MTc1MjEyOTI0NCwianRpIjoiNzVkZDIyZDItNTE4MS00YzQ3LWE1MjgtYTIxYjNhZWNlY2UxIiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.UKClDlrPTtbmE9HcexQ4t4CjAWMbtP1UzL2mVuuVW4uPDwhSwSyU9ahEeoakb7ve0yM_RDkBy_XFdeAzGrDIoA",
-              "type": "string"
-            }
-          ]
-        },
-        "method": "DELETE",
-        "header": [],
-        "url": {
-          "raw": "http://localhost:8083/submission/quiz/33a295ad-b5c8-4ca2-b0c9-7c59d2ba30ea/question/22c128bd-5dd5-4d14-9656-1b96387dabb9",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8083",
-          "path": [
-            "submission",
-            "quiz",
-            "33a295ad-b5c8-4ca2-b0c9-7c59d2ba30ea",
-            "question",
-            "22c128bd-5dd5-4d14-9656-1b96387dabb9"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "(Teacher) softDeleteExercise",
-      "request": {
-        "auth": {
-          "type": "bearer",
-          "bearer": [
-            {
-              "key": "token",
-              "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNDM0MjQyNTItZDJjZi00Y2NkLWFjYWEtNzgxOGQ2ZTE3YzdhIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTIxMzI4NDQsImlhdCI6MTc1MjEyOTI0NCwianRpIjoiNzVkZDIyZDItNTE4MS00YzQ3LWE1MjgtYTIxYjNhZWNlY2UxIiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.UKClDlrPTtbmE9HcexQ4t4CjAWMbtP1UzL2mVuuVW4uPDwhSwSyU9ahEeoakb7ve0yM_RDkBy_XFdeAzGrDIoA",
-              "type": "string"
-            }
-          ]
-        },
-        "method": "DELETE",
-        "header": [],
-        "url": {
-          "raw": "http://localhost:8083/submission/exercise/43c55391-75fb-489a-852e-04dc70638239",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8083",
-          "path": [
-            "submission",
-            "exercise",
-            "43c55391-75fb-489a-852e-04dc70638239"
-          ]
-        }
-      },
-      "response": []
-    }
-  ]
+	"info": {
+		"_postman_id": "efcbff5d-f4ba-4047-90a1-49b674b62803",
+		"name": "Submission Service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33137665",
+		"_collection_link": "https://animeh-team.postman.co/workspace/CodeCampus-Backend~4a46659f-0826-49f2-b8c2-66ff451e96a4/collection/33137665-efcbff5d-f4ba-4047-90a1-49b674b62803?action=share&source=collection_link&creator=33137665"
+	},
+	"item": [
+		{
+			"name": "Contest",
+			"item": [
+				{
+					"name": "(TEACHER) createContest",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNDM0MjQyNTItZDJjZi00Y2NkLWFjYWEtNzgxOGQ2ZTE3YzdhIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTIxMzI4NDQsImlhdCI6MTc1MjEyOTI0NCwianRpIjoiNzVkZDIyZDItNTE4MS00YzQ3LWE1MjgtYTIxYjNhZWNlY2UxIiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.UKClDlrPTtbmE9HcexQ4t4CjAWMbtP1UzL2mVuuVW4uPDwhSwSyU9ahEeoakb7ve0yM_RDkBy_XFdeAzGrDIoA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"title\": \"Summer Coding Final\",\r\n  \"description\": \"Thi cuối kỳ – phần coding & quiz\",\r\n  \"startTime\": \"2025-08-01T08:00:00Z\",\r\n  \"endTime\":   \"2025-08-01T10:00:00Z\",\r\n  \"rankPublic\": true,\r\n  \"rankRevealTime\": \"2025-08-01T10:05:00Z\",\r\n  \"antiCheatConfig\": {\r\n    \"shuffleQuestions\": true,\r\n    \"shuffleOptions\": true,\r\n    \"fullscreenRequired\": true,\r\n    \"webcamRequired\": false,\r\n    \"maxTabSwitches\": 3,\r\n    \"attemptLimitPerExercise\": 2,\r\n    \"ipWhitelist\": [\"10.0.0.0/24\"]\r\n  },\r\n  \"exerciseIds\": [\r\n    \"813a145f-0fe0-4278-8662-42fcc93d5834\"\r\n  ],\r\n  \"studentIds\": [\r\n    \"90e68772-a5ee-412d-a3ac-caa590e8dd37\"\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/submission/contest",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"submission",
+								"contest"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getContest",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiMDVkNTc0ZTItOTYyNy00MTg2LWE3NWEtYTM0Y2VhMzMzNzhkIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTI5NDA4NDUsImlhdCI6MTc1MjkzNzI0NSwianRpIjoiZWVjMmFiZTktYTlkYy00NDI2LTk3ZWMtYjhiNjhiNzliMmUyIiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.VH8-gf5Qpgf51odPYzXQvZtE8ldNO1313CCPSGE1bEDMFASIvxX7ptGZf9XHbbyVlNx2iIi8tZAeVYSYkNH50A",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"title\": \"Summer Coding Final\",\r\n  \"description\": \"Thi cuối kỳ – phần coding & quiz\",\r\n  \"startTime\": \"2025-08-01T08:00:00Z\",\r\n  \"endTime\":   \"2025-08-01T10:00:00Z\",\r\n  \"rankPublic\": true,\r\n  \"rankRevealTime\": \"2025-08-01T10:05:00Z\",\r\n  \"antiCheatConfig\": {\r\n    \"shuffleQuestions\": true,\r\n    \"shuffleOptions\": true,\r\n    \"fullscreenRequired\": true,\r\n    \"webcamRequired\": false,\r\n    \"maxTabSwitches\": 3,\r\n    \"attemptLimitPerExercise\": 2,\r\n    \"ipWhitelist\": [\"10.0.0.0/24\"]\r\n  },\r\n  \"exerciseIds\": [\r\n    \"33a295ad-b5c8-4ca2-b0c9-7c59d2ba30ea\"\r\n  ],\r\n  \"studentIds\": [\r\n    \"05d574e2-9627-4186-a75a-a34cea33378d\"\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/submission/contest/self",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"submission",
+								"contest",
+								"self"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Internal (FE không truy cập được vào đây)",
+			"item": [
+				{
+					"name": "(INTERNAL) (TEACHER) internalCreateExercise",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNDM0MjQyNTItZDJjZi00Y2NkLWFjYWEtNzgxOGQ2ZTE3YzdhIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTIxMzI4NDQsImlhdCI6MTc1MjEyOTI0NCwianRpIjoiNzVkZDIyZDItNTE4MS00YzQ3LWE1MjgtYTIxYjNhZWNlY2UxIiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.UKClDlrPTtbmE9HcexQ4t4CjAWMbtP1UzL2mVuuVW4uPDwhSwSyU9ahEeoakb7ve0yM_RDkBy_XFdeAzGrDIoA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Java Basics Quiz\",\r\n    \"description\": \"Test your Java knowledge\",\r\n    \"difficulty\": \"EASY\",\r\n    \"exerciseType\": \"QUIZ\",\r\n    \"orgId\": null,\r\n    \"cost\": 0,\r\n    \"freeForOrg\": true,\r\n    \"startTime\": null,\r\n    \"endTime\": null,\r\n    \"duration\": 0,\r\n    \"allowDiscussionId\": null,\r\n    \"resourceIds\": [],\r\n    \"tags\": [\r\n        \"java\",\r\n        \"quiz\"\r\n    ],\r\n    \"allowAiQuestion\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/submission/internal/exercise",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"submission",
+								"internal",
+								"exercise"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "(INTERNAL) (TEACHER) internalCreateQuizExercise",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNDM0MjQyNTItZDJjZi00Y2NkLWFjYWEtNzgxOGQ2ZTE3YzdhIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTIxMzI4NDQsImlhdCI6MTc1MjEyOTI0NCwianRpIjoiNzVkZDIyZDItNTE4MS00YzQ3LWE1MjgtYTIxYjNhZWNlY2UxIiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.UKClDlrPTtbmE9HcexQ4t4CjAWMbtP1UzL2mVuuVW4uPDwhSwSyU9ahEeoakb7ve0yM_RDkBy_XFdeAzGrDIoA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"createExerciseRequest\": {\r\n        \"title\": \"Quiz về các khái niệm cơ bản của Java\",\r\n        \"description\": \"Kiểm tra kiến thức về các khái niệm cơ bản của Java\",\r\n        \"difficulty\": \"EASY\",\r\n        \"exerciseType\": \"QUIZ\",\r\n        \"orgId\": null,\r\n        \"cost\": 10,\r\n        \"freeForOrg\": null,\r\n        \"startTime\": null,\r\n        \"endTime\": null,\r\n        \"duration\": 15,\r\n        \"allowDiscussionId\": null,\r\n        \"resourceIds\": null,\r\n        \"tags\": null,\r\n        \"allowAiQuestion\": null\r\n    },\r\n    \"addQuizDetailRequest\": {\r\n        \"questions\": [\r\n            {\r\n                \"text\": \"Bốn trụ cột chính của lập trình hướng đối tượng trong Java là gì?\",\r\n                \"questionType\": \"SINGLE_CHOICE\",\r\n                \"points\": 1,\r\n                \"orderInQuiz\": 1,\r\n                \"options\": [\r\n                    {\r\n                        \"optionText\": \"Tính đóng gói, tính kế thừa, tính đa hình, tính trừu tượng\",\r\n                        \"correct\": true,\r\n                        \"order\": \"A\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"Tính bảo mật, tính linh hoạt, tính tái sử dụng, tính mở rộng\",\r\n                        \"correct\": false,\r\n                        \"order\": \"B\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"Tính nhất quán, tính module hóa, tính trừu tượng, tính kế thừa\",\r\n                        \"correct\": false,\r\n                        \"order\": \"C\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"Tính toàn vẹn, tính bảo mật, tính trừu tượng, tính đa hình\",\r\n                        \"correct\": false,\r\n                        \"order\": \"D\"\r\n                    }\r\n                ]\r\n            },\r\n            {\r\n                \"text\": \"Từ khóa nào cho phép truy cập một biến hoặc phương thức từ bất kỳ đâu?\",\r\n                \"questionType\": \"SINGLE_CHOICE\",\r\n                \"points\": 1,\r\n                \"orderInQuiz\": 2,\r\n                \"options\": [\r\n                    {\r\n                        \"optionText\": \"public\",\r\n                        \"correct\": true,\r\n                        \"order\": \"A\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"private\",\r\n                        \"correct\": false,\r\n                        \"order\": \"B\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"protected\",\r\n                        \"correct\": false,\r\n                        \"order\": \"C\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"internal\",\r\n                        \"correct\": false,\r\n                        \"order\": \"D\"\r\n                    }\r\n                ]\r\n            },\r\n            {\r\n                \"text\": \"Cơ chế cho phép một lớp kế thừa các thuộc tính và phương thức của một lớp khác được gọi là gì?\",\r\n                \"questionType\": \"SINGLE_CHOICE\",\r\n                \"points\": 1,\r\n                \"orderInQuiz\": 3,\r\n                \"options\": [\r\n                    {\r\n                        \"optionText\": \"Kế thừa\",\r\n                        \"correct\": true,\r\n                        \"order\": \"A\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"Đóng gói\",\r\n                        \"correct\": false,\r\n                        \"order\": \"B\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"Đa hình\",\r\n                        \"correct\": false,\r\n                        \"order\": \"C\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"Trừu tượng\",\r\n                        \"correct\": false,\r\n                        \"order\": \"D\"\r\n                    }\r\n                ]\r\n            },\r\n            {\r\n                \"text\": \"Trong Java, một bản thiết kế cho một lớp (class) mà chỉ định nghĩa các phương thức trừu tượng được gọi là gì?\",\r\n                \"questionType\": \"SINGLE_CHOICE\",\r\n                \"points\": 1,\r\n                \"orderInQuiz\": 4,\r\n                \"options\": [\r\n                    {\r\n                        \"optionText\": \"Interface\",\r\n                        \"correct\": true,\r\n                        \"order\": \"A\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"Class\",\r\n                        \"correct\": false,\r\n                        \"order\": \"B\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"Object\",\r\n                        \"correct\": false,\r\n                        \"order\": \"C\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"Package\",\r\n                        \"correct\": false,\r\n                        \"order\": \"D\"\r\n                    }\r\n                ]\r\n            },\r\n            {\r\n                \"text\": \"Những lớp nào sau đây triển khai interface List trong Java?\",\r\n                \"questionType\": \"MULTI_CHOICE\",\r\n                \"points\": 1,\r\n                \"orderInQuiz\": 5,\r\n                \"options\": [\r\n                    {\r\n                        \"optionText\": \"ArrayList\",\r\n                        \"correct\": true,\r\n                        \"order\": \"A\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"LinkedList\",\r\n                        \"correct\": true,\r\n                        \"order\": \"B\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"HashMap\",\r\n                        \"correct\": false,\r\n                        \"order\": \"C\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"HashSet\",\r\n                        \"correct\": false,\r\n                        \"order\": \"D\"\r\n                    }\r\n                ]\r\n            },\r\n            {\r\n                \"text\": \"Cấu trúc nào được sử dụng để xử lý ngoại lệ trong Java?\",\r\n                \"questionType\": \"SINGLE_CHOICE\",\r\n                \"points\": 1,\r\n                \"orderInQuiz\": 6,\r\n                \"options\": [\r\n                    {\r\n                        \"optionText\": \"try-catch\",\r\n                        \"correct\": true,\r\n                        \"order\": \"A\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"if-else\",\r\n                        \"correct\": false,\r\n                        \"order\": \"B\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"for loop\",\r\n                        \"correct\": false,\r\n                        \"order\": \"C\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"while loop\",\r\n                        \"correct\": false,\r\n                        \"order\": \"D\"\r\n                    }\r\n                ]\r\n            },\r\n            {\r\n                \"text\": \"Kiểu dữ liệu nào trong Java là một kiểu tham chiếu (reference type)?\",\r\n                \"questionType\": \"SINGLE_CHOICE\",\r\n                \"points\": 1,\r\n                \"orderInQuiz\": 7,\r\n                \"options\": [\r\n                    {\r\n                        \"optionText\": \"int\",\r\n                        \"correct\": false,\r\n                        \"order\": \"A\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"String\",\r\n                        \"correct\": true,\r\n                        \"order\": \"B\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"boolean\",\r\n                        \"correct\": false,\r\n                        \"order\": \"C\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"double\",\r\n                        \"correct\": false,\r\n                        \"order\": \"D\"\r\n                    }\r\n                ]\r\n            },\r\n            {\r\n                \"text\": \"Thành phần nào của Java chịu trách nhiệm chuyển đổi bytecode thành mã máy để thực thi?\",\r\n                \"questionType\": \"SINGLE_CHOICE\",\r\n                \"points\": 1,\r\n                \"orderInQuiz\": 8,\r\n                \"options\": [\r\n                    {\r\n                        \"optionText\": \"JVM (Java Virtual Machine)\",\r\n                        \"correct\": true,\r\n                        \"order\": \"A\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"JRE (Java Runtime Environment)\",\r\n                        \"correct\": false,\r\n                        \"order\": \"B\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"JDK (Java Development Kit)\",\r\n                        \"correct\": false,\r\n                        \"order\": \"C\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"API (Application Programming Interface)\",\r\n                        \"correct\": false,\r\n                        \"order\": \"D\"\r\n                    }\r\n                ]\r\n            },\r\n            {\r\n                \"text\": \"Phương thức nào được sử dụng để so sánh nội dung của hai đối tượng String trong Java?\",\r\n                \"questionType\": \"SINGLE_CHOICE\",\r\n                \"points\": 1,\r\n                \"orderInQuiz\": 9,\r\n                \"options\": [\r\n                    {\r\n                        \"optionText\": \"equals()\",\r\n                        \"correct\": true,\r\n                        \"order\": \"A\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"==\",\r\n                        \"correct\": false,\r\n                        \"order\": \"B\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"compareTo()\",\r\n                        \"correct\": false,\r\n                        \"order\": \"C\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"hashCode()\",\r\n                        \"correct\": false,\r\n                        \"order\": \"D\"\r\n                    }\r\n                ]\r\n            },\r\n            {\r\n                \"text\": \"Từ khóa nào được sử dụng để khai báo một biến hoặc phương thức thuộc về lớp chứ không phải là một thể hiện cụ thể của lớp?\",\r\n                \"questionType\": \"SINGLE_CHOICE\",\r\n                \"points\": 1,\r\n                \"orderInQuiz\": 10,\r\n                \"options\": [\r\n                    {\r\n                        \"optionText\": \"static\",\r\n                        \"correct\": true,\r\n                        \"order\": \"A\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"final\",\r\n                        \"correct\": false,\r\n                        \"order\": \"B\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"abstract\",\r\n                        \"correct\": false,\r\n                        \"order\": \"C\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"synchronized\",\r\n                        \"correct\": false,\r\n                        \"order\": \"D\"\r\n                    }\r\n                ]\r\n            }\r\n        ]\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/submission/internal/exercise/quiz",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"submission",
+								"internal",
+								"exercise",
+								"quiz"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "(INTERNAL) (TEACHER) internalCreateCodingExercise",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNDM0MjQyNTItZDJjZi00Y2NkLWFjYWEtNzgxOGQ2ZTE3YzdhIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTIxMzI4NDQsImlhdCI6MTc1MjEyOTI0NCwianRpIjoiNzVkZDIyZDItNTE4MS00YzQ3LWE1MjgtYTIxYjNhZWNlY2UxIiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.UKClDlrPTtbmE9HcexQ4t4CjAWMbtP1UzL2mVuuVW4uPDwhSwSyU9ahEeoakb7ve0yM_RDkBy_XFdeAzGrDIoA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"createExerciseRequest\": {\r\n        \"title\": \"(Javascript) Bài tập tính tổng\",\r\n        \"description\": \"Cho 2 số, tính tổng\",\r\n        \"difficulty\": \"EASY\",\r\n        \"exerciseType\": \"CODING\",\r\n        \"orgId\": null,\r\n        \"cost\": 0,\r\n        \"freeForOrg\": true,\r\n        \"startTime\": \"2025-08-01T00:00:00Z\",\r\n        \"endTime\": \"2025-12-31T23:59:59Z\",\r\n        \"duration\": 30,\r\n        \"allowDiscussionId\": null,\r\n        \"resourceIds\": [],\r\n        \"tags\": [\r\n            \"math\",\r\n            \"easy\"\r\n        ],\r\n        \"allowAiQuestion\": false,\r\n        \"visibility\": true\r\n    },\r\n    \"addCodingDetailRequest\": {\r\n        \"topic\": \"math\",\r\n        \"allowedLanguages\": [\r\n            \"python\",\r\n            \"java\",\r\n            \"cpp\"\r\n        ],\r\n        \"input\": \"a b\",\r\n        \"output\": \"a+b\",\r\n        \"constraintText\": \"a,b ≤ 10^9\",\r\n        \"timeLimit\": 1,\r\n        \"memoryLimit\": 128,\r\n        \"maxSubmissions\": 5,\r\n        \"codeTemplate\": \"def solve():\\n    pass\",\r\n        \"solution\": \"def solve():\\n    a,b=map(int,input().split());print(a+b)\",\r\n        \"testCases\": [\r\n            {\r\n                \"input\": \"1 2\",\r\n                \"expectedOutput\": \"3\",\r\n                \"sample\": true,\r\n                \"note\": \"mẫu 1\"\r\n            },\r\n            {\r\n                \"input\": \"10 20\",\r\n                \"expectedOutput\": \"30\",\r\n                \"sample\": false,\r\n                \"note\": \"\"\r\n            }\r\n        ]\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/submission/internal/exercise/coding",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"submission",
+								"internal",
+								"exercise",
+								"coding"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "(INTERNAL) (TEACHER) internalAddQuizDetail",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNDM0MjQyNTItZDJjZi00Y2NkLWFjYWEtNzgxOGQ2ZTE3YzdhIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTE2OTM0NjAsImlhdCI6MTc1MTY4OTg2MCwianRpIjoiZTRiMTEwMzItMTY1OS00ODRlLWI1MzgtMjdiYWJkYzJmZTU3IiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.K2zcjXCfHWBRvIfOvvzNZKPd679JbK-eTiTGlq3BcEC7kqU_mbZCFu-QE6ST1G8NLC1tQB3lDOfzZ_ASFj5D1Q",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"questions\": [\r\n        {\r\n            \"text\": \"What is the size of int in Java?\",\r\n            \"questionType\": \"SINGLE_CHOICE\",\r\n            \"points\": 10,\r\n            \"orderInQuiz\": 1,\r\n            \"options\": [\r\n                {\r\n                    \"optionText\": \"4 bytes\",\r\n                    \"correct\": true,\r\n                    \"order\": \"A\"\r\n                },\r\n                {\r\n                    \"optionText\": \"2 bytes\",\r\n                    \"correct\": false,\r\n                    \"order\": \"B\"\r\n                },\r\n                {\r\n                    \"optionText\": \"8 bytes\",\r\n                    \"correct\": false,\r\n                    \"order\": \"C\"\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"text\": \"Which of the following are primitive types in Java?\",\r\n            \"questionType\": \"MULTI_CHOICE\",\r\n            \"points\": 10,\r\n            \"orderInQuiz\": 2,\r\n            \"options\": [\r\n                {\r\n                    \"optionText\": \"int\",\r\n                    \"correct\": true,\r\n                    \"order\": \"A\"\r\n                },\r\n                {\r\n                    \"optionText\": \"String\",\r\n                    \"correct\": false,\r\n                    \"order\": \"B\"\r\n                },\r\n                {\r\n                    \"optionText\": \"boolean\",\r\n                    \"correct\": true,\r\n                    \"order\": \"C\"\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"text\": \"Fill in the blank: The keyword used to inherit a class is _____ .\",\r\n            \"questionType\": \"FILL_BLANK\",\r\n            \"points\": 10,\r\n            \"orderInQuiz\": 3,\r\n            \"options\": []\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/submission/internal/quiz/exercise/33a295ad-b5c8-4ca2-b0c9-7c59d2ba30ea/quiz-detail",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"submission",
+								"internal",
+								"quiz",
+								"exercise",
+								"33a295ad-b5c8-4ca2-b0c9-7c59d2ba30ea",
+								"quiz-detail"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "(INTERNAL) (TEACHER) internalAddQuestion",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiMTViNmZkNDgtZThmYi00ZjUzLWIxMmYtZWJjZTFiZmQyYzk3IiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTI4MjU1MTIsImlhdCI6MTc1MjgyMTkxMiwianRpIjoiMTA3MjE0MTEtYjQzZS00MDk5LThlYjgtMmI3ODZmMTk5ZGQxIiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.I2U_jNov7o5eC_Yyaz-8_sGUNARyFJpZ6X_1uhrTX2NV057HVr4JVkeGJ1zYnDAhyo55j-K8oU5_7wan_7aJHQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"text\": \"Phương thức nào dưới đây thuộc lớp java.lang.System để in ra console?\",\r\n  \"questionType\": \"SINGLE_CHOICE\",\r\n  \"points\": 10,\r\n  \"orderInQuiz\": 3,\r\n  \"options\": [\r\n    { \"optionText\": \"print()\",    \"correct\": false, \"order\": \"A\" },\r\n    { \"optionText\": \"println()\",  \"correct\": false, \"order\": \"B\" },\r\n    { \"optionText\": \"out.println()\", \"correct\": true, \"order\": \"C\" },\r\n    { \"optionText\": \"console()\",  \"correct\": false, \"order\": \"D\" }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/submission/internal/quiz/fe66b34c-d998-47b3-8e0d-bce71ccdfe30/question",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"submission",
+								"internal",
+								"quiz",
+								"fe66b34c-d998-47b3-8e0d-bce71ccdfe30",
+								"question"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "(INTERNAL) (TEACHER) internalAddOption",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNDM0MjQyNTItZDJjZi00Y2NkLWFjYWEtNzgxOGQ2ZTE3YzdhIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTE2OTM0NjAsImlhdCI6MTc1MTY4OTg2MCwianRpIjoiZTRiMTEwMzItMTY1OS00ODRlLWI1MzgtMjdiYWJkYzJmZTU3IiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.K2zcjXCfHWBRvIfOvvzNZKPd679JbK-eTiTGlq3BcEC7kqU_mbZCFu-QE6ST1G8NLC1tQB3lDOfzZ_ASFj5D1Q",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"optionText\": \"16 bytes\",\r\n    \"correct\": false,\r\n    \"order\": \"D\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/submission/internal/quiz/question/1d089c28-9286-4503-abf1-1b534235fab5/option",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"submission",
+								"internal",
+								"quiz",
+								"question",
+								"1d089c28-9286-4503-abf1-1b534235fab5",
+								"option"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "(TEACHER) (QUIZ) createExercise",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiODI0MjA4MTYtMjc1NS00NTRlLThmOGUtNTEyYzUzOWExZjQyIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTYzOTk5NzMsImlhdCI6MTc1NTc5NTE3MywianRpIjoiOGRjOGIxZjktMTdhMi00NWMwLTkyNjEtMDNmMjBlYmJhNDJmIiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.jwGV7cpNwkayaulQOm8B20n0Gd8XhyOZRJm2Jq1ktiFOYO6LlVvkUQmU0N3ygZG6O6ZT47y8lcdk90H8uV0gVg",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\": \"Java Basics Quizbvbbbb2222\",\r\n    \"description\": \"Test your Java knowledge\",\r\n    \"difficulty\": \"EASY\",\r\n    \"exerciseType\": \"QUIZ\",\r\n    \"orgId\": null,\r\n    \"cost\": 0,\r\n    \"freeForOrg\": true,\r\n    \"startTime\": null,\r\n    \"endTime\": null,\r\n    \"duration\": 0,\r\n    \"allowDiscussionId\": null,\r\n    \"resourceIds\": [],\r\n    \"tags\": [\r\n        \"java\",\r\n        \"quiz\"\r\n    ],\r\n    \"allowAiQuestion\": false,\r\n    \"visibility\": true\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/submission/exercise",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"submission",
+						"exercise"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "(TEACHER) (CODING) createExercise",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNmJmNGM1Y2YtMDg2Yy00MTU0LWJlY2MtYjVkNzk5Y2RkOTA1IiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTYzNjc3MTksImlhdCI6MTc1NTc2MjkxOSwianRpIjoiMGQ5NDFmMGQtYzg0My00MjNhLWI3NzItMWUyZGY2M2IyZGE0IiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.sNqCMJMujYKNEQpFT5X9XZZCTKbdvbOvrNJQS-JFV8ETRYhwV1qX0zSz3A5gwcLAFsgRj-7bV4CgKl3nVOfE5w",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\": \"(Javascript) Bài tập tính tổng\",\r\n    \"description\": \"Cho 2 số, tính tổng\",\r\n    \"difficulty\": \"EASY\",\r\n    \"exerciseType\": \"CODING\",\r\n    \"orgId\": null,\r\n    \"cost\": 0,\r\n    \"freeForOrg\": true,\r\n    \"startTime\": \"2025-08-01T00:00:00Z\",\r\n    \"endTime\": \"2025-12-31T23:59:59Z\",\r\n    \"duration\": 30,\r\n    \"allowDiscussionId\": null,\r\n    \"resourceIds\": [],\r\n    \"tags\": [\r\n        \"math\",\r\n        \"easy\"\r\n    ],\r\n    \"allowAiQuestion\": false,\r\n    \"visibility\": true\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/submission/exercise",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"submission",
+						"exercise"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "(TEACHER) createQuizExercise",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pblJvb3QxMjNAZ21haWwuY29tIiwiYmxvY2tfaWRzIjpbXSwicm9sZXMiOlsiQURNSU4iXSwiaXNzIjoiQ29kZSBDYW1wdXMiLCJhY3RpdmUiOnRydWUsInRva2VuX3R5cGUiOiJhY2Nlc3NfdG9rZW4iLCJ1c2VySWQiOiJmNTJiNzdlYi1kYzMyLTQ0ZGYtOTBhNi02ZTZiZWE3Y2I5ZDAiLCJvcmdfcm9sZSI6IkFkbWluIiwicGVybWlzc2lvbnMiOltdLCJvcmdfaWQiOiJiZjQ4NDgzYi1jNmE4LTQzNDktYjRhMC02NmM2NGU0NDcxMzQiLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTczNDQ5MjIsImlhdCI6MTc1Njc0MDEyOCwianRpIjoiODMzMGU5MDUtZDgxYi00Y2U2LTk4MzctNzJmYWYwMjk0YjY0IiwiZW1haWwiOiJhZG1pblJvb3QxMjNAZ21haWwuY29tIiwidXNlcm5hbWUiOiJhZG1pbiJ9.AOPkPgO8dW8pz-bi8-2LkYOw-Tj_vg47QAq-I2FzhHiWnGqslnZkBzZ5O491en9nq0zd6pqqTBo_juk3HUCqLw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"createExerciseRequest\": {\r\n        \"title\": \"Quiz về các khái niệm cơ bản của Java\",\r\n        \"description\": \"Kiểm tra kiến thức về các khái niệm cơ bản của Java\",\r\n        \"difficulty\": \"EASY\",\r\n        \"exerciseType\": \"QUIZ\",\r\n        \"orgId\": null,\r\n        \"cost\": 10,\r\n        \"freeForOrg\": null,\r\n        \"startTime\": null,\r\n        \"endTime\": null,\r\n        \"duration\": 15,\r\n        \"allowDiscussionId\": null,\r\n        \"resourceIds\": null,\r\n        \"tags\": null,\r\n        \"allowAiQuestion\": null\r\n    },\r\n    \"addQuizDetailRequest\": {\r\n        \"questions\": [\r\n            {\r\n                \"text\": \"Bốn trụ cột chính của lập trình hướng đối tượng trong Java là gì?\",\r\n                \"questionType\": \"SINGLE_CHOICE\",\r\n                \"points\": 1,\r\n                \"orderInQuiz\": 1,\r\n                \"options\": [\r\n                    {\r\n                        \"optionText\": \"Tính đóng gói, tính kế thừa, tính đa hình, tính trừu tượng\",\r\n                        \"correct\": true,\r\n                        \"order\": \"A\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"Tính bảo mật, tính linh hoạt, tính tái sử dụng, tính mở rộng\",\r\n                        \"correct\": false,\r\n                        \"order\": \"B\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"Tính nhất quán, tính module hóa, tính trừu tượng, tính kế thừa\",\r\n                        \"correct\": false,\r\n                        \"order\": \"C\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"Tính toàn vẹn, tính bảo mật, tính trừu tượng, tính đa hình\",\r\n                        \"correct\": false,\r\n                        \"order\": \"D\"\r\n                    }\r\n                ]\r\n            },\r\n            {\r\n                \"text\": \"Từ khóa nào cho phép truy cập một biến hoặc phương thức từ bất kỳ đâu?\",\r\n                \"questionType\": \"SINGLE_CHOICE\",\r\n                \"points\": 1,\r\n                \"orderInQuiz\": 2,\r\n                \"options\": [\r\n                    {\r\n                        \"optionText\": \"public\",\r\n                        \"correct\": true,\r\n                        \"order\": \"A\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"private\",\r\n                        \"correct\": false,\r\n                        \"order\": \"B\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"protected\",\r\n                        \"correct\": false,\r\n                        \"order\": \"C\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"internal\",\r\n                        \"correct\": false,\r\n                        \"order\": \"D\"\r\n                    }\r\n                ]\r\n            },\r\n            {\r\n                \"text\": \"Cơ chế cho phép một lớp kế thừa các thuộc tính và phương thức của một lớp khác được gọi là gì?\",\r\n                \"questionType\": \"SINGLE_CHOICE\",\r\n                \"points\": 1,\r\n                \"orderInQuiz\": 3,\r\n                \"options\": [\r\n                    {\r\n                        \"optionText\": \"Kế thừa\",\r\n                        \"correct\": true,\r\n                        \"order\": \"A\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"Đóng gói\",\r\n                        \"correct\": false,\r\n                        \"order\": \"B\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"Đa hình\",\r\n                        \"correct\": false,\r\n                        \"order\": \"C\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"Trừu tượng\",\r\n                        \"correct\": false,\r\n                        \"order\": \"D\"\r\n                    }\r\n                ]\r\n            },\r\n            {\r\n                \"text\": \"Trong Java, một bản thiết kế cho một lớp (class) mà chỉ định nghĩa các phương thức trừu tượng được gọi là gì?\",\r\n                \"questionType\": \"SINGLE_CHOICE\",\r\n                \"points\": 1,\r\n                \"orderInQuiz\": 4,\r\n                \"options\": [\r\n                    {\r\n                        \"optionText\": \"Interface\",\r\n                        \"correct\": true,\r\n                        \"order\": \"A\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"Class\",\r\n                        \"correct\": false,\r\n                        \"order\": \"B\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"Object\",\r\n                        \"correct\": false,\r\n                        \"order\": \"C\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"Package\",\r\n                        \"correct\": false,\r\n                        \"order\": \"D\"\r\n                    }\r\n                ]\r\n            },\r\n            {\r\n                \"text\": \"Những lớp nào sau đây triển khai interface List trong Java?\",\r\n                \"questionType\": \"MULTI_CHOICE\",\r\n                \"points\": 1,\r\n                \"orderInQuiz\": 5,\r\n                \"options\": [\r\n                    {\r\n                        \"optionText\": \"ArrayList\",\r\n                        \"correct\": true,\r\n                        \"order\": \"A\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"LinkedList\",\r\n                        \"correct\": true,\r\n                        \"order\": \"B\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"HashMap\",\r\n                        \"correct\": false,\r\n                        \"order\": \"C\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"HashSet\",\r\n                        \"correct\": false,\r\n                        \"order\": \"D\"\r\n                    }\r\n                ]\r\n            },\r\n            {\r\n                \"text\": \"Cấu trúc nào được sử dụng để xử lý ngoại lệ trong Java?\",\r\n                \"questionType\": \"SINGLE_CHOICE\",\r\n                \"points\": 1,\r\n                \"orderInQuiz\": 6,\r\n                \"options\": [\r\n                    {\r\n                        \"optionText\": \"try-catch\",\r\n                        \"correct\": true,\r\n                        \"order\": \"A\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"if-else\",\r\n                        \"correct\": false,\r\n                        \"order\": \"B\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"for loop\",\r\n                        \"correct\": false,\r\n                        \"order\": \"C\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"while loop\",\r\n                        \"correct\": false,\r\n                        \"order\": \"D\"\r\n                    }\r\n                ]\r\n            },\r\n            {\r\n                \"text\": \"Kiểu dữ liệu nào trong Java là một kiểu tham chiếu (reference type)?\",\r\n                \"questionType\": \"SINGLE_CHOICE\",\r\n                \"points\": 1,\r\n                \"orderInQuiz\": 7,\r\n                \"options\": [\r\n                    {\r\n                        \"optionText\": \"int\",\r\n                        \"correct\": false,\r\n                        \"order\": \"A\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"String\",\r\n                        \"correct\": true,\r\n                        \"order\": \"B\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"boolean\",\r\n                        \"correct\": false,\r\n                        \"order\": \"C\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"double\",\r\n                        \"correct\": false,\r\n                        \"order\": \"D\"\r\n                    }\r\n                ]\r\n            },\r\n            {\r\n                \"text\": \"Thành phần nào của Java chịu trách nhiệm chuyển đổi bytecode thành mã máy để thực thi?\",\r\n                \"questionType\": \"SINGLE_CHOICE\",\r\n                \"points\": 1,\r\n                \"orderInQuiz\": 8,\r\n                \"options\": [\r\n                    {\r\n                        \"optionText\": \"JVM (Java Virtual Machine)\",\r\n                        \"correct\": true,\r\n                        \"order\": \"A\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"JRE (Java Runtime Environment)\",\r\n                        \"correct\": false,\r\n                        \"order\": \"B\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"JDK (Java Development Kit)\",\r\n                        \"correct\": false,\r\n                        \"order\": \"C\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"API (Application Programming Interface)\",\r\n                        \"correct\": false,\r\n                        \"order\": \"D\"\r\n                    }\r\n                ]\r\n            },\r\n            {\r\n                \"text\": \"Phương thức nào được sử dụng để so sánh nội dung của hai đối tượng String trong Java?\",\r\n                \"questionType\": \"SINGLE_CHOICE\",\r\n                \"points\": 1,\r\n                \"orderInQuiz\": 9,\r\n                \"options\": [\r\n                    {\r\n                        \"optionText\": \"equals()\",\r\n                        \"correct\": true,\r\n                        \"order\": \"A\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"==\",\r\n                        \"correct\": false,\r\n                        \"order\": \"B\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"compareTo()\",\r\n                        \"correct\": false,\r\n                        \"order\": \"C\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"hashCode()\",\r\n                        \"correct\": false,\r\n                        \"order\": \"D\"\r\n                    }\r\n                ]\r\n            },\r\n            {\r\n                \"text\": \"Từ khóa nào được sử dụng để khai báo một biến hoặc phương thức thuộc về lớp chứ không phải là một thể hiện cụ thể của lớp?\",\r\n                \"questionType\": \"SINGLE_CHOICE\",\r\n                \"points\": 1,\r\n                \"orderInQuiz\": 10,\r\n                \"options\": [\r\n                    {\r\n                        \"optionText\": \"static\",\r\n                        \"correct\": true,\r\n                        \"order\": \"A\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"final\",\r\n                        \"correct\": false,\r\n                        \"order\": \"B\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"abstract\",\r\n                        \"correct\": false,\r\n                        \"order\": \"C\"\r\n                    },\r\n                    {\r\n                        \"optionText\": \"synchronized\",\r\n                        \"correct\": false,\r\n                        \"order\": \"D\"\r\n                    }\r\n                ]\r\n            }\r\n        ]\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/submission/exercise/quiz",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"submission",
+						"exercise",
+						"quiz"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "(TEACHER) createCodingExercise",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pblJvb3QxMjNAZ21haWwuY29tIiwiYmxvY2tfaWRzIjpbXSwicm9sZXMiOlsiQURNSU4iXSwiaXNzIjoiQ29kZSBDYW1wdXMiLCJhY3RpdmUiOnRydWUsInRva2VuX3R5cGUiOiJhY2Nlc3NfdG9rZW4iLCJ1c2VySWQiOiIwYmEzMWFlZC1jNDZhLTQzZjEtODE2OC04MzBiYmE1ZDU5YzQiLCJvcmdfcm9sZSI6IiIsInBlcm1pc3Npb25zIjpbXSwib3JnX2lkIjoiIiwic2NvcGUiOiJST0xFX0FETUlOIiwiZXhwIjoxNzU3MTg2MjIzLCJpYXQiOjE3NTY1ODE0MjMsImp0aSI6IjdlYjY2YWFlLTgwNGItNDc0Mi1iZjRjLTBiOTgyOGUxZWE5YyIsImVtYWlsIjoiYWRtaW5Sb290MTIzQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.pacEPTwpKIgorEfyd8RXJxAmDDChxHlChx5_9y0mBQVvK6WTVUemAOcIb_AAdM7HEZGPbEQTkK5iyD9ZNvXcGA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"createExerciseRequest\": {\r\n        \"title\": \"(Javascript) Bài tập tính tổng\",\r\n        \"description\": \"Cho 2 số, tính tổng\",\r\n        \"difficulty\": \"HARD\",\r\n        \"exerciseType\": \"CODING\",\r\n        \"orgId\": \"016cca87-fbe4-4b48-9525-989736f05163\",\r\n        \"cost\": 0,\r\n        \"freeForOrg\": true,\r\n        \"startTime\": \"2025-08-01T00:00:00Z\",\r\n        \"endTime\": \"2025-12-31T23:59:59Z\",\r\n        \"duration\": 30,\r\n        \"allowDiscussionId\": null,\r\n        \"resourceIds\": [],\r\n        \"tags\": [\r\n            \"math\",\r\n            \"easy\"\r\n        ],\r\n        \"allowAiQuestion\": false,\r\n        \"visibility\": true\r\n    },\r\n    \"addCodingDetailRequest\": {\r\n        \"topic\": \"math\",\r\n        \"allowedLanguages\": [\r\n            \"python\",\r\n            \"java\",\r\n            \"cpp\"\r\n        ],\r\n        \"input\": \"a b\",\r\n        \"output\": \"a+b\",\r\n        \"constraintText\": \"a,b ≤ 10^9\",\r\n        \"timeLimit\": 1,\r\n        \"memoryLimit\": 128,\r\n        \"maxSubmissions\": 5,\r\n        \"codeTemplate\": \"def solve():\\n    pass\",\r\n        \"solution\": \"def solve():\\n    a,b=map(int,input().split());print(a+b)\",\r\n        \"testCases\": [\r\n            {\r\n                \"input\": \"1 2\",\r\n                \"expectedOutput\": \"3\",\r\n                \"sample\": true,\r\n                \"note\": \"mẫu 1\"\r\n            },\r\n            {\r\n                \"input\": \"10 20\",\r\n                \"expectedOutput\": \"30\",\r\n                \"sample\": false,\r\n                \"note\": \"\"\r\n            }\r\n        ]\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/submission/exercise/coding",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"submission",
+						"exercise",
+						"coding"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "(TEACHER) addQuizDetail",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiMDZiNTZlMmMtOTFkZS00N2VlLTgyYzktM2UxMjViMGU1N2QyIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTU4OTcxMjcsImlhdCI6MTc1NTI5MjMyNywianRpIjoiOTVjNTc2NjgtMmFlMi00MjM3LWEzMWQtNWY4YmU1MWRkMDhmIiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.vqs-8nOnqlO2OZO8lZ6mCxugsGJlG095uQpu8RB3mJtjTkRgZEovfR5z3n7APjctxdMLfmXO-NHSPDc6tjKSJw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"questions\": [\r\n        {\r\n            \"text\": \"What is the size of int in Java?\",\r\n            \"questionType\": \"SINGLE_CHOICE\",\r\n            \"points\": 10,\r\n            \"orderInQuiz\": 1,\r\n            \"options\": [\r\n                {\r\n                    \"optionText\": \"4 bytes\",\r\n                    \"correct\": true,\r\n                    \"order\": \"A\"\r\n                },\r\n                {\r\n                    \"optionText\": \"2 bytes\",\r\n                    \"correct\": false,\r\n                    \"order\": \"B\"\r\n                },\r\n                {\r\n                    \"optionText\": \"8 bytes\",\r\n                    \"correct\": false,\r\n                    \"order\": \"C\"\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"text\": \"Which of the following are primitive types in Java?\",\r\n            \"questionType\": \"MULTI_CHOICE\",\r\n            \"points\": 10,\r\n            \"orderInQuiz\": 2,\r\n            \"options\": [\r\n                {\r\n                    \"optionText\": \"int\",\r\n                    \"correct\": true,\r\n                    \"order\": \"A\"\r\n                },\r\n                {\r\n                    \"optionText\": \"String\",\r\n                    \"correct\": false,\r\n                    \"order\": \"B\"\r\n                },\r\n                {\r\n                    \"optionText\": \"boolean\",\r\n                    \"correct\": true,\r\n                    \"order\": \"C\"\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"text\": \"Fill in the blank: The keyword used to inherit a class is _____ .\",\r\n            \"questionType\": \"FILL_BLANK\",\r\n            \"points\": 10,\r\n            \"orderInQuiz\": 3,\r\n            \"options\": []\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/submission/quiz/exercise/b5ec9198-013c-4aae-9a08-20ae9d3f003c/quiz-detail",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"submission",
+						"quiz",
+						"exercise",
+						"b5ec9198-013c-4aae-9a08-20ae9d3f003c",
+						"quiz-detail"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "(TEACHER) addCodingDetail",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiMDZiNTZlMmMtOTFkZS00N2VlLTgyYzktM2UxMjViMGU1N2QyIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTU5MjUxNzEsImlhdCI6MTc1NTMyMDM3MSwianRpIjoiNTRjYWVlMDQtOWIxZS00YTllLWJmZTctZmE1ZDM1MzkwNGU3IiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.GuYZW_qKBQr-RLwyTyUPp6tQ9cv-9wOXn8ZI7uBpaajnald-EkQov82pj12rNayBkLR_WS55dsI8xLJUhaYW7w",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"topic\": \"math\",\r\n    \"allowedLanguages\": [\r\n        \"python\",\r\n        \"java\",\r\n        \"cpp\"\r\n    ],\r\n    \"input\": \"a b\",\r\n    \"output\": \"a+b\",\r\n    \"constraintText\": \"a,b ≤ 10^9\",\r\n    \"timeLimit\": 1,\r\n    \"memoryLimit\": 128,\r\n    \"maxSubmissions\": 5,\r\n    \"codeTemplate\": \"def solve():\\n    pass\",\r\n    \"solution\": \"def solve():\\n    a,b=map(int,input().split());print(a+b)\",\r\n    \"testCases\": [\r\n        {\r\n            \"input\": \"1 2\",\r\n            \"expectedOutput\": \"3\",\r\n            \"sample\": true,\r\n            \"note\": \"mẫu 1\"\r\n        },\r\n        {\r\n            \"input\": \"10 20\",\r\n            \"expectedOutput\": \"30\",\r\n            \"sample\": false,\r\n            \"note\": \"\"\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/submission/coding/exercise/7963fb86-9705-41fa-b307-5f7c2a612175/coding-detail",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"submission",
+						"coding",
+						"exercise",
+						"7963fb86-9705-41fa-b307-5f7c2a612175",
+						"coding-detail"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "(TEACHER) addTestCase",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNDM0MjQyNTItZDJjZi00Y2NkLWFjYWEtNzgxOGQ2ZTE3YzdhIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTE2OTM0NjAsImlhdCI6MTc1MTY4OTg2MCwianRpIjoiZTRiMTEwMzItMTY1OS00ODRlLWI1MzgtMjdiYWJkYzJmZTU3IiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.K2zcjXCfHWBRvIfOvvzNZKPd679JbK-eTiTGlq3BcEC7kqU_mbZCFu-QE6ST1G8NLC1tQB3lDOfzZ_ASFj5D1Q",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"input\": \"5 5\",\r\n    \"expectedOutput\": \"10\",\r\n    \"sample\": false,\r\n    \"note\": \"test bổ sung\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/submission/coding/e7903947-d75d-40cd-87de-62fecd95801a/test-case",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"submission",
+						"coding",
+						"e7903947-d75d-40cd-87de-62fecd95801a",
+						"test-case"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "(TEACHER) updateTestCase",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNDM0MjQyNTItZDJjZi00Y2NkLWFjYWEtNzgxOGQ2ZTE3YzdhIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTE2OTM0NjAsImlhdCI6MTc1MTY4OTg2MCwianRpIjoiZTRiMTEwMzItMTY1OS00ODRlLWI1MzgtMjdiYWJkYzJmZTU3IiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.K2zcjXCfHWBRvIfOvvzNZKPd679JbK-eTiTGlq3BcEC7kqU_mbZCFu-QE6ST1G8NLC1tQB3lDOfzZ_ASFj5D1Q",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"input\": \"5 5\",\r\n    \"expectedOutput\": \"10\",\r\n    \"sample\": false,\r\n    \"note\": \"đã cập nhật note\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/submission/coding/74a45d79-67ba-4e8e-b1bf-5868f478108d/test-case/fa3e77dc-9099-401b-96ba-9c6f0bd3bafb",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"submission",
+						"coding",
+						"74a45d79-67ba-4e8e-b1bf-5868f478108d",
+						"test-case",
+						"fa3e77dc-9099-401b-96ba-9c6f0bd3bafb"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "(TEACHER) softDeleteTestCase",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNDM0MjQyNTItZDJjZi00Y2NkLWFjYWEtNzgxOGQ2ZTE3YzdhIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTE2OTM0NjAsImlhdCI6MTc1MTY4OTg2MCwianRpIjoiZTRiMTEwMzItMTY1OS00ODRlLWI1MzgtMjdiYWJkYzJmZTU3IiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.K2zcjXCfHWBRvIfOvvzNZKPd679JbK-eTiTGlq3BcEC7kqU_mbZCFu-QE6ST1G8NLC1tQB3lDOfzZ_ASFj5D1Q",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8083/submission/coding/74a45d79-67ba-4e8e-b1bf-5868f478108d/test-case/2083c1ee-587d-4e7d-9315-04076ebd5b6b",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"submission",
+						"coding",
+						"74a45d79-67ba-4e8e-b1bf-5868f478108d",
+						"test-case",
+						"2083c1ee-587d-4e7d-9315-04076ebd5b6b"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "(TEACHER) addQuestion",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiMTViNmZkNDgtZThmYi00ZjUzLWIxMmYtZWJjZTFiZmQyYzk3IiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTI4MjU1MTIsImlhdCI6MTc1MjgyMTkxMiwianRpIjoiMTA3MjE0MTEtYjQzZS00MDk5LThlYjgtMmI3ODZmMTk5ZGQxIiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.I2U_jNov7o5eC_Yyaz-8_sGUNARyFJpZ6X_1uhrTX2NV057HVr4JVkeGJ1zYnDAhyo55j-K8oU5_7wan_7aJHQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"text\": \"Phương thức nào dưới đây thuộc lớp java.lang.System để in ra console?\",\r\n  \"questionType\": \"SINGLE_CHOICE\",\r\n  \"points\": 10,\r\n  \"orderInQuiz\": 3,\r\n  \"options\": [\r\n    { \"optionText\": \"print()\",    \"correct\": false, \"order\": \"A\" },\r\n    { \"optionText\": \"println()\",  \"correct\": false, \"order\": \"B\" },\r\n    { \"optionText\": \"out.println()\", \"correct\": true, \"order\": \"C\" },\r\n    { \"optionText\": \"console()\",  \"correct\": false, \"order\": \"D\" }\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/submission/quiz/825a6f14-280f-4f9e-a095-dbcbd521ba08/question",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"submission",
+						"quiz",
+						"825a6f14-280f-4f9e-a095-dbcbd521ba08",
+						"question"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "(TEACHER) addOption",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNDM0MjQyNTItZDJjZi00Y2NkLWFjYWEtNzgxOGQ2ZTE3YzdhIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTE2OTM0NjAsImlhdCI6MTc1MTY4OTg2MCwianRpIjoiZTRiMTEwMzItMTY1OS00ODRlLWI1MzgtMjdiYWJkYzJmZTU3IiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.K2zcjXCfHWBRvIfOvvzNZKPd679JbK-eTiTGlq3BcEC7kqU_mbZCFu-QE6ST1G8NLC1tQB3lDOfzZ_ASFj5D1Q",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"optionText\": \"16 bytes\",\r\n    \"correct\": false,\r\n    \"order\": \"D\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/submission/quiz/question/55db5bed-1453-4baa-9cfd-a77c53fe2ec8/option",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"submission",
+						"quiz",
+						"question",
+						"55db5bed-1453-4baa-9cfd-a77c53fe2ec8",
+						"option"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "(TEACHER) assignExercise",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiMDZiNTZlMmMtOTFkZS00N2VlLTgyYzktM2UxMjViMGU1N2QyIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTU5MjUxNzEsImlhdCI6MTc1NTMyMDM3MSwianRpIjoiNTRjYWVlMDQtOWIxZS00YTllLWJmZTctZmE1ZDM1MzkwNGU3IiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.GuYZW_qKBQr-RLwyTyUPp6tQ9cv-9wOXn8ZI7uBpaajnald-EkQov82pj12rNayBkLR_WS55dsI8xLJUhaYW7w",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8083/submission/assignment?exerciseId=0acbf136-ef34-4923-879d-7d8fbaf4f81e&studentId=6bf4c5cf-086c-4154-becc-b5d799cdd905&dueAt=2025-08-31T17:00:00Z",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"submission",
+						"assignment"
+					],
+					"query": [
+						{
+							"key": "exerciseId",
+							"value": "0acbf136-ef34-4923-879d-7d8fbaf4f81e"
+						},
+						{
+							"key": "studentId",
+							"value": "6bf4c5cf-086c-4154-becc-b5d799cdd905"
+						},
+						{
+							"key": "dueAt",
+							"value": "2025-08-31T17:00:00Z"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "(TEACHER) bulkAssignExercise",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiMDZiNTZlMmMtOTFkZS00N2VlLTgyYzktM2UxMjViMGU1N2QyIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTU5MjUxNzEsImlhdCI6MTc1NTMyMDM3MSwianRpIjoiNTRjYWVlMDQtOWIxZS00YTllLWJmZTctZmE1ZDM1MzkwNGU3IiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.GuYZW_qKBQr-RLwyTyUPp6tQ9cv-9wOXn8ZI7uBpaajnald-EkQov82pj12rNayBkLR_WS55dsI8xLJUhaYW7w",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"studentIds\": [\r\n        \"28d3b767-e428-4022-97d0-76831116f392\",\r\n        \"ca95116c-8cc7-4a43-8b76-c6d54c59b1b0\"\r\n    ],\r\n    \"dueAt\": \"2025-08-31T17:00:00Z\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/submission/assignment-bulk?exerciseId=0456f1d4-bfa2-4ba6-baab-2ccb698722aa",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"submission",
+						"assignment-bulk"
+					],
+					"query": [
+						{
+							"key": "exerciseId",
+							"value": "0456f1d4-bfa2-4ba6-baab-2ccb698722aa"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "(TEACHER) updateExercise",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pblJvb3QxMjNAZ21haWwuY29tIiwiYmxvY2tfaWRzIjpbXSwicm9sZXMiOlsiQURNSU4iXSwiaXNzIjoiQ29kZSBDYW1wdXMiLCJhY3RpdmUiOnRydWUsInRva2VuX3R5cGUiOiJhY2Nlc3NfdG9rZW4iLCJ1c2VySWQiOiIwYmEzMWFlZC1jNDZhLTQzZjEtODE2OC04MzBiYmE1ZDU5YzQiLCJvcmdfcm9sZSI6IiIsInBlcm1pc3Npb25zIjpbXSwib3JnX2lkIjoiIiwic2NvcGUiOiJST0xFX0FETUlOIiwiZXhwIjoxNzU3MTg2MjIzLCJpYXQiOjE3NTY1ODE0MjMsImp0aSI6IjdlYjY2YWFlLTgwNGItNDc0Mi1iZjRjLTBiOTgyOGUxZWE5YyIsImVtYWlsIjoiYWRtaW5Sb290MTIzQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.pacEPTwpKIgorEfyd8RXJxAmDDChxHlChx5_9y0mBQVvK6WTVUemAOcIb_AAdM7HEZGPbEQTkK5iyD9ZNvXcGA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"title\": \"String\",\r\n  \"description\": \"String\",\r\n  \"difficulty\": \"Enum (EASY, MEDIUM, HARD)\",\r\n  \"orgId\": \"\",\r\n  \"cost\": \"BigDecimal\",\r\n  \"freeForOrg\": \"boolean\",\r\n  \"startTime\": \"Instant\",\r\n  \"endTime\": \"Instant\",\r\n  \"duration\": \"int\",\r\n  \"allowDiscussionId\": \"String\",\r\n  \"resourceIds\": [\"String\"],\r\n  \"tags\": [\"String\"],\r\n  \"allowAiQuestion\": \"boolean\",\r\n  \"visibility\" :\"boolean\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/submission/exercise/1e5ff731-76af-4cf0-a07d-cbf31fe26bb8",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"submission",
+						"exercise",
+						"1e5ff731-76af-4cf0-a07d-cbf31fe26bb8"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "(DEPRECATED) (TEACHER) updateQuestion",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNDM0MjQyNTItZDJjZi00Y2NkLWFjYWEtNzgxOGQ2ZTE3YzdhIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTE2OTM0NjAsImlhdCI6MTc1MTY4OTg2MCwianRpIjoiZTRiMTEwMzItMTY1OS00ODRlLWI1MzgtMjdiYWJkYzJmZTU3IiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.K2zcjXCfHWBRvIfOvvzNZKPd679JbK-eTiTGlq3BcEC7kqU_mbZCFu-QE6ST1G8NLC1tQB3lDOfzZ_ASFj5D1Q",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"points\": 30\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/submission/quiz/30daadcd-79ac-4aaf-89e3-25a204d93091/question/07d692f3-a275-447a-a044-8e7d7d737d1e",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"submission",
+						"quiz",
+						"30daadcd-79ac-4aaf-89e3-25a204d93091",
+						"question",
+						"07d692f3-a275-447a-a044-8e7d7d737d1e"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "(TEACHER) updateCodingDetail",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNDM0MjQyNTItZDJjZi00Y2NkLWFjYWEtNzgxOGQ2ZTE3YzdhIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTE2OTM0NjAsImlhdCI6MTc1MTY4OTg2MCwianRpIjoiZTRiMTEwMzItMTY1OS00ODRlLWI1MzgtMjdiYWJkYzJmZTU3IiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.K2zcjXCfHWBRvIfOvvzNZKPd679JbK-eTiTGlq3BcEC7kqU_mbZCFu-QE6ST1G8NLC1tQB3lDOfzZ_ASFj5D1Q",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"input\": \"String\",\r\n    \"output\": \"String\",\r\n    \"constraintText\": \"String\",\r\n    \"memoryLimit\": 256,\r\n    \"maxSubmissions\": \"int\",\r\n    \"codeTemplate\": \"String\",\r\n    \"solution\": \"String\",\r\n    \"topic\": \"Array\",\r\n    \"timeLimit\": 2000,\r\n    \"testCases\": [\r\n        {\r\n            \"id\": \"123\",\r\n            \"input\": \"1\\n2\",\r\n            \"expectedOutput\": \"3\"\r\n        }, // sửa\r\n        {\r\n            \"id\": \"456\",\r\n            \"delete\": true\r\n        } // xoá\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/submission/coding/exercise/74a45d79-67ba-4e8e-b1bf-5868f478108d/coding-detail",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"submission",
+						"coding",
+						"exercise",
+						"74a45d79-67ba-4e8e-b1bf-5868f478108d",
+						"coding-detail"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "(TEACHER) updateQuestionWithOptions",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNDM0MjQyNTItZDJjZi00Y2NkLWFjYWEtNzgxOGQ2ZTE3YzdhIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTE2OTM0NjAsImlhdCI6MTc1MTY4OTg2MCwianRpIjoiZTRiMTEwMzItMTY1OS00ODRlLWI1MzgtMjdiYWJkYzJmZTU3IiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.K2zcjXCfHWBRvIfOvvzNZKPd679JbK-eTiTGlq3BcEC7kqU_mbZCFu-QE6ST1G8NLC1tQB3lDOfzZ_ASFj5D1Q",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"text\": \"Which of the following are primitive types in Java? (Choose all that apply)\",\r\n    \"questionType\": \"SINGLE_CHOICE\",\r\n    \"points\": 35,\r\n    \"orderInQuiz\": 2,\r\n    \"options\": [\r\n        {\r\n            \"id\": \"d178ecd0-0d21-4ff7-885e-953509dd2eae\",\r\n            \"optionText\": \"INTEGER\",\r\n            \"correct\": false,\r\n            \"order\": \"A\"\r\n        }, // cập nhật\r\n        {\r\n            \"id\": \"02555cda-1e90-4250-9587-75a3dd12ada1\",\r\n            \"delete\": true\r\n        }, // xoá mềm\r\n        {\r\n            \"id\": \"f49226db-5194-4207-bdf0-4e3cbafebad9\",\r\n            \"optionText\": \"boolean\",\r\n            \"correct\": true,\r\n            \"order\": \"B\"\r\n        } // cập nhật\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/submission/quiz/771e3cdb-537f-4b0f-9e1d-3f5d4f365cec/question/b0c7eec5-0d0c-4097-9b90-6cd04e8c5339",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"submission",
+						"quiz",
+						"771e3cdb-537f-4b0f-9e1d-3f5d4f365cec",
+						"question",
+						"b0c7eec5-0d0c-4097-9b90-6cd04e8c5339"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "(TEACHER) updateOption",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNDM0MjQyNTItZDJjZi00Y2NkLWFjYWEtNzgxOGQ2ZTE3YzdhIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTE2OTM0NjAsImlhdCI6MTc1MTY4OTg2MCwianRpIjoiZTRiMTEwMzItMTY1OS00ODRlLWI1MzgtMjdiYWJkYzJmZTU3IiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.K2zcjXCfHWBRvIfOvvzNZKPd679JbK-eTiTGlq3BcEC7kqU_mbZCFu-QE6ST1G8NLC1tQB3lDOfzZ_ASFj5D1Q",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"optionText\": \"4 bytes (32-bit)\",\r\n    \"order\": \"A\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/submission/quiz/question/option/4c266a8c-85df-4802-b08f-0dcca7336f79",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"submission",
+						"quiz",
+						"question",
+						"option",
+						"4c266a8c-85df-4802-b08f-0dcca7336f79"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "(ADMIN) getAllExercises",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pblJvb3QxMjNAZ21haWwuY29tIiwiYmxvY2tfaWRzIjpbXSwicm9sZXMiOlsiQURNSU4iXSwiaXNzIjoiQ29kZSBDYW1wdXMiLCJhY3RpdmUiOnRydWUsInRva2VuX3R5cGUiOiJhY2Nlc3NfdG9rZW4iLCJ1c2VySWQiOiJmNTJiNzdlYi1kYzMyLTQ0ZGYtOTBhNi02ZTZiZWE3Y2I5ZDAiLCJvcmdfcm9sZSI6IkFkbWluIiwicGVybWlzc2lvbnMiOltdLCJvcmdfaWQiOiJiZjQ4NDgzYi1jNmE4LTQzNDktYjRhMC02NmM2NGU0NDcxMzQiLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTczNDQ5MjIsImlhdCI6MTc1Njc0MDEyOCwianRpIjoiODMzMGU5MDUtZDgxYi00Y2U2LTk4MzctNzJmYWYwMjk0YjY0IiwiZW1haWwiOiJhZG1pblJvb3QxMjNAZ21haWwuY29tIiwidXNlcm5hbWUiOiJhZG1pbiJ9.AOPkPgO8dW8pz-bi8-2LkYOw-Tj_vg47QAq-I2FzhHiWnGqslnZkBzZ5O491en9nq0zd6pqqTBo_juk3HUCqLw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8083/submission/exercises?page=1&size=10&sortBy=CREATED_AT&asc=true",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"submission",
+						"exercises"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "size",
+							"value": "10"
+						},
+						{
+							"key": "sortBy",
+							"value": "CREATED_AT"
+						},
+						{
+							"key": "asc",
+							"value": "true"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "(ADMIN) getExercisesOf",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNmJmNGM1Y2YtMDg2Yy00MTU0LWJlY2MtYjVkNzk5Y2RkOTA1IiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTYzNjc3MTksImlhdCI6MTc1NTc2MjkxOSwianRpIjoiMGQ5NDFmMGQtYzg0My00MjNhLWI3NzItMWUyZGY2M2IyZGE0IiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.sNqCMJMujYKNEQpFT5X9XZZCTKbdvbOvrNJQS-JFV8ETRYhwV1qX0zSz3A5gwcLAFsgRj-7bV4CgKl3nVOfE5w",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8083/submission/exercises/self?page=1&size=10&sortBy=CREATED_AT&asc=true",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"submission",
+						"exercises",
+						"self"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "size",
+							"value": "10"
+						},
+						{
+							"key": "sortBy",
+							"value": "CREATED_AT"
+						},
+						{
+							"key": "asc",
+							"value": "true"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getQuizExerciseDetail",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNDhlMzg4ZDYtMDZjYS00ZDFiLWI0MjktMzI2OGIyODAwNmNkIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTUxNjk4MzIsImlhdCI6MTc1NDU2NTAzMiwianRpIjoiMDdkZjgxNDEtZjZhMy00ZTFjLThmOTgtMmJjOTg2YTFmOTE1IiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.YP4NPjMr8oV33fxYq-jDD3v6DekQ6P0rG08EQq9E79fPq8t9fM8eMTUmtxWTEqrD8OkC3stekThad81xUY4tbw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8083/submission/exercise/quiz/d6ae0072-fbaa-45c6-8234-6c7422580b69?qPage=1&qSize=5&qSortBy=ORDER_IN_QUIZ&qAsc=false",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"submission",
+						"exercise",
+						"quiz",
+						"d6ae0072-fbaa-45c6-8234-6c7422580b69"
+					],
+					"query": [
+						{
+							"key": "qPage",
+							"value": "1"
+						},
+						{
+							"key": "qSize",
+							"value": "5"
+						},
+						{
+							"key": "qSortBy",
+							"value": "ORDER_IN_QUIZ"
+						},
+						{
+							"key": "qAsc",
+							"value": "false"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getCodingExerciseDetail",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiYmY3YzUxMTItZGQ4Mi00NTE1LThlMDItMGM5ZGM2NzE2ZmU5IiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTMyNjQ3MjQsImlhdCI6MTc1MzI2MTEyNCwianRpIjoiNDliNjFlMTAtNDMwMC00MDQ1LTgwZjYtZWNhNjM2YjZmNmUyIiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ._gYQhN3EsN4EsdKnkS1xWbYA0_BNwWf7jzWdtcdRK6CGMZ_2dmtKVWuya4Z9gP0xGuOYw_DjBcKwQs055sq5oQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8083/submission/exercise/coding/f2925563-3d6d-486e-bd00-028666310582?tcPage=1&tcSize=5&tcSortBy=CREATED_AT&tcAsc=false",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"submission",
+						"exercise",
+						"coding",
+						"f2925563-3d6d-486e-bd00-028666310582"
+					],
+					"query": [
+						{
+							"key": "tcPage",
+							"value": "1"
+						},
+						{
+							"key": "tcSize",
+							"value": "5"
+						},
+						{
+							"key": "tcSortBy",
+							"value": "CREATED_AT"
+						},
+						{
+							"key": "tcAsc",
+							"value": "false"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "(TEACHER) getTestCases",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiYmY3YzUxMTItZGQ4Mi00NTE1LThlMDItMGM5ZGM2NzE2ZmU5IiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTMyNjQ3MjQsImlhdCI6MTc1MzI2MTEyNCwianRpIjoiNDliNjFlMTAtNDMwMC00MDQ1LTgwZjYtZWNhNjM2YjZmNmUyIiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ._gYQhN3EsN4EsdKnkS1xWbYA0_BNwWf7jzWdtcdRK6CGMZ_2dmtKVWuya4Z9gP0xGuOYw_DjBcKwQs055sq5oQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8083/submission/coding/610a0f52-573b-41b9-8f5d-57b2a80f0d56/test-cases?page=1&size=10&sortBy=CREATED_AT&asc=false",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"submission",
+						"coding",
+						"610a0f52-573b-41b9-8f5d-57b2a80f0d56",
+						"test-cases"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "size",
+							"value": "10"
+						},
+						{
+							"key": "sortBy",
+							"value": "CREATED_AT"
+						},
+						{
+							"key": "asc",
+							"value": "false"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "(TEACHER) getTestCaseById",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiYmY3YzUxMTItZGQ4Mi00NTE1LThlMDItMGM5ZGM2NzE2ZmU5IiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTMyNjQ3MjQsImlhdCI6MTc1MzI2MTEyNCwianRpIjoiNDliNjFlMTAtNDMwMC00MDQ1LTgwZjYtZWNhNjM2YjZmNmUyIiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ._gYQhN3EsN4EsdKnkS1xWbYA0_BNwWf7jzWdtcdRK6CGMZ_2dmtKVWuya4Z9gP0xGuOYw_DjBcKwQs055sq5oQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8083/submission/coding/test-case/e0f740da-3d3c-466a-a8b2-2c119c81b346",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"submission",
+						"coding",
+						"test-case",
+						"e0f740da-3d3c-466a-a8b2-2c119c81b346"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "(TEACHER) getQuestionsOfQuiz",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNDM0MjQyNTItZDJjZi00Y2NkLWFjYWEtNzgxOGQ2ZTE3YzdhIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTIxMzI4NDQsImlhdCI6MTc1MjEyOTI0NCwianRpIjoiNzVkZDIyZDItNTE4MS00YzQ3LWE1MjgtYTIxYjNhZWNlY2UxIiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.UKClDlrPTtbmE9HcexQ4t4CjAWMbtP1UzL2mVuuVW4uPDwhSwSyU9ahEeoakb7ve0yM_RDkBy_XFdeAzGrDIoA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8083/submission/quiz/ad223f64-e3f3-4936-9215-4eadcad6fb92/questions?page=1&size=10&sortBy=ORDER_IN_QUIZ&asc=false",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"submission",
+						"quiz",
+						"ad223f64-e3f3-4936-9215-4eadcad6fb92",
+						"questions"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "size",
+							"value": "10"
+						},
+						{
+							"key": "sortBy",
+							"value": "ORDER_IN_QUIZ"
+						},
+						{
+							"key": "asc",
+							"value": "false"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "(TEACHER) getQuestion",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNDM0MjQyNTItZDJjZi00Y2NkLWFjYWEtNzgxOGQ2ZTE3YzdhIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTIxMzI4NDQsImlhdCI6MTc1MjEyOTI0NCwianRpIjoiNzVkZDIyZDItNTE4MS00YzQ3LWE1MjgtYTIxYjNhZWNlY2UxIiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.UKClDlrPTtbmE9HcexQ4t4CjAWMbtP1UzL2mVuuVW4uPDwhSwSyU9ahEeoakb7ve0yM_RDkBy_XFdeAzGrDIoA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8083/submission/question/dcf11051-7706-44c8-9f18-a3c889c2422b",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"submission",
+						"question",
+						"dcf11051-7706-44c8-9f18-a3c889c2422b"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "(TEACHER) getOptionsOfQuestion",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNDM0MjQyNTItZDJjZi00Y2NkLWFjYWEtNzgxOGQ2ZTE3YzdhIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTIxMzI4NDQsImlhdCI6MTc1MjEyOTI0NCwianRpIjoiNzVkZDIyZDItNTE4MS00YzQ3LWE1MjgtYTIxYjNhZWNlY2UxIiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.UKClDlrPTtbmE9HcexQ4t4CjAWMbtP1UzL2mVuuVW4uPDwhSwSyU9ahEeoakb7ve0yM_RDkBy_XFdeAzGrDIoA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8083/submission/question/dcf11051-7706-44c8-9f18-a3c889c2422b/option",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"submission",
+						"question",
+						"dcf11051-7706-44c8-9f18-a3c889c2422b",
+						"option"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "(TEACHER) getOption",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNDM0MjQyNTItZDJjZi00Y2NkLWFjYWEtNzgxOGQ2ZTE3YzdhIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTIxMzI4NDQsImlhdCI6MTc1MjEyOTI0NCwianRpIjoiNzVkZDIyZDItNTE4MS00YzQ3LWE1MjgtYTIxYjNhZWNlY2UxIiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.UKClDlrPTtbmE9HcexQ4t4CjAWMbtP1UzL2mVuuVW4uPDwhSwSyU9ahEeoakb7ve0yM_RDkBy_XFdeAzGrDIoA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8083/submission/option/4c266a8c-85df-4802-b08f-0dcca7336f79",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"submission",
+						"option",
+						"4c266a8c-85df-4802-b08f-0dcca7336f79"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "myQuizHistory",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiMDVkNTc0ZTItOTYyNy00MTg2LWE3NWEtYTM0Y2VhMzMzNzhkIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTI5NDA4NDUsImlhdCI6MTc1MjkzNzI0NSwianRpIjoiZWVjMmFiZTktYTlkYy00NDI2LTk3ZWMtYjhiNjhiNzliMmUyIiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.VH8-gf5Qpgf51odPYzXQvZtE8ldNO1313CCPSGE1bEDMFASIvxX7ptGZf9XHbbyVlNx2iIi8tZAeVYSYkNH50A",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/submission/quiz/self/history?page=1&size=10",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"submission",
+						"quiz",
+						"self",
+						"history"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "size",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "myCodingHistory",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiMDVkNTc0ZTItOTYyNy00MTg2LWE3NWEtYTM0Y2VhMzMzNzhkIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTI5NDA4NDUsImlhdCI6MTc1MjkzNzI0NSwianRpIjoiZWVjMmFiZTktYTlkYy00NDI2LTk3ZWMtYjhiNjhiNzliMmUyIiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.VH8-gf5Qpgf51odPYzXQvZtE8ldNO1313CCPSGE1bEDMFASIvxX7ptGZf9XHbbyVlNx2iIi8tZAeVYSYkNH50A",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/submission/coding/self/history?page=1&size=10",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"submission",
+						"coding",
+						"self",
+						"history"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "size",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "myAssignments",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNmJmNGM1Y2YtMDg2Yy00MTU0LWJlY2MtYjVkNzk5Y2RkOTA1IiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTYzNjc3MTksImlhdCI6MTc1NTc2MjkxOSwianRpIjoiMGQ5NDFmMGQtYzg0My00MjNhLWI3NzItMWUyZGY2M2IyZGE0IiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.sNqCMJMujYKNEQpFT5X9XZZCTKbdvbOvrNJQS-JFV8ETRYhwV1qX0zSz3A5gwcLAFsgRj-7bV4CgKl3nVOfE5w",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/submission/assignments/self?page=1&size=20",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"submission",
+						"assignments",
+						"self"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "size",
+							"value": "20"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "(TEACHER) getAssignedStudentsForExercise",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiMDVkNTc0ZTItOTYyNy00MTg2LWE3NWEtYTM0Y2VhMzMzNzhkIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTI5NDA4NDUsImlhdCI6MTc1MjkzNzI0NSwianRpIjoiZWVjMmFiZTktYTlkYy00NDI2LTk3ZWMtYjhiNjhiNzliMmUyIiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.VH8-gf5Qpgf51odPYzXQvZtE8ldNO1313CCPSGE1bEDMFASIvxX7ptGZf9XHbbyVlNx2iIi8tZAeVYSYkNH50A",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/submission/assignments/{exerciseId}?page=1&size=20&completed=false",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"submission",
+						"assignments",
+						"{exerciseId}"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "size",
+							"value": "20"
+						},
+						{
+							"key": "completed",
+							"value": "false"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "mySubmissions",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiMDVkNTc0ZTItOTYyNy00MTg2LWE3NWEtYTM0Y2VhMzMzNzhkIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTI5NDA4NDUsImlhdCI6MTc1MjkzNzI0NSwianRpIjoiZWVjMmFiZTktYTlkYy00NDI2LTk3ZWMtYjhiNjhiNzliMmUyIiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.VH8-gf5Qpgf51odPYzXQvZtE8ldNO1313CCPSGE1bEDMFASIvxX7ptGZf9XHbbyVlNx2iIi8tZAeVYSYkNH50A",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/submission/self/history?page=1&size=10",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"submission",
+						"self",
+						"history"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "size",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "(TEACHER) softDeleteAssignment",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiMDZiNTZlMmMtOTFkZS00N2VlLTgyYzktM2UxMjViMGU1N2QyIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTU5MjUxNzEsImlhdCI6MTc1NTMyMDM3MSwianRpIjoiNTRjYWVlMDQtOWIxZS00YTllLWJmZTctZmE1ZDM1MzkwNGU3IiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.GuYZW_qKBQr-RLwyTyUPp6tQ9cv-9wOXn8ZI7uBpaajnald-EkQov82pj12rNayBkLR_WS55dsI8xLJUhaYW7w",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8083/submission/assignment?exerciseId=0acbf136-ef34-4923-879d-7d8fbaf4f81e&studentId=6bf4c5cf-086c-4154-becc-b5d799cdd905",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"submission",
+						"assignment"
+					],
+					"query": [
+						{
+							"key": "exerciseId",
+							"value": "0acbf136-ef34-4923-879d-7d8fbaf4f81e"
+						},
+						{
+							"key": "studentId",
+							"value": "6bf4c5cf-086c-4154-becc-b5d799cdd905"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "(TEACHER) bulkSoftDeleteAssignments",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiMDZiNTZlMmMtOTFkZS00N2VlLTgyYzktM2UxMjViMGU1N2QyIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTU5MjUxNzEsImlhdCI6MTc1NTMyMDM3MSwianRpIjoiNTRjYWVlMDQtOWIxZS00YTllLWJmZTctZmE1ZDM1MzkwNGU3IiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.GuYZW_qKBQr-RLwyTyUPp6tQ9cv-9wOXn8ZI7uBpaajnald-EkQov82pj12rNayBkLR_WS55dsI8xLJUhaYW7w",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"studentIds\": [\r\n        \"28d3b767-e428-4022-97d0-76831116f392\",\r\n        \"ca95116c-8cc7-4a43-8b76-c6d54c59b1b0\"\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/submission/assignment-bulk?exerciseId=0456f1d4-bfa2-4ba6-baab-2ccb698722aa",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"submission",
+						"assignment-bulk"
+					],
+					"query": [
+						{
+							"key": "exerciseId",
+							"value": "0456f1d4-bfa2-4ba6-baab-2ccb698722aa"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "(Teacher) softDeleteOption",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNDM0MjQyNTItZDJjZi00Y2NkLWFjYWEtNzgxOGQ2ZTE3YzdhIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTIxMzI4NDQsImlhdCI6MTc1MjEyOTI0NCwianRpIjoiNzVkZDIyZDItNTE4MS00YzQ3LWE1MjgtYTIxYjNhZWNlY2UxIiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.UKClDlrPTtbmE9HcexQ4t4CjAWMbtP1UzL2mVuuVW4uPDwhSwSyU9ahEeoakb7ve0yM_RDkBy_XFdeAzGrDIoA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8083/submission/quiz/33a295ad-b5c8-4ca2-b0c9-7c59d2ba30ea/14419198-ff06-4034-ab37-505d2adcb36c/option/ee8e2bd0-9520-48db-b70f-6a182af2db67",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"submission",
+						"quiz",
+						"33a295ad-b5c8-4ca2-b0c9-7c59d2ba30ea",
+						"14419198-ff06-4034-ab37-505d2adcb36c",
+						"option",
+						"ee8e2bd0-9520-48db-b70f-6a182af2db67"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "(Teacher) softDeleteQuestion",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNDM0MjQyNTItZDJjZi00Y2NkLWFjYWEtNzgxOGQ2ZTE3YzdhIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTIxMzI4NDQsImlhdCI6MTc1MjEyOTI0NCwianRpIjoiNzVkZDIyZDItNTE4MS00YzQ3LWE1MjgtYTIxYjNhZWNlY2UxIiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.UKClDlrPTtbmE9HcexQ4t4CjAWMbtP1UzL2mVuuVW4uPDwhSwSyU9ahEeoakb7ve0yM_RDkBy_XFdeAzGrDIoA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8083/submission/quiz/e7dd1dbd-93bf-465e-ba55-0a3123c02907/question/11acf6b2-8547-4834-883b-3d0393595b64",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"submission",
+						"quiz",
+						"e7dd1dbd-93bf-465e-ba55-0a3123c02907",
+						"question",
+						"11acf6b2-8547-4834-883b-3d0393595b64"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "(Teacher) softDeleteExercise",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6IkNvZGUgQ2FtcHVzIiwiYWN0aXZlIjp0cnVlLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIiwidXNlcklkIjoiNDM0MjQyNTItZDJjZi00Y2NkLWFjYWEtNzgxOGQ2ZTE3YzdhIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6IlJPTEVfQURNSU4iLCJleHAiOjE3NTIxMzI4NDQsImlhdCI6MTc1MjEyOTI0NCwianRpIjoiNzVkZDIyZDItNTE4MS00YzQ3LWE1MjgtYTIxYjNhZWNlY2UxIiwiZW1haWwiOiJhZG1pbjEyMzEyMzEyM0BtYWlsLmNvbSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.UKClDlrPTtbmE9HcexQ4t4CjAWMbtP1UzL2mVuuVW4uPDwhSwSyU9ahEeoakb7ve0yM_RDkBy_XFdeAzGrDIoA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8083/submission/exercise/43c55391-75fb-489a-852e-04dc70638239",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"submission",
+						"exercise",
+						"43c55391-75fb-489a-852e-04dc70638239"
+					]
+				}
+			},
+			"response": []
+		}
+	]
 }

@@ -12,6 +12,15 @@ spring:
   kafka:
     bootstrap-servers: kafka:9092
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "prometheus,health,info"
+  endpoint:
+    prometheus:
+      enabled: true
+
 app:
   services:
     profile: http://profile-service:8081/profile
