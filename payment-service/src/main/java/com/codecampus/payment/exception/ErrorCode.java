@@ -59,6 +59,11 @@ public enum ErrorCode {
   PURCHASED_ITEM(4059103, NOT_ACCEPTABLE.toString(), "Đã mua sản phẩm!",
       BAD_REQUEST),
 
+  // 406 - Input Validation Error
+  MONTH_INVALID(4069101, BAD_REQUEST_STATUS, "Tháng không hợp lệ!", BAD_REQUEST),
+
+  YEAR_INVALID(4069102, BAD_REQUEST_STATUS, "Năm không hợp lệ!", BAD_REQUEST),
+
   // 409 - Conflict
   USER_ALREADY_EXISTS(4099101, CONFLICT_STATUS, "Người dùng đã tồn tại!",
       CONFLICT),
