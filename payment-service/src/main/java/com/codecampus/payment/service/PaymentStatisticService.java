@@ -1,10 +1,10 @@
 package com.codecampus.payment.service;
 
-import com.codecampus.payment.dto.response.DailyDepositSummary;
+import com.codecampus.payment.dto.response.DailyDepositSummaryResponse;
+import com.codecampus.payment.dto.response.DailyStatisticSummaryResponse;
 import com.codecampus.payment.exception.AppException;
 import com.codecampus.payment.exception.ErrorCode;
 import com.codecampus.payment.helper.AuthenticationHelper;
-import com.codecampus.payment.repository.DailyDepositSummaryProjection;
 import com.codecampus.payment.repository.PaymentTransactionRepository;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 public class PaymentStatisticService {
   private final PaymentTransactionRepository paymentTransactionRepository;
 
-  public List<DailyDepositSummaryProjection> getDailyDepositSummaryByMonth(int year, int month) {
+  public List<DailyDepositSummaryResponse> getDailyDepositSummaryByMonth(int year, int month) {
     if (!AuthenticationHelper.getMyRoles().contains("ADMIN")) {
       throw new AppException(ErrorCode.UNAUTHORIZED);
     }
@@ -39,6 +39,40 @@ public class PaymentStatisticService {
     Instant startDate = start.atStartOfDay().toInstant(ZoneOffset.UTC);
     Instant endDate = end.plusDays(1).atStartOfDay().toInstant(ZoneOffset.UTC);
 
-    return paymentTransactionRepository.getDailyDepositSummary(startDate, endDate);
+    return paymentTransactionRepository.getDailyDepositSummary(startDate, endDate)
+        .stream()
+        .map(p -> new DailyDepositSummaryResponse(
+            p.getDay(),
+            p.getTotalAmount()
+        ))
+        .toList();
   }
+
+  public List<DailyStatisticSummaryResponse> getDailyStatisticSummary(int year, int month) {
+    if (year < 2004 || year > Year.now().getValue() ) {
+      throw new AppException(ErrorCode.YEAR_INVALID);
+    }
+    if (month < 1 || month > 12) {
+      throw new AppException(ErrorCode.MONTH_INVALID);
+    }
+    String userId = AuthenticationHelper.getMyUserId();
+
+    YearMonth ym = YearMonth.of(year, month);
+    LocalDate start = ym.atDay(1);
+    LocalDate end = ym.atEndOfMonth();
+
+    Instant startDate = start.atStartOfDay().toInstant(ZoneOffset.UTC);
+    Instant endDate = end.plusDays(1).atStartOfDay().toInstant(ZoneOffset.UTC);
+
+    return paymentTransactionRepository.getDailyDepositSummaryByUser(userId, startDate, endDate)
+        .stream()
+        .map(p -> new DailyStatisticSummaryResponse(
+            p.getDay(),
+            p.getPurchaseAmount(),
+            p.getDepositAmount(),
+            p.getWalletBalance()
+        ))
+        .toList();
+  }
+
 }

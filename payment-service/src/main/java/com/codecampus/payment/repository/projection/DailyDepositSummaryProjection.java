@@ -1,4 +1,4 @@
-package com.codecampus.payment.repository;
+package com.codecampus.payment.repository.projection;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

@@ -6,10 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
-@Setter
-@AllArgsConstructor
-public class DailyDepositSummary {
-  private LocalDate day;
-  private BigDecimal totalAmount;
-}
+public record DailyStatisticSummaryResponse(
+    LocalDate day,
+    BigDecimal depositAmount,
+    BigDecimal purchaseAmount,
+    BigDecimal walletBalance
+) {}
