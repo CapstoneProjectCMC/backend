@@ -52,7 +52,7 @@ public enum ErrorCode {
       NOT_FOUND),
     INSUFFICIENT_BALANCE(4059002, NOT_ACCEPTABLE.toString(), "Số dư không đủ!",
         BAD_REQUEST),
-  PURCHASED_iTEM(4059003, NOT_ACCEPTABLE.toString(), "Đã mua sản phẩm!",
+  PURCHASED_iTEM(4059003, NOT_ACCEPTABLE.toString(), "Sản phâm đã được mua!",
       BAD_REQUEST),
 
   // 409 - Conflict
