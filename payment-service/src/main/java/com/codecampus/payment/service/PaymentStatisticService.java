@@ -68,8 +68,8 @@ public class PaymentStatisticService {
         .stream()
         .map(p -> new DailyStatisticSummaryResponse(
             p.getDay(),
-            p.getPurchaseAmount(),
             p.getDepositAmount(),
+            p.getPurchaseAmount(),
             p.getWalletBalance()
         ))
         .toList();
