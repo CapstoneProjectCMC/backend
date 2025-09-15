@@ -79,6 +79,9 @@ jobs:
           mkdir -p deploy_bundle
           cp -v .env deploy_bundle/.env
           cp -v docker-compose.prod-infra.yml deploy_bundle/
+          mkdir -p deploy_bundle/init
+          cp -vr init/postgres deploy_bundle/init/postgres
+          cp -vr init/mongo deploy_bundle/init/mongo
           cp -v docker-compose.prod-services.yml deploy_bundle/
           mkdir -p deploy_bundle/monitoring/grafana/provisioning
           cp -v monitoring/prometheus.yml deploy_bundle/monitoring/
@@ -179,6 +182,8 @@ jobs:
           test -f deploy_bundle/monitoring/prometheus.yml
           test -f deploy_bundle/monitoring/loki-config.yml
           test -f deploy_bundle/monitoring/promtail-config.yml
+          test -d deploy_bundle/init/postgres
+          test -d deploy_bundle/init/mongo
 
       - name: Pre-clean monitoring paths on server
         uses: appleboy/ssh-action@v1.0.3
@@ -191,6 +196,7 @@ jobs:
             set -euo pipefail
             DEPLOY_DIR='${{ steps.targetdir.outputs.DEPLOY_DIR_FINAL }}'
             mkdir -p "$DEPLOY_DIR/monitoring/grafana/provisioning"
+            mkdir -p "$DEPLOY_DIR/init/postgres" "$DEPLOY_DIR/init/mongo"
 
             # Nếu lỡ có THƯ MỤC trùng tên file, xóa đi
             for f in prometheus.yml loki-config.yml promtail-config.yml; do
@@ -207,7 +213,7 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
-          source: "deploy_bundle/.env,deploy_bundle/docker-compose.prod-infra.yml,deploy_bundle/docker-compose.prod-services.yml,deploy_bundle/deploy.sh,deploy_bundle/monitoring/**"
+          source: "deploy_bundle/.env,deploy_bundle/docker-compose.prod-infra.yml,deploy_bundle/docker-compose.prod-services.yml,deploy_bundle/deploy.sh,deploy_bundle/monitoring/**,deploy_bundle/init/**"
           target: "${{ steps.targetdir.outputs.DEPLOY_DIR_FINAL }}"
           overwrite: true
           strip_components: 1

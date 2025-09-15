@@ -2,165 +2,76 @@ name: codecampus-infrastructures
 
 services:
   # ---------- PostgreSQL ----------
-  identity-db:
+  postgres:
     image: bitnami/postgresql:latest
-    container_name: identity-db
+    container_name: postgres
     restart: unless-stopped
     environment:
-      - POSTGRESQL_USERNAME=${IDENTITY_USERNAME}
-      - POSTGRESQL_PASSWORD=${IDENTITY_DB_PASSWORD}
-      - POSTGRESQL_DATABASE=${IDENTITY_DATABASE}
-      - POSTGRESQL_POSTGRES_PASSWORD=${IDENTITY_DB_PASSWORD}
+      # Superuser duy nhất cho cluster
+      - POSTGRESQL_POSTGRES_PASSWORD=${PG_SUPER_PASSWORD}
+      - POSTGRESQL_PASSWORD=${PG_SUPER_PASSWORD}
+
+      # Khai báo biến cho các app (script init sẽ đọc để tạo role/database)
+      - IDENTITY_USERNAME=${IDENTITY_USERNAME}
+      - IDENTITY_DB_PASSWORD=${IDENTITY_DB_PASSWORD}
+      - IDENTITY_DATABASE=${IDENTITY_DATABASE}
+
+      - QUIZ_USERNAME=${QUIZ_USERNAME}
+      - QUIZ_DB_PASSWORD=${QUIZ_DB_PASSWORD}
+      - QUIZ_DATABASE=${QUIZ_DATABASE}
+
+      - SUBMISSION_USERNAME=${SUBMISSION_USERNAME}
+      - SUBMISSION_DB_PASSWORD=${SUBMISSION_DB_PASSWORD}
+      - SUBMISSION_DATABASE=${SUBMISSION_DATABASE}
+
+      - CODING_USERNAME=${CODING_USERNAME}
+      - CODING_DB_PASSWORD=${CODING_DB_PASSWORD}
+      - CODING_DATABASE=${CODING_DATABASE}
+
+      - AI_USERNAME=${AI_USERNAME}
+      - AI_DB_PASSWORD=${AI_DB_PASSWORD}
+      - AI_DATABASE=${AI_DATABASE}
+
+      - POST_USERNAME=${POST_USERNAME}
+      - POST_DB_PASSWORD=${POST_DB_PASSWORD}
+      - POST_DATABASE=${POST_DATABASE}
+
+      - PAYMENT_USERNAME=${PAYMENT_USERNAME}
+      - PAYMENT_DB_PASSWORD=${PAYMENT_DB_PASSWORD}
+      - PAYMENT_DATABASE=${PAYMENT_DATABASE}
+
+      - ORGANIZATION_USERNAME=${ORGANIZATION_USERNAME}
+      - ORGANIZATION_DB_PASSWORD=${ORGANIZATION_DB_PASSWORD}
+      - ORGANIZATION_DATABASE=${ORGANIZATION_DATABASE}
     ports:
       - "5431:5432"
-    volumes:
-      - identity_pg_data:/bitnami/postgresql
-    healthcheck:
-      test: [ "CMD-SHELL","pg_isready -U postgres" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    networks: [ backend ]
-
-  quiz-db:
-    image: bitnami/postgresql:latest
-    container_name: quiz-db
-    restart: unless-stopped
-    environment:
-      - POSTGRESQL_USERNAME=${QUIZ_USERNAME}
-      - POSTGRESQL_PASSWORD=${QUIZ_DB_PASSWORD}
-      - POSTGRESQL_DATABASE=${QUIZ_DATABASE}
-      - POSTGRESQL_POSTGRES_PASSWORD=${QUIZ_DB_PASSWORD}
-    ports:
       - "5433:5432"
-    volumes:
-      - quiz_pg_data:/bitnami/postgresql
-    healthcheck:
-      test: [ "CMD-SHELL","pg_isready -U postgres" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    networks: [ backend ]
-
-  submission-db:
-    image: bitnami/postgresql:latest
-    container_name: submission-db
-    restart: unless-stopped
-    environment:
-      - POSTGRESQL_USERNAME=${SUBMISSION_USERNAME}
-      - POSTGRESQL_PASSWORD=${SUBMISSION_DB_PASSWORD}
-      - POSTGRESQL_DATABASE=${SUBMISSION_DATABASE}
-      - POSTGRESQL_POSTGRES_PASSWORD=${SUBMISSION_DB_PASSWORD}
-    ports:
       - "5434:5432"
-    volumes:
-      - submission_pg_data:/bitnami/postgresql
-    healthcheck:
-      test: [ "CMD-SHELL","pg_isready -U postgres" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    networks: [ backend ]
-
-  coding-db:
-    image: bitnami/postgresql:latest
-    container_name: coding-db
-    restart: unless-stopped
-    environment:
-      - POSTGRESQL_USERNAME=${CODING_USERNAME}
-      - POSTGRESQL_PASSWORD=${CODING_DB_PASSWORD}
-      - POSTGRESQL_DATABASE=${CODING_DATABASE}
-      - POSTGRESQL_POSTGRES_PASSWORD=${CODING_DB_PASSWORD}
-    ports:
       - "5435:5432"
-    volumes:
-      - coding_pg_data:/bitnami/postgresql
-    healthcheck:
-      test: [ "CMD-SHELL","pg_isready -U postgres" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    networks: [ backend ]
-
-  ai-db:
-    image: bitnami/postgresql:latest
-    container_name: ai-db
-    restart: unless-stopped
-    environment:
-      - POSTGRESQL_USERNAME=${AI_USERNAME}
-      - POSTGRESQL_PASSWORD=${AI_DB_PASSWORD}
-      - POSTGRESQL_DATABASE=${AI_DATABASE}
-      - POSTGRESQL_POSTGRES_PASSWORD=${AI_DB_PASSWORD}
-    ports:
       - "5436:5432"
-    volumes:
-      - ai_pg_data:/bitnami/postgresql
-    healthcheck:
-      test: [ "CMD-SHELL","pg_isready -U postgres" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    networks: [ backend ]
-
-  post-db:
-    image: bitnami/postgresql:latest
-    container_name: post-db
-    restart: unless-stopped
-    environment:
-      - POSTGRESQL_USERNAME=${POST_USERNAME}
-      - POSTGRESQL_PASSWORD=${POST_DB_PASSWORD}
-      - POSTGRESQL_DATABASE=${POST_DATABASE}
-      - POSTGRESQL_POSTGRES_PASSWORD=${POST_DB_PASSWORD}
-    ports:
       - "5439:5432"
-    volumes:
-      - post_pg_data:/bitnami/postgresql
-    healthcheck:
-      test: [ "CMD-SHELL","pg_isready -U postgres" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    networks: [ backend ]
-
-  payment-db:
-    image: bitnami/postgresql:latest
-    container_name: payment-db
-    restart: unless-stopped
-    environment:
-      - POSTGRESQL_USERNAME=${PAYMENT_USERNAME}
-      - POSTGRESQL_PASSWORD=${PAYMENT_DB_PASSWORD}
-      - POSTGRESQL_DATABASE=${PAYMENT_DATABASE}
-      - POSTGRESQL_POSTGRES_PASSWORD=${PAYMENT_DB_PASSWORD}
-    ports:
       - "5440:5432"
-    volumes:
-      - payment_pg_data:/bitnami/postgresql
-    healthcheck:
-      test: [ "CMD-SHELL","pg_isready -U postgres" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    networks: [ backend ]
-
-  organization-db:
-    image: bitnami/postgresql:latest
-    container_name: organization-db
-    restart: unless-stopped
-    environment:
-      - POSTGRESQL_USERNAME=${ORGANIZATION_USERNAME}
-      - POSTGRESQL_PASSWORD=${ORGANIZATION_DB_PASSWORD}
-      - POSTGRESQL_DATABASE=${ORGANIZATION_DATABASE}
-      - POSTGRESQL_POSTGRES_PASSWORD=${ORGANIZATION_DB_PASSWORD}
-    ports:
       - "5441:5432"
     volumes:
-      - organization_pg_data:/bitnami/postgresql
+      - pg_data:/bitnami/postgresql
+      # Mount thư mục init để tạo các DB/user tương ứng
+      - ./init/postgres:/docker-entrypoint-initdb.d:ro
     healthcheck:
-      test: [ "CMD-SHELL","pg_isready -U postgres" ]
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
       interval: 10s
       timeout: 5s
       retries: 5
-    networks: [ backend ]
+    networks:
+      backend:
+        aliases:
+          - identity-db
+          - quiz-db
+          - submission-db
+          - coding-db
+          - ai-db
+          - post-db
+          - payment-db
+          - organization-db
 
   # ----------  Kafka  ----------
   kafka:
@@ -316,80 +227,43 @@ services:
     networks: [ backend ]
 
   # ---------- MongoDB ----------
-  file-db:
+  mongo:
     image: bitnami/mongodb:latest
-    container_name: file-db
+    container_name: mongo
     restart: unless-stopped
+    environment:
+      - MONGODB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
+
+      # Biến cho từng app (script init sẽ dùng)
+      - FILE_USERNAME=${FILE_USERNAME}
+      - FILE_PASSWORD=${FILE_PASSWORD}
+      - FILE_DATABASE=${FILE_DATABASE}
+
+      - NOTIFICATION_USERNAME=${NOTIFICATION_USERNAME}
+      - NOTIFICATION_PASSWORD=${NOTIFICATION_PASSWORD}
+      - NOTIFICATION_DATABASE=${NOTIFICATION_DATABASE}
+
+      - CHAT_USERNAME=${CHAT_USERNAME}
+      - CHAT_PASSWORD=${CHAT_PASSWORD}
+      - CHAT_DATABASE=${CHAT_DATABASE}
     ports:
       - "27017:27017"
-    environment:
-      # Tài khoản quản trị
-      - MONGODB_ROOT_PASSWORD=${FILE_ROOT_PASSWORD}
-      # Tài khoản ứng dụng (tuỳ chọn – dùng khi bạn không muốn chạy bằng root)
-      - MONGODB_USERNAME=${FILE_USERNAME}
-      - MONGODB_PASSWORD=${FILE_PASSWORD}
-      - MONGODB_DATABASE=${FILE_DATABASE}
-      # Nếu chỉ chạy single‑node, KHÔNG khai báo replica‑set
-      # Muốn bật replica set: thêm MONGODB_REPLICA_SET_MODE=primary,...
-    volumes:
-      - file_mongo_data:/bitnami/mongodb
-    healthcheck:
-      test: [ "CMD-SHELL",
-              "mongo admin -u root -p $$FILE_ROOT_PASSWORD --eval 'db.adminCommand(\"ping\")' || exit 1" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    networks: [ backend ]
-
-  notification-db:
-    image: bitnami/mongodb:latest
-    container_name: notification-db
-    restart: unless-stopped
-    ports:
       - "27018:27017"
-    environment:
-      # Tài khoản quản trị
-      - MONGODB_ROOT_PASSWORD=${NOTIFICATION_ROOT_PASSWORD}
-      # Tài khoản ứng dụng (tuỳ chọn – dùng khi bạn không muốn chạy bằng root)
-      - MONGODB_USERNAME=${NOTIFICATION_USERNAME}
-      - MONGODB_PASSWORD=${NOTIFICATION_PASSWORD}
-      - MONGODB_DATABASE=${NOTIFICATION_DATABASE}
-      # Nếu chỉ chạy single‑node, KHÔNG khai báo replica‑set
-      # Muốn bật replica set: thêm MONGODB_REPLICA_SET_MODE=primary,...
-    volumes:
-      - notification_mongo_data:/bitnami/mongodb
-    healthcheck:
-      test: [ "CMD-SHELL",
-              "mongo admin -u root -p $$NOTIFICATION_ROOT_PASSWORD --eval 'db.adminCommand(\"ping\")' || exit 1" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    networks: [ backend ]
-
-  chat-db:
-    image: bitnami/mongodb:latest
-    container_name: chat-db
-    restart: unless-stopped
-    ports:
       - "27019:27017"
-    environment:
-      # Tài khoản quản trị
-      - MONGODB_ROOT_PASSWORD=${CHAT_ROOT_PASSWORD}
-      # Tài khoản ứng dụng (tuỳ chọn – dùng khi bạn không muốn chạy bằng root)
-      - MONGODB_USERNAME=${CHAT_USERNAME}
-      - MONGODB_PASSWORD=${CHAT_PASSWORD}
-      - MONGODB_DATABASE=${CHAT_DATABASE}
-      # Nếu chỉ chạy single‑node, KHÔNG khai báo replica‑set
-      # Muốn bật replica set: thêm MONGODB_REPLICA_SET_MODE=primary,...
     volumes:
-      - chat_mongo_data:/bitnami/mongodb
+      - mongo_data:/bitnami/mongodb
+      - ./init/mongo:/docker-entrypoint-initdb.d:ro
     healthcheck:
-      test: [ "CMD-SHELL",
-              "mongo admin -u root -p $$CHAT_ROOT_PASSWORD --eval 'db.adminCommand(\"ping\")' || exit 1" ]
+      test: [ "CMD-SHELL", "mongo admin -u root -p $${MONGODB_ROOT_PASSWORD} --eval 'db.adminCommand(\"ping\")' || exit 1" ]
       interval: 10s
       timeout: 5s
       retries: 5
-    networks: [ backend ]
+    networks:
+      backend:
+        aliases:
+          - file-db
+          - notification-db
+          - chat-db
 
   # ---------- Monitoring: Metrics (Prometheus/Grafana) ----------
   prometheus:
@@ -500,4 +374,6 @@ volumes:
   file_mongo_data:
   notification_mongo_data:
   chat_mongo_data:
+  pg_data:
+  mongo_data:
 
