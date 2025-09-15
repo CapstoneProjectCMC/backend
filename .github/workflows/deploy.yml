@@ -54,10 +54,12 @@ jobs:
           set -euo pipefail
           IMAGE_TAG_VALUE=""
           if [ "${EVENT_NAME}" = "workflow_dispatch" ]; then
-            IMAGE_TAG_VALUE="${GITHUB_SHA:0:12}"
+            IMAGE_TAG_VALUE="latest"
           else
             if [[ "${HEAD_BRANCH:-}" =~ ^v([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
               IMAGE_TAG_VALUE="${HEAD_BRANCH#v}"
+            elif [ "${HEAD_BRANCH:-}" = "main" ]; then
+               IMAGE_TAG_VALUE="latest"
             else
               IMAGE_TAG_VALUE="${HEAD_SHA:0:12}"
             fi
@@ -90,6 +92,7 @@ jobs:
           cp -vr monitoring/grafana/provisioning/* deploy_bundle/monitoring/grafana/provisioning/ 2>/dev/null || true
           
           mkdir -p ops
+          
           cat > ops/deploy.sh <<'EOS'
           #!/usr/bin/env bash
           set -euo pipefail
@@ -101,9 +104,15 @@ jobs:
           # Backup .env
           cp -f .env ".env.bak.$(date +%Y%m%d-%H%M%S)" || true
 
-          # Ghi IMAGE_TAG vào .env
+          # Ghi IMAGE_TAG vào .env:
+          # - nếu IMAGE_TAG=latest thì giữ latest (hoặc đặt latest nếu chưa có)
+          # - nếu là version cụ thể/SHA thì cập nhật đúng giá trị
           if grep -q '^IMAGE_TAG=' .env; then
-            sed -i "s/^IMAGE_TAG=.*/IMAGE_TAG=${IMAGE_TAG}/" .env
+            if [ "${IMAGE_TAG}" = "latest" ]; then
+              sed -i "s/^IMAGE_TAG=.*/IMAGE_TAG=latest/" .env
+            else
+              sed -i "s/^IMAGE_TAG=.*/IMAGE_TAG=${IMAGE_TAG}/" .env     
+            fi
           else
             echo "IMAGE_TAG=${IMAGE_TAG}" >> .env
           fi
