@@ -260,4 +260,4 @@ jobs:
               exit 1
             fi
             
-            IMAGE_TAG="${IMAGE_TAG:-latest}" DEPLOY_DIR="$DEPLOY_DIR" bash ./deploy.sh
+            IMAGE_TAG="latest" DEPLOY_DIR="$DEPLOY_DIR" bash ./deploy.sh
