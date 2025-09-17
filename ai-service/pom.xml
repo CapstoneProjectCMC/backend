@@ -47,7 +47,7 @@
         <lombok.mapstruct.binding.version>0.2.0</lombok.mapstruct.binding.version>
         <jackson.version>2.19.0</jackson.version>
         <nimbus-jose.version>10.3</nimbus-jose.version>
-        <security-oauth2-jose.version>6.5.0</security-oauth2-jose.version>
+        <security-oauth2-jose.version>6.5.4</security-oauth2-jose.version>
         <jacoco.version>0.8.13</jacoco.version>
 
         <!-- Build-plugin versions -->

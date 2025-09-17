@@ -43,7 +43,7 @@
 
         <jackson.version>2.19.0</jackson.version>
         <nimbus-jose.version>10.3</nimbus-jose.version>
-        <security-oauth2-jose.version>6.5.0</security-oauth2-jose.version>
+        <security-oauth2-jose.version>6.5.4</security-oauth2-jose.version>
         <jacoco.version>0.8.13</jacoco.version>
         <grpc.server.starter.version>3.1.0.RELEASE</grpc.server.starter.version>
         <jackson-datatype-protobuf>0.9.18</jackson-datatype-protobuf>
