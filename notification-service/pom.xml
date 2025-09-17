@@ -38,7 +38,7 @@
         <jackson.version>2.19.0</jackson.version>
         <nimbus-jose.version>10.3</nimbus-jose.version>
         <projectlombok-lombok.version>1.18.40</projectlombok-lombok.version>
-        <security-oauth2-jose.version>6.5.0</security-oauth2-jose.version>
+        <security-oauth2-jose.version>6.5.4</security-oauth2-jose.version>
         <jacoco.version>0.8.13</jacoco.version>
         <socketio.version>2.0.13</socketio.version>
 
