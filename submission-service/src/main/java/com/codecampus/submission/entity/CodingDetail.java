@@ -47,7 +47,7 @@ public class CodingDetail extends AuditMetadata {
   @JoinColumn(name = "id")       // FK tới exercise
   Exercise exercise;
 
-  @Column(name = "allowed_languages", nullable = false, columnDefinition = "text[]")
+  @Column(name = "allowed_languages", columnDefinition = "text[]")
   Set<String> allowedLanguages;
 
   @Column(name = "input", columnDefinition = "text")

@@ -51,7 +51,7 @@ public class Exercise extends AuditMetadata {
   @Column(name = "user_id", nullable = false)
   String userId; // người tạo
 
-  @Column(length = 100, nullable = false)
+  @Column(length = 100)
   String title;
 
   @Column(columnDefinition = "text")
