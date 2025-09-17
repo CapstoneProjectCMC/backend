@@ -8,7 +8,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.4.6</version>
+        <version>3.5.5</version>
     </parent>
 
     <!-- Đây là POM tổng, packaging POM -->
@@ -45,18 +45,19 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
 
         <!-- Library versions -->
-        <grpc.version>1.72.0</grpc.version>
-        <protobuf.version>4.30.2</protobuf.version>
-        <lombok.version>1.18.38</lombok.version>
+        <grpc.version>1.75.0</grpc.version>
+        <protobuf.version>4.32.1</protobuf.version>
+        <lombok.version>1.18.40</lombok.version>
+
         <mapstruct.version>1.6.3</mapstruct.version>
         <spring-cloud.version>2024.0.1</spring-cloud.version>
-        <spring-grpc.version>0.8.0</spring-grpc.version>
+        <spring-grpc.version>0.11.0</spring-grpc.version>
 
         <!-- Plugin versions -->
         <felix.bundle.plugin.version>6.0.0</felix.bundle.plugin.version>
         <protobuf.plugin.version>0.6.1</protobuf.plugin.version>
         <os.maven.plugin.version>1.7.1</os.maven.plugin.version>
-        <maven.compiler.plugin.version>3.12.1</maven.compiler.plugin.version>
+        <maven.compiler.plugin.version>3.14.0</maven.compiler.plugin.version>
     </properties>
 
     <dependencyManagement>
@@ -164,7 +165,7 @@
                 <plugin>
                     <groupId>org.sonarsource.scanner.maven</groupId>
                     <artifactId>sonar-maven-plugin</artifactId>
-                    <version>4.0.0.4121</version>
+                    <version>5.2.0.4988</version>
                 </plugin>
             </plugins>
         </pluginManagement>
