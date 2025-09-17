@@ -1,4 +1,4 @@
-FROM python:3.9-slim-bookworm
+FROM python:3.13-slim-bookworm
 
 # docker build -t capstoneprojectpythondocker:latest .
 # ===== Công cụ biên dịch =====
