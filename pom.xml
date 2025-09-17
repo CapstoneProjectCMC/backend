@@ -8,7 +8,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.4.6</version>
+        <version>3.5.5</version>
     </parent>
 
     <!-- Đây là POM tổng, packaging POM -->
@@ -45,9 +45,10 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
 
         <!-- Library versions -->
-        <grpc.version>1.72.0</grpc.version>
-        <protobuf.version>4.30.2</protobuf.version>
+        <grpc.version>1.75.0</grpc.version>
+        <protobuf.version>4.32.1</protobuf.version>
         <lombok.version>1.18.40</lombok.version>
+
         <mapstruct.version>1.6.3</mapstruct.version>
         <spring-cloud.version>2024.0.1</spring-cloud.version>
         <spring-grpc.version>0.8.0</spring-grpc.version>

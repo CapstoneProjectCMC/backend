@@ -42,7 +42,7 @@ jobs:
           echo "run.head_sha:      ${{ github.event.workflow_run.head_sha }}"
 
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Derive IMAGE_TAG (from workflow_run or manual)
         shell: bash
@@ -168,7 +168,7 @@ jobs:
           fi
 
       - name: Ensure remote dir exists
-        uses: appleboy/ssh-action@v1.0.3
+        uses: appleboy/ssh-action@v1.2.2
         env:
           DEPLOY_DIR: ${{ steps.targetdir.outputs.DEPLOY_DIR_FINAL }}
         with:
@@ -195,7 +195,7 @@ jobs:
           test -d deploy_bundle/init/mongo
 
       - name: Pre-clean monitoring paths on server
-        uses: appleboy/ssh-action@v1.0.3
+        uses: appleboy/ssh-action@v1.2.2
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
@@ -216,7 +216,7 @@ jobs:
             done
 
       - name: Upload bundle to server
-        uses: appleboy/scp-action@v0.1.7
+        uses: appleboy/scp-action@v1.0.0
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
@@ -228,7 +228,7 @@ jobs:
           strip_components: 1
 
       - name: Verify files exist on server (debug)
-        uses: appleboy/ssh-action@v1.0.3
+        uses: appleboy/ssh-action@v1.2.2
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
@@ -238,7 +238,7 @@ jobs:
             ls -la '${{ steps.targetdir.outputs.DEPLOY_DIR_FINAL }}'
 
       - name: Verify .env identical & run deploy
-        uses: appleboy/ssh-action@v1.0.3
+        uses: appleboy/ssh-action@v1.2.2
         env:
           IMAGE_TAG: ${{ env.IMAGE_TAG }}
           ENV_SHA: ${{ env.ENV_SHA }}
