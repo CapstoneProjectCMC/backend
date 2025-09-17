@@ -220,13 +220,6 @@ services:
       - chat-service
     networks: [ backend ]
 
-  frontend:
-    image: ${DOCKERHUB_USER}/codecampus-frontend:${IMAGE_TAG:-latest}
-    restart: unless-stopped
-    ports: [ "4200:80" ]
-    networks: [ backend ]
-
-
 ########################
 #   NETWORK & VOLUME    #
 ########################

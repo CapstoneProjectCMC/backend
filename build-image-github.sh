@@ -6,6 +6,7 @@ DOCKERHUB_USER="${DOCKERHUB_USER:-yunomix2834}"
 DOCKERHUB_TOKEN="${DOCKERHUB_TOKEN:-}"
 IMAGE_TAG="${IMAGE_TAG:-$(date +%Y%m%d.%H%M%S)}"
 DOCKER_PLATFORMS="${DOCKER_PLATFORMS:-linux/amd64}"
+GITHUB_OWNER="${GITHUB_OWNER:-${GITHUB_REPOSITORY_OWNER:-}}"
 
 DEFAULT_SERVICES=(
   ai-service chat-service coding-service gateway-service identity-service
@@ -21,6 +22,14 @@ login() {
     echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USER" --password-stdin
   else
     log "DOCKERHUB_TOKEN empty -> skip docker login (build will fail on --push if registry requires auth)"
+  fi
+
+  # Login GHCR bằng GITHUB_TOKEN
+  if [ -n "${GITHUB_TOKEN:-}" ]; then
+    log "Logging in GHCR as ${GITHUB_ACTOR:-github-actions}"
+      echo "$GITHUB_TOKEN" | docker login ghcr.io -u "${GITHUB_ACTOR:-github-actions}" --password-stdin
+    else
+      log "GITHUB_TOKEN empty -> skip GHCR login"
   fi
 }
 
@@ -40,13 +49,16 @@ extra_tags_args() {
 build_push_java() {
   local module="$1"
   local repo="${DOCKERHUB_USER}/codecampus-${module}"
+  local repo_ghcr="ghcr.io/${GITHUB_OWNER}/codecampus-${module}"
   log "Building Java service: ${module}"
   docker buildx build \
     --platform "${DOCKER_PLATFORMS}" \
     -f docker/java-service.Dockerfile \
     --build-arg "MODULE=${module}" \
     -t "${repo}:${IMAGE_TAG}" \
+    -t "${repo_ghcr}:${IMAGE_TAG}" \
     $(extra_tags_args "${repo}") \
+    $(extra_tags_args "${repo_ghcr}") \
     --label "org.opencontainers.image.source=${GITHUB_SERVER_URL:-}/$([ -n "${GITHUB_REPOSITORY:-}" ] && echo "${GITHUB_REPOSITORY}")" \
     --label "org.opencontainers.image.revision=${GITHUB_SHA:-}" \
     --label "org.opencontainers.image.created=$(date -u +%Y-%m-%dT%H:%M:%SZ)" \

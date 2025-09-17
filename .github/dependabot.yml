@@ -1,4 +1,22 @@
 version: 2
+registries:
+  ghcr:
+    type: docker-registry
+    url: ghcr.io
+    username: ${{secrets.GHCR_USERNAME}}
+    password: ${{secrets.GHCR_TOKEN}}
+
+  dockerhub:
+    type: docker-registry
+    url: registry-1.docker.io
+    username: ${{secrets.DOCKERHUB_USER}}
+    password: ${{secrets.DOCKERHUB_TOKEN}}
+
+  github-maven:
+    type: maven-repository
+    url: https://maven.pkg.github.com/${{github.repository_owner}}/*
+    username: ${{secrets.GHCR_USERNAME}}
+    password: ${{secrets.GHCR_TOKEN}}
 updates:
   # Dependabot maven có thể chạy ở root của multi-module project
   - package-ecosystem: "maven"
@@ -12,25 +30,16 @@ updates:
     labels: [ "dependencies", "maven", "backend" ]
     groups:
       spring-bom:
-        patterns:
-          - "org.springframework.boot:*"
-          - "org.springframework.cloud:*"
+        patterns: [ "org.springframework.boot:*", "org.springframework.cloud:*" ]
         update-types: [ "minor", "patch" ]
       grpc-protobuf:
-        patterns:
-          - "io.grpc:*"
-          - "com.google.protobuf:*"
+        patterns: [ "io.grpc:*", "com.google.protobuf:*" ]
         update-types: [ "minor", "patch" ]
       mapping-and-utils:
-        patterns:
-          - "org.projectlombok:*"
-          - "org.mapstruct:*"
+        patterns: [ "org.projectlombok:*", "org.mapstruct:*" ]
         update-types: [ "minor", "patch" ]
       test-stack:
-        patterns:
-          - "org.jacoco:*"
-          - "org.sonarsource.scanner.maven:sonar-maven-plugin"
-          - "org.apache.maven.plugins:*"
+        patterns: [ "org.jacoco:*", "org.sonarsource.scanner.maven:sonar-maven-plugin", "org.apache.maven.plugins:*" ]
         update-types: [ "minor", "patch" ]
 
   # ========= FileService (.NET / NuGet) =========
@@ -57,19 +66,11 @@ updates:
     labels: [ "dependencies", "docker" ]
     open-pull-requests-limit: 10
     groups:
-      nginx-node-base:
-        patterns:
-          - "nginx"
-          - "node"
-        update-types: [ "minor", "patch" ]
       dotnet-base:
-        patterns:
-          - "mcr.microsoft.com/dotnet/*"
+        patterns: [ "mcr.microsoft.com/dotnet/*" ]
         update-types: [ "minor", "patch" ]
       jre-maven:
-        patterns:
-          - "eclipse-temurin:*"
-          - "maven:*"
+        patterns: [ "eclipse-temurin:*", "maven:*" ]
         update-types: [ "minor", "patch" ]
 
   # ========= Dockerfiles ở root =========
@@ -87,6 +88,7 @@ updates:
   # ========= GitHub Actions =========
   - package-ecosystem: "github-actions"
     directory: "/"
+    registries: [ "ghcr", "dockerhub" ]
     schedule:
       interval: "weekly"
       day: "monday"
