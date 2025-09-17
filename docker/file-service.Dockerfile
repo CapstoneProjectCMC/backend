@@ -17,7 +17,7 @@ WORKDIR /src/FileService/FileService.Api
 RUN dotnet publish -c Release -o /app/publish
 
 # ====== Runtime stage ======
-FROM mcr.microsoft.com/dotnet/aspnet:8.0
+FROM mcr.microsoft.com/dotnet/aspnet:9.0
 WORKDIR /app
 COPY --from=build /app/publish .
 
