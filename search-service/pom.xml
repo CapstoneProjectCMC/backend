@@ -34,14 +34,14 @@
         <!-- Library versions -->
         <jacoco.version>0.8.13</jacoco.version>
         <lombok.mapstruct.binding.version>0.2.0</lombok.mapstruct.binding.version>
-        <projectlombok-lombok.version>1.18.38</projectlombok-lombok.version>
+        <projectlombok-lombok.version>1.18.40</projectlombok-lombok.version>
         <elastic.search.version>9.0.3</elastic.search.version>
         <redisson.version>3.50.0</redisson.version>
 
         <!-- Plugin versions -->
         <protobuf.plugin.version>0.6.1</protobuf.plugin.version> <!-- xolstice/protobuf -->
         <os.maven.plugin.version>1.7.1</os.maven.plugin.version>
-        <maven.compiler.plugin.version>3.12.1</maven.compiler.plugin.version>
+        <maven.compiler.plugin.version>3.14.0</maven.compiler.plugin.version>
     </properties>
     <dependencies>
         <!-- ========= Spring Boot Starters ========= -->
