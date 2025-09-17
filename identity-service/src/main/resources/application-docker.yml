@@ -24,7 +24,7 @@ management:
 app:
   services:
     profile: http://profile-service:8081/profile
-    organization: http://organization-service:8091/org
+    organization: http://organization-service:8092/org
   init:
     admin:
       username: ${INIT_ADMIN_USERNAME:}
