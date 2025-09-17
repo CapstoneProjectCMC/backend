@@ -29,23 +29,36 @@ jobs:
 
       - name: Derive tags (Docker Hub + GHCR)
         id: meta
+        shell: bash
         run: |
-          OWNER_LC="${GITHUB_REPOSITORY_OWNER,,}"
-          echo "OWNER_LC=$OWNER_LC" >> $GITHUB_ENV
+          set -euo pipefail
+          OWNER_LC="$(printf '%s' "${GITHUB_REPOSITORY_OWNER}" | tr '[:upper:]' '[:lower:]')"
+
           if [ "${GITHUB_REF_TYPE}" = "tag" ]; then
             TAG="${GITHUB_REF_NAME#v}"
           else
             TAG="${GITHUB_SHA::12}"
           fi
-          echo "IMAGE_TAG=${TAG}" >> $GITHUB_ENV
+          echo "IMAGE_TAG=${TAG}" >> "$GITHUB_ENV"
 
-          HUB="${{ secrets.DOCKERHUB_USER }}/codecampus-coding-service:${TAG}"
-          GHCR="ghcr.io/${OWNER_LC}/codecampus-coding-service:${TAG}"
+          REPO_HUB="${{ secrets.DOCKERHUB_USER }}/codecampus-${{ matrix.module || 'file-service' }}"
+          REPO_GHCR="ghcr.io/${OWNER_LC}/codecampus-${{ matrix.module || 'file-service' }}"
+
+          HUB="${REPO_HUB}:${TAG}"
+          GHCR="${REPO_GHCR}:${TAG}"
+
           if [ "${GITHUB_REF_TYPE}" = "tag" ] || [ "${GITHUB_REF_NAME}" = "main" ]; then
-            HUB="${HUB}"$'\n'"${{ secrets.DOCKERHUB_USER }}/codecampus-coding-service:latest"
-            GHCR="${GHCR}"$'\n'"ghcr.io/${OWNER_LC}/codecampus-coding-service:latest"
+            HUB="${HUB}"$'\n'"${REPO_HUB}:latest"
+            GHCR="${GHCR}"$'\n'"${REPO_GHCR}:latest"
           fi
-          echo "tags=${HUB}"$'\n'"${GHCR}" >> $GITHUB_OUTPUT
+
+          {
+            echo "tags<<__TAGS__"
+            printf '%s\n' "$HUB"
+            printf '%s\n' "$GHCR"
+            echo "__TAGS__"
+          } >> "$GITHUB_OUTPUT"
+
 
       - name: Login to Docker Hub
         uses: docker/login-action@v3
