@@ -1,6 +1,5 @@
 version: 2
 updates:
-  # Dependabot maven có thể chạy ở root của multi-module project
   - package-ecosystem: "maven"
     directory: "/"
     schedule:
@@ -12,28 +11,18 @@ updates:
     labels: [ "dependencies", "maven", "backend" ]
     groups:
       spring-bom:
-        patterns:
-          - "org.springframework.boot:*"
-          - "org.springframework.cloud:*"
+        patterns: [ "org.springframework.boot:*","org.springframework.cloud:*" ]
         update-types: [ "minor", "patch" ]
       grpc-protobuf:
-        patterns:
-          - "io.grpc:*"
-          - "com.google.protobuf:*"
+        patterns: [ "io.grpc:*","com.google.protobuf:*" ]
         update-types: [ "minor", "patch" ]
       mapping-and-utils:
-        patterns:
-          - "org.projectlombok:*"
-          - "org.mapstruct:*"
+        patterns: [ "org.projectlombok:*","org.mapstruct:*" ]
         update-types: [ "minor", "patch" ]
       test-stack:
-        patterns:
-          - "org.jacoco:*"
-          - "org.sonarsource.scanner.maven:sonar-maven-plugin"
-          - "org.apache.maven.plugins:*"
+        patterns: [ "org.jacoco:*","org.sonarsource.scanner.maven:sonar-maven-plugin","org.apache.maven.plugins:*" ]
         update-types: [ "minor", "patch" ]
 
-  # ========= FileService (.NET / NuGet) =========
   - package-ecosystem: "nuget"
     directory: "/FileService"
     schedule:
@@ -45,7 +34,6 @@ updates:
     labels: [ "dependencies", "nuget", "backend" ]
     open-pull-requests-limit: 10
 
-  # ========= Dockerfiles & Compose (thư mục /docker) =========
   - package-ecosystem: "docker"
     directory: "/docker"
     schedule:
@@ -56,23 +44,18 @@ updates:
     target-branch: "main"
     labels: [ "dependencies", "docker" ]
     open-pull-requests-limit: 10
+    registries: [ dockerhub, ghcr ]
     groups:
       nginx-node-base:
-        patterns:
-          - "nginx"
-          - "node"
+        patterns: [ "nginx", "node" ]
         update-types: [ "minor", "patch" ]
       dotnet-base:
-        patterns:
-          - "mcr.microsoft.com/dotnet/*"
+        patterns: [ "mcr.microsoft.com/dotnet/*" ]
         update-types: [ "minor", "patch" ]
       jre-maven:
-        patterns:
-          - "eclipse-temurin:*"
-          - "maven:*"
+        patterns: [ "eclipse-temurin:*", "maven:*" ]
         update-types: [ "minor", "patch" ]
 
-  # ========= Dockerfiles ở root =========
   - package-ecosystem: "docker"
     directory: "/"
     schedule:
@@ -83,8 +66,8 @@ updates:
     target-branch: "main"
     labels: [ "dependencies", "docker" ]
     open-pull-requests-limit: 10
+    registries: [ dockerhub, ghcr ]
 
-  # ========= GitHub Actions =========
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
@@ -95,3 +78,15 @@ updates:
     target-branch: "main"
     labels: [ "dependencies", "github-actions" ]
     open-pull-requests-limit: 10
+
+registries:
+  dockerhub:
+    type: docker-registry
+    url: https://index.docker.io/v1/
+    username: ${{secrets.DOCKERHUB_USER}}
+    password: ${{secrets.DOCKERHUB_TOKEN}}
+  ghcr:
+    type: docker-registry
+    url: https://ghcr.io
+    username: ${{secrets.GHCR_USERNAME}}
+    password: ${{secrets.GHCR_TOKEN}}

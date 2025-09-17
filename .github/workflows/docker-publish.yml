@@ -35,29 +35,53 @@ jobs:
           - org-service
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+      - uses: docker/setup-qemu-action@v3
+      - uses: docker/setup-buildx-action@v3
 
-      - name: Set up QEMU (multi-arch)
-        uses: docker/setup-qemu-action@v3
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Derive IMAGE_TAG
+      - name: Derive tags (Docker Hub + GHCR)
+        id: meta
         run: |
+          OWNER_LC="${GITHUB_REPOSITORY_OWNER,,}"
+          echo "OWNER_LC=$OWNER_LC" >> $GITHUB_ENV
+          MOD="${{ matrix.module }}"
           if [ "${GITHUB_REF_TYPE}" = "tag" ]; then
-            echo "IMAGE_TAG=${GITHUB_REF_NAME#v}" >> $GITHUB_ENV
+            TAG="${GITHUB_REF_NAME#v}"
           else
-            echo "IMAGE_TAG=${GITHUB_SHA::12}" >> $GITHUB_ENV
+            TAG="${GITHUB_SHA::12}"
           fi
+          echo "IMAGE_TAG=${TAG}" >> $GITHUB_ENV
+
+          HUB="${{ secrets.DOCKERHUB_USER }}/codecampus-${MOD}:${TAG}"
+          GHCR="ghcr.io/${OWNER_LC}/codecampus-${MOD}:${TAG}"
+          if [ "${GITHUB_REF_TYPE}" = "tag" ] || [ "${GITHUB_REF_NAME}" = "main" ]; then
+            HUB="${HUB}"$'\n'"${{ secrets.DOCKERHUB_USER }}/codecampus-${MOD}:latest"
+            GHCR="${GHCR}"$'\n'"ghcr.io/${OWNER_LC}/codecampus-${MOD}:latest"
+          fi
+          echo "tags=${HUB}"$'\n'"${GHCR}" >> $GITHUB_OUTPUT
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USER }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build & Push ${{ matrix.module }}
-        env:
-          DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
-          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-          IMAGE_TAG: ${{ env.IMAGE_TAG }}
-          DOCKER_PLATFORMS: linux/amd64
-        run: |
-          chmod +x ./build-image-github.sh
-          ./build-image-github.sh ${{ matrix.module }}
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: docker/java-service.Dockerfile
+          build-args: |
+            MODULE=${{ matrix.module }}
+          platforms: linux/amd64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
