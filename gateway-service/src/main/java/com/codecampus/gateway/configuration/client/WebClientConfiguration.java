@@ -85,10 +85,10 @@ public class WebClientConfiguration {
    * @return một đối tượng CorsWebFilter áp dụng cấu hình CORS cho mọi đường dẫn
    */
   @Bean
-  CorsWebFilter corsWebFilter() {
+  CorsWebFilter corsWebFilter(CorsProperties corsProperties) {
     CorsConfiguration corsConfiguration = new CorsConfiguration();
     corsConfiguration.setAllowCredentials(true);
-    corsConfiguration.setAllowedOrigins(List.of("http://72.60.41.133:4200"));
+    corsConfiguration.setAllowedOrigins(corsProperties.getAllowedOrigins());
     corsConfiguration.setAllowedHeaders(List.of("*"));
     corsConfiguration.setAllowedMethods(List.of("*"));
 

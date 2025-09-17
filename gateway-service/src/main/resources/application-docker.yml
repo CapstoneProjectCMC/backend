@@ -2,7 +2,9 @@ server:
   port: 8888
 
 app:
-  api-prefix: /api/v1
+  api-prefix: ${APP_API_PREFIX}
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS}
 
 management:
   endpoints:
@@ -16,6 +18,14 @@ management:
 spring:
   cloud:
     gateway:
+      #      globalcors:
+      #        add-to-simple-url-handler-mapping: true
+      #        corsConfigurations:
+      #          '[/**]':
+      #            allowedOrigins: ${CORS_ALLOWED_ORIGINS}
+      #            allowedHeaders: "*"
+      #            allowedMethods: "*"
+      #            allowCredentials: true
       routes:
         - id: identity_service
           uri: http://identity-service:8080

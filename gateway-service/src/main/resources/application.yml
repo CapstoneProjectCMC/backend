@@ -12,6 +12,8 @@ server:
 #    trust-store-password: changeit
 app:
   api-prefix: /api/v1
+  cors:
+    allowed-origins: http://localhost:4200
 
 spring:
   application:
@@ -34,6 +36,14 @@ spring:
       #          key-store-password: changeit
       #          trusted-x509-certificates:
       #            - classpath:ssl/ca.crt
+      #      globalcors:
+      #        add-to-simple-url-handler-mapping: true
+      #        corsConfigurations:
+      #          '[/**]':
+      #            allowedOrigins: http://localhost:4200
+      #            allowedHeaders: "*"
+      #            allowedMethods: "*"
+      #            allowCredentials: true
       routes:
         - id: identity_service
           #          uri: https://localhost:8080
