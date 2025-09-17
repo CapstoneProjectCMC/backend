@@ -1,0 +1,97 @@
+version: 2
+updates:
+  # Dependabot maven có thể chạy ở root của multi-module project
+  - package-ecosystem: "maven"
+    directory: "/"
+    schedule:
+      interval: "daily"
+      time: "02:30"
+      timezone: "Asia/Bangkok"
+    target-branch: "main"
+    open-pull-requests-limit: 10
+    labels: [ "dependencies", "maven", "backend" ]
+    groups:
+      spring-bom:
+        patterns:
+          - "org.springframework.boot:*"
+          - "org.springframework.cloud:*"
+        update-types: [ "minor", "patch" ]
+      grpc-protobuf:
+        patterns:
+          - "io.grpc:*"
+          - "com.google.protobuf:*"
+        update-types: [ "minor", "patch" ]
+      mapping-and-utils:
+        patterns:
+          - "org.projectlombok:*"
+          - "org.mapstruct:*"
+        update-types: [ "minor", "patch" ]
+      test-stack:
+        patterns:
+          - "org.jacoco:*"
+          - "org.sonarsource.scanner.maven:sonar-maven-plugin"
+          - "org.apache.maven.plugins:*"
+        update-types: [ "minor", "patch" ]
+
+  # ========= FileService (.NET / NuGet) =========
+  - package-ecosystem: "nuget"
+    directory: "/FileService"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "03:00"
+      timezone: "Asia/Bangkok"
+    target-branch: "main"
+    labels: [ "dependencies", "nuget", "backend" ]
+    open-pull-requests-limit: 10
+
+  # ========= Dockerfiles & Compose (thư mục /docker) =========
+  - package-ecosystem: "docker"
+    directory: "/docker"
+    schedule:
+      interval: "weekly"
+      day: "tuesday"
+      time: "04:00"
+      timezone: "Asia/Bangkok"
+    target-branch: "main"
+    labels: [ "dependencies", "docker" ]
+    open-pull-requests-limit: 10
+    groups:
+      nginx-node-base:
+        patterns:
+          - "nginx"
+          - "node"
+        update-types: [ "minor", "patch" ]
+      dotnet-base:
+        patterns:
+          - "mcr.microsoft.com/dotnet/*"
+        update-types: [ "minor", "patch" ]
+      jre-maven:
+        patterns:
+          - "eclipse-temurin:*"
+          - "maven:*"
+        update-types: [ "minor", "patch" ]
+
+  # ========= Dockerfiles ở root =========
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "tuesday"
+      time: "04:30"
+      timezone: "Asia/Bangkok"
+    target-branch: "main"
+    labels: [ "dependencies", "docker" ]
+    open-pull-requests-limit: 10
+
+  # ========= GitHub Actions =========
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "03:00"
+      timezone: "Asia/Bangkok"
+    target-branch: "main"
+    labels: [ "dependencies", "github-actions" ]
+    open-pull-requests-limit: 10
