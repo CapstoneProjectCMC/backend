@@ -49,7 +49,7 @@
         <!-- Plugin versions -->
         <protobuf.plugin.version>3.3.1</protobuf.plugin.version>   <!-- ascopes/protobuf-maven-plugin -->
         <os.maven.plugin.version>1.7.1</os.maven.plugin.version>
-        <maven.compiler.plugin.version>3.12.1</maven.compiler.plugin.version>
+        <maven.compiler.plugin.version>3.14.0</maven.compiler.plugin.version>
     </properties>
     <dependencies>
         <!-- ===== Spring Boot starters ===== -->
