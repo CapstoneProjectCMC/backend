@@ -205,8 +205,8 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - APP_API_PREFIX=/api/v1
-      #      - CORS_ALLOWED_ORIGINS=http://72.60.41.133:4200
-      - CORS_ALLOWED_ORIGINS=http://localhost:4200
+      - CORS_ALLOWED_ORIGINS=http://3.25.83.152:4200
+    #      - CORS_ALLOWED_ORIGINS=http://localhost:4200
     ports: [ "8888:8888" ]
     depends_on:
       - identity-service
