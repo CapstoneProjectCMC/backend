@@ -46,26 +46,9 @@ jobs:
 
       - name: Derive IMAGE_TAG (from workflow_run or manual)
         shell: bash
-        env:
-          HEAD_BRANCH: ${{ github.event.workflow_run.head_branch }}
-          HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
-          EVENT_NAME: ${{ github.event_name }}
         run: |
-          set -euo pipefail
-          IMAGE_TAG_VALUE=""
-          if [ "${EVENT_NAME}" = "workflow_dispatch" ]; then
-            IMAGE_TAG_VALUE="latest"
-          else
-            if [[ "${HEAD_BRANCH:-}" =~ ^v([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
-              IMAGE_TAG_VALUE="${HEAD_BRANCH#v}"
-            elif [ "${HEAD_BRANCH:-}" = "main" ]; then
-               IMAGE_TAG_VALUE="latest"
-            else
-              IMAGE_TAG_VALUE="${HEAD_SHA:0:12}"
-            fi
-          fi
-          echo "Resolved IMAGE_TAG=${IMAGE_TAG_VALUE}"
-          echo "IMAGE_TAG=${IMAGE_TAG_VALUE}" >> "$GITHUB_ENV"
+          echo "Resolved IMAGE_TAG=latest"
+          echo "IMAGE_TAG=latest" >> "$GITHUB_ENV"
 
       - name: Compute .env SHA256
         run: |

@@ -17,6 +17,7 @@ build_push_java() {
     -f docker/java-service.Dockerfile \
     "${build_args[@]}" \
     -t "$DOCKERHUB_USER/codecampus-$module:$IMAGE_TAG" \
+    -t "$DOCKERHUB_USER/codecampus-$module:latest" \
     --push .
 }
 

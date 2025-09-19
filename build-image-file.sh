@@ -37,6 +37,7 @@ build_push_file_service() {
     --platform "${DOCKER_PLATFORMS}" \
     -f docker/file-service.Dockerfile \
     -t "${repo}:${IMAGE_TAG}" \
+    -t "${repo}:latest" \
     $(extra_tags_args "${repo}") \
     --label "org.opencontainers.image.source=${GITHUB_SERVER_URL:-}/$([ -n "${GITHUB_REPOSITORY:-}" ] && echo "${GITHUB_REPOSITORY}")" \
     --label "org.opencontainers.image.revision=${GITHUB_SHA:-}" \

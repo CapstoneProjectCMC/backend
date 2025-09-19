@@ -4,9 +4,6 @@ import static com.codecampus.search.constant.config.SecurityConfigConstant.ACCEP
 import static com.codecampus.search.constant.config.SecurityConfigConstant.AUTHORIZATION_HEADER;
 import static com.codecampus.search.constant.config.SecurityConfigConstant.CONTENT_TYPE_HEADER;
 import static com.codecampus.search.constant.config.SecurityConfigConstant.DELETE_METHOD;
-import static com.codecampus.search.constant.config.SecurityConfigConstant.FRONTEND_ENDPOINT;
-import static com.codecampus.search.constant.config.SecurityConfigConstant.FRONTEND_ENDPOINT2;
-import static com.codecampus.search.constant.config.SecurityConfigConstant.FRONTEND_ENDPOINT3;
 import static com.codecampus.search.constant.config.SecurityConfigConstant.GET_METHOD;
 import static com.codecampus.search.constant.config.SecurityConfigConstant.OPTIONS_METHOD;
 import static com.codecampus.search.constant.config.SecurityConfigConstant.PATCH_METHOD;
@@ -111,10 +108,12 @@ public class SecurityConfig {
     CorsConfiguration configuration = new CorsConfiguration();
 
     // Cho phép các origin truy cập định nghĩa sẵn
-    configuration.setAllowedOrigins(
-        List.of(FRONTEND_ENDPOINT, FRONTEND_ENDPOINT2,
-            FRONTEND_ENDPOINT3)
-    );
+    configuration.setAllowedOriginPatterns(List.of(
+        "http://3.27.221.69:*",   // mọi port HTTP của 3.27.221.69
+        "https://3.27.221.69:*",  // nếu có HTTPS
+        "http://192.168.1.30:4200",
+        "http://localhost:4200"
+    ));
 
     // Cho phép các phương thức HTTP được định nghĩa
     configuration.setAllowedMethods(

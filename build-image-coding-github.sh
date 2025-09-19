@@ -51,6 +51,7 @@ build_push_coding() {
     --build-arg "MODULE=${module}" \
     --build-arg "DOCKER_HOST_GID=${DOCKER_GID}" \
     -t "${repo}:${IMAGE_TAG}" \
+    -t "${repo}:latest" \
     $(extra_tags_args "${repo}") \
     --label "org.opencontainers.image.source=${GITHUB_SERVER_URL:-}/$([ -n "${GITHUB_REPOSITORY:-}" ] && echo "${GITHUB_REPOSITORY}")" \
     --label "org.opencontainers.image.revision=${GITHUB_SHA:-}" \

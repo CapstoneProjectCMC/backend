@@ -46,6 +46,7 @@ build_push_java() {
     -f docker/java-service.Dockerfile \
     --build-arg "MODULE=${module}" \
     -t "${repo}:${IMAGE_TAG}" \
+    -t "${repo}:latest" \
     $(extra_tags_args "${repo}") \
     --label "org.opencontainers.image.source=${GITHUB_SERVER_URL:-}/$([ -n "${GITHUB_REPOSITORY:-}" ] && echo "${GITHUB_REPOSITORY}")" \
     --label "org.opencontainers.image.revision=${GITHUB_SHA:-}" \

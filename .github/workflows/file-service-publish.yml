@@ -44,15 +44,10 @@ jobs:
 
           REPO_HUB="${{ secrets.DOCKERHUB_USER }}/codecampus-${{ matrix.module || 'file-service' }}"
           REPO_GHCR="ghcr.io/${OWNER_LC}/codecampus-${{ matrix.module || 'file-service' }}"
-
-          HUB="${REPO_HUB}:${TAG}"
-          GHCR="${REPO_GHCR}:${TAG}"
-
-          if [ "${GITHUB_REF_TYPE}" = "tag" ] || [ "${GITHUB_REF_NAME}" = "main" ]; then
-            HUB="${HUB}"$'\n'"${REPO_HUB}:latest"
-            GHCR="${GHCR}"$'\n'"${REPO_GHCR}:latest"
-          fi
-
+          
+          HUB="${REPO_HUB}:${TAG}"$'\n'"${REPO_HUB}:latest"
+          GHCR="${REPO_GHCR}:${TAG}"$'\n'"${REPO_GHCR}:latest"
+          
           {
             echo "tags<<__TAGS__"
             printf '%s\n' "$HUB"
