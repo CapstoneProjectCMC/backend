@@ -52,7 +52,7 @@ jobs:
 
             dateTag="$(date +%Y%m%d.%H%M%S)"
             echo "Building ${IMAGE_NAME}:${dateTag} and ${IMAGE_NAME}:latest ..."
-            docker build -f Dockerfile -t "${IMAGE_NAME}:${dateTag}" -t "${IMAGE_NAME}:latest" .
+            docker build -f deploy_sandbox/Dockerfile -t "${IMAGE_NAME}:${dateTag}" -t "${IMAGE_NAME}:latest" .
 
             echo "Prune dangling images…"
             docker image prune -f || true
