@@ -64,7 +64,7 @@ app:
   google:
     client-id: "839020123858-qnan968uvj0u9d5h6bq5cd5ulls9h7dk.apps.googleusercontent.com"
     client-secret: "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"
-    redirect-uri: "http://localhost:4200/auth/identity/authenticate"
+    redirect-uri: "https://codecampus.site/auth/identity/authenticate"
   event:
     user-events: "user-events"
     user-registrations: "user-registrations"

@@ -1,0 +1,61 @@
+name: Sandbox Image - Build on Server
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - "docker/sandbox.Dockerfile"
+      - ".github/workflows/sandbox-image-build-on-server.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-on-server:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Prepare bundle
+        run: |
+          mkdir -p deploy_sandbox
+          # Đổi tên để build context đơn giản trên server
+          cp docker/sandbox.Dockerfile deploy_sandbox/Dockerfile
+
+      - name: Upload Dockerfile to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          source: "deploy_sandbox/Dockerfile"
+          target: "/opt/codecampus/sandbox"
+          overwrite: true
+
+      - name: Build image on server
+        uses: appleboy/ssh-action@v1.0.3
+        env:
+          IMAGE_NAME: capstoneprojectpythondocker
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          envs: IMAGE_NAME
+          script_stop: true
+          script: |
+            set -euo pipefail
+            mkdir -p /opt/codecampus/sandbox
+            cd /opt/codecampus/sandbox
+
+            dateTag="$(date +%Y%m%d.%H%M%S)"
+            echo "Building ${IMAGE_NAME}:${dateTag} and ${IMAGE_NAME}:latest ..."
+            docker build -f Dockerfile -t "${IMAGE_NAME}:${dateTag}" -t "${IMAGE_NAME}:latest" .
+
+            echo "Prune dangling images…"
+            docker image prune -f || true
+
+            docker images | grep "${IMAGE_NAME}" || true
+            echo "✅ Build done."
