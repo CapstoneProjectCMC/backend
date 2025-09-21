@@ -19,7 +19,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  ####
+  #####
   build-push:
     runs-on: ubuntu-latest
 
@@ -42,8 +42,8 @@ jobs:
           fi
           echo "IMAGE_TAG=${TAG}" >> "$GITHUB_ENV"
 
-          REPO_HUB="${{ secrets.DOCKERHUB_USER }}/codecampus-${{ matrix.module || 'file-service' }}"
-          REPO_GHCR="ghcr.io/${OWNER_LC}/codecampus-${{ matrix.module || 'file-service' }}"
+          REPO_HUB="${{ secrets.DOCKERHUB_USER }}/codecampus-coding-service"
+          REPO_GHCR="ghcr.io/${OWNER_LC}/codecampus-coding-service"
 
           HUB="${REPO_HUB}:${TAG}"$'\n'"${REPO_HUB}:latest"
           GHCR="${REPO_GHCR}:${TAG}"$'\n'"${REPO_GHCR}:latest"

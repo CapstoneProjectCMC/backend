@@ -95,7 +95,7 @@ RUN if [ "$MODULE" = "coding-service" ]; then \
 RUN chmod +r app.jar
 
 # Chuyển sang sử dụng user appuser (chỉ cho coding-service)
-USER ${MODULE:+-}${MODULE:+appuser}
+USER appuser
 
 ENV JAVA_OPTS=""
 EXPOSE 7777
