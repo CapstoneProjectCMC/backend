@@ -205,8 +205,7 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - APP_API_PREFIX=/api/v1
-      - CORS_ALLOWED_ORIGINS=http://3.27.221.69, https://3.27.221.69
-    #      - CORS_ALLOWED_ORIGINS=http://localhost
+      - CORS_ALLOWED_ORIGINS=http://codecampus.site, https://codecampus.site, http://www.codecampus.site, https://www.codecampus.site
     ports: [ "8888:8888" ]
     depends_on:
       - identity-service
@@ -219,13 +218,6 @@ services:
       - notification-service
       - chat-service
     networks: [ backend ]
-
-  frontend:
-    image: ${DOCKERHUB_USER}/codecampus-frontend:${IMAGE_TAG:-latest}
-    restart: unless-stopped
-    ports: [ "4200:80" ]
-    networks: [ backend ]
-
 
 ########################
 #   NETWORK & VOLUME    #

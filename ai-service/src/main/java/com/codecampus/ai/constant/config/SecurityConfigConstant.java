@@ -24,7 +24,6 @@ public class SecurityConfigConstant {
   // FRONTEND ENDPOINT
   public static final String FRONTEND_ENDPOINT = "http://192.168.1.30:4200";
   public static final String FRONTEND_ENDPOINT2 = "http://localhost:4200";
-  public static final String FRONTEND_ENDPOINT3 = "http://3.27.221.69";
 
   // METHOD ALLOWED
   public static String GET_METHOD = "GET";

@@ -97,10 +97,12 @@ public class SecurityConfig {
 
     // Cho phép các origin truy cập định nghĩa sẵn
     configuration.setAllowedOriginPatterns(List.of(
-        "http://3.27.221.69:*",   // mọi port HTTP của 3.27.221.69
-        "https://3.27.221.69:*",  // nếu có HTTPS
+        "http://codecampus.site:*",   // mọi port HTTP của codecampus.site
+        "https://codecampus.site:*",  // nếu có HTTPS
         "http://192.168.1.30:4200",
-        "http://localhost:4200"
+        "http://localhost:4200",
+        "http://www.codecampus.site",
+        "https://www.codecampus.site"
     ));
 
     // Cho phép các phương thức HTTP được định nghĩa
