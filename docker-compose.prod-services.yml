@@ -219,9 +219,9 @@ services:
       - chat-service
     networks: [ backend ]
 
-########################
+#########################
 #   NETWORK & VOLUME    #
-########################
+#########################
 networks:
   backend:
     name: codecampus_backend
