@@ -199,7 +199,9 @@ services:
       - AppSettings__Jwt__Audience=Code Campus
     ports: [ "8082:8082" ]
     networks: [ backend ]
-
+    volumes:
+      - file_tmp:/tmp/ffmpeg
+  
   gateway-service:
     image: ${DOCKERHUB_USER}/codecampus-gateway-service:${IMAGE_TAG:-latest}
     environment:
@@ -230,3 +232,4 @@ networks:
 volumes:
   runner_data:
   ai_uploads:
+  file_tmp:
