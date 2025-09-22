@@ -146,16 +146,31 @@ namespace FileService.Service.Implementation
         }
         public Task<string> GetPublicFileUrlAsync(string objectName)
         {
-            if (string.IsNullOrWhiteSpace(objectName) || objectName.Any(c => "!@#$%^&*()".Contains(c)))
-            {
+            if (string.IsNullOrWhiteSpace(objectName))
                 throw new ArgumentException("Invalid object name", nameof(objectName));
+
+            var key = Uri.EscapeDataString(objectName);
+
+            // Nếu có PublicEndpoint thì dùng nó làm base (có thể gồm scheme + path), KHÔNG thêm :port
+            var pub = _config.PublicEndpoint?.Trim().TrimEnd('/');
+            if (!string.IsNullOrEmpty(pub))
+            {
+                // Nếu thiếu scheme thì tự thêm theo cấu hình Secure
+                if (!pub.StartsWith("http://", StringComparison.OrdinalIgnoreCase) &&
+                    !pub.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+                {
+                    pub = $"{(_config.Secure ? "https" : "http")}://{pub}";
+                }
+                var url = $"{pub}/{_config.BucketName}/{key}";
+                Console.WriteLine($"Generated public URL: {url}");
+                return Task.FromResult(url);
             }
 
-            var endpoint = !string.IsNullOrWhiteSpace(_config.PublicEndpoint) ? _config.PublicEndpoint : _config.Endpoint;// Ưu tiên PublicEndpoint
-
-            var url = $"{(_config.Secure ? "https" : "http")}://{endpoint}:{_config.Port}/{_config.BucketName}/{objectName}";
-            Console.WriteLine($"Generated URL: {url}");
-            return Task.FromResult(url);
+            // Fallback: dùng endpoint nội bộ (có :port)
+            var scheme = _config.Secure ? "https" : "http";
+            var direct = $"{scheme}://{_config.Endpoint}:{_config.Port}/{_config.BucketName}/{key}";
+            Console.WriteLine($"Generated direct URL: {direct}");
+            return Task.FromResult(direct);
         }
 
         public async Task<string> GeneratePresignedUrlAsync(string objectName, int expirySeconds)

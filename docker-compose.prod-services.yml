@@ -188,8 +188,7 @@ services:
       - MongoDbSettings__DatabaseName=${FILE_DATABASE}
       - AppSettings__ApiSettings__UserServiceBaseUrl=http://profile-service:8081
       - AppSettings__MinioConfig__Endpoint=minio
-      - AppSettings__MinioConfig__PublicEndpoint=codecampus.site
-      - AppSettings__MinioConfig__Port=9000
+      - AppSettings__MinioConfig__PublicEndpoint=https://codecampus.site/s3
       - AppSettings__MinioConfig__AccessKey=${MINIO_ROOT_USER}
       - AppSettings__MinioConfig__SecretKey=${MINIO_ROOT_PASSWORD}
       - AppSettings__MinioConfig__BucketName=codecampus2025
