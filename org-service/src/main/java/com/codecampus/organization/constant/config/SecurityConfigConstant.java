@@ -10,7 +10,8 @@ public class SecurityConfigConstant {
       "/health",
       "/actuator/**",
       "/auth/**",
-      "/internal/**"
+      "/internal/**",
+      "/member/**"
   };
 
   // FRONTEND ENDPOINT (CORS)
