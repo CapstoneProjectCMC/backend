@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;
+using System.Text;
 
 namespace FileService.Service.Implementation
 {
@@ -13,6 +14,86 @@ namespace FileService.Service.Implementation
         private readonly ILogger<FfmpegService> _logger;
         private readonly IMinioService _minioService;
         private readonly string _tempFolder;
+        
+        private bool HasAudioStream(string videoPath)
+        {
+            var psi = new ProcessStartInfo
+            {
+                FileName = "ffprobe",
+                Arguments = $"-v error -select_streams a:0 -show_entries stream=codec_type -of csv=p=0 \"{videoPath}\"",
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+            using var p = Process.Start(psi);
+            string stdout = p.StandardOutput.ReadToEnd();
+            p.WaitForExit();
+            return !string.IsNullOrWhiteSpace(stdout); // có ít nhất 1 audio stream
+        }
+        
+        
+        private string BuildFfmpegArgs(string inputPath, string outputFolder, bool hasAudio)
+        {
+            // Scale 6 mức như cũ
+            var filterComplex =
+                "[0:v]split=6[v144][v240][v360][v480][v720][v1080];" +
+                "[v144]scale=w=256:h=144:force_original_aspect_ratio=decrease:force_divisible_by=2[v144out];" +
+                "[v240]scale=w=426:h=240:force_original_aspect_ratio=decrease:force_divisible_by=2[v240out];" +
+                "[v360]scale=w=640:h=360:force_original_aspect_ratio=decrease:force_divisible_by=2[v360out];" +
+                "[v480]scale=w=854:h=480:force_original_aspect_ratio=decrease:force_divisible_by=2[v480out];" +
+                "[v720]scale=w=1280:h=720:force_original_aspect_ratio=decrease:force_divisible_by=2[v720out];" +
+                "[v1080]scale=w=1920:h=1080:force_original_aspect_ratio=decrease:force_divisible_by=2[v1080out]";
+
+            // map + encode per-variant
+            var maps = new StringBuilder();
+            // Video bitrates/profiles tương ứng index
+            var v = new (string label, string br, string profile)[]
+            {
+                ("[v144out]","300k","baseline"),
+                ("[v240out]","700k","baseline"),
+                ("[v360out]","1000k","main"),
+                ("[v480out]","1500k","main"),
+                ("[v720out]","2500k","main"),
+                ("[v1080out]","4000k","high"),
+            };
+
+            for (int i = 0; i < v.Length; i++)
+            {
+                maps.Append(
+                    $" -map \"{v[i].label}\" -c:v:{i} libx264 -b:v:{i} {v[i].br} -profile:v:{i} {v[i].profile} " +
+                    $"-g 48 -keyint_min 48 -sc_threshold 0 -pix_fmt yuv420p"
+                );
+
+                if (hasAudio)
+                {
+                    // audio từ input (nếu có kênh), downmix stereo cho tương thích
+                    maps.Append($" -map 0:a:0? -c:a:{i} aac -b:a:{i} 128k -ac 2 -ar 48000");
+                }
+            }
+
+            // var_stream_map tương ứng
+            var varStreamMap = hasAudio
+                ? "\"v:0,a:0 v:1,a:1 v:2,a:2 v:3,a:3 v:4,a:4 v:5,a:5\""
+                : "\"v:0 v:1 v:2 v:3 v:4 v:5\"";
+
+            // HLS options (giữ output như cũ, thêm independent_segments cho keyframe boundary)
+            var hls =
+                $"-f hls -hls_time 6 -hls_list_size 0 -hls_flags independent_segments " +
+                $"-var_stream_map {varStreamMap} " +
+                $"-master_pl_name master.m3u8 " +
+                $"-hls_segment_filename \"{outputFolder}/v%v/segment%d.ts\" " +
+                $"\"{outputFolder}/v%v/playlist.m3u8\"";
+
+            // Nếu hoàn toàn không có audio, loại phụ đề nếu có để tránh rắc rối
+            var extra = hasAudio ? "" : " -sn";
+
+            // max_muxing_queue_size để tránh lỗi queue với vài file lạ
+            var safety = " -max_muxing_queue_size 1024";
+
+            return
+                $"-i \"{inputPath}\" -filter_complex \"{filterComplex}\"{maps}{safety}{extra} {hls}";
+        }
 
         public FfmpegService(ILogger<FfmpegService> logger, IOptions<FfmpegSettings> settings, IMinioService minioService)
         {
@@ -88,76 +169,42 @@ namespace FileService.Service.Implementation
 
             try
             {
+                // tạo thư mục variant
                 for (int i = 0; i <= 5; i++)
                 {
-                    var resolutionFolder = Path.Combine(outputFolder, $"v{i}");
-                    Directory.CreateDirectory(resolutionFolder);
+                    Directory.CreateDirectory(Path.Combine(outputFolder, $"v{i}"));
                 }
 
-                // Save input video to temp file
+                // Save input
                 await using (var stream = new FileStream(tempInputPath, FileMode.Create))
                 {
                     await videoFile.CopyToAsync(stream);
                 }
 
-                // Create thumbnail
+                // Thumbnail
                 var thumbnailArgs = $"-ss 00:00:01 -i \"{tempInputPath}\" -frames:v 1 -q:v 2 \"{thumbnailPath}\"";
                 await RunFfmpegAsync(thumbnailArgs);
 
-                //FFmpeg CLI arguments for HLS Adaptive Bitrate
-                var ffmpegArgs = $"-i \"{tempInputPath}\" " +
-                                "-filter_complex " +
-                                "\"[0:v]split=6[v144][v240][v360][v480][v720][v1080]; " +
-                                "[v144]scale=w=256:h=144:force_original_aspect_ratio=decrease:force_divisible_by=2[v144out]; " +
-                                "[v240]scale=w=426:h=240:force_original_aspect_ratio=decrease:force_divisible_by=2[v240out]; " +
-                                "[v360]scale=w=640:h=360:force_original_aspect_ratio=decrease:force_divisible_by=2[v360out]; " +
-                                "[v480]scale=w=854:h=480:force_original_aspect_ratio=decrease:force_divisible_by=2[v480out]; " +
-                                "[v720]scale=w=1280:h=720:force_original_aspect_ratio=decrease:force_divisible_by=2[v720out]; " +
-                                "[v1080]scale=w=1920:h=1080:force_original_aspect_ratio=decrease:force_divisible_by=2[v1080out]\" " +
-
-                                "-map \"[v144out]\" -map 0:a -c:v:0 libx264 -b:v:0 300k -profile:v:0 baseline -c:a:0 aac -b:a:0 96k " +
-                                "-map \"[v240out]\" -map 0:a -c:v:1 libx264 -b:v:1 700k -profile:v:1 baseline -c:a:1 aac -b:a:1 96k " +
-                                "-map \"[v360out]\" -map 0:a -c:v:2 libx264 -b:v:2 1000k -profile:v:2 main -c:a:2 aac -b:a:2 128k " +
-                                "-map \"[v480out]\" -map 0:a -c:v:3 libx264 -b:v:3 1500k -profile:v:3 main -c:a:3 aac -b:a:3 128k " +
-                                "-map \"[v720out]\" -map 0:a -c:v:4 libx264 -b:v:4 2500k -profile:v:4 main -c:a:4 aac -b:a:4 128k " +
-                                "-map \"[v1080out]\" -map 0:a -c:v:5 libx264 -b:v:5 4000k -profile:v:5 high -c:a:5 aac -b:a:5 128k " +
-
-                                "-f hls -var_stream_map " +
-                                "\"v:0,a:0 v:1,a:1 v:2,a:2 v:3,a:3 v:4,a:4 v:5,a:5\" " +
-                                $"-master_pl_name master.m3u8 -hls_time 6 -hls_list_size 0 " +
-                                $"-hls_segment_filename \"{outputFolder}/v%v/segment%d.ts\" " +
-                                $"\"{outputFolder}/v%v/playlist.m3u8\"";
-
+                // >>> PHÁT HIỆN AUDIO & BUILD LỆNH PHÙ HỢP <<<
+                bool hasAudio = HasAudioStream(tempInputPath);
+                var ffmpegArgs = BuildFfmpegArgs(tempInputPath, outputFolder, hasAudio);
                 await RunFfmpegAsync(ffmpegArgs);
 
                 // Upload thumbnail
                 var thumbKey = $"thumbnails/{fileId}.jpg";
                 await using (var thumbStream = File.OpenRead(thumbnailPath))
-                {
                     await _minioService.UploadStreamAsync(thumbKey, thumbStream, "image/jpeg");
-                }
 
                 // Upload master playlist
                 var baseVideoPath = $"videos/{fileId}/master.m3u8";
                 await using (var masterStream = File.OpenRead(masterPlaylistPath))
-                {
                     await _minioService.UploadStreamAsync(baseVideoPath, masterStream, "application/x-mpegURL");
-                }
 
-                // Upload HLS segments and playlists
+                // Upload từng playlist + segment
                 for (int i = 0; i <= 5; i++)
                 {
                     var segmentFolder = Path.Combine(outputFolder, $"v{i}");
-                    var segmentFiles = Directory.GetFiles(segmentFolder, "segment*.ts");
 
-                    foreach (var segmentFile in segmentFiles)
-                    {
-                        var segKey = $"videos/{fileId}/v{i}/{Path.GetFileName(segmentFile)}";
-                        await using var segStream = File.OpenRead(segmentFile);
-                        await _minioService.UploadStreamAsync(segKey, segStream, "video/MP2T");
-                    }
-
-                    // Upload playlist.m3u8 for each resolution folder
                     var playlistFile = Path.Combine(segmentFolder, "playlist.m3u8");
                     if (File.Exists(playlistFile))
                     {
@@ -166,9 +213,14 @@ namespace FileService.Service.Implementation
                         await _minioService.UploadStreamAsync(playlistKey, playlistStream, "application/x-mpegURL");
                     }
 
+                    foreach (var segmentFile in Directory.GetFiles(segmentFolder, "segment*.ts"))
+                    {
+                        var segKey = $"videos/{fileId}/v{i}/{Path.GetFileName(segmentFile)}";
+                        await using var segStream = File.OpenRead(segmentFile);
+                        await _minioService.UploadStreamAsync(segKey, segStream, "video/mp2t"); // <— sửa MIME
+                    }
                 }
 
-                // get duration using ffprobe
                 var duration = GetVideoDuration(tempInputPath);
                 var thumbnailUrl = await _minioService.GetPublicFileUrlAsync(thumbKey);
                 var hlsUrl = await _minioService.GetPublicFileUrlAsync(baseVideoPath);
@@ -186,10 +238,7 @@ namespace FileService.Service.Implementation
                 Console.WriteLine($"Video processing failed: {ex.Message}");
                 return new VideoProcessResultModel
                 {
-                    ThumbnailUrl = null,
-                    Duration = null,
-                    Status = "failed",
-                    HlsUrl = null
+                    Status = "failed"
                 };
             }
             finally
