@@ -14,7 +14,6 @@
   <component name="ChangeListManager">
     <list default="true" id="b5542390-86ea-4e7c-8261-890d4e9fdf28" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.FileService/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.FileService/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FileService.Service/Implementation/FfmpegService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FileService.Service/Implementation/FfmpegService.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -196,7 +195,7 @@
       <workItem from="1758528518028" duration="1657000" />
       <workItem from="1758568372157" duration="6307000" />
       <workItem from="1758601994284" duration="629000" />
-      <workItem from="1758621170669" duration="2710000" />
+      <workItem from="1758621170669" duration="3410000" />
     </task>
     <servers />
   </component>
