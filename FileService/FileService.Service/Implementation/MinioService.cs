@@ -149,6 +149,7 @@ namespace FileService.Service.Implementation
             if (string.IsNullOrWhiteSpace(objectName))
                 throw new ArgumentException("Invalid object name", nameof(objectName));
 
+            objectName = objectName.TrimStart('/');
             var key = Uri.EscapeDataString(objectName);
 
             // Nếu có PublicEndpoint thì dùng nó làm base (có thể gồm scheme + path), KHÔNG thêm :port
