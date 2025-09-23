@@ -65,7 +65,6 @@ public class MembershipService {
       String role,
       boolean active) {
 
-
     auth.ensureRoleAtLeastForOrg(orgId, OrgAuthorization.OrgRole.ADMIN);
 
     List<OrganizationMember> actives =
