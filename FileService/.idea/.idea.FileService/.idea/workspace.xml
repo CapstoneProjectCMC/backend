@@ -14,8 +14,6 @@
   <component name="ChangeListManager">
     <list default="true" id="b5542390-86ea-4e7c-8261-890d4e9fdf28" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.FileService/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.FileService/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FileService.Api/appsettings.Staging.json" beforeDir="false" afterPath="$PROJECT_DIR$/FileService.Api/appsettings.Staging.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FileService.Api/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/FileService.Api/appsettings.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FileService.Service/Implementation/MinioService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FileService.Service/Implementation/MinioService.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -198,6 +196,7 @@
       <workItem from="1758528518028" duration="1657000" />
       <workItem from="1758568372157" duration="6307000" />
       <workItem from="1758601994284" duration="629000" />
+      <workItem from="1758621170669" duration="1076000" />
     </task>
     <servers />
   </component>

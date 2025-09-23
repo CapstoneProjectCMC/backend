@@ -149,29 +149,56 @@ namespace FileService.Service.Implementation
             if (string.IsNullOrWhiteSpace(objectName))
                 throw new ArgumentException("Invalid object name", nameof(objectName));
 
-            objectName = objectName.TrimStart('/');
-            var key = Uri.EscapeDataString(objectName);
+            // 1) Chuẩn hoá key và chỉ encode từng segment, không encode dấu '/'
+            var key = string.Join("/",
+                objectName.Trim().TrimStart('/')
+                          .Split('/', StringSplitOptions.RemoveEmptyEntries)
+                          .Select(s => Uri.EscapeDataString(s))
+            );
 
-            // Nếu có PublicEndpoint thì dùng nó làm base (có thể gồm scheme + path), KHÔNG thêm :port
+            // 2) Nếu có PublicEndpoint (vd: https://codecampus.site/s3) thì dùng làm base
             var pub = _config.PublicEndpoint?.Trim().TrimEnd('/');
             if (!string.IsNullOrEmpty(pub))
             {
-                // Nếu thiếu scheme thì tự thêm theo cấu hình Secure
                 if (!pub.StartsWith("http://", StringComparison.OrdinalIgnoreCase) &&
                     !pub.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
                 {
                     pub = $"{(_config.Secure ? "https" : "http")}://{pub}";
                 }
-                var url = $"{pub}/{_config.BucketName}/{key}";
-                Console.WriteLine($"Generated public URL: {url}");
-                return Task.FromResult(url);
+                return Task.FromResult($"{pub}/{_config.BucketName}/{key}");
             }
 
-            // Fallback: dùng endpoint nội bộ (có :port)
+            // 3) Fallback: endpoint nội bộ MinIO
             var scheme = _config.Secure ? "https" : "http";
-            var direct = $"{scheme}://{_config.Endpoint}:{_config.Port}/{_config.BucketName}/{key}";
-            Console.WriteLine($"Generated direct URL: {direct}");
-            return Task.FromResult(direct);
+            return Task.FromResult($"{scheme}://{_config.Endpoint}:{_config.Port}/{_config.BucketName}/{key}");
+        }
+
+        // Thêm tiện ích: nhận vào URL hoặc key, trả về object key dùng cho MinIO
+        public string UrlToObjectKey(string urlOrKey)
+        {
+            if (string.IsNullOrWhiteSpace(urlOrKey)) return urlOrKey;
+
+            var s = urlOrKey.Trim();
+
+            // Nếu đã là key thì trả về key (bỏ dấu '/')
+            if (!s.StartsWith("http://", StringComparison.OrdinalIgnoreCase) &&
+                !s.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+                return s.TrimStart('/');
+
+            // Cắt bỏ PublicEndpoint (nếu khớp)
+            var pub = _config.PublicEndpoint?.Trim().TrimEnd('/') ?? "";
+            if (!string.IsNullOrEmpty(pub) && s.StartsWith(pub, StringComparison.OrdinalIgnoreCase))
+                s = s.Substring(pub.Length);
+
+            s = s.TrimStart('/');
+
+            // Cắt bỏ bucket name nếu có
+            var bucketPrefix = _config.BucketName + "/";
+            if (s.StartsWith(bucketPrefix, StringComparison.OrdinalIgnoreCase))
+                s = s.Substring(bucketPrefix.Length);
+
+            // Giải mã phần còn lại (đề phòng URL cũ có %2F)
+            return Uri.UnescapeDataString(s);
         }
 
         public async Task<string> GeneratePresignedUrlAsync(string objectName, int expirySeconds)

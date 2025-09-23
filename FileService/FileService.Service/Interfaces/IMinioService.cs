@@ -13,6 +13,6 @@ namespace FileService.Service.Interfaces
         Task<string> GeneratePresignedUrlAsync(string objectName, int expirySeconds);
         Task EnsureBucketExistsAsync();
         Task RemoveFileAsync(string objectName);
-
+        string UrlToObjectKey(string urlOrKey);
     }
 }
