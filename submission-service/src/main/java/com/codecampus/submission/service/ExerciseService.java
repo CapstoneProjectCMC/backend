@@ -107,13 +107,10 @@ public class ExerciseService {
       CreateExerciseRequest request,
       boolean returnExercise) {
     String userId = AuthenticationHelper.getMyUserId();
-    String orgId = AuthenticationHelper.getMyOrgId();
 
-    Exercise exercise = exerciseMapper.toExerciseFromCreateExerciseRequest(
-        request, userId);
-    exercise.setOrgId(orgId);
-    exerciseRepository.save(exercise);
-    
+    Exercise exercise = exerciseRepository
+        .save(exerciseMapper.toExerciseFromCreateExerciseRequest(
+            request, userId));
     if (exercise.getExerciseType() == ExerciseType.QUIZ) {
       grpcQuizClient.pushExercise(exercise);
     } else if (exercise.getExerciseType() == ExerciseType.CODING) {

@@ -19,7 +19,6 @@ public interface PostMapper {
   List<PostRequestDto> toPostRequestDtoListFromPostList(
       List<Post> posts);
 
-  @BeanMapping(nullValuePropertyMappingStrategy = IGNORE)
   Post toPostFromPostRequestDto(
       PostRequestDto postRequestDto);
 

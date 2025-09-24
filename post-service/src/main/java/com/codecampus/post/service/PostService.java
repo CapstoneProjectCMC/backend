@@ -103,7 +103,6 @@ public class PostService {
   public void createPost(
       PostRequestDto postRequestDto) {
     String userId = AuthenticationHelper.getMyUserId();
-    String orgId = AuthenticationHelper.getMyOrgId();
 
     List<String> fileUrls =
         postHelper.uploadAll(postRequestDto.getFileDocument());
@@ -111,7 +110,6 @@ public class PostService {
     Post post = postMapper.toPostFromPostRequestDto(postRequestDto);
     post.setFileUrls(fileUrls);
     post.setUserId(userId);
-    post.setOrgId(orgId);
 
     postRepository.save(post);
 
