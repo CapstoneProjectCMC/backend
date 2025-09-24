@@ -38,6 +38,8 @@ public class OrganizationDocument {
   @Field(type = Text, analyzer = "icu_analyzer", searchAnalyzer = "icu_analyzer")
   String description;
 
+  String ownerId;
+
   @Field(type = Keyword)
   String logoUrl;
   @Field(type = Keyword)

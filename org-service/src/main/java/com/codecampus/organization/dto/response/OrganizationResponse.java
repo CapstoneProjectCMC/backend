@@ -18,6 +18,7 @@ public class OrganizationResponse {
   String id;
   String name;
   String description;
+  String ownerId;
   String logoUrl;
   String email;
   String phone;

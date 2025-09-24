@@ -41,11 +41,14 @@ public class OrganizationService {
   public void create(
       CreateOrganizationForm form) {
 
+    String userId = AuthenticationHelper.getMyUserId();
+
     String logoUrl = organizationHelper.uploadIfAny(form.getLogo());
 
     Organization o = Organization.builder()
         .name(form.getName())
         .description(form.getDescription())
+        .ownerId(userId)
         .logoUrl(logoUrl)
         .email(form.getEmail())
         .phone(form.getPhone())

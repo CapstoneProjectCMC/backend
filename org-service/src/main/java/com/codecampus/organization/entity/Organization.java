@@ -37,6 +37,8 @@ public class Organization extends AuditMetadata {
   @Column(length = 2000)
   String description;
 
+  String ownerId;
+
   @Column(length = 512)
   String logoUrl;
 

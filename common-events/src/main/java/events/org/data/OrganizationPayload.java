@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 public class OrganizationPayload {
   String name;
   String description;
+  String ownerId;
   String logoUrl;
   String email;
   String phone;
