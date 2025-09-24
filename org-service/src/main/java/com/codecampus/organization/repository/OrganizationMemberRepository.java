@@ -68,21 +68,27 @@ public interface OrganizationMemberRepository
 
   // Đếm số membership ACTIVE cấp Organization của user
   @Query("""
-      select count(m) from OrganizationMember m, Organization o
+      select count(m) from OrganizationMember m
        where m.userId = :userId
          and m.scopeType = com.codecampus.constant.ScopeType.Organization
          and m.isActive = true
-         and o.id = m.scopeId
+         and exists (
+           select 1 from Organization o
+            where o.id = m.scopeId
+         )
       """)
   long countActiveOrganizations(@Param("userId") String userId);
 
   // Lấy tất cả membership ACTIVE của user ở cấp Organization
   @Query("""
-      select m from OrganizationMember m, Organization o
+      select m from OrganizationMember m
        where m.userId = :userId
          and m.scopeType = com.codecampus.constant.ScopeType.Organization
          and m.isActive = true
-         and o.id = m.scopeId
+         and exists (
+           select 1 from Organization o
+            where o.id = m.scopeId
+         )
       """)
   List<OrganizationMember> findActiveOrgsOfUser(@Param("userId") String userId);
 

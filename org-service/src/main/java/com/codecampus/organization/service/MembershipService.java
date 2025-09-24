@@ -16,6 +16,7 @@ import com.codecampus.organization.helper.OrganizationMemberHelper;
 import com.codecampus.organization.helper.PageResponseHelper;
 import com.codecampus.organization.repository.OrganizationBlockRepository;
 import com.codecampus.organization.repository.OrganizationMemberRepository;
+import com.codecampus.organization.repository.OrganizationRepository;
 import com.codecampus.organization.service.cache.UserBulkLoader;
 import com.codecampus.organization.service.cache.UserSummaryCacheService;
 import com.codecampus.organization.service.kafka.OrganizationMemberEventProducer;
@@ -52,6 +53,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class MembershipService {
   OrganizationMemberRepository memberRepository;
   OrganizationBlockRepository blockRepository;
+  OrganizationRepository organizationRepository;
   OrganizationMemberEventProducer eventProducer;
   OrganizationMemberHelper organizationMemberHelper;
   UserBulkLoader userBulkLoader;
@@ -378,27 +380,32 @@ public class MembershipService {
   }
 
   public PrimaryOrgResponse getPrimaryOrg(String userId) {
-    return memberRepository
+    var primaryOpt = memberRepository
         .findFirstByUserIdAndScopeTypeAndIsActiveIsTrueAndIsPrimaryIsTrueOrderByCreatedAtAsc(
-            userId, ScopeType.Organization)
-        .map(m -> PrimaryOrgResponse.builder()
+            userId, ScopeType.Organization);
+
+    if (primaryOpt.isPresent()
+        && organizationRepository.existsById(primaryOpt.get().getScopeId())) {
+      var m = primaryOpt.get();
+      return PrimaryOrgResponse.builder()
+          .organizationId(m.getScopeId())
+          .role(m.getRole())
+          .build();
+    }
+
+    // fallback: lấy org active đầu tiên NHƯNG còn tồn tại
+    var list = memberRepository
+        .findByUserIdAndScopeTypeAndIsActiveIsTrue(userId,
+            ScopeType.Organization);
+    for (var m : list) {
+      if (organizationRepository.existsById(m.getScopeId())) {
+        return PrimaryOrgResponse.builder()
             .organizationId(m.getScopeId())
             .role(m.getRole())
-            .build())
-        .orElseGet(() -> {
-          // fallback: lấy org active đầu tiên nếu chưa có primary
-          List<OrganizationMember> list = memberRepository
-              .findByUserIdAndScopeTypeAndIsActiveIsTrue(userId,
-                  ScopeType.Organization);
-          if (list.isEmpty()) {
-            return null;
-          }
-          OrganizationMember m = list.getFirst();
-          return PrimaryOrgResponse.builder()
-              .organizationId(m.getScopeId())
-              .role(m.getRole())
-              .build();
-        });
+            .build();
+      }
+    }
+    return null;
   }
 
   public PageResponse<MemberInBlockWithMemberResponse> listUnassignedMembers(
@@ -555,9 +562,21 @@ public class MembershipService {
       String userId) {
     var list = memberRepository
         .findByUserIdAndScopeTypeAndIsActiveIsTrue(userId, ScopeType.Grade);
+
+    var rawIds = list.stream().map(OrganizationMember::getScopeId)
+        .collect(Collectors.toSet());
+
+    // chỉ giữ block còn tồn tại (OrganizationBlock có @Where deleted_at IS NULL)
+    var aliveBlocks = blockRepository.findAllById(rawIds);
+    var aliveIds = aliveBlocks.stream().map(OrganizationBlock::getId)
+        .collect(java.util.stream.Collectors.toSet());
+
     return BlocksOfUserWithMemberResponse.builder()
         .user(userSummaryCacheService.getOrLoad(userId))
-        .blockIds(list.stream().map(OrganizationMember::getScopeId).toList())
+        .blockIds(list.stream()
+            .map(OrganizationMember::getScopeId)
+            .filter(aliveIds::contains)
+            .toList())
         .build();
   }
 }

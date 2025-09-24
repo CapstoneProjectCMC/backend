@@ -1,5 +1,6 @@
 package com.codecampus.organization.service;
 
+import com.codecampus.constant.ScopeType;
 import com.codecampus.organization.dto.common.PageResponse;
 import com.codecampus.organization.dto.request.CreateOrganizationForm;
 import com.codecampus.organization.dto.request.UpdateOrganizationForm;
@@ -12,6 +13,8 @@ import com.codecampus.organization.helper.AuthenticationHelper;
 import com.codecampus.organization.helper.OrganizationHelper;
 import com.codecampus.organization.helper.PageResponseHelper;
 import com.codecampus.organization.mapper.OrganizationMapper;
+import com.codecampus.organization.repository.OrganizationBlockRepository;
+import com.codecampus.organization.repository.OrganizationMemberRepository;
 import com.codecampus.organization.repository.OrganizationRepository;
 import com.codecampus.organization.service.kafka.OrganizationEventProducer;
 import events.org.data.OrganizationPayload;
@@ -31,6 +34,8 @@ import org.springframework.transaction.annotation.Transactional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class OrganizationService {
   OrganizationRepository organizationRepository;
+  OrganizationBlockRepository blockRepository;
+  OrganizationMemberRepository memberRepository;
   MembershipService membershipService;
   BlockService blockService;
   OrganizationMapper organizationMapper;
@@ -91,11 +96,35 @@ public class OrganizationService {
   public void delete(String id) {
     String deletedBy = AuthenticationHelper.getMyUsername();
     Organization o = organizationRepository.findById(id)
-        .orElseThrow(
-            () -> new AppException(ErrorCode.ORGANIZATION_NOT_FOUND));
+        .orElseThrow(() -> new AppException(ErrorCode.ORGANIZATION_NOT_FOUND));
+
+    // Soft-delete organization
     o.markDeleted(deletedBy);
     organizationRepository.save(o);
 
+    // 1) Soft-delete memberships cấp Organization
+    var orgMembers = memberRepository.findByScopeTypeAndScopeId(
+        ScopeType.Organization, id);
+    for (var m : orgMembers) {
+      m.setActive(false);
+      m.setPrimary(false);
+      m.markDeleted(deletedBy);
+    }
+    memberRepository.saveAll(orgMembers);
+
+    // 2) Soft-delete memberships cấp Block thuộc org
+    var blockIds = blockRepository.findBlockIdsOfOrg(id);
+    for (String bid : blockIds) {
+      var blockMembers = memberRepository.findByScopeTypeAndScopeId(
+          ScopeType.Grade, bid);
+      for (var m : blockMembers) {
+        m.setActive(false);
+        m.markDeleted(deletedBy);
+      }
+      memberRepository.saveAll(blockMembers);
+    }
+
+    // publish DELETED event như cũ
     eventProducer.publishDeleted(o.getId());
   }
 

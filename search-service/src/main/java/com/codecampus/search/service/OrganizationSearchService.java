@@ -81,6 +81,7 @@ public class OrganizationSearchService {
               .id(doc.getId())
               .name(doc.getName())
               .description(doc.getDescription())
+              .ownerId(doc.getOwnerId())
               .logoUrl(doc.getLogoUrl())
               .email(doc.getEmail())
               .phone(doc.getPhone())
