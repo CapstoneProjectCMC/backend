@@ -2,7 +2,7 @@
 set -euo pipefail
 export DOCKER_BUILDKIT=1
 
-DOCKERHUB_USER="${DOCKERHUB_USER:-yunomix2834}"
+DOCKERHUB_USER="${DOCKERHUB_USER:-yunomix280304}"
 IMAGE_TAG="${IMAGE_TAG:-$(date +%Y%m%d.%H%M%S)}"
 
 # Xác định DOCKER_GID an toàn
