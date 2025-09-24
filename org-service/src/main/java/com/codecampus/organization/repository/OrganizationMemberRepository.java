@@ -14,11 +14,40 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface OrganizationMemberRepository
     extends JpaRepository<OrganizationMember, String> {
+  @Query(value = """
+      select m.* 
+      from organization_members m
+      join organizations o on o.id = m.scope_id
+      where m.user_id   = :userId
+        and m.scope_type = :scopeType
+        and m.is_active  = true
+        and m.is_primary = true
+        and m.deleted_at is null
+        and o.deleted_at is null
+      order by m.created_at asc
+      limit 1
+      """, nativeQuery = true)
   Optional<OrganizationMember> findFirstByUserIdAndScopeTypeAndIsActiveIsTrueAndIsPrimaryIsTrueOrderByCreatedAtAsc(
-      String userId, ScopeType scopeType);
+      @Param("userId") String userId,
+      @Param("scopeType") ScopeType scopeType
+  );
 
+
+  @Query(value = """
+      select m.* 
+      from organization_members m
+      join organizations o on o.id = m.scope_id
+      where m.user_id   = :userId
+        and m.scope_type = :scopeType
+        and m.is_active  = true
+        and m.deleted_at is null
+        and o.deleted_at is null
+      order by m.created_at asc
+      """, nativeQuery = true)
   List<OrganizationMember> findByUserIdAndScopeTypeAndIsActiveIsTrue(
-      String userId, ScopeType scopeType);
+      @Param("userId") String userId,
+      @Param("scopeType") ScopeType scopeType
+  );
 
   List<OrganizationMember> findByScopeTypeAndScopeIdAndIsActiveIsTrue(
       ScopeType scopeType, String scopeId);
