@@ -206,7 +206,7 @@ public class ExerciseSearchService {
       bv.should(s -> s.term(t -> t.field("visibility").value(true)));
       if (viewerOrgId != null) {
         bv.should(s -> s.terms(ts -> ts.field("orgId").terms(tv -> tv.value(
-            java.util.List.of(FieldValue.of(viewerOrgId))
+            List.of(FieldValue.of(viewerOrgId))
         ))));
       }
       return bv;

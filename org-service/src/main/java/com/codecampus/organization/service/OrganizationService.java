@@ -58,11 +58,7 @@ public class OrganizationService {
 
     o = organizationRepository.save(o);
 
-    String creatorUserId = AuthenticationHelper.getMyUserId();
-    if (creatorUserId != null && !creatorUserId.isBlank()) {
-      // mặc định role=Admin, active=true
-      membershipService.addCreatorToOrg(creatorUserId, o.getId());
-    }
+    membershipService.addCreatorToOrg(userId, o.getId());
 
     // publish CREATED
     OrganizationPayload payload =
