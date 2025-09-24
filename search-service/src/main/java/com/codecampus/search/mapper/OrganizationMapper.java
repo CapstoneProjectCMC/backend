@@ -18,6 +18,7 @@ public interface OrganizationMapper {
         .id(id)
         .name(p.getName())
         .description(p.getDescription())
+        .ownerId(p.getOwnerId())
         .logoUrl(p.getLogoUrl())
         .email(p.getEmail())
         .phone(p.getPhone())
@@ -36,6 +37,7 @@ public interface OrganizationMapper {
     }
     doc.setName(p.getName());
     doc.setDescription(p.getDescription());
+    doc.setOwnerId(p.getOwnerId());
     doc.setLogoUrl(p.getLogoUrl());
     doc.setEmail(p.getEmail());
     doc.setPhone(p.getPhone());
