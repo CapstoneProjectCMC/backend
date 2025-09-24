@@ -73,4 +73,17 @@ public class AuthenticationHelper {
 
     return null;
   }
+
+  public static String getMyOrgId() {
+    Authentication a = SecurityContextHolder.getContext().getAuthentication();
+    if (a == null || !a.isAuthenticated()) {
+      return null;
+    }
+    Object p = a.getPrincipal();
+    if (p instanceof Jwt jwt) {
+      String orgId = jwt.getClaimAsString("org_id");
+      return (orgId != null && !orgId.isBlank()) ? orgId : null;
+    }
+    return null;
+  }
 }
