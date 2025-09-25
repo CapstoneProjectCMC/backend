@@ -19,7 +19,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  ############D
+  ##############
   build-push:
     runs-on: ubuntu-latest
 
