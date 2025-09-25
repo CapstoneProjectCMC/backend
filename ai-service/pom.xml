@@ -38,8 +38,8 @@
         <spring-ai.version>1.0.0</spring-ai.version>
 
         <!-- gRPC & Protobuf -->
-        <grpc.version>1.72.0</grpc.version>
-        <protobuf.version>4.30.2</protobuf.version>
+        <grpc.version>1.75.0</grpc.version>
+        <protobuf.version>4.32.1</protobuf.version>
 
         <!-- Library versions -->
         <lombok.version>1.18.38</lombok.version>
