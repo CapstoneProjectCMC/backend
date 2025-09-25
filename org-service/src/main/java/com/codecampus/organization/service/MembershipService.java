@@ -382,7 +382,7 @@ public class MembershipService {
   public PrimaryOrgResponse getPrimaryOrg(String userId) {
     var primaryOpt = memberRepository
         .findFirstByUserIdAndScopeTypeAndIsActiveIsTrueAndIsPrimaryIsTrueOrderByCreatedAtAsc(
-            userId, ScopeType.Organization);
+            userId, ScopeType.Organization.name());
 
     if (primaryOpt.isPresent()
         && organizationRepository.existsById(primaryOpt.get().getScopeId())) {
@@ -396,7 +396,7 @@ public class MembershipService {
     // fallback: lấy org active đầu tiên NHƯNG còn tồn tại
     var list = memberRepository
         .findByUserIdAndScopeTypeAndIsActiveIsTrue(userId,
-            ScopeType.Organization);
+            ScopeType.Organization.name());
     for (var m : list) {
       if (organizationRepository.existsById(m.getScopeId())) {
         return PrimaryOrgResponse.builder()
@@ -561,7 +561,8 @@ public class MembershipService {
   public BlocksOfUserWithMemberResponse listActiveBlocksOfUser(
       String userId) {
     var list = memberRepository
-        .findByUserIdAndScopeTypeAndIsActiveIsTrue(userId, ScopeType.Grade);
+        .findByUserIdAndScopeTypeAndIsActiveIsTrue(userId,
+            ScopeType.Grade.name());
 
     var rawIds = list.stream().map(OrganizationMember::getScopeId)
         .collect(Collectors.toSet());

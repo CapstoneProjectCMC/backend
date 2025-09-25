@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
 public interface OrganizationMemberRepository
     extends JpaRepository<OrganizationMember, String> {
   @Query(value = """
-      select m.* 
+      select m.*
       from organization_members m
       join organizations o on o.id = m.scope_id
       where m.user_id   = :userId
@@ -29,12 +29,12 @@ public interface OrganizationMemberRepository
       """, nativeQuery = true)
   Optional<OrganizationMember> findFirstByUserIdAndScopeTypeAndIsActiveIsTrueAndIsPrimaryIsTrueOrderByCreatedAtAsc(
       @Param("userId") String userId,
-      @Param("scopeType") ScopeType scopeType
+      @Param("scopeType") String scopeType
   );
 
 
   @Query(value = """
-      select m.* 
+      select m.*
       from organization_members m
       join organizations o on o.id = m.scope_id
       where m.user_id   = :userId
@@ -46,7 +46,7 @@ public interface OrganizationMemberRepository
       """, nativeQuery = true)
   List<OrganizationMember> findByUserIdAndScopeTypeAndIsActiveIsTrue(
       @Param("userId") String userId,
-      @Param("scopeType") ScopeType scopeType
+      @Param("scopeType") String scopeType
   );
 
   List<OrganizationMember> findByScopeTypeAndScopeIdAndIsActiveIsTrue(
@@ -72,9 +72,10 @@ public interface OrganizationMemberRepository
        where m.userId = :userId
          and m.scopeType = com.codecampus.constant.ScopeType.Organization
          and m.isActive = true
+         and m.deletedAt is null
          and exists (
            select 1 from Organization o
-            where o.id = m.scopeId
+           where o.id = m.scopeId and o.deletedAt is null
          )
       """)
   long countActiveOrganizations(@Param("userId") String userId);
@@ -85,9 +86,10 @@ public interface OrganizationMemberRepository
        where m.userId = :userId
          and m.scopeType = com.codecampus.constant.ScopeType.Organization
          and m.isActive = true
+         and m.deletedAt is null
          and exists (
            select 1 from Organization o
-            where o.id = m.scopeId
+           where o.id = m.scopeId and o.deletedAt is null
          )
       """)
   List<OrganizationMember> findActiveOrgsOfUser(@Param("userId") String userId);
