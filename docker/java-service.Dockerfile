@@ -37,7 +37,7 @@ RUN mvn -q -DskipTests install -pl common-protos
 RUN mvn -q -DskipTests -pl ${MODULE} -am package
 
 # ===== Runtime stage =====
-FROM eclipse-temurin:21-jre
+FROM eclipse-temurin:25-jre
 ARG MODULE
 ENV JAVA_OPTS=""
 WORKDIR /app
