@@ -44,14 +44,14 @@
         <jackson.version>2.19.0</jackson.version>
         <nimbus-jose.version>10.3</nimbus-jose.version>
         <security-oauth2-jose.version>6.5.0</security-oauth2-jose.version>
-        <jacoco.version>0.8.13</jacoco.version>
+        <jacoco.version>0.8.14</jacoco.version>
         <grpc.server.starter.version>3.1.0.RELEASE</grpc.server.starter.version>
         <redisson.version>3.50.0</redisson.version>
 
         <!-- Build-plugin versions -->
         <protobuf.plugin.version>0.6.1</protobuf.plugin.version>   <!-- xolstice/protobuf -->
         <os.maven.plugin.version>1.7.1</os.maven.plugin.version>
-        <maven.compiler.plugin.version>3.12.1</maven.compiler.plugin.version>
+        <maven.compiler.plugin.version>3.14.1</maven.compiler.plugin.version>
     </properties>
     <dependencies>
         <!-- ===== Spring Boot starters ===== -->
