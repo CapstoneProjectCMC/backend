@@ -36,7 +36,7 @@
         <lombok.mapstruct.binding.version>0.2.0</lombok.mapstruct.binding.version>
         <projectlombok-lombok.version>1.18.38</projectlombok-lombok.version>
         <elastic.search.version>9.0.3</elastic.search.version>
-        <redisson.version>3.50.0</redisson.version>
+        <redisson.version>3.52.0</redisson.version>
 
         <!-- Plugin versions -->
         <protobuf.plugin.version>0.6.1</protobuf.plugin.version> <!-- xolstice/protobuf -->
