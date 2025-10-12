@@ -44,7 +44,7 @@
         <nimbus-jose.version>10.3</nimbus-jose.version>
         <jacoco.version>0.8.13</jacoco.version>
         <projectlombok-lombok.version>1.18.38</projectlombok-lombok.version>
-        <redisson.version>3.50.0</redisson.version>
+        <redisson.version>3.52.0</redisson.version>
 
         <!-- Plugin versions -->
         <protobuf.plugin.version>3.3.1</protobuf.plugin.version>   <!-- ascopes/protobuf-maven-plugin -->

@@ -47,7 +47,7 @@
         <modelmapper.version>3.2.4</modelmapper.version>
         <projectlombok-lombok.version>1.18.38</projectlombok-lombok.version>
         <jackson-datatype-protobuf>0.9.18</jackson-datatype-protobuf>
-        <redisson.version>3.50.0</redisson.version>
+        <redisson.version>3.52.0</redisson.version>
 
 
         <!-- Build-plugin versions -->

@@ -44,7 +44,7 @@
         <nimbus-jose.version>10.3</nimbus-jose.version>
         <security-oauth2-jose.version>6.5.0</security-oauth2-jose.version>
         <jacoco.version>0.8.13</jacoco.version>
-        <redisson.version>3.50.0</redisson.version>
+        <redisson.version>3.52.0</redisson.version>
         <socketio.version>2.0.13</socketio.version>
 
         <!-- Build-plugin versions -->

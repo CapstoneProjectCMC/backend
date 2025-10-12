@@ -46,7 +46,7 @@
         <security-oauth2-jose.version>6.5.0</security-oauth2-jose.version>
         <jacoco.version>0.8.13</jacoco.version>
         <grpc.server.starter.version>3.1.0.RELEASE</grpc.server.starter.version>
-        <redisson.version>3.50.0</redisson.version>
+        <redisson.version>3.52.0</redisson.version>
 
         <!-- Build-plugin versions -->
         <protobuf.plugin.version>0.6.1</protobuf.plugin.version>   <!-- xolstice/protobuf -->

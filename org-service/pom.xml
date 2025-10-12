@@ -47,7 +47,7 @@
         <projectlombok-lombok.version>1.18.38</projectlombok-lombok.version>
         <apache.poi.version>5.4.1</apache.poi.version>
         <apache.poi.ooxml.version>5.4.1</apache.poi.ooxml.version>
-        <redisson.version>3.50.0</redisson.version>
+        <redisson.version>3.52.0</redisson.version>
 
         <!-- Build-plugin -->
         <protobuf.plugin.version>0.6.1</protobuf.plugin.version>

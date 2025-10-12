@@ -47,7 +47,7 @@
         <jacoco.version>0.8.13</jacoco.version>
         <grpc.server.starter.version>3.1.0.RELEASE</grpc.server.starter.version>
         <jackson-datatype-protobuf>0.9.18</jackson-datatype-protobuf>
-        <redisson.version>3.50.0</redisson.version>
+        <redisson.version>3.52.0</redisson.version>
         <socketio.version>2.0.13</socketio.version>
 
         <!-- Build-plugin versions -->
