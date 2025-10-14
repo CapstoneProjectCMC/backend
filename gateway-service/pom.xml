@@ -40,7 +40,7 @@
         <bucket4j.version>8.10.1</bucket4j.version>
         <caffeine.version>3.2.0</caffeine.version>
         <tomcat.embed.version>11.0.8</tomcat.embed.version>
-        <reactor-test.version>3.8.0-M3</reactor-test.version>
+        <reactor-test.version>3.8.0-RC1</reactor-test.version>
         <mockito.version>5.18.0</mockito.version>
 
         <!-- Plugin versions -->
