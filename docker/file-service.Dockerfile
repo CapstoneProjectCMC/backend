@@ -16,7 +16,7 @@ WORKDIR /src/FileService/FileService.Api
 RUN dotnet publish -c Release -o /app/publish
 
 # ====== Runtime stage ======
-FROM mcr.microsoft.com/dotnet/aspnet:8.0
+FROM mcr.microsoft.com/dotnet/aspnet:10.0
 
 # Install FFmpeg + ffprobe (non-interactive, minimal)
 RUN apt-get update \
