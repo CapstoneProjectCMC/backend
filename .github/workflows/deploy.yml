@@ -43,7 +43,7 @@ jobs:
           echo "run.head_sha:      ${{ github.event.workflow_run.head_sha }}"
 
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Derive IMAGE_TAG (from workflow_run or manual)
         shell: bash
